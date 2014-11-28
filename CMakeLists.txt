@@ -24,6 +24,9 @@ endif()
 
 add_executable(Main main.c)
 target_link_libraries(Main glfw ${GLFW_LIBRARIES})
+
+add_executable(Example glfw_example.c)
+target_link_libraries(Example glfw ${GLFW_LIBRARIES})
 #target_link_libraries(Main ${GLFW_STATIC_LIBRARIES})
 
 set(CMAKE_BUILD_TYPE Debug)
