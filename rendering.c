@@ -35,7 +35,7 @@ unsigned char* orthoTest() {
     for(int y=0;y<k_nPixels;y++) {
         closeD = k_drawD;
         for(int obj=0;obj<k_nMaxObj;obj++) {
-            if(ob_levelTest[obj*3] == 0) {break;} //Check for termination
+            if(ob_levelTest[obj*3] == terminator) {break;} //Check for termination
             for(int line=0;line<k_nMaxLinesPerObj;line++) {
                 if(ob_isTerminating(&(objFtype(ob_levelTest[obj*3])[line]))){break;}
                 l = realLine(&(objFtype(ob_levelTest[obj*3])[line]), (ob_levelTest + obj*3 +1));

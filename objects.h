@@ -12,7 +12,8 @@
 
 //labeling all the types of objects (enum)
 enum objType {
-    nothing=1,
+    terminator=0,
+    nothing,
     objGround
 };
 

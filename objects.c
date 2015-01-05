@@ -13,8 +13,11 @@ void ob_init() {
 
     ob_levelTest[0] = objGround;
     ob_levelTest[1] = 10;
-    ob_levelTest[2] = -8;
-    ob_levelTest[3] = 0;
+    ob_levelTest[2] = 3;
+    ob_levelTest[3] = objGround;
+    ob_levelTest[4] = 20;
+    ob_levelTest[5] = 100;
+    ob_levelTest[6] = 0;
 }
 
 void ob_printLine(line *l){
