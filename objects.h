@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
@@ -15,7 +16,7 @@ enum objType {
     objGround
 };
 
-typdef struct {
+typedef struct {
     int x1;
     int x2;
     int y1;
@@ -26,12 +27,18 @@ typdef struct {
 } line;
 
 //objects possible in the scene
-static line *g_ground;
-static line *g_nothing;
+line *g_ground;
+line *g_nothing;
 
 //object from type
-int objFtype(enum objType);
+line* objFtype(enum objType);
 
-static int g_levelTest[k_nMaxObj*3];
+void g_init();
+
+void g_printLine(line*);
+
+bool g_isNotTerminating(line*);
+
+int g_levelTest[k_nMaxObj*3];
 
 #endif

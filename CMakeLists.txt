@@ -10,6 +10,7 @@ set (fp_mario_VERSION_PATCH 1)
 #include_directories(${GLFW_INCLUDE_DIRS})
 add_subdirectory(./glfw-3.0.4/)
 include_directories(./glfw-3.0.4/include/)
+add_library (Objects objects.c)
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -28,5 +29,8 @@ target_link_libraries(Main glfw ${GLFW_LIBRARIES})
 add_executable(Example glfw_example.c)
 target_link_libraries(Example glfw ${GLFW_LIBRARIES})
 #target_link_libraries(Main ${GLFW_STATIC_LIBRARIES})
+
+add_executable(Rendering rendering.c)
+target_link_libraries(Rendering glfw Objects ${GLFW_LIBRARIES})
 
 set(CMAKE_BUILD_TYPE Debug)
