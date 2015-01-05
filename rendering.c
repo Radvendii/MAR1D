@@ -1,5 +1,6 @@
 #include "objects.h"
 #include <math.h>
+#define pi (22/7.0)
 
 line* realLine(line *objLine, int *pos){
     line* rl = malloc(sizeof(line));
