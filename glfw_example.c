@@ -19,7 +19,7 @@ int main(void)
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
-    window = glfwCreateWindow(10, 700, "Simple example", NULL, NULL);
+    window = glfwCreateWindow(40, 700, "Simple example", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -43,11 +43,17 @@ int main(void)
         /*glLoadIdentity();*/
         /*glRotatef((float) glfwGetTime() * 50.f, 0.f, 0.f, 1.f);*/
 
-        glLineWidth(5.f);
-        glBegin(GL_LINES);
+        glBegin(GL_QUADS);
         glColor3f(1.f, 0.f, 0.f);
-        glVertex3f(-0.6f, -0.4f, 0.f);
-        glVertex3f(0.6f, -0.4f, 0.f);
+        glVertex2f(-1.f, 1.0f);
+        glVertex2f(-1.f, 0.9f);
+        glVertex2f(1.f, 0.9f);
+        glVertex2f(1.f, 1.0f);
+        glColor3f(0.f, 1.f, 0.f);
+        glVertex2f(-1.f, 0.9f);
+        glVertex2f(-1.f, 0.8f);
+        glVertex2f(1.f, 0.8f);
+        glVertex2f(1.f, 0.9f);
         /*glColor3f(1.f, 0.f, 0.f);*/
         /*glVertex3f(0.f, 0.6f, 0.f);*/
         glEnd();

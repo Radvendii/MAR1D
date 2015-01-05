@@ -12,7 +12,7 @@
 
 //labeling all the types of objects (enum)
 enum objType {
-    nothing=0,
+    nothing=1,
     objGround
 };
 
@@ -21,24 +21,24 @@ typedef struct {
     int x2;
     int y1;
     int y2;
-    char r;
-    char g;
-    char b;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
 } line;
 
 //objects possible in the scene
-line *g_ground;
-line *g_nothing;
+line *ob_ground;
+line *ob_nothing;
 
 //object from type
 line* objFtype(enum objType);
 
-void g_init();
+void ob_init();
 
-void g_printLine(line*);
+void ob_printLine(line*);
 
-bool g_isNotTerminating(line*);
+bool ob_isTerminating(line*);
 
-int g_levelTest[k_nMaxObj*3];
+int ob_levelTest[k_nMaxObj*3];
 
 #endif

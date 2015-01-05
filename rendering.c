@@ -1,6 +1,5 @@
 #include "objects.h"
 #include <math.h>
-#define pi (22/7.0)
 
 line* realLine(line *objLine, int *pos){
     line* rl = malloc(sizeof(line));
@@ -8,6 +7,9 @@ line* realLine(line *objLine, int *pos){
     rl->x2 = objLine->x2 + pos[0];
     rl->y1 = objLine->y1 + pos[1];
     rl->y2 = objLine->y2 + pos[1];
+    rl->r = objLine->r;
+    rl->g = objLine->g;
+    rl->b = objLine->b;
     return rl;
 }
 
@@ -24,16 +26,19 @@ float orthoIntersectD(int y, line* l){ //returns 0 if there's no intersection
     return (y - l->y1 - slope(l) * l->x1 ) / slope(l);
 }
 
-int* orthoTest() {
-    int *renderArr = malloc(sizeof(int) * k_nPixels);
+
+unsigned char* orthoTest() {
+    unsigned char *renderArr = malloc(sizeof(unsigned char) * k_nPixels * 3);
+    for(int i=0;i<k_nPixels*3;i++){ renderArr[i]=0; }
     float closeD, newD;
     line *l;
     for(int y=0;y<k_nPixels;y++) {
         closeD = k_drawD;
         for(int obj=0;obj<k_nMaxObj;obj++) {
+            if(ob_levelTest[obj*3] == 0) {break;} //Check for termination
             for(int line=0;line<k_nMaxLinesPerObj;line++) {
-                if(!g_isNotTerminating(&(objFtype(g_levelTest[obj*3])[line]))){break;}
-                l = realLine(&(objFtype(g_levelTest[obj*3])[line]), (g_levelTest + obj*3 +1));
+                if(ob_isTerminating(&(objFtype(ob_levelTest[obj*3])[line]))){break;}
+                l = realLine(&(objFtype(ob_levelTest[obj*3])[line]), (ob_levelTest + obj*3 +1));
                 if( (newD = orthoIntersectD(y, l)) == 0){continue;}
                 if(newD < closeD){
                     closeD=newD;
@@ -47,23 +52,18 @@ int* orthoTest() {
     return renderArr;
 }
 
-int main(int argc, char **argv) {
-    line l = (line) {.x1 = 0, .y1=0, .x2=2, .y2=16};
-    int *pos = malloc(sizeof(int)*2);
-    pos[0] = 2;
-    pos[1] = 2;
-    int y = 1;
-    g_printLine(realLine(&l, pos));
-    printf("%f", orthoIntersectD(y, &l));
-    /*
-     *int *rendered = orthoTest();
-     *for(int i=0;i<k_nPixels;i++) {
-     *    printf("%d\n", rendered[i*3]);
-     *}
-     */
-
-    return 0;
-}
+/*
+ *int main(int argc, char **argv) {
+ *    ob_init();
+ *
+ *    unsigned char *rendered = orthoTest();
+ *    for(int i=0;i<k_nPixels;i++) {
+ *        printf("%d\n", rendered[(k_nPixels-(i+1))*3]);
+ *    }
+ *
+ *    return 0;
+ *}
+ */
 
 /*
  *double intersectD(int *c_, int *l_){
@@ -114,14 +114,14 @@ int main(int argc, char **argv) {
  *        for(int obj=0;obj<k_nMaxObj;obj++) {
  *            for(int line=0;line<k_nMaxLinesPerObj;line++) {
  *                for(int i=0;i<4;i++){
- *                    lineLine[i] = *(objFtype(g_levelTest[obj*3]) +line*7 +i)+g_levelTest[obj*3 +(i%2+1)]; //accesses the $line-th line of the object in question, and adds the location of that object to the lines' locations
+ *                    lineLine[i] = *(objFtype(ob_levelTest[obj*3]) +line*7 +i)+ob_levelTest[obj*3 +(i%2+1)]; //accesses the $line-th line of the object in question, and adds the location of that object to the lines' locations
  *                }
  *[>if(y==250 && obj==0 && line==3){printf("%d, %d, %d, %d\n", camLine[0], camLine[1], camLine[2], camLine[3]);}<]
  *                if((newD = intersectD(camLine, lineLine) ) == 0) {continue;}
  *                if(newD < closeD) {
  *                    closeD=newD;
  *                    for(int i=0;i<3;i++) {
- *                        renderArr[y*3+i]=*(objFtype(g_levelTest[obj*3]) +line*7+4+i);
+ *                        renderArr[y*3+i]=*(objFtype(ob_levelTest[obj*3]) +line*7+4+i);
  *                    }
  *                }
  *            }
