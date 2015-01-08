@@ -1,9 +1,10 @@
 #include "objects.h"
+#include "helpers.h"
 #include <math.h>
 #define pi (22/7.0)
 
 line* realLine(line *objLine, int *pos){
-    line* rl = malloc(sizeof(line));
+    line* rl = salloc(sizeof(line));
     rl->x1 = objLine->x1 + pos[0];
     rl->x2 = objLine->x2 + pos[0];
     rl->y1 = objLine->y1 + pos[1];
@@ -13,6 +14,15 @@ line* realLine(line *objLine, int *pos){
     rl->b = objLine->b;
     return rl;
 }
+//TODO: MAKE SALLOC FUNCTION, MAKE SAFER VERSIONS OF FUNCTIONS
+/*
+ *void realifyLine(line *l, int *p){
+ *    line *rl = realLine(l, p);
+ *    free(l);
+ *    l=rl;
+ *    return;
+ *}
+ */
 
 float f_round(float f){
     return( (((int) (f*10 + ((f > 0) ? 0.5: -0.5))))/10.0);
@@ -37,7 +47,7 @@ float* intersect(line *l1, line* l2){ //returns NULL if there's no intersection.
 
     float x=( (l1->x1*l1->y2-l1->y1*l1->x2)*(l2->x1-l2->x2) - (l1->x1-l1->x2)*(l2->x1*l2->y2-l2->y1*l2->x2) )/d;
     float y=( (l1->x1*l1->y2-l1->y1*l1->x2)*(l2->y1-l2->y2) - (l1->y1-l1->y2)*(l2->x1*l2->y2-l2->y1*l2->x2) )/d;
-    float *p = malloc(sizeof(float)*2);
+    float *p = salloc(sizeof(float)*2);
     p[0] = x;
     p[1] = y;
     return p;
@@ -58,7 +68,7 @@ float intersectD(line *c, line* l){ //returns 0 if there's no intersection. Edge
 }
 
 unsigned char* orthoTest() {
-    unsigned char *renderArr = malloc(sizeof(unsigned char) * k_nPixels * 3);
+    unsigned char *renderArr = salloc(sizeof(unsigned char) * k_nPixels * 3);
     for(int i=0;i<k_nPixels*3;i++){ renderArr[i]=0; }
     float closeD, newD;
     line *l;
@@ -84,7 +94,7 @@ unsigned char* orthoTest() {
 
 unsigned char* renderTest(int camX, int camY, int camT) {
     int camD = 500; //This is arbitrary, it just has to be set large enough so there aren't roundoff errors
-    unsigned char *renderArr = malloc(sizeof(unsigned char)*k_nPixels*3);
+    unsigned char *renderArr = salloc(sizeof(unsigned char)*k_nPixels*3);
     for(int i=0;i<k_nPixels*3;i++){ renderArr[i]=0; }
     double a = camD/cos((pi/180)*k_FOV/2);
     double xa = a*cos((pi/180)*camT);
