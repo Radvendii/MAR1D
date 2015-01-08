@@ -4,20 +4,21 @@
 void ob_init() {
     ob_ground = malloc(sizeof(line) * k_nMaxLinesPerObj);
     ob_ground[0] = (line) { .x1=0, .y1=16, .x2=16, .y2=16, .r=231, .g=95, .b=19 };
-    ob_ground[1] = (line) { .x1=16, .y1=16, .x2=16, .y2=16, .r=231, .g=95, .b=19 };
+    ob_ground[1] = (line) { .x1=16, .y1=16, .x2=16, .y2=0, .r=231, .g=95, .b=19 };
     ob_ground[2] = (line) { .x1=16, .y1=0, .x2=0, .y2=0, .r=231, .g=95, .b=19 };
     ob_ground[3] = (line) { .x1=0, .y1=0, .x2=0, .y2=16, .r=231, .g=95, .b=19 };
+    ob_ground[4] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
 
     ob_nothing = malloc(sizeof(line) * k_nMaxLinesPerObj);
-    ob_nothing[0] = (line) { .x1=0, .y1=0, .x2=0, .y2=16, .r=231, .g=95, .b=19 };
+    ob_nothing[0] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
 
     ob_levelTest[0] = objGround;
-    ob_levelTest[1] = 10;
-    ob_levelTest[2] = 3;
+    ob_levelTest[1] = 100;
+    ob_levelTest[2] = -8;
     ob_levelTest[3] = objGround;
-    ob_levelTest[4] = 20;
+    ob_levelTest[4] = 180;
     ob_levelTest[5] = 100;
-    ob_levelTest[6] = 0;
+    ob_levelTest[6] = terminator;
 }
 
 void ob_printLine(line *l){

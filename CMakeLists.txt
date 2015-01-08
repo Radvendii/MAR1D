@@ -35,3 +35,4 @@ add_executable(Graphics graphics.c)
 target_link_libraries(Graphics RenderingL ObjectsL glfw ${GLFW_LIBRARIES})
 
 set(CMAKE_BUILD_TYPE Debug)
+#TODO: FIGURE OUT ABOUT WARNING FOR UNINITIALIZED VARIABLE ACCESS
