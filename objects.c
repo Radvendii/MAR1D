@@ -1,4 +1,5 @@
 #include "objects.h"
+#include "helpers.h"
 
 //objects possible in the scene
 void ob_init() {
