@@ -3,21 +3,25 @@
 #include <math.h>
 #define pi (22/7.0)
 
-line* realLine(line *objLine, int *pos){
-    line* rl = salloc(sizeof(line));
-    rl->x1 = objLine->x1 + pos[0];
-    rl->x2 = objLine->x2 + pos[0];
-    rl->y1 = objLine->y1 + pos[1];
-    rl->y2 = objLine->y2 + pos[1];
-    rl->r = objLine->r;
-    rl->g = objLine->g;
-    rl->b = objLine->b;
-    return rl;
-}
+/*
+ *line* realLine(line *objLine, int *pos){
+ *    line* rl = salloc(sizeof(line));
+ *    rl->x1 = objLine->x1 + pos[0];
+ *    rl->x2 = objLine->x2 + pos[0];
+ *    rl->y1 = objLine->y1 + pos[1];
+ *    rl->y2 = objLine->y2 + pos[1];
+ *    rl->r = objLine->r;
+ *    rl->g = objLine->g;
+ *    rl->b = objLine->b;
+ *    return rl;
+ *}
+ */
+
  void realifyLine(line *l, int *p){
-    line *rl = realLine(l, p);
-    free(l);
-    l=rl;
+    l->x1 += p[0];
+    l->x2 += p[0];
+    l->y1 += p[1];
+    l->y2 += p[1];
     return;
 }
 
@@ -25,16 +29,16 @@ float f_round(float f){
     return( (((int) (f*10 + ((f > 0) ? 0.5: -0.5))))/10.0);
 }
 
-float slope(line *l){
-    if(l->x1==l->x2){printf("Can't find slope of line with Dx 0"); exit(1);}
-    return ( (float) l->y2 - l->y1) / (l->x2 - l->x1);
+float slope(line l){
+    if(l.x1==l.x2){printf("Can't find slope of line with Dx 0"); exit(1);}
+    return ( (float) l.y2 - l.y1) / (l.x2 - l.x1);
 }
 
-float orthoIntersectD(int y, line* l){ //returns 0 if there's no intersection
-    if(l->y1 == l->y2){return 0;}
-    if( (l->y1 < y)==(l->y2 < y) ){return 0;}
-    if(l->x1 == l->x2){return l->x1;}
-    return (y - l->y1 - slope(l) * l->x1 ) / slope(l);
+float orthoIntersectD(int y, line l){ //returns 0 if there's no intersection
+    if(l.y1 == l.y2){return 0;}
+    if( (l.y1 < y)==(l.y2 < y) ){return 0;}
+    if(l.x1 == l.x2){return l.x1;}
+    return (y - l.y1 - slope(l) * l.x1 ) / slope(l);
 }
 
 float* intersect(line *l1, line* l2){ //returns NULL if there's no intersection. Edge cases are whatever.
@@ -69,15 +73,16 @@ unsigned char* orthoTest() {
     unsigned char *renderArr = salloc(sizeof(unsigned char) * k_nPixels * 3);
     for(int i=0;i<k_nPixels*3;i++){ renderArr[i]=0; }
     float closeD, newD;
-    line *l;
+    line *l = salloc(sizeof(line));
     for(int y=0;y<k_nPixels;y++) {
         closeD = k_drawD;
         for(int obj=0;obj<k_nMaxObj;obj++) {
             if(ob_levelTest[obj*3] == terminator) {break;} //Check for termination
             for(int line=0;line<k_nMaxLinesPerObj;line++) {
                 if(ob_isTerminating(&(objFtype(ob_levelTest[obj*3])[line]))){break;}
-                l = realLine(&(objFtype(ob_levelTest[obj*3])[line]), (ob_levelTest + obj*3 +1));
-                if( (newD = orthoIntersectD(y, l)) == 0){continue;}
+                *l = objFtype(ob_levelTest[obj*3])[line];
+                realifyLine(l, (ob_levelTest + obj*3 +1));
+                if( (newD = orthoIntersectD(y, *l)) == 0){continue;}
                 if(newD < closeD){
                     closeD=newD;
                     renderArr[y*3 +0]=l->r;
@@ -87,6 +92,7 @@ unsigned char* orthoTest() {
             }
         }
     }
+    free(l);
     return renderArr;
 }
 
@@ -112,7 +118,8 @@ unsigned char* renderTest(int camX, int camY, int camT) {
             if(ob_levelTest[obj*3] == terminator) {break;} //Check for termination
             for(int line=0;line<k_nMaxLinesPerObj;line++) {
                 if(ob_isTerminating(&(objFtype(ob_levelTest[obj*3])[line]))){break;}
-                l = *realLine(&(objFtype(ob_levelTest[obj*3])[line]), (ob_levelTest + obj*3 +1));
+                l = objFtype(ob_levelTest[obj*3])[line];
+                realifyLine(&l, (ob_levelTest + obj*3 +1));
                 if((newD = intersectD(&c, &l) ) == 0) {continue;}
                 if(newD < closeD) {
                     closeD=newD;

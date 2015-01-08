@@ -13,6 +13,7 @@ void ob_init() {
     ob_nothing = salloc(sizeof(line) * k_nMaxLinesPerObj);
     ob_nothing[0] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
 
+    ob_levelTest = salloc(sizeof(int) * k_nMaxObj * 3);
     ob_levelTest[0] = objGround;
     ob_levelTest[1] = 100;
     ob_levelTest[2] = -8;
@@ -20,6 +21,11 @@ void ob_init() {
     ob_levelTest[4] = 180;
     ob_levelTest[5] = 100;
     ob_levelTest[6] = terminator;
+}
+void ob_deinit() {
+    free(ob_ground);
+    free(ob_nothing);
+    free(ob_levelTest);
 }
 
 void ob_printLine(line *l){

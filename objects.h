@@ -30,16 +30,16 @@ typedef struct {
 //objects possible in the scene
 line *ob_ground;
 line *ob_nothing;
+int *ob_levelTest;
 
 //object from type
 line* objFtype(enum objType);
 
 void ob_init();
+void ob_deinit();
 
 void ob_printLine(line*);
 
 bool ob_isTerminating(line*);
-
-int ob_levelTest[k_nMaxObj*3];
 
 #endif
