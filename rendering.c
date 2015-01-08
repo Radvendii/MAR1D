@@ -14,15 +14,12 @@ line* realLine(line *objLine, int *pos){
     rl->b = objLine->b;
     return rl;
 }
-//TODO: MAKE SALLOC FUNCTION, MAKE SAFER VERSIONS OF FUNCTIONS
-/*
- *void realifyLine(line *l, int *p){
- *    line *rl = realLine(l, p);
- *    free(l);
- *    l=rl;
- *    return;
- *}
- */
+ void realifyLine(line *l, int *p){
+    line *rl = realLine(l, p);
+    free(l);
+    l=rl;
+    return;
+}
 
 float f_round(float f){
     return( (((int) (f*10 + ((f > 0) ? 0.5: -0.5))))/10.0);
@@ -58,6 +55,8 @@ float intersectD(line *c, line* l){ //returns 0 if there's no intersection. Edge
     if(p == NULL){return 0;}
     float x = p[0];
     float y = p[1];
+    free(p+0);
+    free(p+1);
 
     if(x<l->x1 == x<l->x2 && l->x1!=l->x2){return 0;}
     if(y<l->y1 == y<l->y2 && l->y1!=l->y2){return 0;}
