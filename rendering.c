@@ -41,25 +41,20 @@ float orthoIntersectD(int y, line l){ //returns 0 if there's no intersection
     return (y - l.y1 - slope(l) * l.x1 ) / slope(l);
 }
 
-float* intersect(line *l1, line* l2){ //returns NULL if there's no intersection. Edge cases are whatever.
-    if( (l1->y1 == l1->y2 && l1->x1 == l1->x2) || (l2->y1 == l2->y2 && l2->x1 == l2->x2) ) {printf("This is not a line"); exit(1);}
+bool intersect(line *l1, line* l2, float* x, float* y){ //returns whether or not there was an intersection
+    if( (l1->y1 == l1->y2 && l1->x1 == l1->x2) || (l2->y1 == l2->y2 && l2->x1 == l2->x2) ) {printf("This is not a line"); exit(false);}
     float d;
-    if( f_round(d = (l1->x1-l1->x2)*(l2->y1-l2->y2) - (l1->y1-l1->y2)*(l2->x1-l2->x2)) == 0 ) {return NULL;}
+    if( f_round(d = (l1->x1-l1->x2)*(l2->y1-l2->y2) - (l1->y1-l1->y2)*(l2->x1-l2->x2)) == 0 ) {return 1;}
 
-    float x=( (l1->x1*l1->y2-l1->y1*l1->x2)*(l2->x1-l2->x2) - (l1->x1-l1->x2)*(l2->x1*l2->y2-l2->y1*l2->x2) )/d;
-    float y=( (l1->x1*l1->y2-l1->y1*l1->x2)*(l2->y1-l2->y2) - (l1->y1-l1->y2)*(l2->x1*l2->y2-l2->y1*l2->x2) )/d;
-    float *p = salloc(sizeof(float)*2);
-    p[0] = x;
-    p[1] = y;
-    return p;
+    *x=( (l1->x1*l1->y2-l1->y1*l1->x2)*(l2->x1-l2->x2) - (l1->x1-l1->x2)*(l2->x1*l2->y2-l2->y1*l2->x2) )/d;
+    *y=( (l1->x1*l1->y2-l1->y1*l1->x2)*(l2->y1-l2->y2) - (l1->y1-l1->y2)*(l2->x1*l2->y2-l2->y1*l2->x2) )/d;
+
+    return true;
 }
 
 float intersectD(line *c, line* l){ //returns 0 if there's no intersection. Edge cases are whatever.
-    float *p = intersect(c, l);
-    if(p == NULL){return 0;}
-    float x = p[0];
-    float y = p[1];
-    free(p);
+    float x, y;
+    if(!intersect(c, l, &x, &y)){return 0;}
 
     if(x<l->x1 == x<l->x2 && l->x1!=l->x2){return 0;}
     if(y<l->y1 == y<l->y2 && l->y1!=l->y2){return 0;}
@@ -69,37 +64,35 @@ float intersectD(line *c, line* l){ //returns 0 if there's no intersection. Edge
     return pow(x-c->x1, 2) + pow(y-c->y1, 2);
 }
 
-unsigned char* orthoTest() {
-    unsigned char *renderArr = salloc(sizeof(unsigned char) * k_nPixels * 3);
-    for(int i=0;i<k_nPixels*3;i++){ renderArr[i]=0; }
+void orthoTest(unsigned char* screen) {
+    for(int i=0;i<k_nPixels*3;i++){ screen[i]=0; }
     float closeD, newD;
     line *l = salloc(sizeof(line));
     for(int y=0;y<k_nPixels;y++) {
         closeD = k_drawD;
-        for(int obj=0;obj<k_nMaxObj;obj++) {
+        for(int obj=0;;obj++) {
             if(ob_levelTest[obj*3] == terminator) {break;} //Check for termination
-            for(int line=0;line<k_nMaxLinesPerObj;line++) {
+            for(int line=0;;line++) {
                 if(ob_isTerminating(&(objFtype(ob_levelTest[obj*3])[line]))){break;}
                 *l = objFtype(ob_levelTest[obj*3])[line];
                 realifyLine(l, (ob_levelTest + obj*3 +1));
                 if( (newD = orthoIntersectD(y, *l)) == 0){continue;}
                 if(newD < closeD){
                     closeD=newD;
-                    renderArr[y*3 +0]=l->r;
-                    renderArr[y*3 +1]=l->g;
-                    renderArr[y*3 +2]=l->b;
+                    screen[y*3 +0]=l->r;
+                    screen[y*3 +1]=l->g;
+                    screen[y*3 +2]=l->b;
                 }
             }
         }
     }
     free(l);
-    return renderArr;
+    return;
 }
 
-unsigned char* renderTest(int camX, int camY, int camT) {
+void perspTest(int camX, int camY, int camT, unsigned char *screen) {
     int camD = 500; //This is arbitrary, it just has to be set large enough so there aren't roundoff errors
-    unsigned char *renderArr = salloc(sizeof(unsigned char)*k_nPixels*3);
-    for(int i=0;i<k_nPixels*3;i++){ renderArr[i]=0; }
+    for(int i=0;i<k_nPixels*3;i++){ screen[i]=0; }
     double a = camD/cos((pi/180)*k_FOV/2);
     double xa = a*cos((pi/180)*camT);
     double ya = a*sin((pi/180)*camT);
@@ -114,22 +107,22 @@ unsigned char* renderTest(int camX, int camY, int camT) {
         c.x2 = (int)(xa + y_*cos((pi/180)*beta));
         c.y2 = (int)(ya + y_*sin((pi/180)*beta));
         closeD=k_drawD*k_drawD;
-        for(int obj=0;obj<k_nMaxObj;obj++) {
+        for(int obj=0;;obj++) {
             if(ob_levelTest[obj*3] == terminator) {break;} //Check for termination
-            for(int line=0;line<k_nMaxLinesPerObj;line++) {
+            for(int line=0;;line++) {
                 if(ob_isTerminating(&(objFtype(ob_levelTest[obj*3])[line]))){break;}
                 l = objFtype(ob_levelTest[obj*3])[line];
                 realifyLine(&l, (ob_levelTest + obj*3 +1));
                 if((newD = intersectD(&c, &l) ) == 0) {continue;}
                 if(newD < closeD) {
                     closeD=newD;
-                    renderArr[y*3 +0]=l.r;
-                    renderArr[y*3 +1]=l.g;
-                    renderArr[y*3 +2]=l.b;
+                    screen[y*3 +0]=l.r;
+                    screen[y*3 +1]=l.g;
+                    screen[y*3 +2]=l.b;
                 }
             }
         }
     }
-    return renderArr;
+    return;
 }
 
