@@ -4,5 +4,6 @@
 #include <stdio.h>
 
 void* salloc(size_t);
+void* resalloc(void*, size_t);
 
 #endif

@@ -13,6 +13,8 @@ include_directories(./glfw-3.0.4/include/)
 add_library (ObjectsL objects.c)
 add_library (RenderingL rendering.c)
 add_library (HelpersL helpers.c)
+add_library (ControlsL controls.c)
+add_library (MechanicsL mechanics.c)
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -33,7 +35,7 @@ target_link_libraries(Example glfw ${GLFW_LIBRARIES})
 #target_link_libraries(Main ${GLFW_STATIC_LIBRARIES})
 
 add_executable(Graphics graphics.c)
-target_link_libraries(Graphics RenderingL ObjectsL HelpersL glfw ${GLFW_LIBRARIES})
+target_link_libraries(Graphics RenderingL ObjectsL HelpersL ControlsL MechanicsL glfw ${GLFW_LIBRARIES})
 
 set(CMAKE_BUILD_TYPE Debug)
 #TODO: FIGURE OUT ABOUT WARNING FOR UNINITIALIZED VARIABLE ACCESS
