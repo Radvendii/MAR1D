@@ -152,6 +152,7 @@ int main(void){
     gr_init();
     while (!(glfwWindowShouldClose(window) || glfwWindowShouldClose(perspWindow)))
     {
+        gr_update();
         gr_draw(perspWindow, 2);
         gr_draw(window, 0);
     }
