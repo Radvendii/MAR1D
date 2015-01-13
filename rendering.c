@@ -101,6 +101,15 @@ int rn_dimFworld(line **renderArr, struct world w){//returns the number of lines
             (*renderArr)[nLines++] = l;
         }
     }
+    int camD = 30;
+    double a = camD/cos((pi/180)*k_FOV/2);
+    double xa = w.camX + a*cos((pi/180)*w.camT);
+    double ya = w.camY + a*sin((pi/180)*w.camT);
+    double xb = w.camX + a*cos((pi/180)*(w.camT+k_FOV));
+    double yb = w.camY + a*sin((pi/180)*(w.camT+k_FOV));
+    (*renderArr)[nLines++] = (line) {.x1 = w.camX, .y1= w.camY, .x2=xa, .y2=ya, .r=155, .g=55, .b=155};
+    (*renderArr)[nLines++] = (line) {.x1 = w.camX, .y1= w.camY, .x2=xb, .y2=yb, .r=155, .g=55, .b=155};
+    (*renderArr)[nLines++] = (line) {.x1 = xa, .y1= ya, .x2=xb, .y2=yb, .r=155, .g=55, .b=155};
     return nLines;
 }
 
@@ -108,8 +117,8 @@ void rn_perspFworld(unsigned char *screen, struct world w){
     int camD = 500; //This is arbitrary, it just has to be set large enough so there aren't roundoff errors
     for(int i=0;i<k_nPixels*3;i++){ screen[i]=0; }
     double a = camD/cos((pi/180)*k_FOV/2);
-    double xa = a*cos((pi/180)*w.camT);
-    double ya = a*sin((pi/180)*w.camT);
+    double xa = w.camX + a*cos((pi/180)*w.camT);
+    double ya = w.camY + a*sin((pi/180)*w.camT);
     double beta = 90+k_FOV/2+w.camT;
     line c; //Holds the ray eminating from the camera. Calculated based on what pixel we're on
         c.x1 = w.camX;

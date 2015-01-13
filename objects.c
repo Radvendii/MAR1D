@@ -20,8 +20,8 @@ void ob_init() {
     ob_levelTest[1] = 100;
     ob_levelTest[2] = -8;
     ob_levelTest[3] = objGround;
-    ob_levelTest[4] = 95;
-    ob_levelTest[5] = 0;
+    ob_levelTest[4] = 25;
+    ob_levelTest[5] = 40;
     ob_levelTest[6] = terminator;
 }
 void ob_deinit() {

@@ -9,22 +9,19 @@
 #include "controls.h"
 
 GLFWwindow* window;
+GLFWwindow* perspWindow;
 unsigned char *screen;
 line *lineArr;
 int nLines;
 struct world world;
 int numObjs;
-int renderType;
 
 void gr_update(){
-    if(renderType==0){
-        nLines = rn_dimFworld(&lineArr, world);
-        lineArr[nLines] = (line) {.x1 = -k_drawD, .x2 = k_drawD, .y1=0, .y2=0, .r=255, .g=255, .b=255};
-        lineArr[nLines+1] = (line) {.y1 = -k_drawD, .y2 = k_drawD, .x1=0, .x2=0, .r=255, .g=255, .b=255};
-        nLines += 2;
-    }
-    else if(renderType == 1){rn_orthoTest(screen);}
-    else if(renderType == 2){rn_perspFworld(screen, world);}
+    nLines = rn_dimFworld(&lineArr, world);
+    lineArr[nLines] = (line) {.x1 = -k_drawD, .x2 = k_drawD, .y1=0, .y2=0, .r=255, .g=255, .b=255};
+    lineArr[nLines+1] = (line) {.y1 = -k_drawD, .y2 = k_drawD, .x1=0, .x2=0, .r=255, .g=255, .b=255};
+    nLines += 2;
+    rn_perspFworld(screen, world);
 }
 
 static void error_callback(int error, const char* description)
@@ -46,6 +43,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+
+    if (key == GLFW_KEY_W && action == GLFW_PRESS){
+        cl_forward(&world);
+        gr_update();
+    }
 
     if (key == GLFW_KEY_N && action == GLFW_PRESS){
         double x, y;
@@ -90,7 +92,8 @@ void gr_lines(line *ls, int nLines){
     return;
 }
 
-static void gr_draw(GLFWwindow *window){
+static void gr_draw(GLFWwindow *window, int renderType){
+    glfwMakeContextCurrent(window);
     float ratio;
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
@@ -108,30 +111,31 @@ static void gr_draw(GLFWwindow *window){
 
 void gr_init(){
     screen = salloc(sizeof(unsigned char)*k_nPixels*3);
+    lineArr = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
     world.scene = salloc(sizeof(int) * k_nMaxObj*3);
     for(int i=0;!((world.scene[i] = ob_levelTest[i]) == terminator && (i%3 == 0) && (numObjs = i/3));i++){}
     world.camX = -20;
     world.camY = 20;
     world.camT = -20;
-    int h, w;
-    renderType = 0; //0 for 2d, 1 for ortho, 2 for persp
-    if(renderType == 0){h=800;w=800;
-        lineArr = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
-    }
-    else if(renderType == 1){h=800;w=20;}
-    else if(renderType == 2){h=800;w=20;}
     gr_update();
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
-    window = glfwCreateWindow(w, h, "This is Epic", NULL, NULL);
+    perspWindow = glfwCreateWindow(20, 800, "Perspective view", NULL, NULL);
+    window = glfwCreateWindow(800, 800, "2d view. For debugging only.", NULL, NULL);
+    if (!perspWindow)
+    {
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
     if (!window)
     {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
-    glfwMakeContextCurrent(window);
-    glfwSetWindowRefreshCallback(window, gr_draw);
+    glfwSetWindowPos(window, 100, 50);
+    glfwSetWindowPos(perspWindow, 900, 50);
+
     glfwSetKeyCallback(window, key_callback);
 }
 
@@ -139,15 +143,17 @@ void gr_deinit(){
     free(screen);
     free(world.scene);
     glfwDestroyWindow(window);
+    glfwDestroyWindow(perspWindow);
     glfwTerminate();
 }
 
 int main(void){
     ob_init();
     gr_init();
-    while (!glfwWindowShouldClose(window))
+    while (!(glfwWindowShouldClose(window) || glfwWindowShouldClose(perspWindow)))
     {
-        gr_draw(window);
+        gr_draw(perspWindow, 2);
+        gr_draw(window, 0);
     }
     gr_deinit();
     ob_deinit();
