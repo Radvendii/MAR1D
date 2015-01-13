@@ -32,6 +32,16 @@ static void error_callback(int error, const char* description)
     fputs(description, stderr);
 }
 
+void gr_listcollisions(){
+    for(int i1=0;i1<numObjs;i1++){
+        for(int i2=0;i2<numObjs;i2++){
+            printf("%d collides with %d: %d\n", i1, i2, mh_isCollision(world, i1*3, i2*3));
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -48,6 +58,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         world.scene[numObjs*3+3] = terminator;
         numObjs++;
         gr_update();
+        gr_listcollisions();
     }
 
 }
@@ -131,38 +142,9 @@ void gr_deinit(){
     glfwTerminate();
 }
 
-
-/*
- *void gr_lines(){
- *    line l;
- *    glBegin(GL_LINES);
- *    for(int obj=0;;obj++) {
- *        if(ob_levelTest[obj*3] == terminator) {break;} //Check for termination
- *        for(int line=0;;line++) {
- *            if(ob_isTerminating(&(objFtype(ob_levelTest[obj*3])[line]))){break;}
- *            l = objFtype(ob_levelTest[obj*3])[line];
- *            realifyLine(&l, (ob_levelTest + obj*3 +1));
- *            glColor3f( (GLfloat) l.r/255.0, (GLfloat) l.g/255.0, (GLfloat) l.b/255.0 );
- *            glVertex2f((GLfloat) l.x1/k_screenX*2, (GLfloat) l.y1/k_screenX*2);
- *            glVertex2f((GLfloat) l.x2/k_screenX*2, (GLfloat) l.y2/k_screenX*2);
- *
- *        }
- *    }
- *    glColor3f( 1.f, 1.f, 1.f);
- *    glVertex2f( -1.f, 0.f );
- *    glVertex2f( 1.f, 0.f );
- *    glVertex2f( 0.f, -1.f );
- *    glVertex2f( 0.f, 1.f );
- *    glEnd();
- *    return;
- *}
- */
-
-
 int main(void){
     ob_init();
     gr_init();
-    //printf("%d\n", mh_isCollision(world, 0, 3));
     while (!glfwWindowShouldClose(window))
     {
         gr_draw(window);
