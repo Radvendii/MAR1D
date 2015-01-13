@@ -9,8 +9,6 @@
 #define k_nMaxLinesPerObj 30 //maximum number of lines per object
 #define k_drawD 500
 #define k_nMaxObj 50 //maximum number of objects in a world
-#define k_screenX 500.0
-#define k_screenY 50.0
 
 //labeling all the types of objects (enum)
 enum objType {

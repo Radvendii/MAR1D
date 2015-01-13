@@ -88,7 +88,23 @@ int rn_dimTest(line **renderArr){//returns the number of lines
     return nLines;
 }
 
-void rn_screenFworld(unsigned char *screen, struct world w){
+int rn_dimFworld(line **renderArr, struct world w){//returns the number of lines
+    line l;
+    int nLines=0;
+    *renderArr = resalloc(*renderArr, sizeof(line) * k_nMaxLinesPerObj * k_nMaxObj);
+    for(int obj=0;;obj++) {
+        if(w.scene[obj*3] == terminator) {break;} //Check for termination
+        for(int line=0;;line++) {
+            if(ob_isTerminating(objFtype(w.scene[obj*3])[line])){break;}
+            l = objFtype(w.scene[obj*3])[line];
+            ob_realifyLine(&l, (w.scene + obj*3 +1));
+            (*renderArr)[nLines++] = l;
+        }
+    }
+    return nLines;
+}
+
+void rn_perspFworld(unsigned char *screen, struct world w){
     int camD = 500; //This is arbitrary, it just has to be set large enough so there aren't roundoff errors
     for(int i=0;i<k_nPixels*3;i++){ screen[i]=0; }
     double a = camD/cos((pi/180)*k_FOV/2);
