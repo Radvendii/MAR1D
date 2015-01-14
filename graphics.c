@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -7,21 +8,22 @@
 #include "helpers.h"
 #include "mechanics.h"
 #include "controls.h"
+#include "graphics.h"
 
 GLFWwindow* window;
 GLFWwindow* perspWindow;
+struct state s;
 unsigned char *screen;
 line *lineArr;
-int nLines;
-struct world world;
-int numObjs;
 
 void gr_update(){
-    nLines = rn_dimFworld(&lineArr, world);
-    lineArr[nLines] = (line) {.x1 = -k_drawD, .x2 = k_drawD, .y1=0, .y2=0, .r=255, .g=255, .b=255};
-    lineArr[nLines+1] = (line) {.y1 = -k_drawD, .y2 = k_drawD, .x1=0, .x2=0, .r=255, .g=255, .b=255};
-    nLines += 2;
-    rn_perspFworld(screen, world);
+    if(s.forward && s.backward){;}
+    else if(s.forward){cl_forward(&s.world);}
+    else if(s.backward){cl_backward(&s.world);}
+    if(s.upward){cl_upward(&s.world); s.upward--;}
+    s.onGround = !cl_gravity(&s.world);
+    rn_dimFworld(&lineArr, s.world);
+    rn_perspFworld_v(screen, s.world, &lineArr);
 }
 
 static void error_callback(int error, const char* description)
@@ -29,10 +31,12 @@ static void error_callback(int error, const char* description)
     fputs(description, stderr);
 }
 
-void gr_listcollisions(){
-    for(int i1=0;i1<numObjs;i1++){
-        for(int i2=0;i2<numObjs;i2++){
-            printf("%d collides with %d: %d\n", i1, i2, mh_isCollision(world, i1*3, i2*3));
+void gr_listCollisions(){
+    for(int i1=0;;i1++){
+        if(s.world.scene[i1*3] == terminator) {break;}
+        for(int i2=0;;i2++){
+            if(s.world.scene[i2*3] == terminator) {break;}
+            printf("%d collides with %d: %d\n", i1, i2, mh_isCollision(s.world, i1*3, i2*3));
         }
         printf("\n");
     }
@@ -45,8 +49,28 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         glfwSetWindowShouldClose(window, GL_TRUE);
 
     if (key == GLFW_KEY_W && action == GLFW_PRESS){
-        cl_forward(&world);
-        gr_update();
+        s.forward = true;
+    }
+    if (key == GLFW_KEY_W && action == GLFW_RELEASE){
+        s.forward = false;
+    }
+
+    if (key == GLFW_KEY_S && action == GLFW_PRESS){
+        s.backward = true;
+    }
+    if (key == GLFW_KEY_S && action == GLFW_RELEASE){
+        s.backward = false;
+    }
+
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
+        if(s.onGround) {s.upward = 40;}
+    }
+    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE){
+        s.upward -= 20;
+        if(s.upward<0){s.upward = 0;}
+    }
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS){
+        s.paused = !s.paused;
     }
 
     if (key == GLFW_KEY_N && action == GLFW_PRESS){
@@ -54,13 +78,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         glfwGetCursorPos(window, &x, &y);
         int w,h;
         glfwGetFramebufferSize(window, &w, &h);
-        world.scene[numObjs*3+0] = objGround;
-        world.scene[numObjs*3+1] = (int)((x-w/2)/w*k_drawD);
-        world.scene[numObjs*3+2] = (int)((w/2-y)/h*k_drawD);
-        world.scene[numObjs*3+3] = terminator;
-        numObjs++;
-        gr_update();
-        gr_listcollisions();
+        int i=0;
+        do{i+=3;}while(s.world.scene[i]!=terminator);
+        s.world.scene[i] = objGround;
+        s.world.scene[i+1] = (int)((x-w/2)/w*k_drawD);
+        s.world.scene[i+2] = (int)((w/2-y)/h*k_drawD);
+        s.world.scene[i+3] = terminator;
     }
 
 }
@@ -81,9 +104,10 @@ void gr_pixels(unsigned char *renderArr){
     }
 }
 
-void gr_lines(line *ls, int nLines){
+void gr_lines(line *ls){
     glBegin(GL_LINES);
-    for(int i=0;i<nLines;i++){
+    for(int i=0;;i++){
+        if(ob_isTerminating(ls[i])){break;}
         glColor3f( (GLfloat) ls[i].r/255.0, (GLfloat) ls[i].g/255.0, (GLfloat) ls[i].b/255.0 );
         glVertex2f((GLfloat) ls[i].x1/k_drawD*2, (GLfloat) ls[i].y1/k_drawD*2);
         glVertex2f((GLfloat) ls[i].x2/k_drawD*2, (GLfloat) ls[i].y2/k_drawD*2);
@@ -101,7 +125,7 @@ static void gr_draw(GLFWwindow *window, int renderType){
     glClear(GL_COLOR_BUFFER_BIT);
 
     if(renderType == 0){
-        gr_lines(lineArr, nLines);}
+        gr_lines(lineArr);}
     else{gr_pixels(screen);}
 
     glfwSwapBuffers(window);
@@ -112,11 +136,16 @@ static void gr_draw(GLFWwindow *window, int renderType){
 void gr_init(){
     screen = salloc(sizeof(unsigned char)*k_nPixels*3);
     lineArr = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
-    world.scene = salloc(sizeof(int) * k_nMaxObj*3);
-    for(int i=0;!((world.scene[i] = ob_levelTest[i]) == terminator && (i%3 == 0) && (numObjs = i/3));i++){}
-    world.camX = -20;
-    world.camY = 20;
-    world.camT = -20;
+    s.world.scene = salloc(sizeof(int) * k_nMaxObj*3);
+    for(int i=0;!((s.world.scene[i] = ob_levelTest[i]) == terminator && (i%3 == 0));i++){}
+    s.forward = false;
+    s.backward = false;
+    s.onGround = true;
+    s.upward = 0;
+    s.paused = false;
+    s.world.camX = ob_levelTest[1];
+    s.world.camY = ob_levelTest[2];
+    s.world.camT = -20;
     gr_update();
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
@@ -141,7 +170,7 @@ void gr_init(){
 
 void gr_deinit(){
     free(screen);
-    free(world.scene);
+    free(s.world.scene);
     glfwDestroyWindow(window);
     glfwDestroyWindow(perspWindow);
     glfwTerminate();
@@ -152,7 +181,10 @@ int main(void){
     gr_init();
     while (!(glfwWindowShouldClose(window) || glfwWindowShouldClose(perspWindow)))
     {
+        //sleep(1);
+        if(!s.paused){
         gr_update();
+        }
         gr_draw(perspWindow, 2);
         gr_draw(window, 0);
     }

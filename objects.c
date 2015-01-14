@@ -8,21 +8,31 @@ void ob_init() {
     ob_ground = salloc(sizeof(line) * 5);
     ob_ground[0] = (line) { .x1=0, .y1=16, .x2=16, .y2=16, .r=231, .g=95, .b=19 };
     ob_ground[1] = (line) { .x1=16, .y1=16, .x2=16, .y2=0, .r=231, .g=95, .b=19 };
-    ob_ground[2] = (line) { .x1=16, .y1=0, .x2=0, .y2=0, .r=231, .g=95, .b=19 };
+    ob_ground[2] = (line) { .x1=0, .y1=0, .x2=16, .y2=0, .r=231, .g=95, .b=19 };
     ob_ground[3] = (line) { .x1=0, .y1=0, .x2=0, .y2=16, .r=231, .g=95, .b=19 };
     ob_ground[4] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
 
     ob_nothing = salloc(sizeof(line));
     ob_nothing[0] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
 
-    ob_levelTest = salloc(sizeof(int) * 7);
-    ob_levelTest[0] = objGround;
-    ob_levelTest[1] = 100;
-    ob_levelTest[2] = -8;
-    ob_levelTest[3] = objGround;
-    ob_levelTest[4] = 25;
-    ob_levelTest[5] = 40;
-    ob_levelTest[6] = terminator;
+    ob_playerBox = salloc(sizeof(line)*5);
+    ob_playerBox[0] = (line) { .x1=-14, .y1=2, .x2=2, .y2=2, .r=231, .g=0, .b=231 };
+    ob_playerBox[1] = (line) { .x1=2, .y1=2, .x2=2, .y2=-14, .r=231, .g=0, .b=231 };
+    ob_playerBox[2] = (line) { .x1=2, .y1=-14, .x2=-14, .y2=-14, .r=231, .g=0, .b=231 };
+    ob_playerBox[3] = (line) { .x1=-14, .y1=-14, .x2=-14, .y2=2, .r=231, .g=0, .b=231 };
+    ob_playerBox[4] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
+
+    ob_levelTest = salloc(sizeof(int) * 34);
+    ob_levelTest[0] = objPlayer;
+    ob_levelTest[1] = 14;
+    ob_levelTest[2] = 14;
+    for(int i=1;i<10;i++){
+        ob_levelTest[i*3] = objGround;
+        ob_levelTest[i*3+1] = (i-1)*16;
+        ob_levelTest[i*3+2] = -17;
+    }
+    ob_levelTest[30] = terminator;
+
 }
 void ob_deinit() {
     free(ob_ground);
@@ -30,15 +40,15 @@ void ob_deinit() {
     free(ob_levelTest);
 }
 
-void ob_printLine(line *l){
-    printf("{ x1: %d, x2: %d, y1: %d, y2: %d, r: %d, g: %d, b: %d }\n", l->x1, l->x2, l->y1, l->y2, l->r, l->g, l->b);
+void ob_printLine(line l){
+    printf("{ x1: %d, x2: %d, y1: %d, y2: %d, r: %d, g: %d, b: %d }\n", l.x1, l.x2, l.y1, l.y2, l.r, l.g, l.b);
 }
 
 void ob_realifyLine(line *l, int *p){
-    l->x1 += p[0];
-    l->x2 += p[0];
-    l->y1 += p[1];
-    l->y2 += p[1];
+    (*l).x1 += p[0];
+    (*l).x2 += p[0];
+    (*l).y1 += p[1];
+    (*l).y2 += p[1];
     return;
 }
 
@@ -97,6 +107,9 @@ line* objFtype(enum objType type) {
             break;
         case nothing:
             return ob_nothing;
+            break;
+        case objPlayer:
+            return ob_playerBox;
             break;
         default:
             printf("No object data found for object type %d", type);
