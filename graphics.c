@@ -10,7 +10,7 @@
 #include "controls.h"
 #include "graphics.h"
 
-GLFWwindow* window;
+GLFWwindow* dimWindow;
 GLFWwindow* perspWindow;
 struct state s;
 unsigned char *screen;
@@ -49,7 +49,11 @@ void gr_listCollisions(){
     printf("\n");
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void cursor_callback(GLFWwindow *window, double xPos, double yPos){
+    s.world.camT = -yPos/80.0;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
@@ -91,7 +95,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         do{i+=3;}while(s.world.scene[i]!=terminator);
         s.world.scene[i] = objGround;
         s.world.scene[i+1] = (int)((x-w/2)/w*k_drawD);
-        s.world.scene[i+2] = (int)((w/2-y)/h*k_drawD);
+        s.world.scene[i+2] = (int)((h/2-y)/h*k_drawD);
         s.world.scene[i+3] = terminator;
     }
 
@@ -154,33 +158,37 @@ void gr_init(){
     s.paused = false;
     s.world.camX = ob_levelTest[1];
     s.world.camY = ob_levelTest[2];
-    s.world.camT = -20;
+    s.world.camT = 0;
     gr_update();
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
+    dimWindow = glfwCreateWindow(800, 800, "2d view. For debugging only.", NULL, NULL);
     perspWindow = glfwCreateWindow(20, 800, "Perspective view", NULL, NULL);
-    window = glfwCreateWindow(800, 800, "2d view. For debugging only.", NULL, NULL);
     if (!perspWindow)
     {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
-    if (!window)
+    if (!dimWindow)
     {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
-    glfwSetWindowPos(window, 100, 50);
+    glfwSetWindowPos(dimWindow, 100, 50);
     glfwSetWindowPos(perspWindow, 900, 50);
 
-    glfwSetKeyCallback(window, key_callback);
+    glfwSetInputMode(perspWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
+
+    glfwSetKeyCallback(perspWindow, key_callback);
+    glfwSetKeyCallback(dimWindow, key_callback);
+    glfwSetCursorPosCallback(perspWindow, cursor_callback);
 }
 
 void gr_deinit(){
     free(screen);
     free(s.world.scene);
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(dimWindow);
     glfwDestroyWindow(perspWindow);
     glfwTerminate();
 }
@@ -188,14 +196,14 @@ void gr_deinit(){
 int main(void){
     ob_init();
     gr_init();
-    while (!(glfwWindowShouldClose(window) || glfwWindowShouldClose(perspWindow)))
+    while (!(glfwWindowShouldClose(dimWindow) || glfwWindowShouldClose(perspWindow)))
     {
         //sleep(1);
         if(!s.paused){
         gr_update();
         }
         gr_draw(perspWindow, 2);
-        gr_draw(window, 0);
+        gr_draw(dimWindow, 0);
     }
     gr_deinit();
     ob_deinit();

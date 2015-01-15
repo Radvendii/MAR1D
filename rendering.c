@@ -36,7 +36,7 @@ void rn_orthoTest(unsigned char* screen) {
     return;
 }
 
-void rn_perspTest(int camX, int camY, int camT, unsigned char *screen) {
+void rn_perspTest(int camX, int camY, double camT, unsigned char *screen) {
     int camD = 500; //This is arbitrary, it just has to be set large enough so there aren't roundoff errors
     for(int i=0;i<k_nPixels*3;i++){ screen[i]=0; }
     double a = camD/cos((pi/180)*k_FOV/2);
@@ -155,6 +155,7 @@ void rn_perspFworld(unsigned char *screen, struct world w){
 }
 
 void rn_perspFworld_v(unsigned char *screen, struct world w, line **lineArr){
+    bool rays = true; //true for fun visual effects
     int camD = 500; //This is arbitrary, it just has to be set large enough so there aren't roundoff errors
     for(int i=0;i<k_nPixels*3;i++){ screen[i]=0; }
     *lineArr = resalloc(*lineArr, sizeof(line) * (k_nMaxLinesPerObj * k_nMaxObj + k_nPixels));
@@ -174,6 +175,12 @@ void rn_perspFworld_v(unsigned char *screen, struct world w, line **lineArr){
         c.x2 = (int)(xa + y_*cos((pi/180)*beta));
         c.y2 = (int)(ya + y_*sin((pi/180)*beta));
         closeD=k_drawD*k_drawD;
+        if(rays){
+            c.r = 131;
+            c.g = 0;
+            c.b = 131;
+            (*lineArr)[nLines] = c;
+        }
         for(int obj=0;;obj++) {
             if(w.scene[obj*3] == terminator) {break;} //Check for termination
             if(w.scene[obj*3] == objPlayer) {continue;} //don't render playerBox
@@ -191,14 +198,24 @@ void rn_perspFworld_v(unsigned char *screen, struct world w, line **lineArr){
                     float x, y;
                     int xx, yy;
                     ob_intersect(c, l, &x, &y);
-                    if(l.x1==l.x2){xx = x; yy = y+1;}
-                    else{xx = x+1; yy=y+1*ob_slope(l);}
-                    (*lineArr)[nLines] = (line){.x1 = (int) x, .y1 = (int) y, .x2 = xx, .y2 = yy, .r = fmin(l.r+80, 255), .g = fmin(l.g+80, 255), .b = fmin(l.b+80, 255)};
+                    if(rays){
+                        c.x2 = x;
+                        c.y2 = y;
+                        c.r = 231;
+                        c.g = 0;
+                        c.b = 231;
+                        (*lineArr)[nLines] = c;
+                    }
+                    else{
+                        if(l.x1==l.x2){xx = x; yy = y+1;}
+                        else{xx = x+1; yy=y+1*ob_slope(l);}
+                        (*lineArr)[nLines] = (line){.x1 = (int) x, .y1 = (int) y, .x2 = xx, .y2 = yy, .r = fmin(l.r+80, 255), .g = fmin(l.g+80, 255), .b = fmin(l.b+80, 255)};
+                    }
                     (*lineArr)[nLines+1] = (line) {.y1=0, .y2=0, .x1=0, .x2=0, .r=0, .g=0, .b=0};
                 }
             }
         }
-        if(!ob_isTerminating((*lineArr)[nLines])) {nLines++;}
+        if(!ob_isTerminating((*lineArr)[nLines]) || rays) {nLines++;}
     }
     return;
 }
