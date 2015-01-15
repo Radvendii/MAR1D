@@ -9,6 +9,8 @@ struct state {
     int upward; //stores for how many frames player should travel upwards
     bool onGround;
     bool paused;
+    double velX;
+    double velY;
 };
 
 void gr_init();

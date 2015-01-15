@@ -20,8 +20,14 @@ void gr_update(){
     if(s.forward && s.backward){;}
     else if(s.forward){cl_forward(&s.world);}
     else if(s.backward){cl_backward(&s.world);}
-    if(s.upward){cl_upward(&s.world); s.upward--;}
-    s.onGround = !cl_gravity(&s.world);
+    //if(s.upward){cl_upward(&s.world); s.upward--;}
+    //s.onGround = !cl_gravity(&s.world);
+    s.velY -= .2;
+    bool colis = !cl_go(&s.world, 'y', s.velY);
+    if(colis == true && s.velY <= 0) {s.onGround = true; while(!cl_go(&s.world,'y', s.velY+=.1));}
+    if(colis == true && s.velY > 0) {while(!cl_go(&s.world,'y', s.velY-=.1));}
+    else if((int) s.velY != 0){s.onGround = false;}
+
     rn_dimFworld(&lineArr, s.world);
     rn_perspFworld_v(screen, s.world, &lineArr);
 }
@@ -64,9 +70,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
         if(s.onGround) {s.upward = 40;}
+        if(s.onGround) {s.velY = 7;}
+        s.onGround = false;
     }
     if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE){
         s.upward -= 20;
+        s.velY -= 0;
         if(s.upward<0){s.upward = 0;}
     }
     if (key == GLFW_KEY_Q && action == GLFW_PRESS){
