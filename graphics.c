@@ -22,6 +22,22 @@ void gr_update(){
 
     rn_dimFworld(&lineArr, s.world);
     rn_perspFworld_v(screen, s.world, &lineArr);
+    if(s.camFlip){
+        unsigned char swap_r;
+        unsigned char swap_g;
+        unsigned char swap_b;
+        for(int i=0;i<k_nPixels/2;i++){
+            swap_r = screen[i*3];
+            swap_g = screen[i*3+1];
+            swap_b = screen[i*3+2];
+            screen[i*3] = screen[3*k_nPixels-(1+i)*3];
+            screen[i*3+1] = screen[3*k_nPixels-(1+i)*3+1];
+            screen[i*3+2] = screen[3*k_nPixels-(1+i)*3+2];
+            screen[3*k_nPixels-(1+i)*3] = swap_r;
+            screen[3*k_nPixels-(1+i)*3+1] = swap_g;
+            screen[3*k_nPixels-(1+i)*3+2] = swap_b;
+        }
+    }
     //rn_perspFworld(screen, s.world);
 }
 
@@ -42,7 +58,7 @@ void gr_listCollisions(){
 }
 
 void cursor_callback(GLFWwindow *window, double xPos, double yPos){
-    s.world.camT = -yPos/80.0;
+    cl_cursormove(&s, xPos, yPos);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -62,7 +78,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         s.world.scene[i+2] = (int)((h/2-y)/h*k_drawD);
         s.world.scene[i+3] = terminator;
     }
-    cl_keypress(&s, window, key, scancode, action, mods);
+    cl_keypress(&s, key, scancode, action, mods);
 }
 
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
@@ -121,7 +137,7 @@ void gr_init(){
     screen = salloc(sizeof(unsigned char)*k_nPixels*3);
     lineArr = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
     s.world.scene = salloc(sizeof(int) * k_nMaxObj*3);
-    for(int i=0;!((s.world.scene[i] = ob_levelTest[i]) == terminator && (i%3 == 0));i++){}
+    for(int i=0;!((s.world.scene[i] = ob_levelTest[i]) == terminator && (i%3 == 0));i++);
     s.velY = 0;
     s.velX = 0;
     s.forward = false;
@@ -132,6 +148,7 @@ void gr_init(){
     s.world.camX = ob_levelTest[1];
     s.world.camY = ob_levelTest[2];
     s.world.camT = 0;
+    s.camFlip = false;
     gr_update();
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())

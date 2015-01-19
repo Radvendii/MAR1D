@@ -39,19 +39,23 @@ bool cl_go(struct world *w, char dir, int amt){
      */
 }
 
-void cl_keypress(struct state *s, GLFWwindow* window, int key, int scancode, int action, int mods){
+void cl_keypress(struct state *s, int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_W && action == GLFW_PRESS){
-        (*s).forward = true;
+        if(!(*s).camFlip){(*s).forward = true;}
+        else{(*s).backward = true;}
     }
     if (key == GLFW_KEY_W && action == GLFW_RELEASE){
-        (*s).forward = false;
+        if(!(*s).camFlip){(*s).forward = false;}
+        else{(*s).backward = false;}
     }
 
     if (key == GLFW_KEY_S && action == GLFW_PRESS){
-        (*s).backward = true;
+        if(!(*s).camFlip){(*s).backward = true;}
+        else{(*s).forward = true;}
     }
     if (key == GLFW_KEY_S && action == GLFW_RELEASE){
-        (*s).backward = false;
+        if(!(*s).camFlip){(*s).backward = false;}
+        else{(*s).forward = false;}
     }
 
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
@@ -67,6 +71,15 @@ void cl_keypress(struct state *s, GLFWwindow* window, int key, int scancode, int
     if (key == GLFW_KEY_Q && action == GLFW_PRESS){
         (*s).paused = !(*s).paused;
     }
+    if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
+        (*s).camFlip = !(*s).camFlip;
+        (*s).world.camT = 180-(*s).world.camT-k_FOV;
+    }
+}
+
+void cl_cursormove(struct state *s, double xPos, double yPos){
+    if(!(*s).camFlip){(*s).world.camT = -yPos/80;}
+    else{(*s).world.camT = 180+yPos/80-k_FOV;}
 }
 
 bool cl_forward(struct world *w){

@@ -4,7 +4,7 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
-#define k_nPixels 1000 //resolution of screen
+#define k_nPixels 1000 //resolution of screen. Never make it odd.
 #define k_FOV 60 //Field of vision (degrees)
 #define k_nMaxLinesPerObj 30 //maximum number of lines per object
 #define k_drawD 500

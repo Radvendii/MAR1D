@@ -11,9 +11,11 @@ struct state {
     bool paused;
     double velX;
     double velY;
+    bool camFlip;
 };
 
-void cl_keypress(struct state *, GLFWwindow*, int, int, int, int);
+void cl_keypress(struct state*, int, int, int, int);
+void cl_cursormove(struct state*, double, double);
 bool cl_go(struct world*, char, int);
 bool cl_forward(struct world*);
 bool cl_backward(struct world*);

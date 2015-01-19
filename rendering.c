@@ -168,7 +168,7 @@ void rn_perspFworld(unsigned char *screen, struct world w){
 }
 
 void rn_perspFworld_v(unsigned char *screen, struct world w, line **lineArr){
-    bool rays = false; //true for fun visual effects
+    bool rays = true; //true for fun visual effects
     int camD = 500; //This is arbitrary, it just has to be set large enough so there aren't roundoff errors
     for(int i=0;i<k_nPixels;i++){
         screen[i*3]=107;
