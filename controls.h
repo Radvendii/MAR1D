@@ -2,11 +2,10 @@
 #ifndef _CONTROLS_H
 #define _CONTROLS_H
 
+#define k_xVel 2.0
+
 struct state {
     struct world world;
-    bool forward;
-    bool backward;
-    int upward; //stores for how many frames player should travel upwards
     bool onGround;
     bool paused;
     double velX;

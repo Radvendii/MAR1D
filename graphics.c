@@ -11,11 +11,10 @@
 #include "graphics.h"
 
 void gr_update(){
-    if(s.forward && s.backward){;}
-    else if(s.forward){cl_forward(&s.world);}
-    else if(s.backward){cl_backward(&s.world);}
+    if(s.velY >= 32){printf("Dudicus Mafudicus, you're going way too fast!");exit(1);} //Too lazy to fix the movement code, so now it's documented. Have fun.
     cl_gravity(&s);
     bool colis = !cl_go(&s.world, 'y', s.velY);
+    cl_go(&s.world, 'x', s.velX);
     if(colis == true && s.velY <= 0) {s.onGround = true; while(!cl_go(&s.world,'y', s.velY+=.1));}
     if(colis == true && s.velY > 0) {while(!cl_go(&s.world,'y', s.velY-=.1));}
     else if((int) s.velY != 0){s.onGround = false;}
@@ -140,10 +139,7 @@ void gr_init(){
     for(int i=0;!((s.world.scene[i] = ob_levelTest[i]) == terminator && (i%3 == 0));i++);
     s.velY = 0;
     s.velX = 0;
-    s.forward = false;
-    s.backward = false;
     s.onGround = true;
-    s.upward = 0;
     s.paused = false;
     s.world.camX = ob_levelTest[1];
     s.world.camY = ob_levelTest[2];

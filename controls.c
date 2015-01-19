@@ -41,37 +41,35 @@ bool cl_go(struct world *w, char dir, int amt){
 
 void cl_keypress(struct state *s, int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_W && action == GLFW_PRESS){
-        if(!(*s).camFlip){(*s).forward = true;}
-        else{(*s).backward = true;}
+        if(!(*s).camFlip){(*s).velX += k_xVel;}
+        else{(*s).velX -= k_xVel;}
     }
     if (key == GLFW_KEY_W && action == GLFW_RELEASE){
-        if(!(*s).camFlip){(*s).forward = false;}
-        else{(*s).backward = false;}
+        if(!(*s).camFlip){(*s).velX -= k_xVel;}
+        else{(*s).velX += k_xVel;}
     }
 
     if (key == GLFW_KEY_S && action == GLFW_PRESS){
-        if(!(*s).camFlip){(*s).backward = true;}
-        else{(*s).forward = true;}
+        if(!(*s).camFlip){(*s).velX -= k_xVel;}
+        else{(*s).velX += k_xVel;}
     }
     if (key == GLFW_KEY_S && action == GLFW_RELEASE){
-        if(!(*s).camFlip){(*s).backward = false;}
-        else{(*s).forward = false;}
+        if(!(*s).camFlip){(*s).velX += k_xVel;}
+        else{(*s).velX -= k_xVel;}
     }
 
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
-        if((*s).onGround) {(*s).upward = 40;}
-        if((*s).onGround) {(*s).velY = 7;}
+        if((*s).onGround) {(*s).velY = 5.5;}
         (*s).onGround = false;
     }
     if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE){
-        (*s).upward -= 20;
         (*s).velY -= 0;
-        if((*s).upward<0){(*s).upward = 0;}
     }
     if (key == GLFW_KEY_Q && action == GLFW_PRESS){
         (*s).paused = !(*s).paused;
     }
     if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
+        (*s).velX = -(*s).velX;
         (*s).camFlip = !(*s).camFlip;
         (*s).world.camT = 180-(*s).world.camT-k_FOV;
     }
@@ -83,11 +81,11 @@ void cl_cursormove(struct state *s, double xPos, double yPos){
 }
 
 bool cl_forward(struct world *w){
-    return cl_go(w, 'x', 1);
+    return cl_go(w, 'x', 2);
 }
 
 bool cl_backward(struct world *w){
-    return cl_go(w, 'x', -1);
+    return cl_go(w, 'x', -2);
 }
 
 bool cl_upward(struct world *w){

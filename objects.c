@@ -28,14 +28,20 @@ void ob_init() {
     ob_brick = salloc(sizeof(line) * k_nMaxObj);
     i = 0;
     //top face
-    ob_brick[i++] = (line) { .x1=0, .y1=16, .x2=16, .y2=16, .r=240, .g=208, .b=176 };
+    ob_brick[i++] = (line) { .x1=0, .y1=16, .x2=7, .y2=16, .r=240, .g=208, .b=176 };
+    ob_brick[i++] = (line) { .x1=7, .y1=16, .x2=8, .y2=16, .r=200, .g=200, .b=200 };
+    ob_brick[i++] = (line) { .x1=0, .y1=16, .x2=15, .y2=16, .r=240, .g=208, .b=176 };
+    ob_brick[i++] = (line) { .x1=15, .y1=16, .x2=16, .y2=16, .r=200, .g=200, .b=200 };
 
     //back face
-    ob_brick[i++] = (line) { .x1=16, .y1=16, .x2=16, .y2=1, .r=231, .g=95, .b=19 };
+    ob_brick[i++] = (line) { .x1=16, .y1=16, .x2=16, .y2=15, .r=240, .g=208, .b=176 };
+    ob_brick[i++] = (line) { .x1=16, .y1=15, .x2=16, .y2=12, .r=0, .g=0, .b=0 };
+    ob_brick[i++] = (line) { .x1=16, .y1=12, .x2=16, .y2=9, .r=231, .g=95, .b=19 };
+    ob_brick[i++] = (line) { .x1=16, .y1=9, .x2=16, .y2=4, .r=0, .g=0, .b=0 };
+    ob_brick[i++] = (line) { .x1=16, .y1=4, .x2=16, .y2=1, .r=231, .g=95, .b=19 };
     ob_brick[i++] = (line) { .x1=16, .y1=1, .x2=16, .y2=0, .r=0, .g=0, .b=0 };
 
     //bottom face
-    //ob_brick[i++] = (line) { .x1=0, .y1=0, .x2=16, .y2=0, .r=0, .g=0, .b=0 };
     ob_brick[i++] = (line) { .x1=0, .y1=0, .x2=3, .y2=0, .r=0, .g=0, .b=0 };
     ob_brick[i++] = (line) { .x1=3, .y1=0, .x2=4, .y2=0, .r=20, .g=20, .b=20 };
     ob_brick[i++] = (line) { .x1=4, .y1=0, .x2=11, .y2=0, .r=0, .g=0, .b=0 };
