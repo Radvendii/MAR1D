@@ -2,16 +2,11 @@
 #ifndef _GRAPHICS_H
 #define _GRAPHICS_H
 
-struct state {
-    struct world world;
-    bool forward;
-    bool backward;
-    int upward; //stores for how many frames player should travel upwards
-    bool onGround;
-    bool paused;
-    double velX;
-    double velY;
-};
+GLFWwindow* dimWindow;
+GLFWwindow* perspWindow;
+struct state s;
+unsigned char *screen;
+line *lineArr;
 
 void gr_init();
 void gr_deinit();

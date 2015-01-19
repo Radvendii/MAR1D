@@ -1,16 +1,58 @@
 #include "objects.h"
 #include "helpers.h"
 #include <math.h>
-#define pi (22/7.0)
 
 //objects possible in the scene
 void ob_init() {
-    ob_ground = salloc(sizeof(line) * 5);
-    ob_ground[0] = (line) { .x1=0, .y1=16, .x2=16, .y2=16, .r=231, .g=95, .b=19 };
-    ob_ground[1] = (line) { .x1=16, .y1=16, .x2=16, .y2=0, .r=231, .g=95, .b=19 };
-    ob_ground[2] = (line) { .x1=0, .y1=0, .x2=16, .y2=0, .r=231, .g=95, .b=19 };
-    ob_ground[3] = (line) { .x1=0, .y1=0, .x2=0, .y2=16, .r=231, .g=95, .b=19 };
-    ob_ground[4] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
+    int i = 0;
+    ob_ground = salloc(sizeof(line) * k_nMaxObj);
+    //top face
+    ob_ground[i++] = (line) { .x1=0, .y1=16, .x2=1, .y2=16, .r=231, .g=95, .b=19 };
+    ob_ground[i++] = (line) { .x1=1, .y1=16, .x2=10, .y2=16, .r=240, .g=208, .b=176 };
+    ob_ground[i++] = (line) { .x1=10, .y1=16, .x2=11, .y2=16, .r=0, .g=0, .b=0 };
+    ob_ground[i++] = (line) { .x1=11, .y1=16, .x2=12, .y2=16, .r=231, .g=95, .b=19 };
+    ob_ground[i++] = (line) { .x1=12, .y1=16, .x2=15, .y2=16, .r=240, .g=208, .b=176 };
+    ob_ground[i++] = (line) { .x1=15, .y1=16, .x2=16, .y2=16, .r=231, .g=95, .b=19 };
+
+    //back face
+    ob_ground[i++] = (line) { .x1=16, .y1=16, .x2=16, .y2=0, .r=231, .g=95, .b=19 };
+
+    //bottom face
+    ob_ground[i++] = (line) { .x1=0, .y1=0, .x2=16, .y2=0, .r=231, .g=95, .b=19 };
+
+    //front face
+    ob_ground[i++] = (line) { .x1=0, .y1=0, .x2=0, .y2=16, .r=231, .g=95, .b=19 };
+
+    ob_ground[i++] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
+
+    ob_brick = salloc(sizeof(line) * k_nMaxObj);
+    i = 0;
+    //top face
+    ob_brick[i++] = (line) { .x1=0, .y1=16, .x2=16, .y2=16, .r=240, .g=208, .b=176 };
+
+    //back face
+    ob_brick[i++] = (line) { .x1=16, .y1=16, .x2=16, .y2=1, .r=231, .g=95, .b=19 };
+    ob_brick[i++] = (line) { .x1=16, .y1=1, .x2=16, .y2=0, .r=0, .g=0, .b=0 };
+
+    //bottom face
+    //ob_brick[i++] = (line) { .x1=0, .y1=0, .x2=16, .y2=0, .r=0, .g=0, .b=0 };
+    ob_brick[i++] = (line) { .x1=0, .y1=0, .x2=3, .y2=0, .r=0, .g=0, .b=0 };
+    ob_brick[i++] = (line) { .x1=3, .y1=0, .x2=4, .y2=0, .r=20, .g=20, .b=20 };
+    ob_brick[i++] = (line) { .x1=4, .y1=0, .x2=11, .y2=0, .r=0, .g=0, .b=0 };
+    ob_brick[i++] = (line) { .x1=11, .y1=0, .x2=12, .y2=0, .r=20, .g=20, .b=20 };
+    ob_brick[i++] = (line) { .x1=12, .y1=0, .x2=16, .y2=0, .r=0, .g=0, .b=0 };
+
+    //front face
+    ob_brick[i++] = (line) { .x1=0, .y1=0, .x2=0, .y2=1, .r=30, .g=30, .b=30 };
+    ob_brick[i++] = (line) { .x1=0, .y1=1, .x2=0, .y2=4, .r=231, .g=95, .b=19 };
+    ob_brick[i++] = (line) { .x1=0, .y1=4, .x2=0, .y2=5, .r=30, .g=30, .b=30 };
+    ob_brick[i++] = (line) { .x1=0, .y1=5, .x2=0, .y2=8, .r=231, .g=95, .b=19 };
+    ob_brick[i++] = (line) { .x1=0, .y1=8, .x2=0, .y2=9, .r=30, .g=30, .b=30 };
+    ob_brick[i++] = (line) { .x1=0, .y1=9, .x2=0, .y2=12, .r=231, .g=95, .b=19 };
+    ob_brick[i++] = (line) { .x1=0, .y1=12, .x2=0, .y2=13, .r=30, .g=30, .b=30 };
+    ob_brick[i++] = (line) { .x1=0, .y1=13, .x2=0, .y2=16, .r=231, .g=95, .b=19 };
+
+    ob_brick[i++] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
 
     ob_nothing = salloc(sizeof(line));
     ob_nothing[0] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
@@ -22,16 +64,19 @@ void ob_init() {
     ob_playerBox[3] = (line) { .x1=-14, .y1=-14, .x2=-14, .y2=2, .r=231, .g=0, .b=231 };
     ob_playerBox[4] = (line) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
 
-    ob_levelTest = salloc(sizeof(int) * 34);
+    ob_levelTest = salloc(sizeof(int) * k_nMaxObj);
     ob_levelTest[0] = objPlayer;
     ob_levelTest[1] = 14;
     ob_levelTest[2] = 14;
-    for(int i=1;i<10;i++){
+    for(int i=1;i<20;i++){
         ob_levelTest[i*3] = objGround;
-        ob_levelTest[i*3+1] = (i-1)*16;
+        ob_levelTest[i*3+1] = (i-10)*16;
         ob_levelTest[i*3+2] = -17;
     }
-    ob_levelTest[30] = terminator;
+    ob_levelTest[60] = objBrick;
+    ob_levelTest[61] = 30;
+    ob_levelTest[62] = 30;
+    ob_levelTest[63] = terminator;
 
 }
 void ob_deinit() {
@@ -88,7 +133,7 @@ float ob_intersectD(line c, line l){ //returns 0 if there's no intersection. Edg
     if(c.x1<x != c.x1<c.x2){return 0;}
     if(c.y1<y != c.y1<c.y2){return 0;}
 
-    return pow(x-c.x1, 2) + pow(y-c.y1, 2);
+    return (pow(x-c.x1, 2) + pow(y-c.y1, 2));
 }
 
 float ob_slope(line l){
@@ -110,6 +155,9 @@ line* objFtype(enum objType type) {
             break;
         case objPlayer:
             return ob_playerBox;
+            break;
+        case objBrick:
+            return ob_brick;
             break;
         default:
             printf("No object data found for object type %d", type);

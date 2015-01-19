@@ -4,10 +4,11 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
-#define k_nPixels 200 //resolution of screen
+#define k_nPixels 1000 //resolution of screen
 #define k_FOV 60 //Field of vision (degrees)
 #define k_nMaxLinesPerObj 30 //maximum number of lines per object
 #define k_drawD 500
+#define k_fogAmt .001
 #define k_nMaxObj 100 //maximum number of objects in a world
 
 //labeling all the types of objects (enum)
@@ -15,7 +16,8 @@ enum objType {
     terminator=0,
     objPlayer,
     nothing,
-    objGround
+    objGround,
+    objBrick
 };
 
 typedef struct {
@@ -39,6 +41,7 @@ struct world {
 line *ob_ground;
 line *ob_nothing;
 line *ob_playerBox;
+line *ob_brick;
 int *ob_levelTest;
 
 //object from type

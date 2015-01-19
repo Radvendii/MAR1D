@@ -10,19 +10,11 @@
 #include "controls.h"
 #include "graphics.h"
 
-GLFWwindow* dimWindow;
-GLFWwindow* perspWindow;
-struct state s;
-unsigned char *screen;
-line *lineArr;
-
 void gr_update(){
     if(s.forward && s.backward){;}
     else if(s.forward){cl_forward(&s.world);}
     else if(s.backward){cl_backward(&s.world);}
-    //if(s.upward){cl_upward(&s.world); s.upward--;}
-    //s.onGround = !cl_gravity(&s.world);
-    s.velY -= .2;
+    cl_gravity(&s);
     bool colis = !cl_go(&s.world, 'y', s.velY);
     if(colis == true && s.velY <= 0) {s.onGround = true; while(!cl_go(&s.world,'y', s.velY+=.1));}
     if(colis == true && s.velY > 0) {while(!cl_go(&s.world,'y', s.velY-=.1));}
@@ -30,10 +22,10 @@ void gr_update(){
 
     rn_dimFworld(&lineArr, s.world);
     rn_perspFworld_v(screen, s.world, &lineArr);
+    //rn_perspFworld(screen, s.world);
 }
 
-static void error_callback(int error, const char* description)
-{
+static void error_callback(int error, const char* description){
     fputs(description, stderr);
 }
 
@@ -58,34 +50,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 
-    if (key == GLFW_KEY_W && action == GLFW_PRESS){
-        s.forward = true;
-    }
-    if (key == GLFW_KEY_W && action == GLFW_RELEASE){
-        s.forward = false;
-    }
-
-    if (key == GLFW_KEY_S && action == GLFW_PRESS){
-        s.backward = true;
-    }
-    if (key == GLFW_KEY_S && action == GLFW_RELEASE){
-        s.backward = false;
-    }
-
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
-        if(s.onGround) {s.upward = 40;}
-        if(s.onGround) {s.velY = 7;}
-        s.onGround = false;
-    }
-    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE){
-        s.upward -= 20;
-        s.velY -= 0;
-        if(s.upward<0){s.upward = 0;}
-    }
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS){
-        s.paused = !s.paused;
-    }
-
     if (key == GLFW_KEY_N && action == GLFW_PRESS){
         double x, y;
         glfwGetCursorPos(window, &x, &y);
@@ -93,12 +57,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         glfwGetFramebufferSize(window, &w, &h);
         int i=0;
         do{i+=3;}while(s.world.scene[i]!=terminator);
-        s.world.scene[i] = objGround;
+        s.world.scene[i] = objBrick;
         s.world.scene[i+1] = (int)((x-w/2)/w*k_drawD);
         s.world.scene[i+2] = (int)((h/2-y)/h*k_drawD);
         s.world.scene[i+3] = terminator;
     }
-
+    cl_keypress(&s, window, key, scancode, action, mods);
 }
 
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
@@ -129,7 +93,7 @@ void gr_lines(line *ls){
     return;
 }
 
-static void gr_draw(GLFWwindow *window, int renderType){
+void gr_draw(GLFWwindow *window, int renderType){
     glfwMakeContextCurrent(window);
     float ratio;
     int width, height;
@@ -138,6 +102,13 @@ static void gr_draw(GLFWwindow *window, int renderType){
     glClear(GL_COLOR_BUFFER_BIT);
 
     if(renderType == 0){
+        glBegin(GL_QUADS);
+        glColor3f( (GLfloat) 107/255.0, (GLfloat) 136/255.0, (GLfloat) 255/255.0);
+        glVertex2f(-1.f, -1.f);
+        glVertex2f(-1.f, 1.f);
+        glVertex2f(1.f, 1.f);
+        glVertex2f(1.f, -1.f);
+        glEnd();
         gr_lines(lineArr);}
     else{gr_pixels(screen);}
 
@@ -151,6 +122,8 @@ void gr_init(){
     lineArr = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
     s.world.scene = salloc(sizeof(int) * k_nMaxObj*3);
     for(int i=0;!((s.world.scene[i] = ob_levelTest[i]) == terminator && (i%3 == 0));i++){}
+    s.velY = 0;
+    s.velX = 0;
     s.forward = false;
     s.backward = false;
     s.onGround = true;
@@ -164,7 +137,7 @@ void gr_init(){
     if (!glfwInit())
         exit(EXIT_FAILURE);
     dimWindow = glfwCreateWindow(800, 800, "2d view. For debugging only.", NULL, NULL);
-    perspWindow = glfwCreateWindow(20, 800, "Perspective view", NULL, NULL);
+    perspWindow = glfwCreateWindow(50, 800, "Perspective view", NULL, NULL);
     if (!perspWindow)
     {
         glfwTerminate();
@@ -179,6 +152,7 @@ void gr_init(){
     glfwSetWindowPos(perspWindow, 900, 50);
 
     glfwSetInputMode(perspWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
+    glLineWidth(1.5f);
 
     glfwSetKeyCallback(perspWindow, key_callback);
     glfwSetKeyCallback(dimWindow, key_callback);
@@ -197,6 +171,7 @@ int main(void){
     ob_init();
     gr_init();
     while (!(glfwWindowShouldClose(dimWindow) || glfwWindowShouldClose(perspWindow)))
+    //while (!(glfwWindowShouldClose(perspWindow)))
     {
         //sleep(1);
         if(!s.paused){
