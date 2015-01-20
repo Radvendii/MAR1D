@@ -4,39 +4,39 @@
 #include "mechanics.h"
 #include "objects.h"
 
-/*
- *bool cl_go1(struct world*w, char dir, bool pos){
- *    int dirNum = dir == 'x' ? 1 : 2;
- *    (*w).scene[dirNum] += pos ? 1 : -1;
- *    for(int obj=0;;obj+=3){
- *        if((*w).scene[obj] == terminator) {break;}
- *        if((*w).scene[obj] == objPlayer) {continue;}
- *        if(mh_isCollision(*w, 0, obj)) {(*w).scene[dirNum] -= pos ? -1 : 1; return false;}
- *    }
- *    if(dir == 'x'){(*w).camX += pos ? 1 : -1;}
- *    else{(*w).camY += pos ? 1 : -1;}
- *    return true;
- *}
- */
-
-bool cl_go(struct world *w, char dir, int amt){
+bool cl_go1(struct world*w, char dir, bool pos){
     int dirNum = dir == 'x' ? 1 : 2;
-    (*w).scene[dirNum] += amt;
+    (*w).scene[dirNum] += pos*2-1;
     for(int obj=0;;obj+=3){
         if((*w).scene[obj] == terminator) {break;}
         if((*w).scene[obj] == objPlayer) {continue;}
-        if(mh_isCollision(*w, 0, obj)) {(*w).scene[dirNum] -= amt; return false;}
+        if(mh_isCollision(*w, 0, obj)) {(*w).scene[dirNum] -= pos*2-1; return false;}
     }
-    if(dir == 'x'){(*w).camX += amt;}
-    else{(*w).camY += amt;}
+    if(dir == 'x'){(*w).camX += pos*2-1;}
+    else{(*w).camY += pos*2-1;}
     return true;
+}
+
+bool cl_go(struct world *w, char dir, int amt){
     /*
-     *bool ret;
-     *for(;amt != 0; amt < 0 ? amt++ : amt--){
-     *    ret = ret && cl_go1(w, dir, amt > 0);
+     *int dirNum = dir == 'x' ? 1 : 2;
+     *(*w).scene[dirNum] += amt;
+     *for(int obj=0;;obj+=3){
+     *    if((*w).scene[obj] == terminator) {break;}
+     *    if((*w).scene[obj] == objPlayer) {continue;}
+     *    if(mh_isCollision(*w, 0, obj)) {(*w).scene[dirNum] -= amt; return false;}
      *}
-     *return ret;
+     *if(dir == 'x'){(*w).camX += amt;}
+     *else{(*w).camY += amt;}
+     *return true;
      */
+    bool ret=true;
+    while(amt != 0){
+        ret = ret && cl_go1(w, dir, amt > 0);
+        if(amt>0){amt--;}
+        else{amt++;}
+    }
+    return ret;
 }
 
 void cl_keypress(struct state *s, int key, int scancode, int action, int mods){

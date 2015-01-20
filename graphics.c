@@ -10,17 +10,18 @@
 #include "controls.h"
 #include "graphics.h"
 
+bool debug;
+
 void gr_update(){
-    if(s.velY >= 32){printf("Dudicus Mafudicus, you're going way too fast!");exit(1);} //Too lazy to fix the movement code, so now it's documented. Have fun.
     cl_gravity(&s);
     bool colis = !cl_go(&s.world, 'y', s.velY);
     cl_go(&s.world, 'x', s.velX);
-    if(colis == true && s.velY <= 0) {s.onGround = true; while(!cl_go(&s.world,'y', s.velY+=.1));}
-    if(colis == true && s.velY > 0) {while(!cl_go(&s.world,'y', s.velY-=.1));}
-    else if((int) s.velY != 0){s.onGround = false;}
+    if(colis == true && s.velY <= 0) {s.onGround = true;}
+    if(colis == false && (int) s.velY != 0){s.onGround = false;}
 
     rn_dimFworld(&lineArr, s.world);
     rn_perspFworld_v(screen, s.world, &lineArr);
+    if(!debug){lineArr[0] = (line) {.x1 = 0, .x2 = 0, .y1 = 0, .y2 = 0, .r = 0, .g = 0, .b = 0};}
     if(s.camFlip){
         unsigned char swap_r;
         unsigned char swap_g;
@@ -76,6 +77,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         s.world.scene[i+1] = (int)((x-w/2)/w*k_drawD);
         s.world.scene[i+2] = (int)((h/2-y)/h*k_drawD);
         s.world.scene[i+3] = terminator;
+    }
+    if (key == GLFW_KEY_J && action == GLFW_PRESS){
+        debug = !debug;
     }
     cl_keypress(&s, key, scancode, action, mods);
 }
@@ -133,6 +137,7 @@ void gr_draw(GLFWwindow *window, int renderType){
 
 
 void gr_init(){
+    debug = true;
     screen = salloc(sizeof(unsigned char)*k_nPixels*3);
     lineArr = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
     s.world.scene = salloc(sizeof(int) * k_nMaxObj*3);
