@@ -15,16 +15,19 @@ add_library (RenderingL rendering.c)
 add_library (HelpersL helpers.c)
 add_library (ControlsL controls.c)
 add_library (MechanicsL mechanics.c)
+add_library (WindowingL windowing.c)
+add_library (GamelogicL gamelogic.c)
+add_library (GraphicsL graphics.c)
 
 add_executable(Main main.c)
-target_link_libraries(Main glfw ${GLFW_LIBRARIES})
+target_link_libraries(Main RenderingL GraphicsL GamelogicL WindowingL ObjectsL HelpersL ControlsL MechanicsL glfw ${GLFW_LIBRARIES})
 
 add_executable(Example glfw_example.c)
 target_link_libraries(Example glfw ${GLFW_LIBRARIES})
 #target_link_libraries(Main ${GLFW_STATIC_LIBRARIES})
 
-add_executable(Graphics graphics.c)
-target_link_libraries(Graphics RenderingL ObjectsL HelpersL ControlsL MechanicsL glfw ${GLFW_LIBRARIES})
+#add_executable(Graphics graphics.c)
+#target_link_libraries(Graphics RenderingL GamelogicL WindowingL ObjectsL HelpersL ControlsL MechanicsL glfw ${GLFW_LIBRARIES})
 
 set(CMAKE_BUILD_TYPE Debug)
 #TODO: FIGURE OUT ABOUT WARNING FOR UNINITIALIZED VARIABLE ACCESS

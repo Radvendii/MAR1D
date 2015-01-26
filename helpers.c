@@ -17,3 +17,12 @@ void* resalloc(void* ptr, size_t size){
     }
     return ret;
 }
+
+int intcmp(const void *aa, const void *bb){
+    const int *a = aa, *b = bb;
+    return (*a < *b) ? -1 : (*a > *b);
+}
+
+void intsort(int* l, int s){
+    qsort(l, s, sizeof(int), intcmp);
+}
