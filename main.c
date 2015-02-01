@@ -12,13 +12,14 @@ struct state s;
 
 int main(void){
     ob_init();
+    ob_init_old();
     mh_init();
     wn_init();
     gr_init();
     while(!wn_shouldClose()) {
         //sleep(1);
         if(!s.paused){
-            mh_update();
+            //mh_update();
             gr_update();
         }
         wn_perspWindow();
@@ -30,6 +31,7 @@ int main(void){
     gr_deinit();
     wn_deinit();
     mh_deinit();
+    ob_deinit_old();
     ob_deinit();
     exit(EXIT_SUCCESS);
 

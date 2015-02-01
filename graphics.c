@@ -1,10 +1,11 @@
 #include "graphics.h"
 
 void gr_update(){
-    rn_dimFworld(&dimScreen, s.world);
-    rn_perspFworld_v(perspScreen, s.world, &dimScreen);
-    //rn_perspFworld(perspScreen, s.world);
-    if(!debug){dimScreen[0] = (line) {.x1 = 0, .x2 = 0, .y1 = 0, .y2 = 0, .r = 0, .g = 0, .b = 0};}
+    //rn_dimFworld_old(&dimScreen_old, s.world);
+    //rn_perspFworld_v(perspScreen, s.world, NULL);
+    //if(!debug){dimScreen_old[0] = (line) {.x1 = 0, .x2 = 0, .y1 = 0, .y2 = 0, .r = 0, .g = 0, .b = 0};}
+    rn_dimFworld(dimScreen, s.world);
+    rn_perspFworld_v(perspScreen, s.world, NULL);
     if(s.camFlip){
         unsigned char swap_r;
         unsigned char swap_g;
@@ -36,20 +37,18 @@ void gr_char(char c, GLfloat* x, GLfloat* y){
 }
 
 void gr_text(char *s, GLfloat x, GLfloat y){
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(-k_drawD, k_drawD, -k_drawD, k_drawD, -1, 1);
     while(*s != '\0'){
         gr_char(*s, &x, &y);
         s++;
     }
+    glPopMatrix();
 }
 
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, 1, 0, k_nPixels, -1, 1);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
     glBegin(GL_QUADS);
     glColor3ub(r, g, b);
     glVertex2f(0, y);
@@ -60,18 +59,22 @@ void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
 }
 
 void gr_pixels(unsigned char *renderArr){
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, 1, 0, k_nPixels, -1, 1);
+
     for(int y=0;y<k_nPixels;y++){
         gr_pixel(y, renderArr[y*3+0], renderArr[y*3+1], renderArr[y*3+2]);
     }
+    glPopMatrix();
 }
 
 void gr_lines(line *ls){
     glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
     glLoadIdentity();
     glOrtho(-k_drawD, k_drawD, -k_drawD, k_drawD, -1, 1);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 
     glBegin(GL_LINES);
     for(int i=0;;i++){
@@ -81,6 +84,25 @@ void gr_lines(line *ls){
         glVertex2f(ls[i].x2, ls[i].y2);
     }
     glEnd();
+    glPopMatrix();
+    return;
+}
+
+void gr_points(point *ps){
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(-k_drawD, k_drawD, -k_drawD, k_drawD, -1, 1);
+
+    glPointSize(3.2f);
+    glBegin(GL_POINTS);
+    for(int i=0;;i++){
+        if(ob_p_isTerm(ps[i])){break;}
+        glColor3ub(ps[i].r, ps[i].g, ps[i].b);
+        glVertex2f(ps[i].x, ps[i].y);
+    }
+    glEnd();
+    glPopMatrix();
     return;
 }
 
@@ -100,22 +122,24 @@ void gr_draw(GLFWwindow *window, int renderType){
         glVertex2f(1.f, 1.f);
         glVertex2f(1.f, -1.f);
         glEnd();
-        gr_lines(dimScreen);
+        //gr_lines(dimScreen_old);
+        gr_points(dimScreen);
         glColor3f(1.0, 1.0, 1.0);
         char score[100];
         sprintf(score, "%d", s.coins);
         gr_text(score, -k_drawD+5, k_drawD-5);
     }
     else{gr_pixels(perspScreen);}
-    //if(renderType != 0){gr_pixels(perspScreen);}
 }
 
 void gr_init(){
     debug = true;
     perspScreen = salloc(sizeof(unsigned char)*k_nPixels*3);
     for(int i=0; i<k_nPixels*3; i++){perspScreen[i]=0;}
-    dimScreen = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
-    dimScreen[0] = k_termLine;
+    //dimScreen_old = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
+    //dimScreen_old[0] = k_termLine;
+    dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
+    dimScreen[0] = p_termPoint;
     //init Font
     font = salloc(sizeof(bool)*5*7*43);
     FILE* f;
@@ -133,6 +157,7 @@ void gr_init(){
 
 void gr_deinit(){
     free(perspScreen);
+    //free(dimScreen_old);
     free(dimScreen);
     free(font);
 }

@@ -12,7 +12,8 @@ bool *font;
 
 struct state s;
 unsigned char *perspScreen;
-line *dimScreen;
+line *dimScreen_old;
+point *dimScreen;
 
 void gr_text(char *, GLfloat, GLfloat);
 
