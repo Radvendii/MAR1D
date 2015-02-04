@@ -2,7 +2,7 @@
 
 void gr_update(){
     //rn_dimFworld_old(&dimScreen_old, s.world);
-    //rn_perspFworld_v(perspScreen, s.world, NULL);
+    //rn_perspFworld_v_old(perspScreen, s.world, &dimScreen_old);
     //if(!debug){dimScreen_old[0] = (line) {.x1 = 0, .x2 = 0, .y1 = 0, .y2 = 0, .r = 0, .g = 0, .b = 0};}
     rn_dimFworld(dimScreen, s.world);
     rn_perspFworld_v(perspScreen, s.world, NULL);
@@ -94,7 +94,7 @@ void gr_points(point *ps){
     glLoadIdentity();
     glOrtho(-k_drawD, k_drawD, -k_drawD, k_drawD, -1, 1);
 
-    glPointSize(3.2f);
+    glPointSize(330.0/k_drawD);
     glBegin(GL_POINTS);
     for(int i=0;;i++){
         if(ob_p_isTerm(ps[i])){break;}

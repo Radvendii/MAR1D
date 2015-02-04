@@ -10,8 +10,6 @@ struct state s;
 bool mh_isCollision(struct world, int, int);
 bool mh_playerCollision(int);
 void mh_update();
-void mh_init();
-void mh_deinit();
 void mh_listCollisions();
 /*
  *bool mh_isCollisionRight(struct world, int);

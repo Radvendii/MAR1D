@@ -1,5 +1,13 @@
 #include "controls.h"
 
+void cl_update(){
+    if(s.forward && s.velX<k_xVelMax){s.velX+=k_xVel;}
+    if(!s.forward && s.velX>0){s.velX-=k_xVel;}
+    if(s.backward && s.velX>-k_xVelMax){s.velX-=k_xVel;}
+    if(!s.backward && s.velX<0){s.velX+=k_xVel;}
+    if(!--s.upcount){cl_jumpEnd();}
+}
+
 bool cl_go1(struct world*w, char dir, bool pos){
     int dirNum = dir == 'x' ? 1 : 2;
     (*w).scene[dirNum] += pos*2-1;
@@ -23,36 +31,49 @@ bool cl_go(struct world *w, char dir, int amt){
     return ret;
 }
 
+void cl_jumpStart(){
+    if(s.onGround) {s.velY = k_yVel;
+        s.gravity/=5;
+        s.upcount = k_nJumpFrames;
+    }
+    s.onGround = false;
+}
+
+void cl_jumpEnd(){
+    s.gravity= k_gravity;
+}
+
 void cl_keypress(int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_W && action == GLFW_PRESS){
-        if(!s.camFlip){s.velX += k_xVel;}
-        else{s.velX -= k_xVel;}
+        if(!s.camFlip){s.forward = true;}
+        else{s.backward = true;}
     }
     if (key == GLFW_KEY_W && action == GLFW_RELEASE){
-        if(!s.camFlip){s.velX -= k_xVel;}
-        else{s.velX += k_xVel;}
+        if(!s.camFlip){s.forward = false;}
+        else{s.backward = false;}
     }
 
     if (key == GLFW_KEY_S && action == GLFW_PRESS){
-        if(!s.camFlip){s.velX -= k_xVel;}
-        else{s.velX += k_xVel;}
+        if(!s.camFlip){s.backward = true;}
+        else{s.forward = true;}
     }
     if (key == GLFW_KEY_S && action == GLFW_RELEASE){
-        if(!s.camFlip){s.velX += k_xVel;}
-        else{s.velX -= k_xVel;}
+        if(!s.camFlip){s.backward = false;}
+        else{s.forward = false;}
     }
     if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
-        s.velX = -s.velX;
+        bool temp = s.forward;
+        s.forward = s.backward;
+        s.backward = temp;
         s.camFlip = !s.camFlip;
         s.world.camT = 180-s.world.camT-k_FOV;
     }
 
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
-        if(s.onGround) {s.velY = 5.5;}
-        s.onGround = false;
+        cl_jumpStart();
     }
     if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE){
-        s.velY -= 0;
+        cl_jumpEnd();
     }
 
 
@@ -79,5 +100,6 @@ bool cl_upward(struct world *w){
 }
 
 void cl_gravity(){
-    s.velY -= .2;
+    s.velY += s.gravity;
+    if(s.velY<k_yVelMin){s.velY=k_yVelMin;}
 }

@@ -141,6 +141,7 @@ void rn_perspFworld_v(unsigned char *screen, struct world w, point *points){
     float ds[k_nPixels];
     for(int i=0;i<k_nPixels;i++){ds[i] = k_drawD;}
     float d;
+    int D;
     point p;
     float intX, intY;
     int y;
@@ -157,6 +158,7 @@ void rn_perspFworld_v(unsigned char *screen, struct world w, point *points){
             if(w.scene[obj*3] == objPlayer) {continue;} //don't render playerBox
             for(point* pp=objFtype(w.scene[obj*3]);!ob_p_isTerm(p = *pp);pp++) {
                 ob_realifyPoint(&p, (w.scene + obj*3 +1));
+                //TODO: Stop using lines.
                 line l = (line) {.x1 = w.camX, .y1 = w.camY, .x2 = p.x, .y2 = p.y};
                 if(ob_intersectD(l, c) == 0){continue;}
                 ob_intersect(l, c, &intX, &intY);
@@ -165,12 +167,15 @@ void rn_perspFworld_v(unsigned char *screen, struct world w, point *points){
                 line l3 = (line) { .x1 = w.camX, .y1 = w.camY, .x2 = p.x, .y2 = p.y};
                 y = ob_len(l1)/ob_len(l2) *k_nPixels;
                 d = ob_len(l3);
-                printf("%f, %f\n", d, ds[y]);
-                if(d<ds[y]){
-                    ds[y] = d;
-                    screen[y*3+0] = p.r;
-                    screen[y*3+1] = p.g;
-                    screen[y*3+2] = p.b;
+                D = ceil(1/(2*d*tan((pi/180)*k_FOV/2))*k_nPixels);
+                for(int i=y-D;i<y+D;i++){
+                    if(i<0 || i >= k_nPixels) {continue;}
+                    if(d<ds[i]){
+                        ds[i] = d;
+                        screen[i*3+0] = p.r;
+                        screen[i*3+1] = p.g;
+                        screen[i*3+2] = p.b;
+                    }
                 }
             }
         }

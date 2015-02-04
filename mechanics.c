@@ -1,30 +1,17 @@
 #include "mechanics.h"
 
-void mh_init(){
-    s.world.scene = salloc(sizeof(int) * k_nMaxObj*3);
-    for(int i=0;!((s.world.scene[i] = ob_levelTest[i]) == terminator && (i%3 == 0));i++);
-    s.velY = 0;
-    s.velX = 0;
-    s.onGround = true;
-    s.paused = false;
-    s.world.camX = ob_levelTest[1];
-    s.world.camY = ob_levelTest[2];
-    s.world.camT = 0;
-    s.camFlip = false;
-}
-
-void mh_deinit(){
-    free(s.world.scene);
-}
-
 void mh_update(){
     cl_gravity();
-    bool colis = !cl_go(&s.world, 'y', s.velY);
-    cl_go(&s.world, 'x', s.velX);
-    if(colis == true){s.velY = 0;
+    bool colisY = !cl_go(&s.world, 'y', s.velY);
+    bool colisX = !cl_go(&s.world, 'x', s.velX);
+    if(colisY == true){
         if(s.velY <= 0) {s.onGround = true;}
+        s.velY = 0;
     }
-    else if(colis == false && (int) s.velY != 0){s.onGround = false;}
+    else if((int) s.velY != 0){s.onGround = false;}
+    if(colisX == true){
+        s.velX = 0;
+    }
 }
 
 bool mh_isCollision(struct world w, int i1, int i2){

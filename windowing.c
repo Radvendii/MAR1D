@@ -33,7 +33,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         glfwGetFramebufferSize(window, &w, &h);
         int i=0;
         do{i+=3;}while(s.world.scene[i]!=terminator);
-        s.world.scene[i] = objGround;
+        s.world.scene[i] = objBrick;
         s.world.scene[i+1] = (int)((x-w/2)/w*k_drawD*2);
         s.world.scene[i+2] = (int)((h/2-y)/h*k_drawD*2);
         s.world.scene[i+3] = terminator;
@@ -52,8 +52,8 @@ void wn_init(){
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
-    dimWindow = glfwCreateWindow(800, 800, "2d view. For debugging only.", NULL, NULL);
-    perspWindow = glfwCreateWindow(50, 800, "Perspective view", NULL, NULL);
+    dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, "dimWindow", NULL, NULL);
+    perspWindow = glfwCreateWindow(k_perspWindowW, k_perspWindowH, "perspWindow", NULL, NULL);
     if (!perspWindow)
     {
         glfwTerminate();

@@ -117,7 +117,7 @@ void ob_deinit_old() {
 
 void ob_init(){
     int i = 0;
-    ob_ground = salloc(sizeof(point) * 16*4+1);
+    ob_ground = salloc(sizeof(point) * (16*4+1));
     //bottom face
     ob_ground[i++] = (point) {.x=0, .y=0, c_brick};
     ob_ground[i++] = (point) {.x=1, .y=0, c_black};
@@ -192,63 +192,176 @@ void ob_init(){
 
     ob_ground[i] = p_termPoint;
 
+    ob_brick = salloc(sizeof(point) * (16*4+1));
+    i = 0;
+    //bottom face
+    ob_brick[i++] = (point) {.x=0, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=1, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=2, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=3, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=4, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=5, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=6, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=7, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=8, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=9, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=10, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=11, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=12, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=13, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=14, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=0, c_black};
+
+    //back face
+    ob_brick[i++] = (point) {.x=15, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=1, c_brick};
+    ob_brick[i++] = (point) {.x=15, .y=2, c_brick};
+    ob_brick[i++] = (point) {.x=15, .y=3, c_brick};
+    ob_brick[i++] = (point) {.x=15, .y=4, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=5, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=6, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=7, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=8, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=9, c_brick};
+    ob_brick[i++] = (point) {.x=15, .y=10, c_brick};
+    ob_brick[i++] = (point) {.x=15, .y=11, c_brick};
+    ob_brick[i++] = (point) {.x=15, .y=12, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=13, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=14, c_black};
+    ob_brick[i++] = (point) {.x=15, .y=15, c_lbrick};
+
+    //top face
+    ob_brick[i++] = (point) {.x=0, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=1, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=2, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=3, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=4, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=5, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=6, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=7, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=8, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=9, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=10, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=11, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=12, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=13, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=14, .y=15, c_lbrick};
+    ob_brick[i++] = (point) {.x=15, .y=15, c_lbrick};
+
+    //front face
+    ob_brick[i++] = (point) {.x=0, .y=0, c_black};
+    ob_brick[i++] = (point) {.x=0, .y=1, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=2, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=3, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=4, c_black};
+    ob_brick[i++] = (point) {.x=0, .y=5, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=6, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=7, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=8, c_black};
+    ob_brick[i++] = (point) {.x=0, .y=9, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=10, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=11, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=12, c_black};
+    ob_brick[i++] = (point) {.x=0, .y=13, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=14, c_brick};
+    ob_brick[i++] = (point) {.x=0, .y=15, c_lbrick};
+
+    ob_brick[i] = p_termPoint;
+
     ob_nothing = salloc(sizeof(point));
     ob_nothing[0] = p_termPoint;
-
-    ob_playerBox = salloc(sizeof(point)*5);
+    ob_playerBox = salloc(sizeof(point)*(16*4+1));
     i=0;
+    ob_playerBox[i++] = (point) {.x=-13, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-12, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-11, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-10, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-9, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-8, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-7, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-6, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-5, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-4, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-3, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-2, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-1, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=0, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=1, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=2, c_black};
+
+    ob_playerBox[i++] = (point) {.x=2, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-12, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-11, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-10, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-9, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-8, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-7, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-6, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-5, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-4, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-3, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-2, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-1, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=0, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=1, c_black};
     ob_playerBox[i++] = (point) {.x=2, .y=2, c_black};
+
+    ob_playerBox[i++] = (point) {.x=-13, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-12, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-11, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-10, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-9, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-8, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-7, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-6, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-5, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-4, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-3, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-2, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=-1, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=0, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=1, .y=2, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=2, c_black};
+
+    ob_playerBox[i++] = (point) {.x=-13, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-12, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-11, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-10, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-9, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-8, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-7, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-6, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-5, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-4, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-3, .y=-14, c_black};
     ob_playerBox[i++] = (point) {.x=-14, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-1, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=0, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=1, .y=-14, c_black};
     ob_playerBox[i++] = (point) {.x=2, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-14, .y=2, c_black};
+
     ob_playerBox[i++] = p_termPoint;
 
     ob_levelTest = salloc(sizeof(int) * k_nMaxObj);
     i=0;
     ob_levelTest[i++] = objPlayer;
-    ob_levelTest[i++] = 14;
-    ob_levelTest[i++] = 14;
-    ob_levelTest[i++] = objGround;
-    ob_levelTest[i++] = 50;
-    ob_levelTest[i++] = 50;
+    ob_levelTest[i++] = 0;
+    ob_levelTest[i++] = 0;
+    //ob_levelTest[i++] = objPlayer;
+    //ob_levelTest[i++] = -5;
+    //ob_levelTest[i++] = 14;
+    //while(i/3<20){
+        //ob_levelTest[i++] = objGround;
+        //ob_levelTest[i++] = (i/3-10)*16;
+        //ob_levelTest[i++] = -17;
+    //}
+    //while(i/3<20+4){
+        //ob_levelTest[i++] = objBrick;
+        //ob_levelTest[i++] = 16;
+        //ob_levelTest[i++] = (i/3-20)*16;
+    //}
     ob_levelTest[i++] = terminator;
 
-/*
- *    ob_brick = salloc(sizeof(line) * 24);
- *    i = 0;
- *    //bottom face
- *    ob_brick[i++] = (point) { .x1=0, .y1=0, .x2=3, .y2=0, .r=0, .g=0, .b=0 };
- *    ob_brick[i++] = (point) { .x1=3, .y1=0, .x2=4, .y2=0, .r=20, .g=20, .b=20 };
- *    ob_brick[i++] = (point) { .x1=4, .y1=0, .x2=11, .y2=0, .r=0, .g=0, .b=0 };
- *    ob_brick[i++] = (point) { .x1=11, .y1=0, .x2=12, .y2=0, .r=20, .g=20, .b=20 };
- *    ob_brick[i++] = (point) { .x1=12, .y1=0, .x2=16, .y2=0, .r=0, .g=0, .b=0 };
- *
- *    //front face
- *    ob_brick[i++] = (point) { .x1=0, .y1=0, .x2=0, .y2=1, .r=30, .g=30, .b=30 };
- *    ob_brick[i++] = (point) { .x1=0, .y1=1, .x2=0, .y2=4, .r=231, .g=95, .b=19 };
- *    ob_brick[i++] = (point) { .x1=0, .y1=4, .x2=0, .y2=5, .r=30, .g=30, .b=30 };
- *    ob_brick[i++] = (point) { .x1=0, .y1=5, .x2=0, .y2=8, .r=231, .g=95, .b=19 };
- *    ob_brick[i++] = (point) { .x1=0, .y1=8, .x2=0, .y2=9, .r=30, .g=30, .b=30 };
- *    ob_brick[i++] = (point) { .x1=0, .y1=9, .x2=0, .y2=12, .r=231, .g=95, .b=19 };
- *    ob_brick[i++] = (point) { .x1=0, .y1=12, .x2=0, .y2=13, .r=30, .g=30, .b=30 };
- *    ob_brick[i++] = (point) { .x1=0, .y1=13, .x2=0, .y2=16, .r=231, .g=95, .b=19 };
- *
- *    //top face
- *    ob_brick[i++] = (point) { .x1=0, .y1=16, .x2=7, .y2=16, .r=240, .g=208, .b=176 };
- *    ob_brick[i++] = (point) { .x1=7, .y1=16, .x2=8, .y2=16, .r=200, .g=200, .b=200 };
- *    ob_brick[i++] = (point) { .x1=0, .y1=16, .x2=15, .y2=16, .r=240, .g=208, .b=176 };
- *    ob_brick[i++] = (point) { .x1=15, .y1=16, .x2=16, .y2=16, .r=200, .g=200, .b=200 };
- *
- *    //back face
- *    ob_brick[i++] = (point) { .x1=16, .y1=16, .x2=16, .y2=15, .r=240, .g=208, .b=176 };
- *    ob_brick[i++] = (point) { .x1=16, .y1=15, .x2=16, .y2=12, .r=0, .g=0, .b=0 };
- *    ob_brick[i++] = (point) { .x1=16, .y1=12, .x2=16, .y2=9, .r=231, .g=95, .b=19 };
- *    ob_brick[i++] = (point) { .x1=16, .y1=9, .x2=16, .y2=4, .r=0, .g=0, .b=0 };
- *    ob_brick[i++] = (point) { .x1=16, .y1=4, .x2=16, .y2=1, .r=231, .g=95, .b=19 };
- *    ob_brick[i++] = (point) { .x1=16, .y1=1, .x2=16, .y2=0, .r=0, .g=0, .b=0 };
- *
- *    ob_brick[i++] = (point) { .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 };
- */
 }
 
 void ob_deinit() {
@@ -377,6 +490,9 @@ point* objFtype(enum objType type) {
             break;
         case objPlayer:
             return ob_playerBox;
+            break;
+        case objBrick:
+            return ob_brick;
             break;
         default:
             printf("Error in objFtype(): No object data found for object type %d", type);

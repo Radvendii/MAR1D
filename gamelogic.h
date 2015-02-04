@@ -7,6 +7,10 @@ struct state {
     struct world world;
     bool onGround;
     bool paused;
+    bool forward;
+    double gravity;
+    int upcount;
+    bool backward;
     double velX;
     double velY;
     bool camFlip;
@@ -14,5 +18,9 @@ struct state {
 };
 
 extern struct state s;
+
+void gl_init();
+void gl_update();
+void gl_deinit();
 
 #endif

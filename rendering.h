@@ -10,5 +10,6 @@
 int rn_dimFworld_old(line**, struct world);
 void rn_perspFworld(unsigned char*, struct world);
 void rn_perspFworld_v_old(unsigned char*, struct world, line**);
+void rn_dimFworld(point*, struct world);
 void rn_perspFworld_v(unsigned char*, struct world, point*);
 #endif
