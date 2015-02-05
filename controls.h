@@ -6,12 +6,13 @@
 #include "gamelogic.h"
 #include "mechanics.h"
 
-#define k_xVel 0.15
-#define k_yVel 5.5
-#define k_xVelMax 3.0
-#define k_yVelMin -7.0
-#define k_gravity -0.45
-#define k_nJumpFrames 30
+#define k_xVel 0.05
+#define k_yVel (4.1 * (1+abs(s.velX/27)))
+#define k_xVelMax  1.0
+#define k_yVelMin -4.5
+#define k_gravity -0.42
+#define k_nJumpFrames 40
+#define k_moveFrames 2
 
 struct state s;
 

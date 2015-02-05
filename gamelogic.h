@@ -15,6 +15,8 @@ struct state {
     double velY;
     bool camFlip;
     int coins;
+    int moveFrameY;
+    int moveFrameX;
 };
 
 extern struct state s;

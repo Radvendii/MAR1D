@@ -2,16 +2,31 @@
 
 void mh_update(){
     cl_gravity();
-    bool colisY = !cl_go(&s.world, 'y', s.velY);
-    bool colisX = !cl_go(&s.world, 'x', s.velX);
+    s.moveFrameY++;
+    s.moveFrameX++;
+    double yMove = s.velY;
+    double xMove = s.velX;
+    if(s.velY < 1){
+        if((s.moveFrameY %= k_moveFrames) == 0){yMove *= 2;}
+        else{goto AFTER_Y_MOTION;}
+    }
+
+    bool colisY = !cl_go(&s.world, 'y', yMove);
     if(colisY == true){
         if(s.velY <= 0) {s.onGround = true;}
         s.velY = 0;
     }
     else if((int) s.velY != 0){s.onGround = false;}
+AFTER_Y_MOTION: ;
+    if(s.velX < 1){
+        if((s.moveFrameX %= k_moveFrames) == 0){xMove *= 2;}
+        else{goto AFTER_X_MOTION;}
+    }
+    bool colisX = !cl_go(&s.world, 'x', xMove);
     if(colisX == true){
         s.velX = 0;
     }
+AFTER_X_MOTION: ;
 }
 
 bool mh_isCollision(struct world w, int i1, int i2){

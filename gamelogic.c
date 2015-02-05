@@ -13,6 +13,8 @@ void gl_init(){
     s.camFlip = false;
     s.gravity = k_gravity;
     s.upcount = 0;
+    s.moveFrameY = 0;
+    s.moveFrameX = 0;
 }
 
 void gl_update(){

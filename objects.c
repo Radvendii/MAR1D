@@ -323,43 +323,40 @@ void ob_init(){
     ob_playerBox[i++] = (point) {.x=1, .y=2, c_black};
     ob_playerBox[i++] = (point) {.x=2, .y=2, c_black};
 
-    ob_playerBox[i++] = (point) {.x=-13, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-12, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-11, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-10, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-9, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-8, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-7, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-6, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-5, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-4, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-3, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-14, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=-1, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=0, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=1, .y=-14, c_black};
-    ob_playerBox[i++] = (point) {.x=2, .y=-14, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-12, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-11, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-10, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-9, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-8, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-7, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-6, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-5, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-4, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-3, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-13, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=-1, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=0, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=1, .y=-13, c_black};
+    ob_playerBox[i++] = (point) {.x=2, .y=-13, c_black};
 
     ob_playerBox[i++] = p_termPoint;
 
     ob_levelTest = salloc(sizeof(int) * k_nMaxObj);
     i=0;
     ob_levelTest[i++] = objPlayer;
-    ob_levelTest[i++] = 0;
-    ob_levelTest[i++] = 0;
-    //ob_levelTest[i++] = objPlayer;
-    //ob_levelTest[i++] = -5;
-    //ob_levelTest[i++] = 14;
-    //while(i/3<20){
-        //ob_levelTest[i++] = objGround;
-        //ob_levelTest[i++] = (i/3-10)*16;
-        //ob_levelTest[i++] = -17;
-    //}
-    //while(i/3<20+4){
-        //ob_levelTest[i++] = objBrick;
-        //ob_levelTest[i++] = 16;
-        //ob_levelTest[i++] = (i/3-20)*16;
-    //}
+    ob_levelTest[i++] = -5;
+    ob_levelTest[i++] = 14;
+    while(i/3<30){
+        ob_levelTest[i++] = objGround;
+        ob_levelTest[i++] = (i/3-15)*16;
+        ob_levelTest[i++] = -17;
+    }
+    while(i/3<30+4){
+        ob_levelTest[i++] = objBrick;
+        ob_levelTest[i++] = 16;
+        ob_levelTest[i++] = (i/3-30)*16;
+    }
     ob_levelTest[i++] = terminator;
 
 }

@@ -92,7 +92,7 @@ void gr_points(point *ps){
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    glOrtho(-k_drawD, k_drawD, -k_drawD, k_drawD, -1, 1);
+    glOrtho(-k_drawD+s.world.camX, k_drawD+s.world.camX, -k_drawD, k_drawD, -1, 1);
 
     glPointSize(330.0/k_drawD);
     glBegin(GL_POINTS);
@@ -143,7 +143,7 @@ void gr_init(){
     //init Font
     font = salloc(sizeof(bool)*5*7*43);
     FILE* f;
-    if((f = fopen("../dots.font", "r")) == NULL){
+    if((f = fopen("../dots.font", "r")) == NULL){ //TODO: This effs up when you're not running Main from build
         printf("Error in gr_init(): File not found: ../dots.font\n");
         exit(1);
     }

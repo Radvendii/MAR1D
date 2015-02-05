@@ -8,7 +8,7 @@
 #define k_nPixels 1000 //resolution of screen. Never make it odd.
 #define k_FOV 60 //Field of vision (degrees)
 #define k_nMaxLinesPerObj 100 //maximum number of lines per object
-#define k_drawD 300
+#define k_drawD 150
 #define k_nMaxObj 200 //maximum number of objects in a world
 #define k_termLine  ((line){ .x1=0, .y1=0, .x2=0, .y2=0, .r=0, .g=0, .b=0 })
 #define p_termPoint ((point){ .x=124214, .y=143512, .r=100, .g=100, .b=100 })

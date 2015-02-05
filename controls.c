@@ -2,9 +2,9 @@
 
 void cl_update(){
     if(s.forward && s.velX<k_xVelMax){s.velX+=k_xVel;}
-    if(!s.forward && s.velX>0){s.velX-=k_xVel;}
+    if(!s.forward && s.onGround && s.velX>0){s.velX-=k_xVel;}
     if(s.backward && s.velX>-k_xVelMax){s.velX-=k_xVel;}
-    if(!s.backward && s.velX<0){s.velX+=k_xVel;}
+    if(!s.backward && s.onGround && s.velX<0){s.velX+=k_xVel;}
     if(!--s.upcount){cl_jumpEnd();}
 }
 
