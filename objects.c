@@ -4,37 +4,42 @@
 void ob_init(){
     ob_colors = NULL;
     ob_pObjs = NULL;
-    io_getColors(&ob_colors, "../test.colors");
-    io_getPObjs(&ob_pObjs, ob_colors, "../test.colors");
-    io_getBoxes(&ob_boxes, "../test.colors");
+    io_getColors(&ob_colors, "test.colors");
+    io_getPObjs(&ob_pObjs, ob_colors, "test.colors");
+    io_getBoxes(&ob_boxes, "test.colors");
+    io_getLevels(&ob_levels, "test.colors");
 
-    ob_levelTest = salloc(sizeof(int) * k_nMaxObj);
-    int i=0;
-    ob_levelTest[i++] = 'p';
-    ob_levelTest[i++] = -5;
-    ob_levelTest[i++] = 14;
-    while(i/3<30){
-        ob_levelTest[i++] = 'g';
-        ob_levelTest[i++] = (i/3-15)*16;
-        ob_levelTest[i++] = -17;
-    }
-    while(i/3<30+4){
-        ob_levelTest[i++] = 'b';
-        ob_levelTest[i++] = 16;
-        ob_levelTest[i++] = (i/3-30)*16;
-    }
-    ob_levelTest[i++] = '\0';
-
+    /*
+     *ob_levelTest = salloc(sizeof(int) * k_nMaxObj);
+     *int i=0;
+     *ob_levelTest[i++] = '@';
+     *ob_levelTest[i++] = -5;
+     *ob_levelTest[i++] = 14;
+     *while(i/3<30){
+     *    ob_levelTest[i++] = 'g';
+     *    ob_levelTest[i++] = (i/3-15)*16;
+     *    ob_levelTest[i++] = -17;
+     *}
+     *while(i/3<30+4){
+     *    ob_levelTest[i++] = 'b';
+     *    ob_levelTest[i++] = 16;
+     *    ob_levelTest[i++] = (i/3-30)*16;
+     *}
+     *ob_levelTest[i] = '\0';
+     */
+    ob_levelTest = ob_levels['t'];
 }
 
 void ob_deinit() {
     free(ob_colors);
     for(int i=0;i<127;i++){
         free(ob_pObjs[i]);
+        free(ob_levels[i]);
     }
     free(ob_pObjs);
     free(ob_boxes);
-    free(ob_levelTest);
+    //free(ob_levelTest);
+    free(ob_levels);
 }
 
 void ob_printPoint(point p){

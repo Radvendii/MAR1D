@@ -1,27 +1,27 @@
 #include "rendering.h"
 
-void rn_dimFworld(point *points, struct world w){
+void rn_dimFcamera(point *points, struct camera c){
     point p;
     int nPoints=0;
 
     int camD = 10;
-    double a = camD/cos((pi/180)*k_FOV/2);
-    double xa = w.camX + a*cos((pi/180)*w.camT);
-    double ya = w.camY + a*sin((pi/180)*w.camT);
-    double xb = w.camX + a*cos((pi/180)*(w.camT+k_FOV));
-    double yb = w.camY + a*sin((pi/180)*(w.camT+k_FOV));
-    points[nPoints++] = (point) {.x = w.camX, .y = w.camY, c_black};
+    double a = camD/cos(c.FOV/2);
+    double xa = c.x + a*cos(c.T);
+    double ya = c.y + a*sin(c.T);
+    double xb = c.x + a*cos(c.T+c.FOV);
+    double yb = c.y + a*sin(c.T+c.FOV);
+    points[nPoints++] = (point) {.x = c.x, .y = c.y, c_black};
     points[nPoints++] = (point) {.x = xa, .y = ya, c_black};
     points[nPoints++] = (point) {.x = xb, .y = yb, c_black};
     points[nPoints++] = (point) {.x = 0, .y = 0, c_brick};
 
     for(int obj=0;;obj++) {
-        if(w.scene[obj*3] == '\0') {break;} //Check for termination
+        if(c.scene[obj*3] == '\0') {break;} //Check for termination
         for(int pn=0;;pn++) {
-            if(ob_p_isTerm(ob_pObjs[w.scene[obj*3]][pn])){break;}
-            p = ob_pObjs[w.scene[obj*3]][pn];
+            if(ob_p_isTerm(ob_pObjs[c.scene[obj*3]][pn])){break;}
+            p = ob_pObjs[c.scene[obj*3]][pn];
 
-            ob_realifyPoint(&p, (w.scene + obj*3 +1));
+            ob_realifyPoint(&p, (c.scene + obj*3 +1));
             points[nPoints++] = p;
         }
     }
@@ -29,37 +29,38 @@ void rn_dimFworld(point *points, struct world w){
     return;
 }
 
-void rn_perspFworld_v(unsigned char *screen, struct world w, point *points){
+void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     for(int i=0;i<k_nPixels;i++){
         screen[i*3]=107;
         screen[i*3+1]=136;
         screen[i*3+2]=255;
     }
     float ds[k_nPixels];
-    for(int i=0;i<k_nPixels;i++){ds[i] = k_drawD;}
+    for(int i=0;i<k_nPixels;i++){ds[i] = c.drawD;}
     float d;
     int D;
     point p;
     int y;
 
-    double theta = (pi/180)*w.camT;
-    double gamma = (pi/180)*k_FOV/2;
+    double theta = c.T;
+    double gamma = c.FOV/2;
 
         for(int obj=0;;obj++) {
-            if(w.scene[obj*3] == '\0') {break;} //Check for termination
-            if(w.scene[obj*3] == 'p') {continue;} //don't render playerBox
-            for(point* pp=ob_pObjs[w.scene[obj*3]];!ob_p_isTerm(p = *pp);pp++) {
-                ob_realifyPoint(&p, (w.scene + obj*3 +1));
-                p.x -= w.camX;
-                p.y -= w.camY;
+            if(c.scene[obj*3] == '\0') {break;} //Check for termination
+            if(c.scene[obj*3] == '@') {continue;} //don't render playerBox
+            for(point* pp=ob_pObjs[c.scene[obj*3]];!ob_p_isTerm(p = *pp);pp++) {
+                ob_realifyPoint(&p, (c.scene + obj*3 +1));
+                p.x -= c.x;
+                p.y -= c.y;
                 double alpha = atan2(p.y, p.x) - theta;
                 alpha = fmod(alpha, 2*pi);
                 if(alpha<0){alpha += 2*pi;}
 
                 if(!(alpha>=0 && alpha<gamma*2)){continue;}
                 y = (tan(alpha-gamma) + tan(gamma) ) / (2*tan(gamma)) * k_nPixels;
+                if(c.flip){y = k_nPixels-y;}
                 d = sqrt(p.x*p.x + p.y*p.y);
-                D = ceil(1/(2*d*tan((pi/180)*k_FOV/2))*k_nPixels);
+                D = ceil(1/(2*d*tan(c.FOV/2))*k_nPixels);
                 for(int i=y-D;i<y+D;i++){
                     if(i<0 || i >= k_nPixels) {continue;}
                     if(d<ds[i]){

@@ -13,6 +13,7 @@ bool *font;
 int fontSize;
 
 extern struct state s;
+struct camera cam;
 unsigned char *perspScreen;
 point *dimScreen;
 
@@ -22,6 +23,9 @@ void gr_init();
 void gr_deinit();
 void gr_update();
 void gr_draw();
+
+void gr_keypress(int, int, int, int);
+void gr_cursormove(double, double);
 
 void gr_pixels(unsigned char*);
 

@@ -12,7 +12,7 @@
 extern struct state s;
 
 void mh_init();
-bool mh_isCollision(struct world, int, int);
+bool mh_isCollision(int, int);
 bool mh_playerCollision(int);
 void mh_update();
 void mh_listCollisions();

@@ -5,6 +5,20 @@
 #define k_nPixels 1000 //resolution of screen. Never make it odd.
 #define k_drawD 150
 
-void rn_dimFworld(point*, struct world);
-void rn_perspFworld_v(unsigned char*, struct world, point*);
+struct camera {
+    double FOV;
+    int x;
+    int y;
+    double T;
+    int* scene;
+    bool flip;
+    bool paused;
+    bool debug;
+    int drawD;
+};
+
+void rn_dimFcamera(point*, struct camera);
+
+void rn_dimFcamera(point*, struct camera);
+void rn_perspFcamera(unsigned char*, struct camera, point*);
 #endif

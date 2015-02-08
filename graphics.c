@@ -1,24 +1,23 @@
 #include "graphics.h"
 
-void gr_update(){
-    rn_dimFworld(dimScreen, s.world);
-    rn_perspFworld_v(perspScreen, s.world, NULL);
-    if(s.camFlip){
-        unsigned char swap_r;
-        unsigned char swap_g;
-        unsigned char swap_b;
-        for(int i=0;i<k_nPixels/2;i++){
-            swap_r = perspScreen[i*3];
-            swap_g = perspScreen[i*3+1];
-            swap_b = perspScreen[i*3+2];
-            perspScreen[i*3] = perspScreen[3*k_nPixels-(1+i)*3];
-            perspScreen[i*3+1] = perspScreen[3*k_nPixels-(1+i)*3+1];
-            perspScreen[i*3+2] = perspScreen[3*k_nPixels-(1+i)*3+2];
-            perspScreen[3*k_nPixels-(1+i)*3] = swap_r;
-            perspScreen[3*k_nPixels-(1+i)*3+1] = swap_g;
-            perspScreen[3*k_nPixels-(1+i)*3+2] = swap_b;
-        }
+void gr_keypress(int key, int scancode, int action, int mods){
+    if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
+        cam.flip = !cam.flip;
+        cam.T = pi - cam.T - cam.FOV;
     }
+}
+
+void gr_cursormove(double xPos, double yPos){
+    if(!cam.flip){cam.T = fmod(-yPos*0.000436, 2*pi);}
+    else{cam.T = fmod(pi+yPos*0.000426-cam.FOV, 2*pi);}
+}
+
+void gr_update(){
+    cam.x = s.x+14;
+    cam.y = s.y-2;
+    cam.flip = s.flip;
+    rn_dimFcamera(dimScreen, cam);
+    rn_perspFcamera(perspScreen, cam, NULL);
 }
 
 void gr_char(char c, GLfloat* x, GLfloat* y){
@@ -71,7 +70,7 @@ void gr_points(point *ps){
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    glOrtho(-k_drawD+s.world.camX, k_drawD+s.world.camX, -k_drawD, k_drawD, -1, 1);
+    glOrtho(-cam.drawD+cam.x, cam.drawD+cam.x, -cam.drawD, cam.drawD, -1, 1);
 
     glPointSize(330.0/k_drawD);
     glBegin(GL_POINTS);
@@ -111,12 +110,16 @@ void gr_draw(GLFWwindow *window, int renderType){
 }
 
 void gr_init(){
+    cam.drawD = k_drawD;
+    cam.FOV = 60*pi/180;
+    cam.scene = s.scene;
+    cam.T = 0;
     debug = true;
     perspScreen = salloc(sizeof(unsigned char)*k_nPixels*3);
     for(int i=0; i<k_nPixels*3; i++){perspScreen[i]=0;}
     dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
     dimScreen[0] = p_termPoint;
-    fontSize = io_getFont(&font, "../dots.font");
+    fontSize = io_getFont(&font, "dots.font");
 }
 
 void gr_deinit(){

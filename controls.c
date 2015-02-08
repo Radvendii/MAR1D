@@ -13,23 +13,31 @@ void cl_update(){
     if(!--s.upcount){cl_jumpEnd();}
 }
 
-bool cl_go1(struct world*w, char dir, bool pos){
-    int dirNum = dir == 'x' ? 1 : 2;
-    (*w).scene[dirNum] += pos*2-1;
+bool cl_go1(char dir, bool pos){
+    bool ret=true;
+    int dirNum;
+    if(dir == 'x'){s.x += pos*2-1;}
+    else{s.y += pos*2-1;}
     for(int obj=0;;obj+=3){
-        if((*w).scene[obj] == '\0') {break;}
-        if((*w).scene[obj] == 'p') {continue;}
-        if(mh_playerCollision(obj)) {(*w).scene[dirNum] -= pos*2-1; return false;}
+        if(s.scene[obj] == '\0') {break;}
+        if(s.scene[obj] == '@') {dirNum = obj; continue;}
+        if(mh_playerCollision(obj)) {ret = false;}
     }
-    if(dir == 'x'){(*w).camX += pos*2-1;}
-    else{(*w).camY += pos*2-1;}
-    return true;
+    dirNum += dir == 'x' ? 1 : 2;
+    if(ret){
+        s.scene[dirNum] += pos*2-1;
+    }
+    else{
+        if(dir == 'x'){s.x -= pos*2-1;}
+        else{s.y -= pos*2-1;}
+    }
+    return ret;
 }
 
-bool cl_go(struct world *w, char dir, int amt){
+bool cl_go(char dir, int amt){
     bool ret=true;
     while(amt != 0){
-        ret = ret && cl_go1(w, dir, amt > 0);
+        ret = ret && cl_go1(dir, amt > 0);
         if(amt>0){amt--;}
         else{amt++;}
     }
@@ -50,28 +58,27 @@ void cl_jumpEnd(){
 
 void cl_keypress(int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_W && action == GLFW_PRESS){
-        if(!s.camFlip){s.forward = true;}
+        if(!s.flip){s.forward = true;}
         else{s.backward = true;}
     }
     if (key == GLFW_KEY_W && action == GLFW_RELEASE){
-        if(!s.camFlip){s.forward = false;}
+        if(!s.flip){s.forward = false;}
         else{s.backward = false;}
     }
 
     if (key == GLFW_KEY_S && action == GLFW_PRESS){
-        if(!s.camFlip){s.backward = true;}
+        if(!s.flip){s.backward = true;}
         else{s.forward = true;}
     }
     if (key == GLFW_KEY_S && action == GLFW_RELEASE){
-        if(!s.camFlip){s.backward = false;}
+        if(!s.flip){s.backward = false;}
         else{s.forward = false;}
     }
     if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
         bool temp = s.forward;
         s.forward = s.backward;
         s.backward = temp;
-        s.camFlip = !s.camFlip;
-        s.world.camT = 180-s.world.camT-k_FOV;
+        s.flip = !s.flip;
     }
 
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
@@ -87,21 +94,17 @@ void cl_keypress(int key, int scancode, int action, int mods){
     }
 }
 
-void cl_cursormove(double xPos, double yPos){
-    if(!s.camFlip){s.world.camT = fmod(-yPos/40, 360);}
-    else{s.world.camT = fmod(180+yPos/40-k_FOV, 360);}
+
+bool cl_forward(){
+    return cl_go('x', 2);
 }
 
-bool cl_forward(struct world *w){
-    return cl_go(w, 'x', 2);
+bool cl_backward(){
+    return cl_go('x', -2);
 }
 
-bool cl_backward(struct world *w){
-    return cl_go(w, 'x', -2);
-}
-
-bool cl_upward(struct world *w){
-    return cl_go(w, 'y', 2);
+bool cl_upward(){
+    return cl_go('y', 2);
 }
 
 void cl_gravity(){

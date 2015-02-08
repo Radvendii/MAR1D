@@ -1,7 +1,9 @@
 #include "parsing.h"
 
-FILE* io_readFile(char* s){
-    return sfopen(s, "r");
+FILE* io_readFile(char* fn){
+    char fn_[100];
+    sprintf(fn_, "%s%s", "../", fn);
+    return sfopen(fn_, "r");
 }
 
 int io_getFont(bool** font, char* fn){
@@ -50,7 +52,7 @@ void io_getPObj(FILE* f, color cs[127], pObj os[127]){
     char oname;
     char c;
     int size;
-    fscanf(f, "%c:%i/%*ix%*i\n", &oname, &size);
+    fscanf(f, "%c:%i/%*ix%*i", &oname, &size);
     os[oname] = resalloc(os[oname], sizeof(point) * (size+1));
     int y=0, x=0, i=0;
     while(i<size){
@@ -69,7 +71,6 @@ void io_getPObj(FILE* f, color cs[127], pObj os[127]){
         }
     }
     os[oname][i] = p_termPoint;
-
 }
 
 void io_getPObjs(pObj** os, color* cs, char* fn){
@@ -120,5 +121,52 @@ void io_getBoxes(box** bs, char* fn){
         }
     }
     return;
+}
 
+void io_getLevel(FILE* f, level ls[127]){
+    char lname;
+    char c;
+    int size;
+    fscanf(f, "%c:%i", &lname, &size);
+    ls[lname] = resalloc(ls[lname], sizeof(int) * (size*3+1));
+    int y=0, x=0, i=0;
+    while(i<size){
+        switch(c = fgetc(f)){
+            case ' ':
+                x++;
+                break;
+            case '\n':
+                y--;
+                x=0;
+                break;
+            default:
+                ls[lname][i*3] = c;
+                ls[lname][i*3+1] = x*16;
+                ls[lname][i*3+2] = y*16;
+                i++;
+                x++;
+                break;
+        }
+    }
+    ls[lname][i*3] = '\0';
+}
+
+void io_getLevels(level** ls, char* fn){
+    FILE *f = io_readFile(fn);
+    char c;
+    *ls = resalloc(*ls, sizeof(level)*127);
+    for(int i=0;i<127;i++){(*ls)[i] = NULL;}
+    while((c = fgetc(f)) != EOF){
+        switch(c){
+            case '\n':
+                break;
+            case 'L':
+                io_getLevel(f, *ls);
+                break;
+            default:
+                while(fgetc(f) != '\n');
+                break;
+        }
+    }
+    return;
 }

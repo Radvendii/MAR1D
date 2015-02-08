@@ -3,12 +3,12 @@
 void gl_init(){
     mh_init();
     cl_init();
-    s.world.scene = salloc(sizeof(int) * k_nMaxObj*3);
-    for(int i=0;!((s.world.scene[i] = ob_levelTest[i]) == '\0' && (i%3 == 0));i++);
-    s.world.camX = ob_levelTest[1]+14;
-    s.world.camY = ob_levelTest[2]-2;
-    s.world.camT = 0;
-    s.camFlip = false;
+    s.scene = salloc(sizeof(int) * k_nMaxObj*3);
+    int pl;
+    for(int i=0;!((s.scene[i] = ob_levelTest[i]) == '\0' && (i%3 == 0));i++){if(ob_levelTest[i] == '@' && i%3==0){pl = i;}}
+    s.x = ob_levelTest[pl+1];
+    s.y = ob_levelTest[pl+2];
+    s.flip = false;
 }
 
 void gl_update(){
@@ -17,5 +17,5 @@ void gl_update(){
 }
 
 void gl_deinit(){
-    free(s.world.scene);
+    free(s.scene);
 }

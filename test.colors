@@ -2,7 +2,7 @@ Cb:231.95.19
 Cl:240.208.176
 C.:0.0.0
 
-Ob:60/16x16
+Ob:60/15x15
 llllllllllllllll
 b              .
 b              .
@@ -20,7 +20,7 @@ b              b
 b              b
 ................
 
-Og:60/16x16
+Og:60/15x15
 bllllllll.bllllb
 l              .
 l              .
@@ -38,7 +38,7 @@ l              .
 l              .
 b......bl......b
 
-Op:60/16x16
+O@:60/15x15
 ................
 .              .
 .              .
@@ -57,3 +57,9 @@ Op:60/16x16
 ................
 
 O.:0/0x0
+
+Lt:38
+               bbbbbbb b b bbb bb  b
+
+   @
+gggggggggggggggggggggg

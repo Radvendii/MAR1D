@@ -3,8 +3,10 @@
 #include "objects.h"
 #include "controls.h"
 #include "mechanics.h"
-struct state {
-    struct world world;
+struct state { //TODO: split state into game state and graphics state
+    int* scene;
+    int x;
+    int y;
     bool onGround;
     bool paused;
     bool forward;
@@ -13,7 +15,7 @@ struct state {
     bool backward;
     double velX;
     double velY;
-    bool camFlip;
+    bool flip;
     int coins;
     int moveFrameY;
     int moveFrameX;

@@ -6,7 +6,7 @@
 
 #define k_nMaxLinesPerObj 100 //maximum number of lines per object
 #define k_nMaxObj 200 //maximum number of objects in a world
-#define p_termPoint ((point){ .x=124214, .y=143512, .r=100, .g=100, .b=100 })
+#define p_termPoint ((point){ .x=124214, .y=143512, .r=100, .g=100, .b=100 }) //Hope this point never actually comes up... :P
 #define k_FOV 60 //Field of vision (degrees)
 #define c_brick .r=231, .g=95, .b=19
 #define c_lbrick .r=240, .g=208, .b=176
@@ -34,17 +34,12 @@ typedef struct {
 } box;
 
 typedef point* pObj;
-
-struct world {
-    int camX;
-    int camY;
-    double camT;
-    int *scene;
-};
+typedef int* level;
 
 color* ob_colors;
 pObj* ob_pObjs;
 box* ob_boxes;
+level* ob_levels;
 
 int *ob_levelTest;
 
