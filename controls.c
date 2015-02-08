@@ -17,8 +17,8 @@ bool cl_go1(struct world*w, char dir, bool pos){
     int dirNum = dir == 'x' ? 1 : 2;
     (*w).scene[dirNum] += pos*2-1;
     for(int obj=0;;obj+=3){
-        if((*w).scene[obj] == terminator) {break;}
-        if((*w).scene[obj] == objPlayer) {continue;}
+        if((*w).scene[obj] == '\0') {break;}
+        if((*w).scene[obj] == 'p') {continue;}
         if(mh_playerCollision(obj)) {(*w).scene[dirNum] -= pos*2-1; return false;}
     }
     if(dir == 'x'){(*w).camX += pos*2-1;}

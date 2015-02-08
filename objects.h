@@ -12,16 +12,6 @@
 #define c_lbrick .r=240, .g=208, .b=176
 #define c_black .r=0, .g=0, .b=0
 
-//labeling all the types of objects (enum)
-enum objType {
-    terminator=0,
-    objPlayer,
-    nothing,
-    objGround,
-    objBrick,
-    objCoin
-};
-
 typedef struct {
     unsigned char r;
     unsigned char g;
@@ -58,10 +48,6 @@ box* ob_boxes;
 
 int *ob_levelTest;
 
-
-//object from type
-point* objFtype(enum objType);
-
 void ob_init();
 void ob_deinit();
 
@@ -73,3 +59,4 @@ void ob_objectifyCam(int*, int*);
 bool ob_p_isTerm(point);
 
 #endif
+

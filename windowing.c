@@ -32,11 +32,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         int w,h;
         glfwGetFramebufferSize(window, &w, &h);
         int i=0;
-        do{i+=3;}while(s.world.scene[i]!=terminator);
-        s.world.scene[i] = objBrick;
+        do{i+=3;}while(s.world.scene[i]!='\0');
+        s.world.scene[i] = 'b';
         s.world.scene[i+1] = (int)((x-w/2)/w*k_drawD*2);
         s.world.scene[i+2] = (int)((h/2-y)/h*k_drawD*2);
-        s.world.scene[i+3] = terminator;
+        s.world.scene[i+3] = '\0';
     }
     if (key == GLFW_KEY_J && action == GLFW_PRESS){
         debug = !debug;

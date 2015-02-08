@@ -10,20 +10,20 @@ void ob_init(){
 
     ob_levelTest = salloc(sizeof(int) * k_nMaxObj);
     int i=0;
-    ob_levelTest[i++] = objPlayer;
+    ob_levelTest[i++] = 'p';
     ob_levelTest[i++] = -5;
     ob_levelTest[i++] = 14;
     while(i/3<30){
-        ob_levelTest[i++] = objGround;
+        ob_levelTest[i++] = 'g';
         ob_levelTest[i++] = (i/3-15)*16;
         ob_levelTest[i++] = -17;
     }
     while(i/3<30+4){
-        ob_levelTest[i++] = objBrick;
+        ob_levelTest[i++] = 'b';
         ob_levelTest[i++] = 16;
         ob_levelTest[i++] = (i/3-30)*16;
     }
-    ob_levelTest[i++] = terminator;
+    ob_levelTest[i++] = '\0';
 
 }
 
@@ -59,25 +59,4 @@ float f_round(float f){
 
 bool ob_p_isTerm(point p){
     return (p.x == 124214 && p.y == 143512 && p.r == 100 && p.g == 100 && p.b == 100);
-}
-
-point* objFtype(enum objType type) {
-    switch(type) {
-        case objGround:
-            return ob_pObjs['g'];//ob_ground;
-            break;
-        case nothing:
-            return ob_pObjs['.'];
-            break;
-        case objPlayer:
-            return ob_pObjs['p'];//ob_playerBox;
-            break;
-        case objBrick:
-            return ob_pObjs['b'];//ob_brick;
-            break;
-        default:
-            printf("Error in objFtype(): No object data found for object type %d", type);
-            exit(1);
-            break;
-    }
 }

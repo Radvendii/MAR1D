@@ -16,10 +16,10 @@ void rn_dimFworld(point *points, struct world w){
     points[nPoints++] = (point) {.x = 0, .y = 0, c_brick};
 
     for(int obj=0;;obj++) {
-        if(w.scene[obj*3] == terminator) {break;} //Check for termination
+        if(w.scene[obj*3] == '\0') {break;} //Check for termination
         for(int pn=0;;pn++) {
-            if(ob_p_isTerm(objFtype(w.scene[obj*3])[pn])){break;}
-            p = objFtype(w.scene[obj*3])[pn];
+            if(ob_p_isTerm(ob_pObjs[w.scene[obj*3]][pn])){break;}
+            p = ob_pObjs[w.scene[obj*3]][pn];
 
             ob_realifyPoint(&p, (w.scene + obj*3 +1));
             points[nPoints++] = p;
@@ -46,9 +46,9 @@ void rn_perspFworld_v(unsigned char *screen, struct world w, point *points){
     double gamma = (pi/180)*k_FOV/2;
 
         for(int obj=0;;obj++) {
-            if(w.scene[obj*3] == terminator) {break;} //Check for termination
-            if(w.scene[obj*3] == objPlayer) {continue;} //don't render playerBox
-            for(point* pp=objFtype(w.scene[obj*3]);!ob_p_isTerm(p = *pp);pp++) {
+            if(w.scene[obj*3] == '\0') {break;} //Check for termination
+            if(w.scene[obj*3] == 'p') {continue;} //don't render playerBox
+            for(point* pp=ob_pObjs[w.scene[obj*3]];!ob_p_isTerm(p = *pp);pp++) {
                 ob_realifyPoint(&p, (w.scene + obj*3 +1));
                 p.x -= w.camX;
                 p.y -= w.camY;

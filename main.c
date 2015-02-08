@@ -12,7 +12,6 @@ struct state s;
 
 int main(void){
     ob_init();
-    //ob_init_old();
     gl_init();
     wn_init();
     gr_init();
@@ -35,7 +34,6 @@ int main(void){
     gr_deinit();
     wn_deinit();
     gl_deinit();
-    //ob_deinit_old();
     ob_deinit();
     exit(EXIT_SUCCESS);
 
