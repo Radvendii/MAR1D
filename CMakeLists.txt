@@ -18,9 +18,10 @@ add_library (MechanicsL mechanics.c)
 add_library (WindowingL windowing.c)
 add_library (GamelogicL gamelogic.c)
 add_library (GraphicsL graphics.c)
+add_library (ParsingL parsing.c)
 
 add_executable(Main main.c)
-target_link_libraries(Main RenderingL GraphicsL GamelogicL WindowingL ObjectsL HelpersL ControlsL MechanicsL glfw ${GLFW_LIBRARIES})
+target_link_libraries(Main ParsingL RenderingL GraphicsL GamelogicL WindowingL ObjectsL HelpersL ControlsL MechanicsL glfw ${GLFW_LIBRARIES})
 
 add_executable(Example glfw_example.c)
 target_link_libraries(Example glfw ${GLFW_LIBRARIES})

@@ -5,7 +5,18 @@ void* salloc(size_t size){ //Named such after "Safe allocate"
     else{return ptr;}
 }
 
-void* resalloc(void* ptr, size_t size){
+FILE* sfopen(char* s, char* m){
+    FILE* f;
+    if((f = fopen(s, m)) == NULL){printf("Error in sfopen(): File not found: %s\n", s);exit(1);}
+    return f;
+}
+
+void sfclose(FILE* f){
+    if(fclose(f) == EOF){printf("Error in sfclose(): fclose() returned EOF\n");exit(1);}
+    return;
+}
+
+void* resalloc(void* ptr, size_t size){ //TODO: make this take in a void**
     void *ret;
     if(ptr == NULL){
         ret = salloc(size);

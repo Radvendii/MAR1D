@@ -1,9 +1,6 @@
 #include "graphics.h"
 
 void gr_update(){
-    //rn_dimFworld_old(&dimScreen_old, s.world);
-    //rn_perspFworld_v_old(perspScreen, s.world, &dimScreen_old);
-    //if(!debug){dimScreen_old[0] = (line) {.x1 = 0, .x2 = 0, .y1 = 0, .y2 = 0, .r = 0, .g = 0, .b = 0};}
     rn_dimFworld(dimScreen, s.world);
     rn_perspFworld_v(perspScreen, s.world, NULL);
     if(s.camFlip){
@@ -27,8 +24,8 @@ void gr_update(){
 void gr_char(char c, GLfloat* x, GLfloat* y){
     glPointSize(8.f);
     glBegin(GL_POINTS);
-    for(int i=0;i<5*7;i++){
-        if(font[(c-48)*5*7+i]){
+    for(int i=0;i<fontSize;i++){
+        if(font[(c-48)*fontSize+i]){
         glVertex2f(*x+i%5*5, *y-i/5*5);
         }
     }
@@ -70,24 +67,6 @@ void gr_pixels(unsigned char *renderArr){
     glPopMatrix();
 }
 
-void gr_lines(line *ls){
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(-k_drawD, k_drawD, -k_drawD, k_drawD, -1, 1);
-
-    glBegin(GL_LINES);
-    for(int i=0;;i++){
-        if(ob_isTerminating(ls[i])){break;}
-        glColor3ub(ls[i].r, ls[i].g, ls[i].b);
-        glVertex2f(ls[i].x1, ls[i].y1);
-        glVertex2f(ls[i].x2, ls[i].y2);
-    }
-    glEnd();
-    glPopMatrix();
-    return;
-}
-
 void gr_points(point *ps){
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
@@ -122,7 +101,6 @@ void gr_draw(GLFWwindow *window, int renderType){
         glVertex2f(1.f, 1.f);
         glVertex2f(1.f, -1.f);
         glEnd();
-        //gr_lines(dimScreen_old);
         gr_points(dimScreen);
         glColor3f(1.0, 1.0, 1.0);
         char score[100];
@@ -136,28 +114,13 @@ void gr_init(){
     debug = true;
     perspScreen = salloc(sizeof(unsigned char)*k_nPixels*3);
     for(int i=0; i<k_nPixels*3; i++){perspScreen[i]=0;}
-    //dimScreen_old = salloc(sizeof(line)*k_nMaxLinesPerObj * k_nMaxObj);
-    //dimScreen_old[0] = k_termLine;
     dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
     dimScreen[0] = p_termPoint;
-    //init Font
-    font = salloc(sizeof(bool)*5*7*43);
-    FILE* f;
-    if((f = fopen("../dots.font", "r")) == NULL){ //TODO: This effs up when you're not running Main from build
-        printf("Error in gr_init(): File not found: ../dots.font\n");
-        exit(1);
-    }
-    int c;
-    int i=0;
-    while((c = fgetc(f)) != EOF){
-        if(c == '\n'){continue;}
-        else{font[i++]= (c == '1' ? true : false);}
-    }
+    fontSize = io_getFont(&font, "../dots.font");
 }
 
 void gr_deinit(){
     free(perspScreen);
-    //free(dimScreen_old);
     free(dimScreen);
     free(font);
 }

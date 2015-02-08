@@ -1,5 +1,10 @@
 #include "controls.h"
 
+void cl_init(){
+    s.velY = 0;
+    s.velX = 0;
+}
+
 void cl_update(){
     if(s.forward && s.velX<k_xVelMax){s.velX+=k_xVel;}
     if(!s.forward && s.onGround && s.velX>0){s.velX-=k_xVel;}
@@ -83,8 +88,8 @@ void cl_keypress(int key, int scancode, int action, int mods){
 }
 
 void cl_cursormove(double xPos, double yPos){
-    if(!s.camFlip){s.world.camT = -yPos/40;}
-    else{s.world.camT = 180+yPos/40-k_FOV;}
+    if(!s.camFlip){s.world.camT = fmod(-yPos/40, 360);}
+    else{s.world.camT = fmod(180+yPos/40-k_FOV, 360);}
 }
 
 bool cl_forward(struct world *w){

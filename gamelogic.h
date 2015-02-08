@@ -19,7 +19,7 @@ struct state {
     int moveFrameX;
 };
 
-extern struct state s;
+struct state s;
 
 void gl_init();
 void gl_update();

@@ -2,14 +2,10 @@
 #define _RENDERING_H
 #include "objects.h"
 #include "helpers.h"
-#include <math.h>
+#define k_nPixels 1000 //resolution of screen. Never make it odd.
+#define k_drawD 150
 
-//void rn_orthoTest(unsigned char*);
-//void rn_perspTest(int camX, int camY, double camT, unsigned char*);
-//int rn_dimTest(line**);
-int rn_dimFworld_old(line**, struct world);
 void rn_perspFworld(unsigned char*, struct world);
-void rn_perspFworld_v_old(unsigned char*, struct world, line**);
 void rn_dimFworld(point*, struct world);
 void rn_perspFworld_v(unsigned char*, struct world, point*);
 #endif

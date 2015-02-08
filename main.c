@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <GLFW/glfw3.h>
 #include "helpers.h"
 #include "objects.h"
@@ -8,11 +7,12 @@
 #include "mechanics.h"
 #include "graphics.h"
 #include "windowing.h"
+#include "parsing.h"
 struct state s;
 
 int main(void){
     ob_init();
-    ob_init_old();
+    //ob_init_old();
     gl_init();
     wn_init();
     gr_init();
@@ -35,7 +35,7 @@ int main(void){
     gr_deinit();
     wn_deinit();
     gl_deinit();
-    ob_deinit_old();
+    //ob_deinit_old();
     ob_deinit();
     exit(EXIT_SUCCESS);
 

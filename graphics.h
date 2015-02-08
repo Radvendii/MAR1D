@@ -6,13 +6,14 @@
 #include "objects.h"
 #include "gamelogic.h"
 #include "rendering.h"
+#include "parsing.h"
 
 bool debug;
 bool *font;
+int fontSize;
 
-struct state s;
+extern struct state s;
 unsigned char *perspScreen;
-line *dimScreen_old;
 point *dimScreen;
 
 void gr_text(char *, GLfloat, GLfloat);
@@ -23,6 +24,5 @@ void gr_update();
 void gr_draw();
 
 void gr_pixels(unsigned char*);
-void gr_lines(line *ls);
 
 #endif

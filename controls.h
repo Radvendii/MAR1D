@@ -7,15 +7,14 @@
 #include "mechanics.h"
 
 #define k_xVel 0.05
-#define k_yVel (4.1 * (1+abs(s.velX/27)))
+#define k_yVel 4.1
 #define k_xVelMax  1.0
 #define k_yVelMin -4.5
-#define k_gravity -0.42
 #define k_nJumpFrames 40
-#define k_moveFrames 2
 
-struct state s;
+extern struct state s;
 
+void cl_init();
 void cl_update();
 void cl_keypress(int, int, int, int);
 void cl_cursormove(double, double);
