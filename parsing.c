@@ -48,81 +48,6 @@ void io_getColors(color** cs, char *fn){
     return;
 }
 
-void io_getPObj(FILE* f, color cs[127], pObj os[127]){
-    char oname;
-    char c;
-    int size;
-    fscanf(f, "%c:%i/%*ix%*i", &oname, &size);
-    os[oname] = resalloc(os[oname], sizeof(point) * (size+1));
-    int y=0, x=0, i=0;
-    while(i<size){
-        switch(c = fgetc(f)){
-            case ' ':
-                x++;
-                break;
-            case '\n':
-                y--;
-                x=0;
-                break;
-            default: //TODO: locally defined colors
-                os[oname][i++] = (point) {.x = x, .y = y, .r = cs[c].r, .g = cs[c].g, .b = cs[c].b};
-                x++;
-                break;
-        }
-    }
-    os[oname][i] = p_termPoint;
-}
-
-void io_getPObjs(pObj** os, color* cs, char* fn){
-    FILE *f = io_readFile(fn);
-    char c;
-    color cs_l[127];
-    *os = resalloc(*os, sizeof(pObj)*127);
-    for(int i=0;i<127;i++){(*os)[i] = NULL;}
-    while((c = fgetc(f)) != EOF){
-        switch(c){
-            case '\n':
-                break;
-            case 'C':
-                io_getColor(f, cs_l);
-                break;
-            case 'O':
-                io_getPObj(f, cs, *os);
-                break;
-            default:
-                while(fgetc(f) != '\n');
-                break;
-        }
-    }
-    return;
-}
-
-void io_getBox(FILE* f, box bs[127]){
-    char oname;
-    int w, h;
-    fscanf(f, "%c:%*i/%ix%i\n", &oname, &w, &h);
-    bs[oname] = (box) {.x = 0, .y = 0, .w = w, .h = -h};
-}
-
-void io_getBoxes(box** bs, char* fn){
-    FILE *f = io_readFile(fn);
-    char c;
-    *bs = resalloc(*bs, sizeof(box)*127);
-    while((c = fgetc(f)) != EOF){
-        switch(c){
-            case '\n':
-                break;
-            case 'O':
-                io_getBox(f, *bs);
-                break;
-            default:
-                while(fgetc(f) != '\n');
-                break;
-        }
-    }
-    return;
-}
-
 void io_getLevel(FILE* f, level ls[127]){
     char lname;
     char c;
@@ -168,5 +93,56 @@ void io_getLevels(level** ls, char* fn){
                 break;
         }
     }
+    return;
+}
+
+void io_getObjs(obj** os, color cs[127], char* fn){
+    FILE *f = io_readFile(fn);
+    char oname;
+    int size;
+    int w, h;
+    int nCols;
+    int xpos, ypos, xhei, yhei;
+    int x,y,i;
+    char c;
+    *os = resalloc(*os, sizeof(obj) * 127);
+    while((c = fgetc(f)) != EOF){
+        switch(c){
+            case '\n':
+                break;
+            case 'O':
+                fscanf(f, "%c; ps:%i; dim:%ix%i; cols:%i;", &oname, &size, &w, &h, &nCols);
+                (*os)[oname].bb = (box) {.x = 0, .y = 0, .w = w, .h = -h};
+                (*os)[oname].ps = resalloc(os[oname], sizeof(point) * (size+1));
+                (*os)[oname].cols = salloc(sizeof(box) * nCols);
+                (*os)[oname].nCols = nCols;
+                i=0;
+                while(i<nCols){
+                    fscanf(f, "\nC; pos:%i,%i; dim:%ix%i;", &xpos, &ypos, &xhei, &yhei);
+                    (*os)[oname].cols[i++] = (box) {.x = xpos, .y = -ypos, .w = xhei, .h = -yhei};
+                }
+                y=0; x=0; i=0;
+                while(i<size){
+                    switch(c = fgetc(f)){
+                        case ' ':
+                            x++;
+                            break;
+                        case '\n':
+                            y--;
+                            x=0;
+                            break;
+                        default:
+                            (*os)[oname].ps[i++] = (point) {.x = x, .y = y, .r = cs[c].r, .g = cs[c].g, .b = cs[c].b};
+                            x++;
+                            break;
+                    }
+                }
+                (*os)[oname].ps[i] = p_termPoint;
+                break;
+            default:
+                while(fgetc(f) != '\n');
+                break;
+            }
+        }
     return;
 }

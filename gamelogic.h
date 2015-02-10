@@ -3,8 +3,14 @@
 #include "objects.h"
 #include "controls.h"
 #include "mechanics.h"
-struct state { //TODO: split state into game state and graphics state
+#define act_nothing 0
+#define act_bounce 6
+#define act_bounceD act_bounce/2
+
+
+struct state {
     int* scene;
+    int* action;
     int x;
     int y;
     bool onGround;

@@ -10,6 +10,21 @@ void mh_init(){
 }
 
 void mh_update(){
+    for(int i=0;s.scene[i*3] != '\0';i++){
+        if(s.action[i] == act_nothing){continue;}
+        if((s.scene[i*3] == 'C' || s.scene[i*3] == 'b') && s.action[i] <= act_bounceD){
+            s.scene[i*3+2]--;
+            s.action[i]--;
+        }
+        else if((s.scene[i*3] == 'C' || s.scene[i*3] == 'b') && s.action[i] <= act_bounce){
+            s.scene[i*3+2]++;
+            s.action[i]--;
+        }
+        if(s.scene[i*3] == 'C' && s.action[i] == act_nothing){
+            s.scene[i*3] = 'D';
+        }
+    }
+
     cl_gravity();
     s.moveFrameY++;
     s.moveFrameX++;
@@ -27,6 +42,7 @@ void mh_update(){
     }
     else if((int) s.velY != 0){s.onGround = false;}
 AFTER_Y_MOTION: ;
+
     if(s.velX < 1){
         if((s.moveFrameX %= k_moveFrames) == 0){xMove *= 2;}
         else{goto AFTER_X_MOTION;}
@@ -38,13 +54,21 @@ AFTER_Y_MOTION: ;
 AFTER_X_MOTION: ;
 }
 
-bool mh_isCollision(int i1, int i2){
+int mh_isCollision(int i1, int i2){ //returns side of collision starting from front and moving clockwise
     if(i1 % 3 !=0 || i2 % 3 !=0){printf("Error in mh_isCollision(): indicies must be the beginning of object (i.e. %%3==0)");exit(1);}
-    box b1 = ob_boxes[s.scene[i1]];
-    box b2 = ob_boxes[s.scene[i2]];
+    int ret = 0;
+    box b1 = ob_objs[s.scene[i1]].bb;
+    box b2 = ob_objs[s.scene[i2]].bb;
     ob_realifyBox(&b1, (s.scene + i1 + 1));
     ob_realifyBox(&b2, (s.scene + i2 + 1));
-    return !(k_oneSide(b1.x, b1.x+b1.w, b2.x, b2.x+b2.w) || k_oneSide(b1.y, b1.y+b1.h, b2.y, b2.y+b2.h));
+    ret += k_boxInter(b1, b2);
+    int nCols = ob_objs[s.scene[i1]].nCols;
+    for(int i=0;i<nCols;i++){
+        b1 = ob_objs[s.scene[i1]].cols[i];
+        ob_realifyBox(&b1, (s.scene + i1 + 1));
+        if(k_boxInter(b1, b2)){ret += pow(2, i+1);}
+    }
+    return ret;
 }
 
 bool mh_playerCollision(int i){
@@ -54,7 +78,7 @@ bool mh_playerCollision(int i){
     s.scene[obj+1] = s.x;
     s.scene[obj+2] = s.y;
     s.scene[obj+3] = '\0';
-    bool ret = mh_isCollision(obj, i);
+    int ret = mh_isCollision(i, obj);
     if(ret){
         switch(s.scene[i]){
             case 'c':
@@ -64,9 +88,20 @@ bool mh_playerCollision(int i){
                 break;
             case '.':
                 ret = false;
+                break;
+            case 'C':
+                if(ret/2){
+                    s.coins++;
+                }
+            case 'b':
+                if(ret/2){
+                    s.action[i/3] = act_bounce;
+                    cl_jumpEnd();
+                }
+                break;
         }
     }
     s.scene[obj] = '\0';
-    return ret;
+    return ret%2;
 }
 

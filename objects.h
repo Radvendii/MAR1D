@@ -33,12 +33,17 @@ typedef struct {
     int h;
 } box;
 
-typedef point* pObj;
+typedef struct{
+    point* ps;
+    box bb;
+    box* cols;
+    int nCols;
+} obj;
+
 typedef int* level;
 
 color* ob_colors;
-pObj* ob_pObjs;
-box* ob_boxes;
+obj* ob_objs;
 level* ob_levels;
 
 int *ob_levelTest;

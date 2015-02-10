@@ -2,7 +2,8 @@ Cb:231.95.19
 Cl:240.208.176
 C.:0.0.0
 
-Ob:60/15x15
+Ob; ps:60; dim:15x15; cols:1;
+C; pos:1,14; dim:13x1;
 llllllllllllllll
 b              .
 b              .
@@ -20,7 +21,7 @@ b              b
 b              b
 ................
 
-Og:60/15x15
+Og; ps:60; dim:15x15; cols:0;
 bllllllll.bllllb
 l              .
 l              .
@@ -38,7 +39,7 @@ l              .
 l              .
 b......bl......b
 
-O@:60/15x15
+O@; ps:60; dim:15x15; cols:0;
 ................
 .              .
 .              .
@@ -56,10 +57,65 @@ O@:60/15x15
 .              .
 ................
 
-O.:0/0x0
+Cg:255.163.71
 
-Lt:38
-               bbbbbbb b b bbb bb  b
+Oc; ps:36; dim:10x14; cols:0;
+  gggg..
+ g      .
+ g      .
+g        .
+g        .
+g        .
+g        .
+g        .
+g        .
+g        .
+g        .
+ g      .
+ g      .
+  gggg..
 
-   @
+OC; ps:58; dim:15x15; cols:1;
+C; pos:1,14; dim:13x1;
+ bbbbbbbbbbbbbb 
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+b              .
+................
+
+OD; ps:56; dim:15x15; cols:0;
+ .............. 
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+.              .
+ .............. 
+
+O.; ps:0; dim:0x0; cols:0;
+
+Lt:42
+               Cbbbbbbb b b bbb bb  b
+         C   c
+   @  c
 gggggggggggggggggggggg
