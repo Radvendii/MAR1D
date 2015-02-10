@@ -114,8 +114,28 @@ OD; ps:56; dim:15x15; cols:0;
 
 O.; ps:0; dim:0x0; cols:0;
 
+Oe; ps:47; dim:15x15; cols:1;
+C; pos:1,0; dim:13x1;
+      bbbb       
+     b    b      
+    b      b     
+   b        b    
+  b          b   
+ b            b  
+ b             b 
+b               b
+b               b
+b               b
+ bbb         bbb 
+    l       l    
+  ..        l    
+ .           .   
+ .           .   
+  .....l....     
+
 Lt:42
                Cbbbbbbb b b bbb bb  b
+
          C   c
-   @  c
+   @ ec
 gggggggggggggggggggggg

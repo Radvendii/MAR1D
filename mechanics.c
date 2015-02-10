@@ -12,13 +12,9 @@ void mh_init(){
 void mh_update(){
     for(int i=0;s.scene[i*3] != '\0';i++){
         if(s.action[i] == act_nothing){continue;}
-        if((s.scene[i*3] == 'C' || s.scene[i*3] == 'b') && s.action[i] <= act_bounceD){
-            s.scene[i*3+2]--;
+        if(s.action[i] <= act_bounce){
             s.action[i]--;
-        }
-        else if((s.scene[i*3] == 'C' || s.scene[i*3] == 'b') && s.action[i] <= act_bounce){
-            s.scene[i*3+2]++;
-            s.action[i]--;
+            s.scene[i*3+2] -= (s.action[i] < act_bounceD && s.action[i] > act_bounceU) * 2 - 1;
         }
         if(s.scene[i*3] == 'C' && s.action[i] == act_nothing){
             s.scene[i*3] = 'D';
@@ -52,6 +48,11 @@ AFTER_Y_MOTION: ;
         s.velX = 0;
     }
 AFTER_X_MOTION: ;
+
+    int pn=0;
+    while(s.scene[++pn*3] != '@'){;}
+    s.scene[pn*3+1] = s.x;
+    s.scene[pn*3+2] = s.y;
 }
 
 int mh_isCollision(int i1, int i2){ //returns side of collision starting from front and moving clockwise
@@ -90,14 +91,20 @@ bool mh_playerCollision(int i){
                 ret = false;
                 break;
             case 'C':
-                if(ret/2){
+                if(ret/2 && s.action[i/3] == act_nothing){
                     s.coins++;
                 }
             case 'b':
-                if(ret/2){
+                if(ret/2 && s.action[i/3] == act_nothing){
                     s.action[i/3] = act_bounce;
                     cl_jumpEnd();
                 }
+                break;
+            case 'e':
+                if(ret/2){
+                    s.scene[i]='.';
+                }
+                else{s.y-=100;}
                 break;
         }
     }

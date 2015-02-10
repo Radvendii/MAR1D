@@ -25,7 +25,6 @@ bool cl_go1(char dir, bool pos){
     }
     dirNum += dir == 'x' ? 1 : 2;
     if(ret){
-        s.scene[dirNum] += pos*2-1;
     }
     else{
         if(dir == 'x'){s.x -= pos*2-1;}
