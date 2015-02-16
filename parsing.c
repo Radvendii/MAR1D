@@ -112,6 +112,10 @@ void io_getObjs(obj** os, color cs[127], char* fn){
                 break;
             case 'O':
                 fscanf(f, "%c; ps:%i; dim:%ix%i; cols:%i;", &oname, &size, &w, &h, &nCols);
+                (*os)[oname].type[0] = oname;
+                (*os)[oname].type[1] = '\0';
+                (*os)[oname].x = 0;
+                (*os)[oname].y = 0;
                 (*os)[oname].bb = (box) {.x = 0, .y = 0, .w = w, .h = -h};
                 (*os)[oname].ps = resalloc(os[oname], sizeof(point) * (size+1));
                 (*os)[oname].cols = salloc(sizeof(box) * nCols);

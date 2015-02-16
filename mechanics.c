@@ -10,14 +10,18 @@ void mh_init(){
 }
 
 void mh_update(){
-    for(int i=0;s.scene[i*3] != '\0';i++){
-        if(s.action[i] == act_nothing){continue;}
-        if(s.action[i] <= act_bounce){
-            s.action[i]--;
-            s.scene[i*3+2] -= (s.action[i] < act_bounceD && s.action[i] > act_bounceU) * 2 - 1;
+    for(int i=0;s.scene[i].type[0] != '\0';i++){
+        if(s.scene[i].i == act_nothing){continue;}
+        if(s.scene[i].i <= act_bounce){
+            s.scene[i].i--;
+            s.scene[i].y -= (s.scene[i].i < act_bounceD && s.scene[i].i > act_bounceU) * 2 - 1;
         }
-        if(s.scene[i*3] == 'C' && s.action[i] == act_nothing){
-            s.scene[i*3] = 'D';
+        if(s.scene[i].type[0] == 'C' && s.scene[i].i == act_nothing){
+            obj temp = s.scene[i];
+            s.scene[i] = ob_objFchar('D');
+            s.scene[i].x = temp.x;
+            s.scene[i].y = temp.y;
+            s.scene[i].i = temp.i;
         }
     }
 
@@ -48,67 +52,54 @@ AFTER_Y_MOTION: ;
         s.velX = 0;
     }
 AFTER_X_MOTION: ;
-
-    int pn=0;
-    while(s.scene[++pn*3] != '@'){;}
-    s.scene[pn*3+1] = s.x;
-    s.scene[pn*3+2] = s.y;
 }
 
 int mh_isCollision(int i1, int i2){ //returns side of collision starting from front and moving clockwise
     if(i1 % 3 !=0 || i2 % 3 !=0){printf("Error in mh_isCollision(): indicies must be the beginning of object (i.e. %%3==0)");exit(1);}
     int ret = 0;
-    box b1 = ob_objs[s.scene[i1]].bb;
-    box b2 = ob_objs[s.scene[i2]].bb;
-    ob_realifyBox(&b1, (s.scene + i1 + 1));
-    ob_realifyBox(&b2, (s.scene + i2 + 1));
+    box b1 = s.scene[i1/3].bb;
+    box b2 = s.scene[i2/3].bb;
+    ob_realifyBox(&b1, s.scene[i1/3].x, s.scene[i1/3].y);
+    ob_realifyBox(&b2, s.scene[i2/3].x, s.scene[i2/3].y);
     ret += k_boxInter(b1, b2);
-    int nCols = ob_objs[s.scene[i1]].nCols;
+    int nCols = s.scene[i1/3].nCols;
     for(int i=0;i<nCols;i++){
-        b1 = ob_objs[s.scene[i1]].cols[i];
-        ob_realifyBox(&b1, (s.scene + i1 + 1));
+        b1 = s.scene[i1/3].cols[i];
+        ob_realifyBox(&b1, s.scene[i1/3].x, s.scene[i1/3].y);
         if(k_boxInter(b1, b2)){ret += pow(2, i+1);}
     }
     return ret;
 }
 
 bool mh_playerCollision(int i){
-    int obj=0;
-    while(!(s.scene[obj] == '\0')){obj+=3;}
-    s.scene[obj] = '@';
-    s.scene[obj+1] = s.x;
-    s.scene[obj+2] = s.y;
-    s.scene[obj+3] = '\0';
-    int ret = mh_isCollision(i, obj);
+    int ret = mh_isCollision(i, s.pli*3);
     if(ret){
-        switch(s.scene[i]){
+        switch(s.scene[i/3].type[0]){
             case 'c':
                 s.coins++;
-                s.scene[i]='.';
+                s.scene[i/3] = ob_objFchar('.');
                 ret = false;
                 break;
             case '.':
                 ret = false;
                 break;
             case 'C':
-                if(ret/2 && s.action[i/3] == act_nothing){
+                if(ret/2 && s.scene[i/3].i == act_nothing){
                     s.coins++;
                 }
             case 'b':
-                if(ret/2 && s.action[i/3] == act_nothing){
-                    s.action[i/3] = act_bounce;
-                    cl_jumpEnd();
+                if(ret/2 && s.scene[i/3].i == act_nothing){
+                    s.scene[i/3].i = act_bounce;
                 }
                 break;
             case 'e':
                 if(ret/2){
-                    s.scene[i]='.';
+                    s.scene[i/3].type[0]='.';
                 }
                 else{s.y-=100;}
                 break;
         }
     }
-    s.scene[obj] = '\0';
     return ret%2;
 }
 

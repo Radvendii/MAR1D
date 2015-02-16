@@ -16,12 +16,11 @@ void rn_dimFcamera(point *points, struct camera c){
     points[nPoints++] = (point) {.x = 0, .y = 0, c_brick};
 
     for(int obj=0;;obj++) {
-        if(c.scene[obj*3] == '\0') {break;} //Check for termination
+        if(ob_levelTest[obj].type[0] == '\0') {break;} //Check for termination
         for(int pn=0;;pn++) {
-            if(ob_p_isTerm(ob_objs[c.scene[obj*3]].ps[pn])){break;}
-            p = ob_objs[c.scene[obj*3]].ps[pn];
+            if(ob_p_isTerm(p = ob_levelTest[obj].ps[pn])){break;}
 
-            ob_realifyPoint(&p, (c.scene + obj*3 +1));
+            ob_realifyPoint(&p, ob_levelTest[obj].x, ob_levelTest[obj].y);
             points[nPoints++] = p;
         }
     }
@@ -41,36 +40,32 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     int D;
     point p;
     int y;
+    for(int obj=0;;obj++) {
+        if(ob_levelTest[obj].type[0] == '\0') {break;} //Check for termination
+        if(ob_levelTest[obj].type[0] == '@') {continue;} //don't render playerBox
+        for(point* pp=ob_levelTest[obj].ps;!ob_p_isTerm(p = *pp);pp++) {
+            ob_realifyPoint(&p, ob_levelTest[obj].x, ob_levelTest[obj].y);
+            p.x -= c.x;
+            p.y -= c.y;
+            double alpha = atan2(p.y, p.x) - c.T;
+            alpha = fmod(alpha, 2*pi);
+            if(alpha<0){alpha += 2*pi;}
 
-    double theta = c.T;
-    double gamma = c.FOV/2;
-
-        for(int obj=0;;obj++) {
-            if(c.scene[obj*3] == '\0') {break;} //Check for termination
-            if(c.scene[obj*3] == '@') {continue;} //don't render playerBox
-            for(point* pp=ob_objs[c.scene[obj*3]].ps;!ob_p_isTerm(p = *pp);pp++) {
-                ob_realifyPoint(&p, (c.scene + obj*3 +1));
-                p.x -= c.x;
-                p.y -= c.y;
-                double alpha = atan2(p.y, p.x) - theta;
-                alpha = fmod(alpha, 2*pi);
-                if(alpha<0){alpha += 2*pi;}
-
-                if(!(alpha>=0 && alpha<gamma*2)){continue;}
-                y = (tan(alpha-gamma) + tan(gamma) ) / (2*tan(gamma)) * k_nPixels;
-                if(c.flip){y = k_nPixels-y;}
-                d = sqrt(p.x*p.x + p.y*p.y);
-                D = ceil(1/(2*d*tan(c.FOV/2))*k_nPixels);
-                for(int i=y-D;i<y+D;i++){
-                    if(i<0 || i >= k_nPixels) {continue;}
-                    if(d<ds[i]){
-                        ds[i] = d;
-                        screen[i*3+0] = p.r;
-                        screen[i*3+1] = p.g;
-                        screen[i*3+2] = p.b;
-                    }
+            if(!(alpha>=0 && alpha<c.FOV)){continue;}
+            y = (tan(alpha-c.FOV/2) + tan(c.FOV/2) ) / (2*tan(c.FOV/2)) * k_nPixels;
+            if(c.flip){y = k_nPixels-y;}
+            d = sqrt(p.x*p.x + p.y*p.y);
+            D = ceil(1/(2*d*tan(c.FOV/2))*k_nPixels);
+            for(int i=y-D;i<y+D;i++){
+                if(i<0 || i >= k_nPixels) {continue;}
+                if(d<ds[i]){
+                    ds[i] = d;
+                    screen[i*3+0] = p.r;
+                    screen[i*3+1] = p.g;
+                    screen[i*3+2] = p.b;
                 }
             }
         }
+    }
     return;
 }

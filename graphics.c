@@ -1,4 +1,5 @@
 #include "graphics.h"
+//TODO: FOV decreases when moving fast
 
 void gr_keypress(int key, int scancode, int action, int mods){
     if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){

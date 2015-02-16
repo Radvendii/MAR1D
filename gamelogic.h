@@ -3,6 +3,7 @@
 #include "objects.h"
 #include "controls.h"
 #include "mechanics.h"
+#include "enemies.h"
 #define act_nothing 0
 #define act_bounce 16
 #define act_bounceU 1
@@ -10,10 +11,10 @@
 
 
 struct state {
-    int* scene;
-    int* action;
+    obj* scene;
     int x;
     int y;
+    int pli;
     bool onGround;
     bool paused;
     bool forward;
@@ -29,6 +30,8 @@ struct state {
 };
 
 struct state s;
+
+int gl_playerIndex();
 
 void gl_init();
 void gl_update();

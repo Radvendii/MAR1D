@@ -15,20 +15,29 @@ void cl_update(){
 
 bool cl_go1(char dir, bool pos){
     bool ret=true;
-    int dirNum;
-    if(dir == 'x'){s.x += pos*2-1;}
-    else{s.y += pos*2-1;}
-    for(int obj=0;;obj+=3){
-        if(s.scene[obj] == '\0') {break;}
-        if(s.scene[obj] == '@') {dirNum = obj; continue;}
-        if(mh_playerCollision(obj)) {ret = false;}
-    }
-    dirNum += dir == 'x' ? 1 : 2;
-    if(ret){
+    if(dir == 'x'){
+        s.x += pos*2-1;
+        s.scene[s.pli].x += pos*2-1;
     }
     else{
-        if(dir == 'x'){s.x -= pos*2-1;}
-        else{s.y -= pos*2-1;}
+        s.y += pos*2-1;
+        s.scene[s.pli].y += pos*2-1;
+    }
+    for(int obj=0;;obj+=3){
+        if(s.scene[obj/3].type[0] == '\0') {break;}
+        if(s.scene[obj/3].type[0] == '@') {continue;}
+        if(mh_playerCollision(obj)) {ret = false;}
+    }
+    if(ret){ ; }
+    else{
+        if(dir == 'x'){
+            s.x -= pos*2-1;
+            s.scene[s.pli].x -= pos*2-1;
+        }
+        else{
+            s.y -= pos*2-1;
+            s.scene[s.pli].y -= pos*2-1;
+        }
     }
     return ret;
 }

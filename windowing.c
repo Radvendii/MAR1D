@@ -23,21 +23,10 @@ void error_callback(int error, const char* description){
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         glfwSetWindowShouldClose(window, GL_TRUE);
-
-    if (key == GLFW_KEY_N && action == GLFW_PRESS){
-        double x, y;
-        glfwGetCursorPos(window, &x, &y);
-        int w,h;
-        glfwGetFramebufferSize(window, &w, &h);
-        int i=0;
-        do{i+=3;}while(s.scene[i]!='\0');
-        s.scene[i] = 'b';
-        s.scene[i+1] = (int)((x-w/2)/w*k_drawD*2);
-        s.scene[i+2] = (int)((h/2-y)/h*k_drawD*2);
-        s.scene[i+3] = '\0';
     }
+
     if (key == GLFW_KEY_J && action == GLFW_PRESS){
         debug = !debug;
     }

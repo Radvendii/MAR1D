@@ -10,7 +10,7 @@ struct camera {
     int x;
     int y;
     double T;
-    int* scene;
+    obj* scene;
     bool flip;
     bool paused;
     bool debug;

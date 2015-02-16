@@ -34,11 +34,19 @@ typedef struct {
 } box;
 
 typedef struct{
+    int x;
+    int y;
+    int i;
+
+    char type[10];
     point* ps;
     box bb;
     box* cols;
     int nCols;
 } obj;
+
+obj ob_objFchar(char);
+obj ob_objFtype(char*);
 
 typedef int* level;
 
@@ -46,14 +54,14 @@ color* ob_colors;
 obj* ob_objs;
 level* ob_levels;
 
-int *ob_levelTest;
+obj* ob_levelTest;
 
 void ob_init();
 void ob_deinit();
 
 void ob_printPoint(point);
-void ob_realifyPoint(point*, int*);
-void ob_realifyBox(box*, int*);
+void ob_realifyPoint(point*, int, int);
+void ob_realifyBox(box*, int, int);
 void ob_objectifyCam(int*, int*);
 
 bool ob_p_isTerm(point);
