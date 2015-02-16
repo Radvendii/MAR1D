@@ -17,26 +17,26 @@ bool cl_go1(char dir, bool pos){
     bool ret=true;
     if(dir == 'x'){
         s.x += pos*2-1;
-        s.scene[s.pli].x += pos*2-1;
+        ob_levelTest[s.pli].x += pos*2-1;
     }
     else{
         s.y += pos*2-1;
-        s.scene[s.pli].y += pos*2-1;
+        ob_levelTest[s.pli].y += pos*2-1;
     }
     for(int obj=0;;obj+=3){
-        if(s.scene[obj/3].type[0] == '\0') {break;}
-        if(s.scene[obj/3].type[0] == '@') {continue;}
+        if(ob_levelTest[obj/3].type[0] == '\0') {break;}
+        if(ob_levelTest[obj/3].type[0] == '@') {continue;}
         if(mh_playerCollision(obj)) {ret = false;}
     }
     if(ret){ ; }
     else{
         if(dir == 'x'){
             s.x -= pos*2-1;
-            s.scene[s.pli].x -= pos*2-1;
+            ob_levelTest[s.pli].x -= pos*2-1;
         }
         else{
             s.y -= pos*2-1;
-            s.scene[s.pli].y -= pos*2-1;
+            ob_levelTest[s.pli].y -= pos*2-1;
         }
     }
     return ret;

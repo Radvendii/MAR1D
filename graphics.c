@@ -14,6 +14,10 @@ void gr_cursormove(double xPos, double yPos){
 }
 
 void gr_update(){
+    //for(int i=0; (cam.scene[i] = ob_levelTest[i/3].type[0]) != '\0';i+=3){
+        //cam.scene[i+1] = s.scene[i+1];
+        //cam.scene[i+2] = s.scene[i+2];
+    //}
     cam.x = s.x+14;
     cam.y = s.y-2;
     cam.flip = s.flip;
@@ -113,7 +117,7 @@ void gr_draw(GLFWwindow *window, int renderType){
 void gr_init(){
     cam.drawD = k_drawD;
     cam.FOV = 60*pi/180;
-    cam.scene = s.scene;
+    //cam.scene = salloc(sizeof(int)*k_nMaxObj*3);
     cam.T = 0;
     debug = true;
     perspScreen = salloc(sizeof(unsigned char)*k_nPixels*3);
