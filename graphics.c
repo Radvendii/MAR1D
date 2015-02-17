@@ -14,8 +14,8 @@ void gr_cursormove(double xPos, double yPos){
 }
 
 void gr_update(){
-    cam.x = s.x+14;
-    cam.y = s.y-2;
+    cam.x = s.scene[s.pli].x+14;
+    cam.y = s.scene[s.pli].y-2;
     cam.flip = s.flip;
     rn_dimFcamera(dimScreen, cam);
     rn_perspFcamera(perspScreen, cam, NULL);

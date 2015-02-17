@@ -18,6 +18,8 @@ void cl_init();
 void cl_update();
 void cl_keypress(int, int, int, int);
 void cl_cursormove(double, double);
+bool cl_move1(int, char, bool);
+bool cl_go1(char, bool);
 bool cl_go(char, int);
 bool cl_forward();
 bool cl_backward();

@@ -10,6 +10,9 @@
 #include "parsing.h"
 struct state s;
 
+//TODO: how to represent what to do when x collides y (double hash)
+//TODO: renderable, physical attributes of objects
+
 int main(void){
     ob_init();
     gl_init();

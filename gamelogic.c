@@ -16,9 +16,6 @@ void gl_init(){
     int i;
     for(i=0; ob_levels['t'][i].type[0] != '\0';i++){s.scene[i] = ob_levels['t'][i];}
     s.scene[i].type[0] = '\0';
-
-    s.x = s.scene[s.pli].x;
-    s.y = s.scene[s.pli].y;
     s.flip = false;
 }
 
@@ -27,8 +24,6 @@ void gl_update(){
     mh_update();
     ai_update();
     s.pli = gl_playerIndex();
-    s.x = s.scene[s.pli].x;
-    s.y = s.scene[s.pli].y;
 }
 
 void gl_deinit(){

@@ -12,8 +12,6 @@
 
 struct state {
     obj* scene;
-    int x;
-    int y;
     int pli;
     bool onGround;
     bool paused;

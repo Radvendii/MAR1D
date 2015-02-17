@@ -42,6 +42,8 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){
     os[oname].type[1] = '\0';
     os[oname].x = 0;
     os[oname].y = 0;
+    os[oname].vx = 0;
+    os[oname].vy = 0;
     os[oname].i = 0;
     os[oname].bb = (box) {.x = 0, .y = 0, .w = w, .h = -h};
     os[oname].ps = resalloc(os[oname].ps, sizeof(point) * (size+1));
@@ -71,15 +73,41 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){
     os[oname].ps[i] = p_termPoint;
 }
 
+void io_getLevel(FILE* f, level ls[127], obj os[127]){
+    char lname;
+    int size;
+    char c;
+    int y=0,x=0,i=0;
+    fscanf(f, "%c:%i", &lname, &size);
+    ls[lname] = resalloc(ls[lname], sizeof(obj) * (size*3+1));
+    while(i<size){
+        switch(c = fgetc(f)){
+            case ' ':
+                x++;
+                break;
+            case '\n':
+                y--;
+                x=0;
+                break;
+            default:
+                ls[lname][i] = os[c];
+                ls[lname][i].x = x*16;
+                ls[lname][i].y = y*16;
+                i++;
+                x++;
+                break;
+        }
+    }
+    ls[lname][i].type[0] = '\0';
+    ls[lname][i].type[1] = '\0';
+}
+
 void io_getLevels(level** ls, char* fn){
     FILE *f = io_readFile(fn);
     io_os = salloc(sizeof(obj) * 127);
     io_cs = salloc(sizeof(color)*127);
     *ls = resalloc(*ls, sizeof(level)*127);
     char c;
-    char lname;
-    int size;
-    int y=0,x=0,i=0;
     for(int i=0;i<127;i++){(*ls)[i] = NULL;}
     while((c = fgetc(f)) != EOF){
         switch(c){
@@ -91,29 +119,8 @@ void io_getLevels(level** ls, char* fn){
             case 'O':
                 io_getObj(f, io_os, io_cs);
                 break;
-            case 'L': //TODO: Put this in io_getLevel()
-                fscanf(f, "%c:%i", &lname, &size);
-                (*ls)[lname] = resalloc((*ls)[lname], sizeof(obj) * (size*3+1));
-                while(i<size){
-                    switch(c = fgetc(f)){
-                        case ' ':
-                            x++;
-                            break;
-                        case '\n':
-                            y--;
-                            x=0;
-                            break;
-                        default:
-                            (*ls)[lname][i] = io_os[c];
-                            (*ls)[lname][i].x = x*16;
-                            (*ls)[lname][i].y = y*16;
-                            i++;
-                            x++;
-                            break;
-                    }
-                }
-                (*ls)[lname][i].type[0] = '\0';
-                (*ls)[lname][i].type[1] = '\0';
+            case 'L':
+                io_getLevel(f, *ls, io_os);
                 break;
             default:
                 while(fgetc(f) != '\n');

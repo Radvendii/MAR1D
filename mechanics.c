@@ -12,7 +12,7 @@ void mh_init(){
 void mh_update(){
     for(int i=0;s.scene[i].type[0] != '\0';i++){
         if(s.scene[i].i == act_nothing){continue;}
-        if(s.scene[i].i <= act_bounce){
+        if(s.scene[i].i <= act_bounce && (s.scene[i].type[0] == 'C' || s.scene[i].type[0] == 'b')){
             s.scene[i].i--;
             s.scene[i].y -= (s.scene[i].i < act_bounceD && s.scene[i].i > act_bounceU) * 2 - 1;
         }
@@ -53,7 +53,7 @@ AFTER_Y_MOTION: ;
 AFTER_X_MOTION: ;
 }
 
-int mh_isCollision(int i1, int i2){
+int mh_isCollision(int i1, int i2){ //TODO: implement collision() which executes the appropriate collision mechanics for each object.
     int ret = 0;
     box b1 = s.scene[i1].bb;
     box b2 = s.scene[i2].bb;
