@@ -2,37 +2,19 @@
 #include "parsing.h"
 
 void ob_init(){
-    ob_colors = NULL;
-    ob_objs = NULL;
     ob_levels = NULL;
-    io_getColors(&ob_colors, "test.colors");
-    io_getLevels(&ob_levels, "test.colors");
-    io_getObjs(&ob_objs, ob_colors, "test.colors");
-
-    ob_levelTest = salloc(sizeof(obj) * k_nMaxObj);
-    for(int i=0;ob_levels['t'][i]!='\0';i+=3){
-        ob_levelTest[i/3] = ob_objs[ob_levels['t'][i]];
-        ob_levelTest[i/3].type[0] = ob_levels['t'][i];
-        ob_levelTest[i/3].type[1] = '\0';
-        ob_levelTest[i/3].x = ob_levels['t'][i+1];
-        ob_levelTest[i/3].y = ob_levels['t'][i+2];
-    }
+    io_getLevels(&ob_levels, "data");
 }
 
 void ob_deinit() {
-    free(ob_colors);
     for(int i=0;i<127;i++){
         free(ob_levels[i]);
-        free(ob_objs[i].ps);
-        free(ob_objs[i].cols);
     }
-    free(ob_levelTest);
-    free(ob_objs);
     free(ob_levels);
 }
 
 obj ob_objFchar(char c){
-    return ob_objs[c];
+    return io_os[c];
 }
 
 void ob_printPoint(point p){

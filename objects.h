@@ -48,13 +48,9 @@ typedef struct{
 obj ob_objFchar(char);
 obj ob_objFtype(char*);
 
-typedef int* level;
+typedef obj* level;
 
-color* ob_colors;
-obj* ob_objs;
 level* ob_levels;
-
-obj* ob_levelTest;
 
 void ob_init();
 void ob_deinit();

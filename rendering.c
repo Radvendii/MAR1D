@@ -16,11 +16,11 @@ void rn_dimFcamera(point *points, struct camera c){
     points[nPoints++] = (point) {.x = 0, .y = 0, c_brick};
 
     for(int obj=0;;obj++) {
-        if(ob_levelTest[obj].type[0] == '\0') {break;} //Check for termination
+        if(c.scene[obj].type[0] == '\0') {break;} //Check for termination
         for(int pn=0;;pn++) {
-            if(ob_p_isTerm(p = ob_levelTest[obj].ps[pn])){break;}
+            if(ob_p_isTerm(p = c.scene[obj].ps[pn])){break;}
 
-            ob_realifyPoint(&p, ob_levelTest[obj].x, ob_levelTest[obj].y);
+            ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             points[nPoints++] = p;
         }
     }
@@ -41,10 +41,10 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     point p;
     int y;
     for(int obj=0;;obj++) {
-        if(ob_levelTest[obj].type[0] == '\0') {break;} //Check for termination
-        if(ob_levelTest[obj].type[0] == '@') {continue;} //don't render playerBox
-        for(point* pp=ob_levelTest[obj].ps;!ob_p_isTerm(p = *pp);pp++) {
-            ob_realifyPoint(&p, ob_levelTest[obj].x, ob_levelTest[obj].y);
+        if(c.scene[obj].type[0] == '\0') {break;} //Check for termination
+        if(c.scene[obj].type[0] == '@') {continue;} //don't render playerBox
+        for(point* pp=c.scene[obj].ps;!ob_p_isTerm(p = *pp);pp++) {
+            ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             p.x -= c.x;
             p.y -= c.y;
             double alpha = atan2(p.y, p.x) - c.T;

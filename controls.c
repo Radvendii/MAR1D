@@ -13,31 +13,34 @@ void cl_update(){
     if(!--s.upcount){cl_jumpEnd();}
 }
 
+bool cl_move1(int i, char dir, bool pos){
+    bool ret=true;
+    if(dir == 'x'){s.scene[i].x += pos*2-1;}
+    else{s.scene[i].y += pos*2-1;}
+    for(int obj=0;;obj++){
+        if(s.scene[obj].type[0] == '\0') {break;}
+        if(obj==i) {continue;}
+        if(mh_isCollision(i, obj)) {ret = false;}
+    }
+    if(!ret){
+        if(dir == 'x'){s.scene[i].x -= pos*2-1;}
+        else{s.scene[i].y -= pos*2-1;}
+    }
+    return ret;
+}
+
 bool cl_go1(char dir, bool pos){
     bool ret=true;
-    if(dir == 'x'){
-        s.x += pos*2-1;
-        ob_levelTest[s.pli].x += pos*2-1;
-    }
-    else{
-        s.y += pos*2-1;
-        ob_levelTest[s.pli].y += pos*2-1;
-    }
-    for(int obj=0;;obj+=3){
-        if(ob_levelTest[obj/3].type[0] == '\0') {break;}
-        if(ob_levelTest[obj/3].type[0] == '@') {continue;}
+    if(dir == 'x'){s.scene[s.pli].x += pos*2-1;}
+    else{s.scene[s.pli].y += pos*2-1;}
+    for(int obj=0;;obj++){
+        if(s.scene[obj].type[0] == '\0') {break;}
+        if(s.scene[obj].type[0] == '@') {continue;}
         if(mh_playerCollision(obj)) {ret = false;}
     }
-    if(ret){ ; }
-    else{
-        if(dir == 'x'){
-            s.x -= pos*2-1;
-            ob_levelTest[s.pli].x -= pos*2-1;
-        }
-        else{
-            s.y -= pos*2-1;
-            ob_levelTest[s.pli].y -= pos*2-1;
-        }
+    if(!ret){
+        if(dir == 'x'){s.scene[s.pli].x -= pos*2-1;}
+        else{s.scene[s.pli].y -= pos*2-1;}
     }
     return ret;
 }
