@@ -27,33 +27,93 @@ void mh_update(){
     cl_gravity();
     s.moveFrameY++;
     s.moveFrameX++;
-    double yMove = s.velY;
-    double xMove = s.velX;
-    if(s.velY < 1){
+    double yMove = s.scene[s.pli].vy;
+    double xMove = s.scene[s.pli].vx;
+    if(s.scene[s.pli].vy < 1){
         if((s.moveFrameY %= k_moveFrames) == 0){yMove *= 2;}
         else{goto AFTER_Y_MOTION;}
     }
 
-    bool colisY = !cl_go('y', yMove);
+    bool colisY = !cl_move(s.pli, 'y', yMove);
     if(colisY == true){
-        if(s.velY <= 0) {s.onGround = true;}
-        s.velY = 0;
+        if(s.scene[s.pli].vy <= 0) {s.onGround = true;}
+        s.scene[s.pli].vy = 0;
     }
-    else if((int) s.velY != 0){s.onGround = false;}
+    else if((int) s.scene[s.pli].vy != 0){s.onGround = false;}
 AFTER_Y_MOTION: ;
 
-    if(s.velX < 1){
+    if(s.scene[s.pli].vx < 1){
         if((s.moveFrameX %= k_moveFrames) == 0){xMove *= 2;}
         else{goto AFTER_X_MOTION;}
     }
-    bool colisX = !cl_go('x', xMove);
+    bool colisX = !cl_move(s.pli, 'x', xMove);
     if(colisX == true){
-        s.velX = 0;
+        s.scene[s.pli].vx = 0;
     }
 AFTER_X_MOTION: ;
 }
 
-int mh_isCollision(int i1, int i2){ //TODO: implement collision() which executes the appropriate collision mechanics for each object.
+bool mh_collision(int i1, int i2){
+    int ret;
+    int nCols;
+    box b1 = s.scene[i1].bb;
+    box b2 = s.scene[i2].bb;
+    box b3;
+    ob_realifyBox(&b1, s.scene[i1].x, s.scene[i1].y);
+    ob_realifyBox(&b2, s.scene[i2].x, s.scene[i2].y);
+
+    ret = k_boxInter(b1, b2);
+    nCols = s.scene[i1].nCols;
+    for(int i=0;i<nCols;i++){
+        b3 = s.scene[i1].cols[i];
+        ob_realifyBox(&b3, s.scene[i1].x, s.scene[i1].y);
+        if(k_boxInter(b3, b2)){ret += pow(2, i+1);}
+    }
+    if(ret){mh_doCollision(&(s.scene[i1]), &(s.scene[i2]), ret);}
+
+    ret = k_boxInter(b1, b2);
+    nCols = s.scene[i2].nCols;
+    for(int i=0;i<nCols;i++){
+        b3 = s.scene[i2].cols[i];
+        ob_realifyBox(&b3, s.scene[i2].x, s.scene[i2].y);
+        if(k_boxInter(b1, b3)){ret += pow(2, i+1);}
+    }
+    if(ret){mh_doCollision(&(s.scene[i2]), &(s.scene[i1]), ret);}
+
+    return ret;
+}
+
+void mh_doCollision(obj* actor, obj* actee, int cols){
+    switch((*actor).type[0]){
+        case '@':
+            switch((*actee).type[0]){
+                case 'c':
+                    s.coins++;
+                    *actee = ob_objFchar('.');
+                    break;
+                case '.':
+                    break;
+                case 'C':
+                    if(cols/2 && (*actee).i == act_nothing){
+                        s.coins++;
+                    }
+                case 'b':
+                    if(cols/2 && (*actee).i == act_nothing){
+                        (*actee).i = act_bounce;
+                    }
+                    break;
+                case 'e':
+                    if(cols/2){
+                        (*actee)=ob_objFchar('.');
+                    }
+                    //else{s.scene[s.pli].y-=100;}
+                    break;
+            }
+        break;
+    }
+}
+
+int mh_isCollision(int i1, int i2){
     int ret = 0;
     box b1 = s.scene[i1].bb;
     box b2 = s.scene[i2].bb;

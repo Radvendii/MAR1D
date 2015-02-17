@@ -19,8 +19,6 @@ struct state {
     double gravity;
     int upcount;
     bool backward;
-    double velX;
-    double velY;
     bool flip;
     int coins;
     int moveFrameY;

@@ -36,8 +36,8 @@ typedef struct {
 typedef struct{
     int x;
     int y;
-    int vx;
-    int vy;
+    double vx;
+    double vy;
     int i;
 
     char type[10];

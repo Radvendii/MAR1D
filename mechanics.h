@@ -17,8 +17,6 @@ int mh_isCollision(int, int);
 bool mh_playerCollision(int);
 void mh_update();
 void mh_listCollisions();
-/*
- *bool mh_isCollisionRight(struct world, int);
- *bool mh_isCollisionLeft(struct world, int);
- */
+bool mh_collision(int, int);
+void mh_doCollision(obj*, obj*, int);
 #endif

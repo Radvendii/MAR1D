@@ -1,15 +1,14 @@
 #include "controls.h"
 
 void cl_init(){
-    s.velY = 0;
-    s.velX = 0;
+    ;
 }
 
 void cl_update(){
-    if(s.forward && s.velX<k_xVelMax){s.velX+=k_xVel;}
-    if(!s.forward && s.onGround && s.velX>0){s.velX-=k_xVel;}
-    if(s.backward && s.velX>-k_xVelMax){s.velX-=k_xVel;}
-    if(!s.backward && s.onGround && s.velX<0){s.velX+=k_xVel;}
+    if(s.forward && s.scene[s.pli].vx<k_xVelMax){s.scene[s.pli].vx+=k_xVel;}
+    if(!s.forward && s.onGround && s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
+    if(s.backward && s.scene[s.pli].vx>-k_xVelMax){s.scene[s.pli].vx-=k_xVel;}
+    if(!s.backward && s.onGround && s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
     if(!--s.upcount){cl_jumpEnd();}
 }
 
@@ -20,11 +19,21 @@ bool cl_move1(int i, char dir, bool pos){
     for(int obj=0;;obj++){
         if(s.scene[obj].type[0] == '\0') {break;}
         if(obj==i) {continue;}
-        if(mh_isCollision(i, obj)) {ret = false;}
+        if(mh_collision(i, obj)) {ret = false;}
     }
     if(!ret){
         if(dir == 'x'){s.scene[i].x -= pos*2-1;}
         else{s.scene[i].y -= pos*2-1;}
+    }
+    return ret;
+}
+
+bool cl_move(int i, char dir, int amt){
+    bool ret=true;
+    while(amt != 0){
+        ret = ret && cl_move1(i, dir, amt > 0);
+        if(amt>0){amt--;}
+        else{amt++;}
     }
     return ret;
 }
@@ -56,7 +65,7 @@ bool cl_go(char dir, int amt){
 }
 
 void cl_jumpStart(){
-    if(s.onGround) {s.velY = k_yVel;
+    if(s.onGround) {s.scene[s.pli].vy = k_yVel;
         s.gravity/=5;
         s.upcount = k_nJumpFrames;
     }
@@ -119,6 +128,6 @@ bool cl_upward(){
 }
 
 void cl_gravity(){
-    s.velY += s.gravity;
-    if(s.velY<k_yVelMin){s.velY=k_yVelMin;}
+    s.scene[s.pli].vy += s.gravity;
+    if(s.scene[s.pli].vy<k_yVelMin){s.scene[s.pli].vy=k_yVelMin;}
 }
