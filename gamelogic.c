@@ -8,6 +8,7 @@ int gl_playerIndex(){
 }
 
 void gl_init(){
+    s.gameOver = false;
     s.scene = salloc(sizeof(obj) * k_nMaxObj);
     s.pli = gl_playerIndex();
 

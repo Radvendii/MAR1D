@@ -14,7 +14,7 @@ int io_getFont(bool** font, char* fn){
     int i=0;
     int fontSize;
     fscanf(f, "%d\n", &fontSize);
-    *font = resalloc(*font, sizeof(bool)*fontSize*43);
+    *font = salloc(sizeof(bool)*fontSize*43);
     while((c = fgetc(f)) != EOF){
         if(c == '\n'){continue;}
         else{(*font)[i++]= (c == '1' ? true : false);}
@@ -90,7 +90,7 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
     char c;
     int y=0,x=0,i=0;
     fscanf(f, "%c:%d", &lname, &size);
-    ls[lname] = resalloc(ls[lname], sizeof(obj) * (size*3+1));
+    ls[lname] = salloc(sizeof(obj) * (size*3+1));
     while(i<size){
         switch(c = fgetc(f)){
             case ' ':
@@ -116,8 +116,9 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
 void io_getLevels(level** ls, char* fn){
     FILE *f = io_readFile(fn);
     io_os = salloc(sizeof(obj) * 127);
+    for(int i=0;i<127;i++){io_os[i].ps = NULL;}
     io_cs = salloc(sizeof(color)*127);
-    *ls = resalloc(*ls, sizeof(level)*127);
+    *ls = salloc(sizeof(level)*127);
     char c;
     for(int i=0;i<127;i++){(*ls)[i] = NULL;}
     while((c = fgetc(f)) != EOF){

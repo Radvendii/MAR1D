@@ -113,7 +113,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                         (*ee)=ob_objFchar('.');
                         cl_smallJump();
                     }
-                    else{s.scene[s.pli].y-=100;}
+                    else{s.gameOver=true;}
                     break;
             }
             break;

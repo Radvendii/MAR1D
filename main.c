@@ -10,9 +10,6 @@
 #include "parsing.h"
 struct state s;
 
-//TODO: how to represent what to do when x collides y (double hash)
-//TODO: renderable, physical attributes of objects
-
 int main(void){
     ob_init();
     gl_init();
@@ -22,8 +19,17 @@ int main(void){
     glfwSetTime(0.0);
 
     while(!wn_shouldClose()) {
-        //sleep(1);
+        if(s.gameOver){
+            gr_deinit();
+            wn_deinit();
+            gl_deinit();
+            ob_deinit();
 
+            ob_init();
+            gl_init();
+            wn_init();
+            gr_init();
+        }
         if(!s.paused){
             gl_update();
             gr_update();

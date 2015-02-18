@@ -1,7 +1,9 @@
 #include "controls.h"
 
 void cl_init(){
-    ;
+    s.backward = false;
+    s.forward = false;
+    s.upcount = 0;
 }
 
 void cl_update(){

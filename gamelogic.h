@@ -15,11 +15,12 @@ struct state {
     int pli;
     bool onGround;
     bool paused;
-    bool forward;
     double gravity;
     int upcount;
+    bool forward;
     bool backward;
     bool flip;
+    bool gameOver;
     int coins;
     int moveFrameY;
     int moveFrameX;
