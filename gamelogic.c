@@ -8,8 +8,6 @@ int gl_playerIndex(){
 }
 
 void gl_init(){
-    mh_init();
-    cl_init();
     s.scene = salloc(sizeof(obj) * k_nMaxObj);
     s.pli = gl_playerIndex();
 
@@ -17,6 +15,9 @@ void gl_init(){
     for(i=0; ob_levels['t'][i].type[0] != '\0';i++){s.scene[i] = ob_levels['t'][i];}
     s.scene[i].type[0] = '\0';
     s.flip = false;
+    mh_init();
+    cl_init();
+    ai_init();
 }
 
 void gl_update(){

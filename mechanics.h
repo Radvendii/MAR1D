@@ -13,10 +13,9 @@
 extern struct state s;
 
 void mh_init();
-int mh_isCollision(int, int);
-bool mh_playerCollision(int);
 void mh_update();
 void mh_listCollisions();
 bool mh_collision(int, int);
-void mh_doCollision(obj*, obj*, int);
+void mh_doCollision(obj*, obj*, int, int);
+void mh_move(int);
 #endif

@@ -1,5 +1,7 @@
 #include "parsing.h"
 
+//TODO: Animations not still images
+
 FILE* io_readFile(char* fn){
     char fn_[100];
     sprintf(fn_, "%s%s", "../", fn);
@@ -11,7 +13,7 @@ int io_getFont(bool** font, char* fn){
     int c;
     int i=0;
     int fontSize;
-    fscanf(f, "%i\n", &fontSize);
+    fscanf(f, "%d\n", &fontSize);
     *font = resalloc(*font, sizeof(bool)*fontSize*43);
     while((c = fgetc(f)) != EOF){
         if(c == '\n'){continue;}
@@ -29,48 +31,57 @@ void io_getColor(FILE* f, color cs[127]){//cs must be an array 127 big
     return;
 }
 
-void io_getObj(FILE* f, obj os[127], color cs[127]){
+void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays of point arrays
     char oname;
+    int nps;
     int size;
     int w, h;
     int nCols;
     int xpos, ypos, xhei, yhei;
-    int x,y,i;
+    int grav;
+    int phys;
+    int x,y,i,j;
     char c;
-    fscanf(f, "%c; ps:%i; dim:%ix%i; cols:%i;", &oname, &size, &w, &h, &nCols);
+    fscanf(f, "%c%d; ps:%d; dim:%dx%d; cols:%d; grav:%d; phys:%d;", &oname, &nps, &size, &w, &h, &nCols, &grav, &phys);
     os[oname].type[0] = oname;
     os[oname].type[1] = '\0';
+    os[oname].gravity = grav;
+    os[oname].physical = phys;
     os[oname].x = 0;
     os[oname].y = 0;
     os[oname].vx = 0;
     os[oname].vy = 0;
     os[oname].i = 0;
+    os[oname].nps = nps;
     os[oname].bb = (box) {.x = 0, .y = 0, .w = w, .h = -h};
-    os[oname].ps = resalloc(os[oname].ps, sizeof(point) * (size+1));
+    os[oname].ps = salloc(sizeof(point*) * nps);
     os[oname].cols = salloc(sizeof(box) * nCols);
     os[oname].nCols = nCols;
     i=0;
     while(i<nCols){
-        fscanf(f, "\nC; pos:%i,%i; dim:%ix%i;", &xpos, &ypos, &xhei, &yhei);
+        fscanf(f, "\nC; pos:%d,%d; dim:%dx%d;", &xpos, &ypos, &xhei, &yhei);
         os[oname].cols[i++] = (box) {.x = xpos, .y = -ypos, .w = xhei, .h = -yhei};
     }
-    y=0; x=0; i=0;
-    while(i<size){
-        switch(c = fgetc(f)){
-            case ' ':
-                x++;
-                break;
-            case '\n':
-                y--;
-                x=0;
-                break;
-            default:
-                os[oname].ps[i++] = (point) {.x = x, .y = y, .r = cs[c].r, .g = cs[c].g, .b = cs[c].b};
-                x++;
-                break;
+    for(j=0;j<nps;j++){
+        y=0; x=0; i=0;
+        os[oname].ps[j] = salloc(sizeof(point) * (size+1));
+        while(i<size){
+            switch(c = fgetc(f)){
+                case ' ':
+                    x++;
+                    break;
+                case '\n':
+                    y--;
+                    x=0;
+                    break;
+                default:
+                    os[oname].ps[j][i++] = (point) {.x = x, .y = y, .r = cs[c].r, .g = cs[c].g, .b = cs[c].b};
+                    x++;
+                    break;
+            }
         }
+    os[oname].ps[j][i] = p_termPoint;
     }
-    os[oname].ps[i] = p_termPoint;
 }
 
 void io_getLevel(FILE* f, level ls[127], obj os[127]){
@@ -78,7 +89,7 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
     int size;
     char c;
     int y=0,x=0,i=0;
-    fscanf(f, "%c:%i", &lname, &size);
+    fscanf(f, "%c:%d", &lname, &size);
     ls[lname] = resalloc(ls[lname], sizeof(obj) * (size*3+1));
     while(i<size){
         switch(c = fgetc(f)){

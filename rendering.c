@@ -18,7 +18,7 @@ void rn_dimFcamera(point *points, struct camera c){
     for(int obj=0;;obj++) {
         if(c.scene[obj].type[0] == '\0') {break;} //Check for termination
         for(int pn=0;;pn++) {
-            if(ob_p_isTerm(p = c.scene[obj].ps[pn])){break;}
+            if(ob_p_isTerm(p = c.scene[obj].ps[c.animFrame/10 % c.scene[obj].nps][pn])){break;}
 
             ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             points[nPoints++] = p;
@@ -43,7 +43,7 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     for(int obj=0;;obj++) {
         if(c.scene[obj].type[0] == '\0') {break;} //Check for termination
         if(c.scene[obj].type[0] == '@') {continue;} //don't render playerBox
-        for(point* pp=c.scene[obj].ps;!ob_p_isTerm(p = *pp);pp++) {
+        for(point* pp=c.scene[obj].ps[c.animFrame/10 % c.scene[obj].nps];!ob_p_isTerm(p = *pp);pp++) {
             ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             p.x -= c.x;
             p.y -= c.y;

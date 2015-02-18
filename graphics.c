@@ -14,6 +14,7 @@ void gr_cursormove(double xPos, double yPos){
 }
 
 void gr_update(){
+    cam.animFrame++;
     cam.x = s.scene[s.pli].x+14;
     cam.y = s.scene[s.pli].y-2;
     cam.flip = s.flip;
@@ -73,7 +74,7 @@ void gr_points(point *ps){
     glLoadIdentity();
     glOrtho(-cam.drawD+cam.x, cam.drawD+cam.x, -cam.drawD, cam.drawD, -1, 1);
 
-    glPointSize(330.0/k_drawD);
+    glPointSize(360.0/k_drawD);
     glBegin(GL_POINTS);
     for(int i=0;;i++){
         if(ob_p_isTerm(ps[i])){break;}
@@ -111,6 +112,7 @@ void gr_draw(GLFWwindow *window, int renderType){
 }
 
 void gr_init(){
+    cam.animFrame=0;
     cam.drawD = k_drawD;
     cam.FOV = 60*pi/180;
     cam.scene = s.scene;

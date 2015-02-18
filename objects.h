@@ -38,10 +38,13 @@ typedef struct{
     int y;
     double vx;
     double vy;
+    bool gravity;
+    bool physical;
     int i;
 
     char type[10];
-    point* ps;
+    point** ps;
+    int nps;
     box bb;
     box* cols;
     int nCols;

@@ -10,6 +10,7 @@ void mh_init(){
 }
 
 void mh_update(){
+    if((int)s.scene[s.pli].vy != 0){s.onGround = false;}
     for(int i=0;s.scene[i].type[0] != '\0';i++){
         if(s.scene[i].i == act_nothing){continue;}
         if(s.scene[i].i <= act_bounce && (s.scene[i].type[0] == 'C' || s.scene[i].type[0] == 'b')){
@@ -24,143 +25,103 @@ void mh_update(){
             s.scene[i].i = temp.i;
         }
     }
-    cl_gravity();
+    for(int i=0;s.scene[i].type[0] != '\0';i++){
+        if(s.scene[i].gravity){
+            s.scene[i].vy += s.gravity;
+            if(s.scene[i].vy<k_yVelMin){s.scene[i].vy=k_yVelMin;}
+        }
+        mh_move(i);
+    }
     s.moveFrameY++;
     s.moveFrameX++;
-    double yMove = s.scene[s.pli].vy;
-    double xMove = s.scene[s.pli].vx;
-    if(s.scene[s.pli].vy < 1){
-        if((s.moveFrameY %= k_moveFrames) == 0){yMove *= 2;}
+}
+
+void mh_move(int i){
+    double yMove = s.scene[i].vy;
+    double xMove = s.scene[i].vx;
+    if(abs(s.scene[i].vy) < 1){
+        if((s.moveFrameY %= k_moveFrames) == 0){yMove *= k_moveFrames;}
         else{goto AFTER_Y_MOTION;}
     }
-
-    bool colisY = !cl_move(s.pli, 'y', yMove);
-    if(colisY == true){
-        if(s.scene[s.pli].vy <= 0) {s.onGround = true;}
-        s.scene[s.pli].vy = 0;
-    }
-    else if((int) s.scene[s.pli].vy != 0){s.onGround = false;}
+    cl_move(i, 'y', yMove);
 AFTER_Y_MOTION: ;
 
-    if(s.scene[s.pli].vx < 1){
-        if((s.moveFrameX %= k_moveFrames) == 0){xMove *= 2;}
+    if(abs(s.scene[i].vx) < 1){
+        if((s.moveFrameX %= k_moveFrames) == 0){xMove *= k_moveFrames;}
         else{goto AFTER_X_MOTION;}
     }
-    bool colisX = !cl_move(s.pli, 'x', xMove);
-    if(colisX == true){
-        s.scene[s.pli].vx = 0;
-    }
+    cl_move(i, 'x', xMove);
 AFTER_X_MOTION: ;
 }
 
 bool mh_collision(int i1, int i2){
-    int ret;
+    bool ret;
     int nCols;
+    int cols1, cols2;
     box b1 = s.scene[i1].bb;
     box b2 = s.scene[i2].bb;
     box b3;
     ob_realifyBox(&b1, s.scene[i1].x, s.scene[i1].y);
     ob_realifyBox(&b2, s.scene[i2].x, s.scene[i2].y);
-
     ret = k_boxInter(b1, b2);
+
+    cols1 = ret;
     nCols = s.scene[i1].nCols;
+    if(nCols>1){
+    }
     for(int i=0;i<nCols;i++){
         b3 = s.scene[i1].cols[i];
         ob_realifyBox(&b3, s.scene[i1].x, s.scene[i1].y);
-        if(k_boxInter(b3, b2)){ret += pow(2, i+1);}
+        if(k_boxInter(b3, b2)){cols1 |= (int)pow(2, i+1);}
     }
-    if(ret){mh_doCollision(&(s.scene[i1]), &(s.scene[i2]), ret);}
 
-    ret = k_boxInter(b1, b2);
+    cols2 = ret;
     nCols = s.scene[i2].nCols;
     for(int i=0;i<nCols;i++){
         b3 = s.scene[i2].cols[i];
         ob_realifyBox(&b3, s.scene[i2].x, s.scene[i2].y);
-        if(k_boxInter(b1, b3)){ret += pow(2, i+1);}
+        if(k_boxInter(b1, b3)){cols2 |= (int)pow(2, i+1);}
     }
-    if(ret){mh_doCollision(&(s.scene[i2]), &(s.scene[i1]), ret);}
+    if(cols2){mh_doCollision(&(s.scene[i1]), &(s.scene[i2]), cols1, cols2);}
+    if(cols1){mh_doCollision(&(s.scene[i2]), &(s.scene[i1]), cols2, cols1);}
 
-    return ret;
+    return ret && s.scene[i2].physical;
 }
 
-void mh_doCollision(obj* actor, obj* actee, int cols){
-    switch((*actor).type[0]){
+void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
+    switch((*er).type[0]){
         case '@':
-            switch((*actee).type[0]){
+            if(colser & 2){(*er).vx = 0;}
+            if(colser & (4 | 8)){(*er).vy = 0;}
+            if(colser & 8){s.onGround = true;}
+            switch((*ee).type[0]){
                 case 'c':
                     s.coins++;
-                    *actee = ob_objFchar('.');
-                    break;
-                case '.':
+                    *ee = ob_objFchar('.');
                     break;
                 case 'C':
-                    if(cols/2 && (*actee).i == act_nothing){
+                    if(colsee & 2 && (*ee).i == act_nothing){
                         s.coins++;
                     }
                 case 'b':
-                    if(cols/2 && (*actee).i == act_nothing){
-                        (*actee).i = act_bounce;
+                    if(colsee & 2 && (*ee).i == act_nothing){
+                        (*ee).i = act_bounce;
                     }
                     break;
                 case 'e':
-                    if(cols/2){
-                        (*actee)=ob_objFchar('.');
+                    if(colsee & 2){
+                        (*ee)=ob_objFchar('.');
+                        cl_smallJump();
                     }
-                    //else{s.scene[s.pli].y-=100;}
+                    else{s.scene[s.pli].y-=100;}
                     break;
             }
-        break;
+            break;
+        case 'e':
+            if(colser & (4 | 8)){
+                (*er).vx = -(*er).vx;
+            }
+            break;
     }
-}
-
-int mh_isCollision(int i1, int i2){
-    int ret = 0;
-    box b1 = s.scene[i1].bb;
-    box b2 = s.scene[i2].bb;
-    ob_realifyBox(&b1, s.scene[i1].x, s.scene[i1].y);
-    ob_realifyBox(&b2, s.scene[i2].x, s.scene[i2].y);
-    ret += k_boxInter(b1, b2);
-    int nCols = s.scene[i1].nCols;
-    for(int i=0;i<nCols;i++){
-        b1 = s.scene[i1].cols[i];
-        ob_realifyBox(&b1, s.scene[i1].x, s.scene[i1].y);
-        if(k_boxInter(b1, b2)){ret += pow(2, i+1);}
-    }
-    return ret;
-}
-
-bool mh_playerCollision(int i){
-    int ret = mh_isCollision(i, s.pli);
-    if(ret){
-        switch(s.scene[i].type[0]){
-            case 'c':
-                s.coins++;
-                s.scene[i] = ob_objFchar('.');
-                ret = false;
-                break;
-            case '.':
-                ret = false;
-                break;
-            case 'C':
-                if(ret/2 && s.scene[i].i == act_nothing){
-                    s.coins++;
-                }
-            case 'b':
-                if(ret/2 && s.scene[i].i == act_nothing){
-                    s.scene[i].i = act_bounce;
-                }
-                break;
-            case 'e':
-                if(ret/2){
-                    s.scene[i]=ob_objFchar('.');
-                }
-                else{s.scene[s.pli].y-=100;}
-                break;
-        }
-    }
-    if(ret%2){
-        cl_jumpEnd();
-    }
-    return ret%2;
 }
 

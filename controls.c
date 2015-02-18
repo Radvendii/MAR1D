@@ -14,50 +14,24 @@ void cl_update(){
 
 bool cl_move1(int i, char dir, bool pos){
     bool ret=true;
-    if(dir == 'x'){s.scene[i].x += pos*2-1;}
-    else{s.scene[i].y += pos*2-1;}
+    if(dir == 'x'){s.scene[i].x += (pos ? 1 : -1);}
+    else{s.scene[i].y += (pos ? 1 : -1);}
     for(int obj=0;;obj++){
         if(s.scene[obj].type[0] == '\0') {break;}
         if(obj==i) {continue;}
         if(mh_collision(i, obj)) {ret = false;}
     }
     if(!ret){
-        if(dir == 'x'){s.scene[i].x -= pos*2-1;}
-        else{s.scene[i].y -= pos*2-1;}
+        if(dir == 'x'){s.scene[i].x -= (pos ? 1 : -1);}
+        else{s.scene[i].y -= (pos ? 1 : -1);}
     }
     return ret;
 }
 
 bool cl_move(int i, char dir, int amt){
     bool ret=true;
-    while(amt != 0){
-        ret = ret && cl_move1(i, dir, amt > 0);
-        if(amt>0){amt--;}
-        else{amt++;}
-    }
-    return ret;
-}
-
-bool cl_go1(char dir, bool pos){
-    bool ret=true;
-    if(dir == 'x'){s.scene[s.pli].x += pos*2-1;}
-    else{s.scene[s.pli].y += pos*2-1;}
-    for(int obj=0;;obj++){
-        if(s.scene[obj].type[0] == '\0') {break;}
-        if(s.scene[obj].type[0] == '@') {continue;}
-        if(mh_playerCollision(obj)) {ret = false;}
-    }
-    if(!ret){
-        if(dir == 'x'){s.scene[s.pli].x -= pos*2-1;}
-        else{s.scene[s.pli].y -= pos*2-1;}
-    }
-    return ret;
-}
-
-bool cl_go(char dir, int amt){
-    bool ret=true;
-    while(amt != 0){
-        ret = ret && cl_go1(dir, amt > 0);
+    while(amt != 0 && ret){
+        ret = cl_move1(i, dir, amt > 0);
         if(amt>0){amt--;}
         else{amt++;}
     }
@@ -65,11 +39,15 @@ bool cl_go(char dir, int amt){
 }
 
 void cl_jumpStart(){
-    if(s.onGround) {s.scene[s.pli].vy = k_yVel;
+    if(s.onGround) {
+        s.scene[s.pli].vy = k_yVel;
         s.gravity/=5;
         s.upcount = k_nJumpFrames;
     }
-    s.onGround = false;
+}
+
+void cl_smallJump(){
+        s.scene[s.pli].vy = k_yVel;
 }
 
 void cl_jumpEnd(){
@@ -112,19 +90,6 @@ void cl_keypress(int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_Q && action == GLFW_PRESS){
         s.paused = !s.paused;
     }
-}
-
-
-bool cl_forward(){
-    return cl_go('x', 2);
-}
-
-bool cl_backward(){
-    return cl_go('x', -2);
-}
-
-bool cl_upward(){
-    return cl_go('y', 2);
 }
 
 void cl_gravity(){

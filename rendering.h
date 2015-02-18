@@ -15,6 +15,7 @@ struct camera {
     bool paused;
     bool debug;
     int drawD;
+    int animFrame;
 };
 
 void rn_dimFcamera(point*, struct camera);
