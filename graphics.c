@@ -23,15 +23,15 @@ void gr_update(){
 }
 
 void gr_char(char c, GLfloat* x, GLfloat* y){
-    glPointSize(8.f);
+    glPointSize(2.5f);
     glBegin(GL_POINTS);
     for(int i=0;i<fontSize;i++){
         if(font[(c-48)*fontSize+i]){
-        glVertex2f(*x+i%5*5, *y-i/5*5);
+        glVertex2f(*x+i%7, *y-i/7);
         }
     }
     glEnd();
-    *x += 5*6;
+    *x += 8;
 }
 
 void gr_text(char *s, GLfloat x, GLfloat y){
@@ -104,7 +104,7 @@ void gr_draw(GLFWwindow *window, int renderType){
         glEnd();
         gr_points(dimScreen);
         glColor3f(1.0, 1.0, 1.0);
-        char score[100];
+        char score[20];
         sprintf(score, "%d", s.coins);
         gr_text(score, -k_drawD+5, k_drawD-5);
     }
@@ -122,7 +122,7 @@ void gr_init(){
     for(int i=0; i<k_nPixels*3; i++){perspScreen[i]=0;}
     dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
     dimScreen[0] = p_termPoint;
-    fontSize = io_getFont(&font, "dots.font");
+    fontSize = io_getFont(&font, "mario.font");
 }
 
 void gr_deinit(){

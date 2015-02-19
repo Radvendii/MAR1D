@@ -13,22 +13,22 @@ struct state s;
 int main(void){
     ob_init();
     gl_init();
-    wn_init();
     gr_init();
+    wn_init();
 
     glfwSetTime(0.0);
 
     while(!wn_shouldClose()) {
         if(s.gameOver){
-            gr_deinit();
             wn_deinit();
+            gr_deinit();
             gl_deinit();
             ob_deinit();
 
             ob_init();
             gl_init();
-            wn_init();
             gr_init();
+            wn_init();
         }
         if(!s.paused){
             gl_update();
@@ -40,8 +40,8 @@ int main(void){
         gr_draw(dimWindow, 0);
         wn_update();
     }
-    gr_deinit();
     wn_deinit();
+    gr_deinit();
     gl_deinit();
     ob_deinit();
     exit(EXIT_SUCCESS);

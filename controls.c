@@ -40,7 +40,7 @@ bool cl_move(int i, char dir, int amt){
     return ret;
 }
 
-void cl_jumpStart(){
+void cl_jumpStart(){ //TODO: Bug: Jumping makes goombas fall slow
     if(s.onGround) {
         s.scene[s.pli].vy = k_yVel;
         s.gravity/=5;

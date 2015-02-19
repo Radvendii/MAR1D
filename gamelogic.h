@@ -21,6 +21,7 @@ struct state {
     bool backward;
     bool flip;
     bool gameOver;
+    bool bigMario;
     int coins;
     int moveFrameY;
     int moveFrameX;

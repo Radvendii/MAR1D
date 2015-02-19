@@ -13,11 +13,20 @@ void mh_update(){
     if((int)s.scene[s.pli].vy != 0){s.onGround = false;}
     for(int i=0;s.scene[i].type[0] != '\0';i++){
         if(s.scene[i].i == act_nothing){continue;}
-        if(s.scene[i].i <= act_bounce && (s.scene[i].type[0] == 'C' || s.scene[i].type[0] == 'b')){
+        if(s.scene[i].i <= act_bounce && (s.scene[i].type[0] == 'C' || s.scene[i].type[0] == 'b' || s.scene[i].type[0] == 'R')){
             s.scene[i].i--;
             s.scene[i].y -= (s.scene[i].i < act_bounceD && s.scene[i].i > act_bounceU) * 2 - 1;
         }
-        if(s.scene[i].type[0] == 'C' && s.scene[i].i == act_nothing){
+        if(s.scene[i].type[0] == 'R' && s.scene[i].i == act_nothing){
+            int l;
+            for(l=0;s.scene[l].type[0] != '\0';l++);
+            s.scene[l] = ob_objFchar('r');
+            s.scene[l].x = s.scene[i].x;
+            s.scene[l].y = s.scene[i].y+16;
+            s.scene[l].vx = 1.0;
+            s.scene[l+1].type[0] = '\0';
+        }
+        if((s.scene[i].type[0] == 'C' || s.scene[i].type[0] == 'R') && s.scene[i].i == act_nothing){
             obj temp = s.scene[i];
             s.scene[i] = ob_objFchar('D');
             s.scene[i].x = temp.x;
@@ -98,11 +107,23 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                 case 'C':
                     if(colsee & 2 && (*ee).i == act_nothing){
                         s.coins++;
+                        (*ee).i = act_bounce;
                     }
+                    break;
+                case 'R':
+                    if(colsee & 2 && (*ee).i == act_nothing){
+                        (*ee).i = act_bounce;
+                    }
+                    break;
                 case 'b':
                     if(colsee & 2 && (*ee).i == act_nothing){
                         (*ee).i = act_bounce;
                     }
+                    break;
+                case 'r':
+                    s.bigMario = true;
+                    (*er).y += 16;
+                    (*er).bb.h -= 16;
                     break;
                 case 'e':
                     if(colsee & 2){
@@ -117,6 +138,14 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             break;
         case 'e':
             if(colser & (4 | 8)){
+                (*er).vx = -(*er).vx;
+            }
+            break;
+        case 'r':
+            if((*ee).type[0] == '@'){
+                //*er = ob_objFchar('.');
+            }
+            else if(colser & (2 | 4)){
                 (*er).vx = -(*er).vx;
             }
             break;

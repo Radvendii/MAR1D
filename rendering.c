@@ -29,6 +29,7 @@ void rn_dimFcamera(point *points, struct camera c){
 }
 
 void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
+    //TODO: bottom and top should render even if technically off screen
     for(int i=0;i<k_nPixels;i++){
         screen[i*3]=107;
         screen[i*3+1]=136;
