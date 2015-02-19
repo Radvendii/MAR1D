@@ -121,9 +121,11 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     }
                     break;
                 case 'r':
-                    s.bigMario = true;
-                    (*er).y += 16;
-                    (*er).bb.h -= 16;
+                    if(s.bigMario == false){
+                        s.bigMario = true;
+                        (*er).y += 16;
+                        (*er).bb.h -= 16;
+                    }
                     break;
                 case 'e':
                     if(colsee & 2){
@@ -143,7 +145,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             break;
         case 'r':
             if((*ee).type[0] == '@'){
-                //*er = ob_objFchar('.');
+                *er = ob_objFchar('.');
             }
             else if(colser & (2 | 4)){
                 (*er).vx = -(*er).vx;
