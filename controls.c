@@ -21,7 +21,7 @@ bool cl_move1(int i, char dir, bool pos){
     for(int obj=0;;obj++){
         if(s.scene[obj].type[0] == '\0') {break;}
         if(obj==i) {continue;}
-        if(mh_collision(i, obj)) {ret = false;}
+        ret &= !mh_collision(i, obj);
     }
     if(!ret){
         if(dir == 'x'){s.scene[i].x -= (pos ? 1 : -1);}

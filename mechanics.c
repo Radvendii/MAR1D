@@ -72,7 +72,7 @@ bool mh_collision(int i1, int i2){
     for(int i=0;i<nCols;i++){
         b3 = s.scene[i1].cols[i];
         ob_realifyBox(&b3, s.scene[i1].x, s.scene[i1].y);
-        if(k_boxInter(b3, b2)){cols1 |= (int)pow(2, i+1);}
+        if(k_boxInter(b3, b2) && s.scene[i2].physical){cols1 |= (int)pow(2, i+1);}
     }
 
     cols2 = ret;
@@ -80,12 +80,12 @@ bool mh_collision(int i1, int i2){
     for(int i=0;i<nCols;i++){
         b3 = s.scene[i2].cols[i];
         ob_realifyBox(&b3, s.scene[i2].x, s.scene[i2].y);
-        if(k_boxInter(b1, b3)){cols2 |= (int)pow(2, i+1);}
+        if(k_boxInter(b1, b3) && s.scene[i1].physical){cols2 |= (int)pow(2, i+1);}
     }
     if(cols2){mh_doCollision(&(s.scene[i1]), &(s.scene[i2]), cols1, cols2);}
     if(cols1){mh_doCollision(&(s.scene[i2]), &(s.scene[i1]), cols2, cols1);}
 
-    return ret && s.scene[i2].physical;
+    return ret && s.scene[i1].physical && s.scene[i2].physical;
 }
 
 void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
@@ -95,10 +95,6 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             if(colser & (4 | 8)){(*er).vy = 0;}
             if(colser & 8){s.onGround = true;}
             switch((*ee).type[0]){
-                case 'c':
-                    s.coins++;
-                    *ee = ob_objFchar('.');
-                    break;
                 case 'C':
                     if(colsee & 2 && (*ee).i == act_nothing){
                         s.coins++;
@@ -115,11 +111,19 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     }
                     else{s.gameOver=true;}
                     break;
+                case '~':
+                    s.gameOver = true;
             }
             break;
         case 'e':
             if(colser & (4 | 8)){
                 (*er).vx = -(*er).vx;
+            }
+            break;
+        case 'c':
+            if((*ee).type[0] == '@'){
+                s.coins++;
+                *er = ob_objFchar('.');
             }
             break;
     }

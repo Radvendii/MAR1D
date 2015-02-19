@@ -16,6 +16,7 @@ void gl_init(){
     for(i=0; ob_levels['t'][i].type[0] != '\0';i++){s.scene[i] = ob_levels['t'][i];}
     s.scene[i].type[0] = '\0';
     s.flip = false;
+    s.coins = 0;
     mh_init();
     cl_init();
     ai_init();
