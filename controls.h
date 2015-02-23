@@ -7,8 +7,8 @@
 #include "mechanics.h"
 
 #define k_xVel 0.05
-#define k_yVel 4.1
-#define k_xVelMax  1.0
+#define k_yVel (4.1+s.scene[s.pli].vx/5)
+#define k_xVelMax  1
 #define k_yVelMin -4.5
 #define k_nJumpFrames 40
 
@@ -20,9 +20,11 @@ void cl_keypress(int, int, int, int);
 void cl_cursormove(double, double);
 bool cl_move1(int, char, bool);
 bool cl_move(int, char, int);
-void cl_gravity();
+void cl_gravity(int);
 void cl_jumpStart();
 void cl_smallJump();
 void cl_jumpEnd();
+void cl_bigMario();
+void cl_smallMario();
 
 #endif

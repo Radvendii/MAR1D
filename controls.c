@@ -19,7 +19,7 @@ bool cl_move1(int i, char dir, bool pos){
     if(dir == 'x'){s.scene[i].x += (pos ? 1 : -1);}
     else{s.scene[i].y += (pos ? 1 : -1);}
     for(int obj=0;;obj++){
-        if(s.scene[obj].type[0] == '\0') {break;}
+        if(s.scene[obj].type == '\0') {break;}
         if(obj==i) {continue;}
         ret &= !mh_collision(i, obj);
     }
@@ -40,11 +40,28 @@ bool cl_move(int i, char dir, int amt){
     return ret;
 }
 
-void cl_jumpStart(){ //TODO: Bug: Jumping makes goombas fall slow
+void cl_jumpStart(){
     if(s.onGround) {
         s.scene[s.pli].vy = k_yVel;
         s.gravity/=5;
         s.upcount = k_nJumpFrames;
+    }
+}
+
+void cl_bigMario(){
+    if(s.bigMario == false){
+        s.bigMario = true;
+        s.scene[s.pli].i = act_startGrow;
+    }
+}
+
+void cl_smallMario(){
+    if(s.bigMario == true){
+        s.bigMario = false;
+        s.scene[s.pli].y -= 16;
+        s.scene[s.pli].bb.h += 16;
+        s.scene[s.pli].cols[0].h += 16;
+        s.scene[s.pli].cols[2].y += 16;
     }
 }
 
@@ -94,7 +111,9 @@ void cl_keypress(int key, int scancode, int action, int mods){
     }
 }
 
-void cl_gravity(){
-    s.scene[s.pli].vy += s.gravity;
-    if(s.scene[s.pli].vy<k_yVelMin){s.scene[s.pli].vy=k_yVelMin;}
+void cl_gravity(int i){
+    if(s.scene[i].gravity){
+        s.scene[i].vy += i == s.pli ? s.gravity : k_gravity;
+        if(s.scene[i].vy<k_yVelMin){s.scene[i].vy=k_yVelMin;}
+    }
 }

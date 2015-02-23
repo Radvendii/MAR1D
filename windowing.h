@@ -17,9 +17,13 @@ GLFWwindow* perspWindow;
 void wn_perspWindow();
 void wn_dimWindow();
 
+
 void wn_update();
 
 bool wn_shouldClose();
+
+void wn_debugInit();
+void wn_debugDeinit();
 void wn_init();
 void wn_deinit();
 

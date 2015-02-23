@@ -9,6 +9,13 @@ void wn_dimWindow(){
 }
 
 void wn_update(){
+    if(debug && !glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
+        glfwShowWindow(dimWindow);
+        glfwShowWindow(perspWindow);
+    }
+    if(!debug && glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
+        glfwHideWindow(dimWindow);
+    }
     glfwSwapBuffers(perspWindow);
     glfwSwapBuffers(dimWindow);
     glfwPollEvents();

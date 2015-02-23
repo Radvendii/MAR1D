@@ -17,6 +17,8 @@ void gr_update(){
     cam.animFrame++;
     cam.x = s.scene[s.pli].x+14;
     cam.y = s.scene[s.pli].y-2;
+    cam.flashD = s.invincible && !s.star;
+    cam.flashB = s.star;
     cam.flip = s.flip;
     rn_dimFcamera(dimScreen, cam);
     rn_perspFcamera(perspScreen, cam, NULL);
@@ -107,6 +109,7 @@ void gr_draw(GLFWwindow *window, int renderType){
         char score[20];
         sprintf(score, "%d", s.coins);
         gr_text(score, -k_drawD+5, k_drawD-5);
+        //MAR1D
     }
     else{gr_pixels(perspScreen);}
 }
@@ -117,7 +120,7 @@ void gr_init(){
     cam.FOV = 60*pi/180;
     cam.scene = s.scene;
     cam.T = 0;
-    debug = true;
+    debug = false;
     perspScreen = salloc(sizeof(unsigned char)*k_nPixels*3);
     for(int i=0; i<k_nPixels*3; i++){perspScreen[i]=0;}
     dimScreen = salloc(sizeof(point)*500*k_nMaxObj);

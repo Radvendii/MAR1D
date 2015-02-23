@@ -8,6 +8,8 @@
 #include "graphics.h"
 #include "windowing.h"
 #include "parsing.h"
+
+#include <time.h>
 struct state s;
 
 int main(void){
@@ -17,23 +19,11 @@ int main(void){
     wn_init();
 
     glfwSetTime(0.0);
+    srand(time(NULL));
 
     while(!wn_shouldClose()) {
-        if(s.gameOver){
-            wn_deinit();
-            gr_deinit();
-            gl_deinit();
-            ob_deinit();
-
-            ob_init();
-            gl_init();
-            gr_init();
-            wn_init();
-        }
-        if(!s.paused){
-            gl_update();
-            gr_update();
-        }
+        gl_update();
+        gr_update();
         wn_perspWindow();
         gr_draw(perspWindow, 2);
         wn_dimWindow();

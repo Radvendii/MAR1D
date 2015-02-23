@@ -40,18 +40,21 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
     int xpos, ypos, xhei, yhei;
     int grav;
     int phys;
+    int hid;
     int x,y,i,j;
     char c;
-    fscanf(f, "%c%d; ps:%d; dim:%dx%d; cols:%d; grav:%d; phys:%d;", &oname, &nps, &size, &w, &h, &nCols, &grav, &phys);
-    os[oname].type[0] = oname;
-    os[oname].type[1] = '\0';
+    fscanf(f, "%c%d; ps:%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &oname, &nps, &size, &w, &h, &nCols, &grav, &phys, &hid);
+    os[oname].type = oname;
     os[oname].gravity = grav;
     os[oname].physical = phys;
+    os[oname].hidden = hid;
+    os[oname].active = true;
     os[oname].x = 0;
     os[oname].y = 0;
     os[oname].vx = 0;
     os[oname].vy = 0;
     os[oname].i = 0;
+    os[oname].c = 0;
     os[oname].nps = nps;
     os[oname].bb = (box) {.x = 0, .y = 0, .w = w, .h = -h};
     os[oname].ps = salloc(sizeof(point*) * nps);
@@ -104,13 +107,31 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
                 ls[lname][i] = os[c];
                 ls[lname][i].x = x*16;
                 ls[lname][i].y = y*16;
+                if(c == '?'){
+                    ls[lname][i].c = '.';
+                    for(int j=0;j<i;j++){
+                        if(ls[lname][j].x == ls[lname][i].x && ls[lname][j].y == ls[lname][i].y+16){
+                            ls[lname][i].c = ls[lname][j].type;
+                            ls[lname][j] = os['.'];
+                            break;
+                        }
+                    }
+                }
                 i++;
                 x++;
                 break;
         }
     }
-    ls[lname][i].type[0] = '\0';
-    ls[lname][i].type[1] = '\0';
+    ls[lname][i].type = '\0';
+    fgetc(f);
+    char prop;
+    while(fgetc(f) == 'P'){
+        fscanf(f, ";%d%c", &i, &prop);
+        switch(prop){
+            case 'h':
+                ls[lname][i].hidden = true;
+        }
+    }
 }
 
 void io_getLevels(level** ls, char* fn){
