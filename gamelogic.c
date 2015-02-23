@@ -9,8 +9,8 @@ int gl_playerIndex(){
 
 void gl_init(){
     s.bigMario = false;
-    s.invincible = 1000;
-    s.star = 1000;
+    s.invincible = false;
+    s.star = false;
     s.lives = 3;
     s.scene = salloc(sizeof(obj) * k_nMaxObj);
     s.pli = gl_playerIndex();

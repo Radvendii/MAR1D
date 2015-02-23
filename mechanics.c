@@ -153,9 +153,12 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     }
                     break;
                 case 'e':
-                    if(colsee & 2 || s.star){
+                    if(colsee & 2){
                         (*ee)=ob_objFchar('.');
                         cl_smallJump();
+                    }
+                    else if(s.star){
+                        (*ee)=ob_objFchar('.');
                     }
                     else{gl_killed();}
                     break;
@@ -167,6 +170,14 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         case 'e':
             if(colser & (4 | 8)){
                 (*er).vx = -(*er).vx;
+            }
+            break;
+        case 's':
+            if(colser & (2 | 4)){
+                    (*er).vx = -(*er).vx;
+            }
+            else if(colser & 8){
+                    (*er).vy = -(*er).vy;
             }
             break;
         case 'r':
