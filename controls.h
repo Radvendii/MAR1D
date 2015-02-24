@@ -25,6 +25,7 @@ void cl_jumpStart();
 void cl_smallJump();
 void cl_jumpEnd();
 void cl_bigMario();
+void cl_starman();
 void cl_smallMario();
 
 #endif

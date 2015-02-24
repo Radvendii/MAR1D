@@ -41,6 +41,7 @@ typedef struct{
     bool gravity;
     bool physical;
     int i;
+    int j;
     bool hidden;
     char c;
     bool active;

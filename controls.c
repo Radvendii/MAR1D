@@ -48,6 +48,11 @@ void cl_jumpStart(){
     }
 }
 
+void cl_starman(){
+    s.star = 1000;
+    s.invincible = 1000;
+}
+
 void cl_bigMario(){
     if(s.bigMario == false){
         s.bigMario = true;

@@ -13,12 +13,13 @@ void mh_update(){
     if((int)s.scene[s.pli].vy != 0){s.onGround = false;}
     for(int i=0;s.scene[i].type != '\0';i++){
         if(s.scene[i].i == act_nothing){continue;}
-        if(s.scene[i].i <= act_bounce && (s.scene[i].type == '?' || s.scene[i].type == 'B')){
+        if(s.scene[i].i <= act_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#')){
             s.scene[i].i--;
             s.scene[i].y -= (s.scene[i].i < act_bounceD && s.scene[i].i > act_bounceU) * 2 - 1;
         }
         if(s.scene[i].type == '?' && s.scene[i].i == act_nothing){
             int l;
+            if(s.scene[i].j){s.scene[i].j--;}
             if(s.scene[i].c == 'c'){
                 s.coins++;
             }
@@ -31,7 +32,7 @@ void mh_update(){
                 s.scene[l+1].type = '\0';
             }
         }
-        if(s.scene[i].type == '?' && s.scene[i].i == act_nothing){
+        if(s.scene[i].type == '?' && s.scene[i].i == act_nothing && s.scene[i].j == 0){
             obj temp = s.scene[i];
             s.scene[i] = ob_objFchar('D');
             s.scene[i].x = temp.x;
@@ -43,6 +44,7 @@ void mh_update(){
                 s.paused = true;
                 int grow[12] = {0,1,-1,1,-1,1,1,-2,1,1,-2,2};
                 //int growth = 8*grow[s.scene[i].i/k_growthRate]/k_growthRate;
+                //TODO: Make growth look smoother
                 int growth = 8*grow[s.scene[i].i/k_growthRate] * !(s.scene[i].i % k_growthRate);
                 s.scene[s.pli].y += growth;
                 s.scene[s.pli].bb.h -= growth;
@@ -132,7 +134,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                         (*ee).hidden = false;
                     }
                     break;
-                case 'B':
+                case '#':
                     if(colsee & 2 && (*ee).i == act_nothing){
                         if(s.bigMario){
                             int l;
@@ -173,11 +175,16 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             }
             break;
         case 's':
-            if(colser & (2 | 4)){
-                    (*er).vx = -(*er).vx;
+            if((*ee).type == '@'){
+                *er = ob_objFchar('.');
+                cl_starman();
             }
-            else if(colser & 8){
-                    (*er).vy = -(*er).vy;
+            if(colser & (2 | 4) && (*ee).type != 'e'){
+                (*er).vx = -(*er).vx;
+            }
+            else if(colser & 8 && (*ee).type != 'e'){
+                (*er).y += 1;
+                (*er).vy = 6;
             }
             break;
         case 'r':

@@ -27,7 +27,7 @@ void io_getColor(FILE* f, color cs[127]){//cs must be an array 127 big
     char cname;
     color c;
     fscanf(f, "%c:", &cname);
-    fscanf(f, "%hhi.%hhi.%hhi\n", &cs[cname].r, &cs[cname].g, &cs[cname].b);
+    fscanf(f, "%hhd.%hhd.%hhd\n", &cs[cname].r, &cs[cname].g, &cs[cname].b);
     return;
 }
 
@@ -43,7 +43,7 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
     int hid;
     int x,y,i,j;
     char c;
-    fscanf(f, "%c%d; ps:%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &oname, &nps, &size, &w, &h, &nCols, &grav, &phys, &hid);
+    fscanf(f, "%c%d; ps:%d; pos:%d,%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &oname, &nps, &size, &xpos, &ypos, &w, &h, &nCols, &grav, &phys, &hid);
     os[oname].type = oname;
     os[oname].gravity = grav;
     os[oname].physical = phys;
@@ -54,9 +54,10 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
     os[oname].vx = 0;
     os[oname].vy = 0;
     os[oname].i = 0;
+    os[oname].j = 0;
     os[oname].c = 0;
     os[oname].nps = nps;
-    os[oname].bb = (box) {.x = 0, .y = 0, .w = w, .h = -h};
+    os[oname].bb = (box) {.x = xpos, .y = -ypos, .w = w, .h = -h};
     os[oname].ps = salloc(sizeof(point*) * nps);
     os[oname].cols = salloc(sizeof(box) * nCols);
     os[oname].nCols = nCols;
@@ -117,20 +118,38 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
                         }
                     }
                 }
+                if(c == '|' || c == '='){
+                    fgetc(f);
+                    ls[lname][++i] = os['.'];
+                    x++;
+                }
                 i++;
                 x++;
                 break;
         }
     }
     ls[lname][i].type = '\0';
-    fgetc(f);
     char prop;
+    char obj;
+    int j;
+    fgetc(f);
     while(fgetc(f) == 'P'){
         fscanf(f, ";%d%c", &i, &prop);
         switch(prop){
             case 'h':
                 ls[lname][i].hidden = true;
+                break;
+            case 'v':
+                fscanf(f, "%c", &obj);
+                ls[lname][i].ps = os[obj].ps;
+                ls[lname][i].nps = os[obj].nps;
+                break;
+            case 'j':
+                fscanf(f, "%d", &j);
+                ls[lname][i].j = j;
+                break;
         }
+        fgetc(f);
     }
 }
 

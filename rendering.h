@@ -3,7 +3,7 @@
 #include "objects.h"
 #include "helpers.h"
 #define k_nPixels 1000 //resolution of screen. Never make it odd.
-#define k_drawD (16*16)
+#define k_drawD (16*8)
 
 struct camera {
     double FOV;

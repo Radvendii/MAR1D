@@ -30,7 +30,7 @@ void rn_dimFcamera(point *points, struct camera c){
 
 void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     //TODO: bottom and top should render even if technically off screen
-    static int star = 2;
+    static int starr = 255, starg = 255, starb = 255;
     for(int i=0;i<k_nPixels;i++){
         screen[i*3]=107;
         screen[i*3+1]=136;
@@ -41,9 +41,9 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
             screen[i*3+2] /= 2;
         }
         if(c.flashB && c.animFrame/16 % 2){
-            screen[i*3+0] *= star;
-            screen[i*3+1] *= star;
-            screen[i*3+2] *= star;
+            screen[i*3+0] = (screen[i*3+0]+starr)/2;
+            screen[i*3+1] = (screen[i*3+1]+starg)/2;
+            screen[i*3+2] = (screen[i*3+2]+starb)/2;
         }
     }
     float ds[k_nPixels];
@@ -80,11 +80,15 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
                         screen[i*3+2] /= 2;
                     }
                     if(c.flashB && c.animFrame/16 % 2){
-                        screen[i*3+0] *= star;
-                        screen[i*3+1] *= star;
-                        screen[i*3+2] *= star;
+                        screen[i*3+0] = (screen[i*3+0]+starr)/2;
+                        screen[i*3+1] = (screen[i*3+1]+starg)/2;
+                        screen[i*3+2] = (screen[i*3+2]+starb)/2;
                     }
-                    else{star = rand();}
+                    if(c.animFrame % 16 == 0){
+                        starr = 255;
+                        starg = 255;
+                        starb = 255;
+                    }
                 }
             }
         }

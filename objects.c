@@ -26,7 +26,7 @@ obj ob_objFchar(char c){
 }
 
 void ob_printPoint(point p){
-    printf("{ x: %d, y: %d, r: %d, g: %d, b: %d }\n", p.x, p.y, p.r, p.g, p.b);
+    printf("{ x: %d, y: %d, r: %hhd, g: %hhd, b: %hhd }\n", p.x, p.y, p.r, p.g, p.b);
 }
 
 void ob_realifyPoint(point *p, int x, int y){
