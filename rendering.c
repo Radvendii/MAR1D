@@ -61,7 +61,8 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
             p.y -= c.y;
             double alpha = atan2(p.y, p.x);
             if(c.flip){alpha = pi-alpha;}
-            alpha = fmod(alpha - c.T, pi);
+            alpha = fmod(alpha - c.T, 2*pi);
+            if(alpha>pi){alpha -= pi;}
 
             if(alpha<-0.5 || alpha>c.FOV+0.5){continue;}
             y = (tan(alpha-c.FOV/2) + tan(c.FOV/2) ) / (2*tan(c.FOV/2)) * k_nPixels;
