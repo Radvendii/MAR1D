@@ -28,7 +28,7 @@ void mh_update(){
                 s.scene[l] = ob_objFchar(s.scene[i].c);
                 s.scene[l].x = s.scene[i].x;
                 s.scene[l].y = s.scene[i].y+16;
-                s.scene[l].vx = 1.0;
+                s.scene[l].vx = 0.5;
                 s.scene[l+1].type = '\0';
             }
         }
@@ -50,10 +50,7 @@ void mh_update(){
                 s.scene[s.pli].bb.h -= growth;
                 s.scene[s.pli].cols[0].h -= growth;
                 s.scene[s.pli].cols[2].y -= growth;
-                s.scene[i].i++;
-            }
-            else{
-                s.paused = false;
+                if(++s.scene[i].i == 12 * k_growthRate){s.paused = false;}
             }
         }
     }
@@ -88,6 +85,7 @@ AFTER_X_MOTION: ;
 }
 
 bool mh_collision(int i1, int i2){
+    if(s.scene[i1].type == '.' || s.scene[i2].type == '.'){return false;}
     bool ret;
     int nCols;
     int cols1, cols2;
@@ -105,7 +103,7 @@ bool mh_collision(int i1, int i2){
     for(int i=0;i<nCols;i++){
         b3 = s.scene[i1].cols[i];
         ob_realifyBox(&b3, s.scene[i1].x, s.scene[i1].y);
-        if(k_boxInter(b3, b2) && s.scene[i2].physical){cols1 |= (int)pow(2, i+1);}
+        if(k_boxInter(b3, b2) && s.scene[i2].physical){cols1 |= 1 << (i+1);}
     }
 
     cols2 = ret;
@@ -113,7 +111,7 @@ bool mh_collision(int i1, int i2){
     for(int i=0;i<nCols;i++){
         b3 = s.scene[i2].cols[i];
         ob_realifyBox(&b3, s.scene[i2].x, s.scene[i2].y);
-        if(k_boxInter(b1, b3) && s.scene[i1].physical){cols2 |= (int)pow(2, i+1);}
+        if(k_boxInter(b1, b3) && s.scene[i1].physical){cols2 |= 1 << (i+1);}
     }
     if(cols2){mh_doCollision(&(s.scene[i1]), &(s.scene[i2]), cols1, cols2);}
     if(cols1){mh_doCollision(&(s.scene[i2]), &(s.scene[i1]), cols2, cols1);}
@@ -122,8 +120,10 @@ bool mh_collision(int i1, int i2){
 }
 
 void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
+    double vy;
     switch((*er).type){
         case '@':
+            vy = (*er).vy;
             if(colser & 2){(*er).vx = 0;}
             if(colser & (4 | 8)){(*er).vy = 0;}
             if(colser & 8){s.onGround = true;}
@@ -132,6 +132,24 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     if(colsee & 2 && (*ee).i == act_nothing){
                         (*ee).i = act_bounce;
                         (*ee).hidden = false;
+                    }
+                    if(colsee & 4 && !(colsee & (8 | 2))){
+                        (*er).x++;
+                        (*er).vy = vy;
+                    }
+                    if(colsee & 8 && !(colsee & (4 | 2))){
+                        (*er).x--;
+                        (*er).vy = vy;
+                    }
+                    break;
+                case 'D':
+                    if(colsee & 2 && !(colsee & 4)){
+                        (*er).x++;
+                        (*er).vy = vy;
+                    }
+                    if(colsee & 4 && !(colsee & 2)){
+                        (*er).x--;
+                        (*er).vy = vy;
                     }
                     break;
                 case '#':
@@ -153,6 +171,14 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                         }
                         else{(*ee).i = act_bounce;}
                     }
+                    if(colsee & 4 && !(colsee & (8 | 2))){
+                        (*er).x++;
+                        (*er).vy = vy;
+                    }
+                    if(colsee & 8 && !(colsee & (4 | 2))){
+                        (*er).x--;
+                        (*er).vy = vy;
+                    }
                     break;
                 case 'e':
                     if(colsee & 2){
@@ -168,6 +194,9 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     gl_die();
                     break;
             }
+            break;
+        case '~':
+            (*ee) = ob_objFchar('.');
             break;
         case 'e':
             if(colser & (4 | 8)){

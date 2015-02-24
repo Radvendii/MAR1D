@@ -7,7 +7,6 @@
 #define k_nMaxLinesPerObj 100 //maximum number of lines per object
 #define k_nMaxObj 500 //maximum number of objects in a world
 #define p_termPoint ((point){ .x=124214, .y=143512, .r=100, .g=100, .b=100 }) //Hope this point never actually comes up... :P
-#define k_FOV 60 //Field of vision (degrees)
 #define c_brick .r=231, .g=95, .b=19
 #define c_lbrick .r=240, .g=208, .b=176
 #define c_black .r=0, .g=0, .b=0

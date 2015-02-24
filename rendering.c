@@ -32,9 +32,9 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     //TODO: bottom and top should render even if technically off screen
     static int starr = 255, starg = 255, starb = 255;
     for(int i=0;i<k_nPixels;i++){
-        screen[i*3]=107;
-        screen[i*3+1]=136;
-        screen[i*3+2]=255;
+        screen[i*3]=k_bgr;
+        screen[i*3+1]=k_bgg;
+        screen[i*3+2]=k_bgb;
         if(c.flashD && c.animFrame/16 % 2){
             screen[i*3+0] /= 2;
             screen[i*3+1] /= 2;
@@ -53,18 +53,18 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     point p;
     int y;
     for(int obj=0;;obj++) {
-        if(c.scene[obj].type == '\0') {break;} //Check for termination
-        if(c.scene[obj].hidden == true) {continue;}
+        if(c.scene[obj].type == '\0') {break;}
+        if(c.scene[obj].hidden == true || c.scene[obj].type == '.') {continue;}
         for(point* pp=c.scene[obj].ps[c.animFrame/10 % c.scene[obj].nps];!ob_p_isTerm(p = *pp);pp++) {
             ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             p.x -= c.x;
             p.y -= c.y;
-            double alpha = atan2(p.y, p.x) - c.T;
-            alpha = fmod(alpha, 2*pi); //TODO: Broke camFlip.
+            double alpha = atan2(p.y, p.x);
+            if(c.flip){alpha = pi-alpha;}
+            alpha = fmod(alpha - c.T, pi);
 
-            if(!(alpha>=-1 && alpha<c.FOV+1)){continue;} //TODO: Edges don't work with CamFlip
+            if(alpha<-0.5 || alpha>c.FOV+0.5){continue;}
             y = (tan(alpha-c.FOV/2) + tan(c.FOV/2) ) / (2*tan(c.FOV/2)) * k_nPixels;
-            /*if(c.flip){y = k_nPixels-y;}*/
             d = sqrt(p.x*p.x + p.y*p.y);
             D = ceil(1/(2*d*tan(c.FOV/2))*k_nPixels);
             for(int i=y-D;i<y+D;i++){
@@ -74,6 +74,11 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
                     screen[i*3+0] = p.r;
                     screen[i*3+1] = p.g;
                     screen[i*3+2] = p.b;
+                    if(d>k_drawD1){
+                        screen[i*3+0] = (k_bgr - screen[i*3+0])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+0];
+                        screen[i*3+1] = (k_bgg - screen[i*3+1])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+1];
+                        screen[i*3+2] = (k_bgb - screen[i*3+2])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+2];
+                    }
                     if(c.flashD && c.animFrame/16 % 2){
                         screen[i*3+0] /= 2;
                         screen[i*3+1] /= 2;

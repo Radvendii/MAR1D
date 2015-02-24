@@ -4,13 +4,14 @@
 void gr_keypress(int key, int scancode, int action, int mods){
     if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
         cam.flip = !cam.flip;
-        cam.T = pi - cam.T - cam.FOV;
+        //cam.T = pi - cam.T - cam.FOV;
     }
 }
 
 void gr_cursormove(double xPos, double yPos){
-    if(!cam.flip){cam.T = fmod(-yPos*0.000436, 2*pi);}
-    else{cam.T = fmod(pi+yPos*0.000426-cam.FOV, 2*pi);}
+    cam.T = fmod(-yPos*0.000436, 2*pi);
+    //if(!cam.flip){cam.T = fmod(-yPos*0.000436, 2*pi);}
+    //else{cam.T = fmod(pi+yPos*0.000426-cam.FOV, 2*pi);}
 }
 
 void gr_update(){
@@ -22,6 +23,12 @@ void gr_update(){
     cam.flip = s.flip;
     rn_dimFcamera(dimScreen, cam);
     rn_perspFcamera(perspScreen, cam, NULL);
+    if(s.scene[s.pli].vx < 1.6 || cam.flip){
+        cam.FOV = k_FOV;
+    }
+    else{
+        cam.FOV = (k_FOVrun - k_FOV)/(2.0-1.6)*(s.scene[s.pli].vx - 1.6)+k_FOV;
+    }
 }
 
 void gr_char(char c, GLfloat* x, GLfloat* y){
@@ -117,7 +124,7 @@ void gr_draw(GLFWwindow *window, int renderType){
 void gr_init(){
     cam.animFrame=0;
     cam.drawD = k_drawD;
-    cam.FOV = 60*pi/180;
+    cam.FOV = k_FOV;
     cam.scene = s.scene;
     cam.T = 0;
     debug = false;

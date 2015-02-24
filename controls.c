@@ -8,9 +8,18 @@ void cl_init(){
 
 void cl_update(){
     if(s.forward && s.scene[s.pli].vx<k_xVelMax){s.scene[s.pli].vx+=k_xVel;}
-    if(!s.forward && s.onGround && s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
+    if(!s.forward && s.onGround && s.scene[s.pli].vx>0){
+        if(s.scene[s.pli].vx > 1.0){
+            s.scene[s.pli].vx -= k_xVel;
+        }
+        s.scene[s.pli].vx-=k_xVel;}
     if(s.backward && s.scene[s.pli].vx>-k_xVelMax){s.scene[s.pli].vx-=k_xVel;}
-    if(!s.backward && s.onGround && s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
+    if(!s.backward && s.onGround && s.scene[s.pli].vx<0){
+        if(s.scene[s.pli].vx < -1.0){
+            s.scene[s.pli].vx += k_xVel;
+        }
+        s.scene[s.pli].vx+=k_xVel;
+    }
     if(!--s.upcount){cl_jumpEnd();}
 }
 

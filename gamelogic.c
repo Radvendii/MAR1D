@@ -57,8 +57,13 @@ void gl_update(){
     cl_update();
     mh_update();
     ai_update();
-    if(s.leftMost<s.scene[s.pli].x-16*16){
-        s.leftMost = s.scene[s.pli].x-16*16;
+    if(s.leftMost<s.scene[s.pli].x-16*8){
+        s.leftMost = s.scene[s.pli].x-16*8;
+    }
+    for(int i=0;s.scene[i].type != '\0';i++){
+        if(s.scene[i].x<s.leftMost){
+            s.scene[i] = ob_objFchar('.');
+        }
     }
     s.pli = gl_playerIndex();
     if(s.invincible){s.invincible--;}
