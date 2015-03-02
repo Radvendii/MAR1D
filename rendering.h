@@ -12,6 +12,8 @@
 #define k_bgg 136
 #define k_bgb 255
 
+#define k_animFreq 10
+
 struct camera {
     double FOV;
     int x;
@@ -23,6 +25,7 @@ struct camera {
     bool debug;
     bool flashD;
     bool flashB;
+    bool redTint;
     int drawD;
     int animFrame;
     int yshift;

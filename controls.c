@@ -62,20 +62,31 @@ void cl_starman(){
     s.invincible = 1000;
 }
 
+void cl_fireMario(){
+    s.fire = true;
+}
+
 void cl_bigMario(){
     if(s.bigMario == false){
         s.bigMario = true;
         s.scene[s.pli].i = act_startGrow;
+    }
+    for(int i=0; s.scene[i].type != '\0';i++){
+        if(s.scene[i].type == '?' && s.scene[i].c == 'r'){s.scene[i].c = 'R';}
     }
 }
 
 void cl_smallMario(){
     if(s.bigMario == true){
         s.bigMario = false;
+        s.fire = false;
         s.scene[s.pli].y -= 16;
         s.scene[s.pli].bb.h += 16;
         s.scene[s.pli].cols[0].h += 16;
         s.scene[s.pli].cols[2].y += 16;
+        for(int i=0; s.scene[i].type != '\0';i++){
+            if(s.scene[i].type == '?' && s.scene[i].c == 'r'){s.scene[i].c = 'R';}
+        }
     }
 }
 
@@ -85,6 +96,26 @@ void cl_smallJump(){
 
 void cl_jumpEnd(){
     s.gravity= k_gravity;
+}
+
+void cl_click(int button, int action, int mods){
+    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+        if(s.fire){
+            cl_fire();
+        }
+    }
+}
+
+void cl_fire(){
+    if(s.nFBalls < 2){
+        s.nFBalls++;
+        int i=0;
+        for(i=0;s.scene[i].type != '\0' && s.scene[i].type != '.';i++);
+        s.scene[i] = ob_objFchar('o');
+        s.scene[i].x = s.scene[s.pli].x+14;
+        s.scene[i].y = s.scene[s.pli].y-2;
+        s.scene[i].vx = -1.0 * (s.flip*2-1);
+    }
 }
 
 void cl_keypress(int key, int scancode, int action, int mods){
@@ -130,4 +161,17 @@ void cl_gravity(int i){
         s.scene[i].vy += i == s.pli ? s.gravity : k_gravity;
         if(s.scene[i].vy<k_yVelMin){s.scene[i].vy=k_yVelMin;}
     }
+}
+
+void cl_delObjAt(int i){
+    if(s.scene[i].type == 'o'){
+        s.nFBalls--;
+    }
+    s.scene[i] = ob_objFchar('.');
+}
+void cl_delObj(obj* obj){
+    if((*obj).type == 'o'){
+        s.nFBalls--;
+    }
+    (*obj) = ob_objFchar('.');
 }

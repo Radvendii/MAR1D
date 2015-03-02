@@ -4,14 +4,11 @@
 void gr_keypress(int key, int scancode, int action, int mods){
     if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
         cam.flip = !cam.flip;
-        //cam.T = pi - cam.T - cam.FOV;
     }
 }
 
 void gr_cursormove(double xPos, double yPos){
     cam.T = fmod(-yPos*0.000436, 2*pi);
-    //if(!cam.flip){cam.T = fmod(-yPos*0.000436, 2*pi);}
-    //else{cam.T = fmod(pi+yPos*0.000426-cam.FOV, 2*pi);}
 }
 
 void gr_update(){
@@ -20,6 +17,7 @@ void gr_update(){
     cam.y = s.scene[s.pli].y-2;
     cam.flashD = s.invincible && !s.star;
     cam.flashB = s.star;
+    cam.redTint = s.fire;
     cam.flip = s.flip;
     rn_dimFcamera(dimScreen, cam);
     rn_perspFcamera(perspScreen, cam, NULL);
@@ -27,7 +25,7 @@ void gr_update(){
         cam.FOV = k_FOV;
     }
     else{
-        cam.FOV = (k_FOVrun - k_FOV)/(2.0-1.6)*(s.scene[s.pli].vx - 1.6)+k_FOV;
+        cam.FOV = (k_FOVrun - k_FOV)/(1.9-1.6)*(s.scene[s.pli].vx - 1.6)+k_FOV;
     }
 }
 
@@ -58,10 +56,10 @@ void gr_text(char *s, GLfloat x, GLfloat y){
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
     glBegin(GL_QUADS);
     glColor3ub(r, g, b);
-    glVertex2f(0, y);
-    glVertex2f(0, y+1);
-    glVertex2f(1, y+1);
-    glVertex2f(1, y);
+    glVertex2f(-k_lineSize, y);
+    glVertex2f(-k_lineSize, y+1);
+    glVertex2f(k_lineSize, y+1);
+    glVertex2f(k_lineSize, y);
     glEnd();
 }
 
@@ -69,7 +67,7 @@ void gr_pixels(unsigned char *renderArr){
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    glOrtho(0, 1, 0, k_nPixels, -1, 1);
+    glOrtho(-k_perspWindowW, k_perspWindowW, 0, k_nPixels, -1, 1);
 
     for(int y=0;y<k_nPixels;y++){
         gr_pixel(y, renderArr[y*3+0], renderArr[y*3+1], renderArr[y*3+2]);
@@ -96,6 +94,7 @@ void gr_points(point *ps){
 }
 
 void gr_draw(GLFWwindow *window, int renderType){
+    glClearColor(0.0,0.0,0.0,1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     if(renderType == 0){
         glMatrixMode(GL_PROJECTION);
@@ -105,7 +104,7 @@ void gr_draw(GLFWwindow *window, int renderType){
         glLoadIdentity();
 
         glBegin(GL_QUADS);
-        glColor3ub(107, 136, 255);
+        glColor3ub(k_bgr, k_bgg, k_bgb);
         glVertex2f(-1.f, -1.f);
         glVertex2f(-1.f, 1.f);
         glVertex2f(1.f, 1.f);

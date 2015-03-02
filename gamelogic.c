@@ -2,22 +2,24 @@
 
 int gl_playerIndex(){
     int ret=0;
-    for(ret=0;ob_levels['t'][ret].type != '\0' && ob_levels['t'][ret].type != '@';ret++);
-    if(ob_levels['t'][ret].type == '\0'){printf("Error in gl_playerIndex(): Player not found\n");exit(1);}
+    for(ret=0;s.scene[ret].type != '\0' && s.scene[ret].type != '@';ret++);
+    if(s.scene[ret].type == '\0'){printf("Error in gl_playerIndex(): Player not found\n");exit(1);}
     return ret;
 }
 
 void gl_init(){
     s.bigMario = false;
-    s.invincible = false;
     s.star = false;
+    s.invincible = false;
+    s.fire = false;
     s.lives = 3;
+    s.nFBalls = 0;
     s.scene = salloc(sizeof(obj) * k_nMaxObj);
-    s.pli = gl_playerIndex();
 
     int i;
     for(i=0; ob_levels['t'][i].type != '\0';i++){s.scene[i] = ob_levels['t'][i];}
     s.scene[i].type = '\0';
+    s.pli = gl_playerIndex();
     s.flip = false;
     s.leftMost = 0;
     s.coins = 0;
@@ -25,7 +27,7 @@ void gl_init(){
     cl_init();
     ai_init();
     for(int i=0;s.scene[i].type != '\0'; i++){
-        if(s.scene[i].type == 'e'){s.scene[i].vx=-0.5;}
+        if(s.scene[i].type == 'e' || s.scene[i].type == '&'){s.scene[i].vx=-0.5;}
     }
 }
 
@@ -47,7 +49,7 @@ void gl_die(){
     s.flip = false;
     s.leftMost = 0;
     for(int i=0;s.scene[i].type != '\0'; i++){
-        if(s.scene[i].type == 'e'){s.scene[i].vx=-0.5;}
+        if(s.scene[i].type == 'e' || s.scene[i].type == '&'){s.scene[i].vx=-0.5;}
     }
     s.lives--;
     ai_init();
@@ -62,7 +64,7 @@ void gl_update(){
     }
     for(int i=0;s.scene[i].type != '\0';i++){
         if(s.scene[i].x<s.leftMost){
-            s.scene[i] = ob_objFchar('.');
+            cl_delObjAt(i);
         }
     }
     s.pli = gl_playerIndex();

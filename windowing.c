@@ -29,6 +29,10 @@ void error_callback(int error, const char* description){
     fputs(description, stderr);
 }
 
+void click_callback(GLFWwindow* w, int button, int action, int mods){
+    cl_click(button, action, mods);
+}
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         glfwSetWindowShouldClose(window, GL_TRUE);
@@ -68,6 +72,7 @@ void wn_init(){
     glLineWidth(1.5f);
 
     glfwSetKeyCallback(perspWindow, key_callback);
+    glfwSetMouseButtonCallback(perspWindow, click_callback);
     glfwSetKeyCallback(dimWindow, key_callback);
     glfwSetCursorPosCallback(perspWindow, cursor_callback);
 }

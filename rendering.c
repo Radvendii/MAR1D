@@ -18,7 +18,7 @@ void rn_dimFcamera(point *points, struct camera c){
     for(int obj=0;;obj++) {
         if(c.scene[obj].type == '\0') {break;} //Check for termination
         for(int pn=0;;pn++) {
-            if(ob_p_isTerm(p = c.scene[obj].ps[c.animFrame/10 % c.scene[obj].nps][pn])){break;}
+            if(ob_p_isTerm(p = c.scene[obj].ps[c.animFrame/k_animFreq % c.scene[obj].nps][pn])){break;}
 
             ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             points[nPoints++] = p;
@@ -30,7 +30,7 @@ void rn_dimFcamera(point *points, struct camera c){
 
 void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     //TODO: bottom and top should render even if technically off screen
-    static int starr = 255, starg = 255, starb = 255;
+    //Only still a problem when c.flip
     for(int i=0;i<k_nPixels;i++){
         screen[i*3]=k_bgr;
         screen[i*3+1]=k_bgg;
@@ -41,9 +41,14 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
             screen[i*3+2] /= 2;
         }
         if(c.flashB && c.animFrame/16 % 2){
-            screen[i*3+0] = (screen[i*3+0]+starr)/2;
-            screen[i*3+1] = (screen[i*3+1]+starg)/2;
-            screen[i*3+2] = (screen[i*3+2]+starb)/2;
+            screen[i*3+0] = (screen[i*3+0]+255)/2;
+            screen[i*3+1] = (screen[i*3+1]+255)/2;
+            screen[i*3+2] = (screen[i*3+2]+255)/2;
+        }
+        if(c.redTint){
+            screen[i*3+0] = (2*screen[i*3+0]+255)/3;
+            screen[i*3+1] = (2*screen[i*3+1]+0)/3;
+            screen[i*3+2] = (2*screen[i*3+2]+0)/3;
         }
     }
     float ds[k_nPixels];
@@ -55,14 +60,14 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     for(int obj=0;;obj++) {
         if(c.scene[obj].type == '\0') {break;}
         if(c.scene[obj].hidden == true || c.scene[obj].type == '.') {continue;}
-        for(point* pp=c.scene[obj].ps[c.animFrame/10 % c.scene[obj].nps];!ob_p_isTerm(p = *pp);pp++) {
+        for(point* pp=c.scene[obj].ps[c.animFrame/k_animFreq % c.scene[obj].nps];!ob_p_isTerm(p = *pp);pp++) {
+            if(ob_p_isSkip(p)){continue;}
             ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             p.x -= c.x;
             p.y -= c.y;
             double alpha = atan2(p.y, p.x);
             if(c.flip){alpha = pi-alpha;}
             alpha = fmod(alpha - c.T, 2*pi);
-            if(alpha>pi){alpha -= pi;}
 
             if(alpha<-0.5 || alpha>c.FOV+0.5){continue;}
             y = (tan(alpha-c.FOV/2) + tan(c.FOV/2) ) / (2*tan(c.FOV/2)) * k_nPixels;
@@ -86,14 +91,14 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
                         screen[i*3+2] /= 2;
                     }
                     if(c.flashB && c.animFrame/16 % 2){
-                        screen[i*3+0] = (screen[i*3+0]+starr)/2;
-                        screen[i*3+1] = (screen[i*3+1]+starg)/2;
-                        screen[i*3+2] = (screen[i*3+2]+starb)/2;
+                        screen[i*3+0] = (screen[i*3+0]+255)/2;
+                        screen[i*3+1] = (screen[i*3+1]+255)/2;
+                        screen[i*3+2] = (screen[i*3+2]+255)/2;
                     }
-                    if(c.animFrame % 16 == 0){
-                        starr = 255;
-                        starg = 255;
-                        starb = 255;
+                    if(c.redTint){
+                        screen[i*3+0] = (2*screen[i*3+0]+255)/3;
+                        screen[i*3+1] = (2*screen[i*3+1]+0)/3;
+                        screen[i*3+2] = (2*screen[i*3+2]+0)/3;
                     }
                 }
             }

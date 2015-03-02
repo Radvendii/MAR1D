@@ -11,6 +11,9 @@
 #define act_startGrow 1
 #define k_growthRate 7
 
+#define k_corpseLife 80
+#define k_shellLife 1000;
+
 
 struct state {
     obj* scene;
@@ -24,6 +27,8 @@ struct state {
     int leftMost;
     bool flip;
     bool bigMario;
+    bool fire;
+    int nFBalls;
     int invincible;
     int star;
     int lives;

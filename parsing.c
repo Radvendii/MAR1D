@@ -56,6 +56,7 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
     os[oname].i = 0;
     os[oname].j = 0;
     os[oname].c = 0;
+    os[oname].flip = false;
     os[oname].nps = nps;
     os[oname].bb = (box) {.x = xpos, .y = -ypos, .w = w, .h = -h};
     os[oname].ps = salloc(sizeof(point*) * nps);
@@ -77,6 +78,10 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
                 case '\n':
                     y--;
                     x=0;
+                    break;
+                case '0':
+                    os[oname].ps[j][i++] = p_skipPoint;
+                    x++;
                     break;
                 default:
                     os[oname].ps[j][i++] = (point) {.x = x, .y = y, .r = cs[c].r, .g = cs[c].g, .b = cs[c].b};
@@ -108,6 +113,12 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
                 ls[lname][i] = os[c];
                 ls[lname][i].x = x*16;
                 ls[lname][i].y = y*16;
+                if(c == '&'){
+                    ls[lname][i].y += 7;
+                }
+                if(c == '7'){
+                    ls[lname][i].y -= 3;
+                }
                 if(c == '?'){
                     ls[lname][i].c = '.';
                     for(int j=0;j<i;j++){

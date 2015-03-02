@@ -9,7 +9,7 @@
 #define k_dimWindowH 800
 #define k_dimWindowW 800
 #define k_perspWindowH 800
-#define k_perspWindowW 50
+#define k_perspWindowW 500
 
 GLFWwindow* dimWindow;
 GLFWwindow* perspWindow;

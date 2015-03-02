@@ -48,3 +48,7 @@ float f_round(float f){
 bool ob_p_isTerm(point p){
     return (p.x == 124214 && p.y == 143512 && p.r == 100 && p.g == 100 && p.b == 100);
 }
+
+bool ob_p_isSkip(point p){
+    return (p.x == 124214 && p.y == 141312 && p.r == 100 && p.g == 100 && p.b == 100);
+}

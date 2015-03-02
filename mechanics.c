@@ -13,6 +13,9 @@ void mh_update(){
     if((int)s.scene[s.pli].vy != 0){s.onGround = false;}
     for(int i=0;s.scene[i].type != '\0';i++){
         if(s.scene[i].i == act_nothing){continue;}
+        if(s.scene[i].type == 'O' && s.scene[i].i-- == 1){cl_delObjAt(i);}
+        if(s.scene[i].type == 'E' && s.scene[i].i-- == 1){cl_delObjAt(i);}
+        if(s.scene[i].type == '7' && s.scene[i].i-- == 1){cl_delObjAt(i);}
         if(s.scene[i].i <= act_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#')){
             s.scene[i].i--;
             s.scene[i].y -= (s.scene[i].i < act_bounceD && s.scene[i].i > act_bounceU) * 2 - 1;
@@ -28,7 +31,9 @@ void mh_update(){
                 s.scene[l] = ob_objFchar(s.scene[i].c);
                 s.scene[l].x = s.scene[i].x;
                 s.scene[l].y = s.scene[i].y+16;
-                s.scene[l].vx = 0.5;
+                if(s.scene[i].c != 'R'){
+                    s.scene[l].vx = 0.5;
+                }
                 s.scene[l+1].type = '\0';
             }
         }
@@ -95,6 +100,7 @@ bool mh_collision(int i1, int i2){
     ob_realifyBox(&b1, s.scene[i1].x, s.scene[i1].y);
     ob_realifyBox(&b2, s.scene[i2].x, s.scene[i2].y);
     ret = k_boxInter(b1, b2);
+    if(s.scene[i1].type == '@' && s.scene[i2].type == 'E'){ret = false;}
 
     cols1 = ret;
     nCols = s.scene[i1].nCols;
@@ -167,7 +173,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                             }
                             }
                             s.scene[l+4].type = '\0';
-                            (*ee) = ob_objFchar('.');
+                            cl_delObj(ee);
                         }
                         else{(*ee).i = act_bounce;}
                     }
@@ -182,13 +188,49 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     break;
                 case 'e':
                     if(colsee & 2){
-                        (*ee)=ob_objFchar('.');
+                        int x_temp = (*ee).x;
+                        int y_temp = (*ee).y-8;
+                        (*ee) = ob_objFchar('E');
+                        (*ee).x = x_temp;
+                        (*ee).y = y_temp;
+                        (*ee).i = k_corpseLife;
                         cl_smallJump();
                     }
                     else if(s.star){
-                        (*ee)=ob_objFchar('.');
+                        cl_delObj(ee);
                     }
                     else{gl_killed();}
+                    break;
+                case '&':
+                    if(colsee & 2){
+                        int x_temp = (*ee).x;
+                        int y_temp = (*ee).y-8;
+                        (*ee) = ob_objFchar('7');
+                        (*ee).x = x_temp;
+                        (*ee).y = y_temp;
+                        (*ee).i = k_shellLife;
+                        cl_smallJump();
+                    }
+                    else if(s.star){
+                        cl_delObj(ee);
+                    }
+                    else{gl_killed();}
+                    break;
+                case '7':
+                    if(colsee & 2){
+                        (*ee).vx = 2.0;
+                        (*er).vx = -0.5;
+                    }
+                    if(colsee & 4){
+                        (*ee).vx = -2.0;
+                        (*er).vx = 0.5;
+                    }
+                    if(!(colsee & (4|2))){
+                        if(s.star){
+                            cl_delObj(ee);
+                        }
+                        else{gl_killed();}
+                    }
                     break;
                 case '~':
                     gl_die();
@@ -196,29 +238,74 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             }
             break;
         case '~':
-            (*ee) = ob_objFchar('.');
+            if((*ee).type != '@'){
+                cl_delObj(ee);
+            }
             break;
         case 'e':
             if(colser & (4 | 8)){
                 (*er).vx = -(*er).vx;
             }
             break;
-        case 's':
-            if((*ee).type == '@'){
-                *er = ob_objFchar('.');
-                cl_starman();
-            }
-            if(colser & (2 | 4) && (*ee).type != 'e'){
+        case '&':
+            if(colser & (4 | 8)){
                 (*er).vx = -(*er).vx;
             }
-            else if(colser & 8 && (*ee).type != 'e'){
+            break;
+        case '7':
+            switch((*ee).type){
+                case '&':
+                    ;
+                case 'e':
+                    cl_delObj(ee);
+                    break;
+                default:
+                    if(colser & (8 | 16)){
+                        (*er).vx = -(*er).vx;
+                    }
+                    break;
+            }
+            break;
+        case 'o':
+            if((*ee).type == 'e' || (*ee).type == '&'){
+                cl_delObj(ee);
+                int x_temp = (*er).x;
+                int y_temp = (*er).y;
+                (*er) = ob_objFchar('O');
+                (*er).x = x_temp;
+                (*er).y = y_temp;
+                (*er).i = 2*10;
+            }
+            if(colser & (2 | 4) && (*ee).type != '@'){
+                (*er).vx = -(*er).vx;
+            }
+            else if(colser & 8 && (*ee).type != '@'){
+                (*er).y += 1;
+                (*er).vy = 3;
+            }
+            break;
+        case 's':
+            if((*ee).type == '@'){
+                cl_delObj(er);
+                cl_starman();
+            }
+            if(colser & (2 | 4) && (*ee).type != 'e' && (*ee).type != '&'){
+                (*er).vx = -(*er).vx;
+            }
+            else if(colser & 8 && (*ee).type != 'e' && (*ee).type != '&'){
                 (*er).y += 1;
                 (*er).vy = 6;
             }
             break;
+        case 'R':
+            if((*ee).type == '@'){
+                cl_delObj(er);
+                cl_fireMario();
+            }
+            break;
         case 'r':
             if((*ee).type == '@'){
-                *er = ob_objFchar('.');
+                cl_delObj(er);
                 cl_bigMario();
             }
             else if(colser & (2 | 4)){
@@ -227,7 +314,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             break;
         case 'g':
             if((*ee).type == '@'){
-                *er = ob_objFchar('.');
+                cl_delObj(er);
                 s.lives++;
             }
             else if(colser & (2 | 4)){
@@ -237,7 +324,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         case 'c':
             if((*ee).type == '@'){
                 s.coins++;
-                *er = ob_objFchar('.');
+                cl_delObj(er);
             }
             break;
     }

@@ -7,6 +7,8 @@
 #include "gamelogic.h"
 #include "rendering.h"
 #include "parsing.h"
+#include "windowing.h"
+#define k_lineSize 50
 
 bool debug;
 bool *font;
