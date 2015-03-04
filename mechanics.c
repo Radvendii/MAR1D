@@ -15,8 +15,30 @@ void mh_update(){
         if(s.scene[i].i == act_nothing){continue;}
         if(s.scene[i].type == 'O' && s.scene[i].i-- == 1){cl_delObjAt(i);}
         if(s.scene[i].type == 'E' && s.scene[i].i-- == 1){cl_delObjAt(i);}
-        if(s.scene[i].type == '7' && s.scene[i].i-- == 1){cl_delObjAt(i);}
+        if(s.scene[i].type == '7' && s.scene[i].i-- == 1 && s.scene[i].vx == 0){
+            int x_temp = s.scene[i].x;
+            int y_temp = s.scene[i].y+16;
+            s.scene[i] = ob_objFchar('&');
+            s.scene[i].x = x_temp;
+            s.scene[i].y = y_temp;
+            s.scene[i].vx = -0.5;
+        }
         if(s.scene[i].i <= act_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#')){
+            if(s.bigMario && s.scene[i].type == '#' && s.scene[i].i == act_bounce-1){
+                int l;
+                for(l=0;s.scene[l].type != '\0';l++);
+                for(int j=0;j<2;j++){
+                    for(int k=0;k<2;k++){
+                        s.scene[l+j+k*2] = ob_objFchar('b');
+                        s.scene[l+j+k*2].x = s.scene[i].x+j*8;
+                        s.scene[l+j+k*2].y = s.scene[i].y+k*8;
+                        s.scene[l+j+k*2].vx = (j*2-1);
+                        s.scene[l+j+k*2].vy = 1+(k);
+                    }
+                }
+                s.scene[l+4].type = '\0';
+                cl_delObjAt(i);
+            }
             s.scene[i].i--;
             s.scene[i].y -= (s.scene[i].i < act_bounceD && s.scene[i].i > act_bounceU) * 2 - 1;
         }
@@ -48,8 +70,6 @@ void mh_update(){
             if(s.scene[i].i && s.scene[i].i < 12*k_growthRate){
                 s.paused = true;
                 int grow[12] = {0,1,-1,1,-1,1,1,-2,1,1,-2,2};
-                //int growth = 8*grow[s.scene[i].i/k_growthRate]/k_growthRate;
-                //TODO: Make growth look smoother
                 int growth = 8*grow[s.scene[i].i/k_growthRate] * !(s.scene[i].i % k_growthRate);
                 s.scene[s.pli].y += growth;
                 s.scene[s.pli].bb.h -= growth;
@@ -66,9 +86,22 @@ void mh_update(){
                 mh_move(i);
             }
         }
-        s.moveFrameY++;
-        s.moveFrameX++;
     }
+    else if(s.dead){
+        s.scene[s.pli].vx=0;
+        if(!(--s.dead)){
+            gl_resetLevel();
+        }
+        else if(s.dead<k_dieStartBlack){
+            s.scene[s.pli].hidden = false;
+        }
+        else if(s.dead<k_dieStartMoving){
+            cl_gravity(s.pli);
+            mh_move(s.pli);
+        }
+    }
+    s.moveFrameY++;
+    s.moveFrameX++;
 }
 
 void mh_move(int i){
@@ -90,7 +123,7 @@ AFTER_X_MOTION: ;
 }
 
 bool mh_collision(int i1, int i2){
-    if(s.scene[i1].type == '.' || s.scene[i2].type == '.'){return false;}
+    if(s.scene[i1].type == '.' || s.scene[i2].type == '.' || s.dead){return false;}
     bool ret;
     int nCols;
     int cols1, cols2;
@@ -150,38 +183,27 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     break;
                 case 'D':
                     if(colsee & 2 && !(colsee & 4)){
+                        (*er).vx = 0;
                         (*er).x++;
                         (*er).vy = vy;
                     }
                     if(colsee & 4 && !(colsee & 2)){
+                        (*er).vx = 0;
                         (*er).x--;
                         (*er).vy = vy;
                     }
                     break;
                 case '#':
                     if(colsee & 2 && (*ee).i == act_nothing){
-                        if(s.bigMario){
-                            int l;
-                            for(l=0;s.scene[l].type != '\0';l++);
-                            for(int j=0;j<2;j++){
-                            for(int k=0;k<2;k++){
-                                s.scene[l+j+k*2] = ob_objFchar('b');
-                                s.scene[l+j+k*2].x = (*ee).x+j*8;
-                                s.scene[l+j+k*2].y = (*ee).y+k*8;
-                                s.scene[l+j+k*2].vx = (j*2-1);
-                                s.scene[l+j+k*2].vy = 1+(k);
-                            }
-                            }
-                            s.scene[l+4].type = '\0';
-                            cl_delObj(ee);
-                        }
-                        else{(*ee).i = act_bounce;}
+                        (*ee).i = act_bounce;
                     }
                     if(colsee & 4 && !(colsee & (8 | 2))){
+                        (*er).vx = 0;
                         (*er).x++;
                         (*er).vy = vy;
                     }
                     if(colsee & 8 && !(colsee & (4 | 2))){
+                        (*er).vx = 0;
                         (*er).x--;
                         (*er).vy = vy;
                     }
@@ -232,6 +254,9 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                         else{gl_killed();}
                     }
                     break;
+                case '!':
+                    gl_win();
+                    break;
                 case '~':
                     gl_die();
                     break;
@@ -242,6 +267,19 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                 cl_delObj(ee);
             }
             break;
+        case '#':
+            ;
+        case '?':
+            if((*er).i != act_nothing){
+                if((*ee).type == 'e' || (*ee).type == '&'){
+                    cl_delObj(ee);
+                }
+                if((*ee).type == 'r' || (*ee).type == 'g'){
+                    (*ee).vx = -(*ee).vx;
+                    (*ee).vy = 4;
+                }
+            }
+            break;
         case 'e':
             if(colser & (4 | 8)){
                 (*er).vx = -(*er).vx;
@@ -250,6 +288,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         case '&':
             if(colser & (4 | 8)){
                 (*er).vx = -(*er).vx;
+                (*er).flip = !(*er).flip;
             }
             break;
         case '7':

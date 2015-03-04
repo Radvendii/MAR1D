@@ -6,11 +6,10 @@
 #define k_drawD1 (16*7)
 #define k_drawD2 (16*8)
 #define k_drawD (16*8)
-#define k_FOV (70*pi/180)
-#define k_FOVrun (65*pi/180)
 #define k_bgr 107
 #define k_bgg 136
 #define k_bgb 255
+#define k_flashG 1000
 
 #define k_animFreq 10
 
@@ -25,6 +24,7 @@ struct camera {
     bool debug;
     bool flashD;
     bool flashB;
+    int flashG;
     bool redTint;
     int drawD;
     int animFrame;

@@ -4,23 +4,17 @@ void cl_init(){
     s.backward = false;
     s.forward = false;
     s.upcount = 0;
+    s.run = false;
 }
 
 void cl_update(){
     if(s.forward && s.scene[s.pli].vx<k_xVelMax){s.scene[s.pli].vx+=k_xVel;}
-    if(!s.forward && s.onGround && s.scene[s.pli].vx>0){
-        if(s.scene[s.pli].vx > 1.0){
-            s.scene[s.pli].vx -= k_xVel;
-        }
-        s.scene[s.pli].vx-=k_xVel;}
+    if(!s.forward && s.onGround && s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
     if(s.backward && s.scene[s.pli].vx>-k_xVelMax){s.scene[s.pli].vx-=k_xVel;}
-    if(!s.backward && s.onGround && s.scene[s.pli].vx<0){
-        if(s.scene[s.pli].vx < -1.0){
-            s.scene[s.pli].vx += k_xVel;
-        }
-        s.scene[s.pli].vx+=k_xVel;
-    }
+    if(!s.backward && s.onGround && s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
     if(!--s.upcount){cl_jumpEnd();}
+    if(k_xVelMax - s.scene[s.pli].vx < 0.0001){s.run++;}
+    else if(s.run){s.run--;}
 }
 
 bool cl_move1(int i, char dir, bool pos){
@@ -85,7 +79,7 @@ void cl_smallMario(){
         s.scene[s.pli].cols[0].h += 16;
         s.scene[s.pli].cols[2].y += 16;
         for(int i=0; s.scene[i].type != '\0';i++){
-            if(s.scene[i].type == '?' && s.scene[i].c == 'r'){s.scene[i].c = 'R';}
+            if(s.scene[i].type == '?' && s.scene[i].c == 'R'){s.scene[i].c = 'r';}
         }
     }
 }
@@ -164,11 +158,9 @@ void cl_gravity(int i){
 }
 
 void cl_delObjAt(int i){
-    if(s.scene[i].type == 'o'){
-        s.nFBalls--;
-    }
-    s.scene[i] = ob_objFchar('.');
+    cl_delObj(&s.scene[i]);
 }
+
 void cl_delObj(obj* obj){
     if((*obj).type == 'o'){
         s.nFBalls--;

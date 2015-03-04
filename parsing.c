@@ -1,6 +1,6 @@
 #include "parsing.h"
 
-//TODO: Animations not still images
+//TODO: animate koopas
 
 FILE* io_readFile(char* fn){
     char fn_[100];
@@ -56,6 +56,7 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
     os[oname].i = 0;
     os[oname].j = 0;
     os[oname].c = 0;
+    os[oname].animFrame = 0;
     os[oname].flip = false;
     os[oname].nps = nps;
     os[oname].bb = (box) {.x = xpos, .y = -ypos, .w = w, .h = -h};

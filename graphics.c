@@ -1,5 +1,4 @@
 #include "graphics.h"
-//TODO: FOV decreases when moving fast
 
 void gr_keypress(int key, int scancode, int action, int mods){
     if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
@@ -13,6 +12,9 @@ void gr_cursormove(double xPos, double yPos){
 
 void gr_update(){
     cam.animFrame++;
+    for(int i=0; cam.scene[i].type != '\0'; i++){
+        cam.scene[i].animFrame++;
+    }
     cam.x = s.scene[s.pli].x+14;
     cam.y = s.scene[s.pli].y-2;
     cam.flashD = s.invincible && !s.star;
@@ -21,12 +23,13 @@ void gr_update(){
     cam.flip = s.flip;
     rn_dimFcamera(dimScreen, cam);
     rn_perspFcamera(perspScreen, cam, NULL);
-    if(s.scene[s.pli].vx < 1.6 || cam.flip){
+    if(s.run < k_tBeforeFOVChange || cam.flip){
         cam.FOV = k_FOV;
     }
     else{
-        cam.FOV = (k_FOVrun - k_FOV)/(1.9-1.6)*(s.scene[s.pli].vx - 1.6)+k_FOV;
+        cam.FOV = (k_FOVrun - k_FOV)/(k_durationFOVChange)*(s.run - k_tBeforeFOVChange)+k_FOV;
     }
+    if(s.run>k_tBeforeFOVChange+k_durationFOVChange){s.run = k_tBeforeFOVChange+k_durationFOVChange;}
 }
 
 void gr_char(char c, GLfloat* x, GLfloat* y){

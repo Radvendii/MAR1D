@@ -16,9 +16,9 @@ void rn_dimFcamera(point *points, struct camera c){
     points[nPoints++] = (point) {.x = 0, .y = 0, c_brick};
 
     for(int obj=0;;obj++) {
-        if(c.scene[obj].type == '\0') {break;} //Check for termination
+        if(c.scene[obj].type == '\0') {break;}
         for(int pn=0;;pn++) {
-            if(ob_p_isTerm(p = c.scene[obj].ps[c.animFrame/k_animFreq % c.scene[obj].nps][pn])){break;}
+            if(ob_p_isTerm(p = c.scene[obj].ps[c.scene[obj].animFrame/k_animFreq % c.scene[obj].nps][pn])){break;}
 
             ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             points[nPoints++] = p;
@@ -29,8 +29,6 @@ void rn_dimFcamera(point *points, struct camera c){
 }
 
 void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
-    //TODO: bottom and top should render even if technically off screen
-    //Only still a problem when c.flip
     for(int i=0;i<k_nPixels;i++){
         screen[i*3]=k_bgr;
         screen[i*3+1]=k_bgg;
@@ -60,14 +58,16 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     for(int obj=0;;obj++) {
         if(c.scene[obj].type == '\0') {break;}
         if(c.scene[obj].hidden == true || c.scene[obj].type == '.') {continue;}
-        for(point* pp=c.scene[obj].ps[c.animFrame/k_animFreq % c.scene[obj].nps];!ob_p_isTerm(p = *pp);pp++) {
+        for(point* pp=c.scene[obj].ps[c.scene[obj].animFrame/k_animFreq % c.scene[obj].nps];!ob_p_isTerm(p = *pp);pp++) {
             if(ob_p_isSkip(p)){continue;}
+            if(c.scene[obj].flip){p.x = c.scene[obj].bb.w - p.x;}
             ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
             p.x -= c.x;
             p.y -= c.y;
             double alpha = atan2(p.y, p.x);
             if(c.flip){alpha = pi-alpha;}
             alpha = fmod(alpha - c.T, 2*pi);
+            if(alpha > pi){alpha -= 2*pi;}
 
             if(alpha<-0.5 || alpha>c.FOV+0.5){continue;}
             y = (tan(alpha-c.FOV/2) + tan(c.FOV/2) ) / (2*tan(c.FOV/2)) * k_nPixels;

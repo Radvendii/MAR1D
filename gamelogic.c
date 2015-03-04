@@ -11,6 +11,7 @@ void gl_init(){
     s.bigMario = false;
     s.star = false;
     s.invincible = false;
+    s.dead = false;
     s.fire = false;
     s.lives = 3;
     s.nFBalls = 0;
@@ -40,19 +41,36 @@ void gl_killed(){
     else{gl_die();}
 }
 
+void gl_die(){ //TODO: consolodate reset level stuff into one function
+    //if(!s.lives){exit(0);}
+    s.paused = true;
+    s.scene[s.pli].physical = false;
+    s.scene[s.pli].vy=10;
+    s.scene[s.pli].vx=0;
+    s.dead = k_dieStart;
+}
 
-void gl_die(){
-    if(!s.lives){exit(0);}
+void gl_win(){
+    gl_resetLevel();
+}
+
+void gl_resetLevel(){
+    cl_smallMario();
     int i;
     for(i=0; ob_levels['t'][i].type != '\0';i++){s.scene[i] = ob_levels['t'][i];}
     s.scene[i].type = '\0';
+    s.pli = gl_playerIndex();
     s.flip = false;
     s.leftMost = 0;
-    for(int i=0;s.scene[i].type != '\0'; i++){
+    s.nFBalls = 0;
+    s.dead = false;
+    mh_init();
+    cl_init();
+    ai_init();
+    for(i=0;s.scene[i].type != '\0'; i++){
         if(s.scene[i].type == 'e' || s.scene[i].type == '&'){s.scene[i].vx=-0.5;}
     }
     s.lives--;
-    ai_init();
 }
 
 void gl_update(){

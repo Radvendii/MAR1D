@@ -9,10 +9,14 @@
 #define act_bounceU 1
 #define act_bounceD (act_bounce/2 + act_bounceU*2)
 #define act_startGrow 1
+
 #define k_growthRate 7
+#define k_dieStart 120
+#define k_dieStartMoving 100
+#define k_dieStartBlack 50
 
 #define k_corpseLife 80
-#define k_shellLife 1000;
+#define k_shellLife 160;
 
 
 struct state {
@@ -28,8 +32,10 @@ struct state {
     bool flip;
     bool bigMario;
     bool fire;
+    int dead;
     int nFBalls;
     int invincible;
+    int run;
     int star;
     int lives;
     int coins;
@@ -37,20 +43,12 @@ struct state {
     int moveFrameX;
 };
 
-typedef struct {
-    obj o;
-    int x;
-    int y;
-    double vx;
-    double vy;
-    bool gravity;
-    bool physical;
-    int i;
-} gameObj;
-
 struct state s;
 
 int gl_playerIndex();
+
+void gl_resetLevel();
+void gl_win();
 
 void gl_init();
 void gl_update();

@@ -5,7 +5,7 @@
 //TODO: remove need for k_nMax___
 
 #define k_nMaxLinesPerObj 100 //maximum number of lines per object
-#define k_nMaxObj 500 //maximum number of objects in a world
+#define k_nMaxObj 1000 //maximum number of objects in a world
 #define p_termPoint ((point){ .x=124214, .y=143512, .r=100, .g=100, .b=100 }) //Hope this point never actually comes up... :P
 #define p_skipPoint ((point){ .x=124214, .y=141312, .r=100, .g=100, .b=100 }) //Hope this point never actually comes up... :P
 #define c_brick .r=231, .g=95, .b=19
@@ -42,10 +42,12 @@ typedef struct{
     bool physical;
     int i;
     int j;
-    bool hidden;
     char c;
     bool active;
+
+    bool hidden;
     bool flip;
+    int animFrame;
 
     char type;
     point** ps;
