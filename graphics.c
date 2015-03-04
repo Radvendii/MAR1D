@@ -43,14 +43,14 @@ void gr_char(char c, GLfloat* x, GLfloat* y){
         }
     }
     glEnd();
-    *x += 8*k_fontSize;
+    *y += 8*k_fontSize;
 }
 
 void gr_text(char *s, GLfloat x, GLfloat y){
     float x_orig = x;
     while(*s != '\0'){
         if(*s == '\n'){
-            y-=8*k_fontSize;
+            x-=8*k_fontSize;
             x=x_orig;
         }
         else{
