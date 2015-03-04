@@ -1,6 +1,6 @@
 #ifndef _GRAPHICS_H
 #define _GRAPHICS_H
-#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h> //for openGL functions
 #include <unistd.h>
 #include "helpers.h"
 #include "objects.h"
@@ -13,6 +13,7 @@
 #define k_durationFOVChange 20
 #define k_FOV (70*pi/180)
 #define k_FOVrun (65*pi/180)
+#define k_fontSize 2
 
 bool debug;
 bool *font;
@@ -28,7 +29,10 @@ void gr_text(char *, GLfloat, GLfloat);
 void gr_init();
 void gr_deinit();
 void gr_update();
-void gr_draw();
+void gr_drawPersp();
+void gr_drawDim();
+void gr_drawGui();
+void gr_clear();
 
 void gr_keypress(int, int, int, int);
 void gr_cursormove(double, double);

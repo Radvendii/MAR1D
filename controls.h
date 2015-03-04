@@ -7,7 +7,7 @@
 #include "mechanics.h"
 
 #define k_xVel 0.05
-#define k_yVel (4.1+s.scene[s.pli].vx/5)
+#define k_yVel (3.9+s.scene[s.pli].vx*s.bigMario/5)
 #define k_xVelMax  1.0
 #define k_yVelMin -4.5
 #define k_nJumpFrames 40

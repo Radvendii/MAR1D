@@ -6,14 +6,19 @@
 #include "gameLogic.h"
 #include "graphics.h"
 
-#define k_dimWindowH 800
-#define k_dimWindowW 800
-#define k_perspWindowH 800
-#define k_perspWindowW 500
+#define k_dimWindowH 600
+#define k_dimWindowW 600
+#define k_perspWindowH 600
+#define k_perspWindowW 600
+#define k_guiWindowH 600
+#define k_guiWindowW 600
+#define k_dimWindowX 0
+#define k_perspWindowX (k_dimWindowX+k_dimWindowW)
 
 GLFWwindow* dimWindow;
 GLFWwindow* perspWindow;
 
+void wn_guiWindow();
 void wn_perspWindow();
 void wn_dimWindow();
 

@@ -8,10 +8,16 @@ void cl_init(){
 }
 
 void cl_update(){
-    if(s.forward && s.scene[s.pli].vx<k_xVelMax){s.scene[s.pli].vx+=k_xVel;}
-    if(!s.forward && s.onGround && s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
-    if(s.backward && s.scene[s.pli].vx>-k_xVelMax){s.scene[s.pli].vx-=k_xVel;}
-    if(!s.backward && s.onGround && s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
+    if(s.crouch){
+        if(s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
+        if(s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
+    }
+    else{
+        if(s.forward && s.scene[s.pli].vx<k_xVelMax){s.scene[s.pli].vx+=k_xVel;}
+        if(!s.forward && s.onGround && s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
+        if(s.backward && s.scene[s.pli].vx>-k_xVelMax){s.scene[s.pli].vx-=k_xVel;}
+        if(!s.backward && s.onGround && s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
+    }
     if(!--s.upcount){cl_jumpEnd();}
     if(k_xVelMax - s.scene[s.pli].vx < 0.0001){s.run++;}
     else if(s.run){s.run--;}
@@ -41,6 +47,30 @@ bool cl_move(int i, char dir, int amt){
         else{amt++;}
     }
     return ret;
+}
+
+void cl_uncrouch(){
+    if(s.crouch){
+        s.crouch = false;
+        if(s.bigMario){
+            s.scene[s.pli].y += 16;
+            s.scene[s.pli].bb.h -= 16;
+            s.scene[s.pli].cols[0].h -= 16;
+            s.scene[s.pli].cols[2].y -= 16;
+        }
+    }
+}
+void cl_crouch(){
+    if(!s.crouch){
+        s.crouch = true;
+        if(s.bigMario){
+            s.scene[s.pli].y -= 16;
+            s.scene[s.pli].bb.h += 16;
+            s.scene[s.pli].cols[0].h += 16;
+            s.scene[s.pli].cols[2].y += 16;
+        }
+    }
+
 }
 
 void cl_jumpStart(){
@@ -74,10 +104,12 @@ void cl_smallMario(){
     if(s.bigMario == true){
         s.bigMario = false;
         s.fire = false;
-        s.scene[s.pli].y -= 16;
-        s.scene[s.pli].bb.h += 16;
-        s.scene[s.pli].cols[0].h += 16;
-        s.scene[s.pli].cols[2].y += 16;
+        if(!s.crouch){
+            s.scene[s.pli].y -= 16;
+            s.scene[s.pli].bb.h += 16;
+            s.scene[s.pli].cols[0].h += 16;
+            s.scene[s.pli].cols[2].y += 16;
+        }
         for(int i=0; s.scene[i].type != '\0';i++){
             if(s.scene[i].type == '?' && s.scene[i].c == 'R'){s.scene[i].c = 'r';}
         }
@@ -108,7 +140,7 @@ void cl_fire(){
         s.scene[i] = ob_objFchar('o');
         s.scene[i].x = s.scene[s.pli].x+14;
         s.scene[i].y = s.scene[s.pli].y-2;
-        s.scene[i].vx = -1.0 * (s.flip*2-1);
+        s.scene[i].vx = -4.5 * (s.flip*2-1);
     }
 }
 
@@ -144,6 +176,12 @@ void cl_keypress(int key, int scancode, int action, int mods){
         cl_jumpEnd();
     }
 
+    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS){
+        cl_crouch();
+    }
+    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE){
+        cl_uncrouch();
+    }
 
     if (key == GLFW_KEY_Q && action == GLFW_PRESS){
         s.paused = !s.paused;
@@ -162,7 +200,7 @@ void cl_delObjAt(int i){
 }
 
 void cl_delObj(obj* obj){
-    if((*obj).type == 'o'){
+    if((*obj).type == 'o' || (*obj).type == 'O'){
         s.nFBalls--;
     }
     (*obj) = ob_objFchar('.');

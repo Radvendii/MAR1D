@@ -163,7 +163,9 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     switch((*er).type){
         case '@':
             vy = (*er).vy;
-            if(colser & 2){(*er).vx = 0;}
+            if(!((s.star || s.invincible) && ((*er).type == '@' && ((*ee).type == 'e' || (*ee).type == '&')))){
+                if(colser & 2){(*er).vx = 0;}
+            }
             if(colser & (4 | 8)){(*er).vy = 0;}
             if(colser & 8){s.onGround = true;}
             switch((*ee).type){
@@ -195,7 +197,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     break;
                 case '#':
                     if(colsee & 2 && (*ee).i == act_nothing){
-                        (*ee).i = act_bounce;
+                        (*ee).i = act_bounce; //brick-breaking code is in mh_update()
                     }
                     if(colsee & 4 && !(colsee & (8 | 2))){
                         (*er).vx = 0;
@@ -209,19 +211,21 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     }
                     break;
                 case 'e':
-                    if(colsee & 2){
-                        int x_temp = (*ee).x;
-                        int y_temp = (*ee).y-8;
-                        (*ee) = ob_objFchar('E');
-                        (*ee).x = x_temp;
-                        (*ee).y = y_temp;
-                        (*ee).i = k_corpseLife;
-                        cl_smallJump();
+                    if((*ee).physical == true){
+                        if(colsee & 2){
+                            int x_temp = (*ee).x;
+                            int y_temp = (*ee).y-8;
+                            (*ee) = ob_objFchar('E');
+                            (*ee).x = x_temp;
+                            (*ee).y = y_temp;
+                            (*ee).i = k_corpseLife;
+                            cl_smallJump();
+                        }
+                        else if(s.star){
+                            ai_kill(ee);
+                        }
+                        else{gl_killed();}
                     }
-                    else if(s.star){
-                        cl_delObj(ee);
-                    }
-                    else{gl_killed();}
                     break;
                 case '&':
                     if(colsee & 2){
@@ -234,7 +238,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                         cl_smallJump();
                     }
                     else if(s.star){
-                        cl_delObj(ee);
+                        ai_kill(ee);
                     }
                     else{gl_killed();}
                     break;
@@ -249,7 +253,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     }
                     if(!(colsee & (4|2))){
                         if(s.star){
-                            cl_delObj(ee);
+                            ai_kill(ee);
                         }
                         else{gl_killed();}
                     }
@@ -271,8 +275,8 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             ;
         case '?':
             if((*er).i != act_nothing){
-                if((*ee).type == 'e' || (*ee).type == '&'){
-                    cl_delObj(ee);
+                if(((*ee).type == 'e' || (*ee).type == '&') && (*ee).physical == true){
+                    ai_kill(ee);
                 }
                 if((*ee).type == 'r' || (*ee).type == 'g'){
                     (*ee).vx = -(*ee).vx;
@@ -281,12 +285,12 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             }
             break;
         case 'e':
-            if(colser & (4 | 8)){
+            if((*er).physical == true && colser & (4 | 8)){
                 (*er).vx = -(*er).vx;
             }
             break;
         case '&':
-            if(colser & (4 | 8)){
+            if((*er).physical == true && colser & (4 | 8)){
                 (*er).vx = -(*er).vx;
                 (*er).flip = !(*er).flip;
             }
@@ -296,7 +300,9 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                 case '&':
                     ;
                 case 'e':
-                    cl_delObj(ee);
+                    if((*ee).physical == true){
+                        ai_kill(ee);
+                    }
                     break;
                 default:
                     if(colser & (8 | 16)){
@@ -306,8 +312,8 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             }
             break;
         case 'o':
-            if((*ee).type == 'e' || (*ee).type == '&'){
-                cl_delObj(ee);
+            if(((*ee).type == 'e' || (*ee).type == '&') && (*ee).physical == true){
+                ai_kill(ee);
                 int x_temp = (*er).x;
                 int y_temp = (*er).y;
                 (*er) = ob_objFchar('O');
@@ -316,11 +322,16 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                 (*er).i = 2*10;
             }
             if(colser & (2 | 4) && (*ee).type != '@'){
-                (*er).vx = -(*er).vx;
+                int x_temp = (*er).x;
+                int y_temp = (*er).y;
+                (*er) = ob_objFchar('O');
+                (*er).x = x_temp;
+                (*er).y = y_temp;
+                (*er).i = 2*10;
             }
-            else if(colser & 8 && (*ee).type != '@'){
+            else if(colser & 8 && (*ee).type != '@' && (*er).type != 'O'){
                 (*er).y += 1;
-                (*er).vy = 3;
+                (*er).vy = 5;
             }
             break;
         case 's':

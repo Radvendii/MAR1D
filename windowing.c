@@ -1,5 +1,9 @@
 #include "windowing.h"
 
+void wn_guiWindow(){
+    glfwMakeContextCurrent(perspWindow);
+}
+
 void wn_perspWindow(){
     glfwMakeContextCurrent(perspWindow);
 }
@@ -65,8 +69,8 @@ void wn_init(){
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
-    glfwSetWindowPos(dimWindow, 100, 50);
-    glfwSetWindowPos(perspWindow, 900, 50);
+    glfwSetWindowPos(dimWindow, k_dimWindowX, 50);
+    glfwSetWindowPos(perspWindow, k_perspWindowX, 50);
 
     glfwSetInputMode(perspWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
     glLineWidth(1.5f);

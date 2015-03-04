@@ -25,9 +25,13 @@ int main(void){
         gl_update();
         gr_update();
         wn_perspWindow();
-        gr_draw(perspWindow, 2);
+        gr_clear();
+        gr_drawPersp();
         wn_dimWindow();
-        gr_draw(dimWindow, 0);
+        gr_clear();
+        gr_drawDim();
+        wn_guiWindow();
+        gr_drawGui();
         wn_update();
     }
     wn_deinit();

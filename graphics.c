@@ -21,8 +21,7 @@ void gr_update(){
     cam.flashB = s.star;
     cam.redTint = s.fire;
     cam.flip = s.flip;
-    rn_dimFcamera(dimScreen, cam);
-    rn_perspFcamera(perspScreen, cam, NULL);
+
     if(s.run < k_tBeforeFOVChange || cam.flip){
         cam.FOV = k_FOV;
     }
@@ -30,30 +29,35 @@ void gr_update(){
         cam.FOV = (k_FOVrun - k_FOV)/(k_durationFOVChange)*(s.run - k_tBeforeFOVChange)+k_FOV;
     }
     if(s.run>k_tBeforeFOVChange+k_durationFOVChange){s.run = k_tBeforeFOVChange+k_durationFOVChange;}
+
+    rn_dimFcamera(dimScreen, cam);
+    rn_perspFcamera(perspScreen, cam, NULL);
 }
 
 void gr_char(char c, GLfloat* x, GLfloat* y){
-    glPointSize(2.5f);
+    glPointSize(k_fontSize);
     glBegin(GL_POINTS);
     for(int i=0;i<fontSize;i++){
         if(font[(c-48)*fontSize+i]){
-        glVertex2f(*x+i%7, *y-i/7);
+        glVertex2f(*x+(i%7)*k_fontSize, *y-(i/7)*k_fontSize);
         }
     }
     glEnd();
-    *x += 8;
+    *x += 8*k_fontSize;
 }
 
 void gr_text(char *s, GLfloat x, GLfloat y){
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(-k_drawD, k_drawD, -k_drawD, k_drawD, -1, 1);
+    float x_orig = x;
     while(*s != '\0'){
-        gr_char(*s, &x, &y);
+        if(*s == '\n'){
+            y-=8*k_fontSize;
+            x=x_orig;
+        }
+        else{
+            gr_char(*s, &x, &y);
+        }
         s++;
     }
-    glPopMatrix();
 }
 
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
@@ -96,31 +100,40 @@ void gr_points(point *ps){
     return;
 }
 
-void gr_draw(GLFWwindow *window, int renderType){
+void gr_drawPersp(){
+    gr_pixels(perspScreen);
+}
+
+void gr_drawDim(){
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glBegin(GL_QUADS);
+    glColor3ub(k_bgr, k_bgg, k_bgb);
+    glVertex2f(-1.f, -1.f);
+    glVertex2f(-1.f, 1.f);
+    glVertex2f(1.f, 1.f);
+    glVertex2f(1.f, -1.f);
+    glEnd();
+    gr_points(dimScreen);
+}
+
+void gr_clear(){
     glClearColor(0.0,0.0,0.0,1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    if(renderType == 0){
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
+}
 
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
-        glBegin(GL_QUADS);
-        glColor3ub(k_bgr, k_bgg, k_bgb);
-        glVertex2f(-1.f, -1.f);
-        glVertex2f(-1.f, 1.f);
-        glVertex2f(1.f, 1.f);
-        glVertex2f(1.f, -1.f);
-        glEnd();
-        gr_points(dimScreen);
-        glColor3f(1.0, 1.0, 1.0);
-        char score[20];
-        sprintf(score, "%d", s.coins);
-        gr_text(score, -k_drawD+5, k_drawD-5);
-        //MAR1D
-    }
-    else{gr_pixels(perspScreen);}
+void gr_drawGui(){
+    char score[20];
+    sprintf(score, "MAR1D\n%d", s.coins);
+    glColor3f(1.0, 1.0, 1.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, k_guiWindowW, 0, k_guiWindowH, -1, 1);
+    gr_text(score, 5, k_guiWindowH-5);
 }
 
 void gr_init(){

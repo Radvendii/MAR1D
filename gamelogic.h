@@ -32,6 +32,7 @@ struct state {
     bool flip;
     bool bigMario;
     bool fire;
+    bool crouch;
     int dead;
     int nFBalls;
     int invincible;
