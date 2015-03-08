@@ -5,6 +5,7 @@ void cl_init(){
     s.forward = false;
     s.upcount = 0;
     s.run = false;
+    s.multibounce=0;
 }
 
 void cl_update(){
@@ -21,6 +22,7 @@ void cl_update(){
     if(!--s.upcount){cl_jumpEnd();}
     if(k_xVelMax - s.scene[s.pli].vx < 0.0001){s.run++;}
     else if(s.run){s.run--;}
+    if(s.onGround){s.multibounce = 0;}
 }
 
 bool cl_move1(int i, char dir, bool pos){
@@ -61,6 +63,9 @@ void cl_uncrouch(){
     }
 }
 void cl_crouch(){
+    if(s.pipeTo != '\0'){
+        s.scene[s.pli].y--;
+    }
     if(!s.crouch){
         s.crouch = true;
         if(s.bigMario){
@@ -104,12 +109,7 @@ void cl_smallMario(){
     if(s.bigMario == true){
         s.bigMario = false;
         s.fire = false;
-        if(!s.crouch){
-            s.scene[s.pli].y -= 16;
-            s.scene[s.pli].bb.h += 16;
-            s.scene[s.pli].cols[0].h += 16;
-            s.scene[s.pli].cols[2].y += 16;
-        }
+        cl_uncrouch();
         for(int i=0; s.scene[i].type != '\0';i++){
             if(s.scene[i].type == '?' && s.scene[i].c == 'R'){s.scene[i].c = 'r';}
         }
@@ -118,6 +118,8 @@ void cl_smallMario(){
 
 void cl_smallJump(){
         s.scene[s.pli].vy = k_yVel;
+        s.onGround = false;
+        s.multibounce++;
 }
 
 void cl_jumpEnd(){
@@ -186,6 +188,10 @@ void cl_keypress(int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_Q && action == GLFW_PRESS){
         s.paused = !s.paused;
     }
+}
+
+void cl_pipe(){
+    gl_loadLevel(s.pipeTo, s.loc);
 }
 
 void cl_gravity(int i){

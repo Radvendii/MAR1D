@@ -1,6 +1,7 @@
 #include "mechanics.h"
 
 void mh_init(){
+    s.pipeTo = '\0';
     s.onGround = true;
     s.paused = false;
     s.gravity = k_gravity;
@@ -10,7 +11,7 @@ void mh_init(){
 }
 
 void mh_update(){
-    if((int)s.scene[s.pli].vy != 0){s.onGround = false;}
+    if((int)s.scene[s.pli].vy != 0){s.onGround = false; s.pipeTo = '\0';}
     for(int i=0;s.scene[i].type != '\0';i++){
         if(s.scene[i].i == act_nothing){continue;}
         if(s.scene[i].type == 'O' && s.scene[i].i-- == 1){cl_delObjAt(i);}
@@ -25,6 +26,7 @@ void mh_update(){
         }
         if(s.scene[i].i <= act_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#')){
             if(s.bigMario && s.scene[i].type == '#' && s.scene[i].i == act_bounce-1){
+                s.score += 50;
                 int l;
                 for(l=0;s.scene[l].type != '\0';l++);
                 for(int j=0;j<2;j++){
@@ -47,6 +49,7 @@ void mh_update(){
             if(s.scene[i].j){s.scene[i].j--;}
             if(s.scene[i].c == 'c'){
                 s.coins++;
+                s.score += 200;
             }
             else{
                 for(l=0;s.scene[l].type != '\0';l++);
@@ -67,7 +70,7 @@ void mh_update(){
             s.scene[i].i = temp.i;
         }
         if(s.scene[i].type == '@'){
-            if(s.scene[i].i && s.scene[i].i < 12*k_growthRate){
+            if(s.scene[i].i && s.bigMario == true && s.scene[i].i < 12*k_growthRate){
                 s.paused = true;
                 int grow[12] = {0,1,-1,1,-1,1,1,-2,1,1,-2,2};
                 int growth = 8*grow[s.scene[i].i/k_growthRate] * !(s.scene[i].i % k_growthRate);
@@ -76,6 +79,16 @@ void mh_update(){
                 s.scene[s.pli].cols[0].h -= growth;
                 s.scene[s.pli].cols[2].y -= growth;
                 if(++s.scene[i].i == 12 * k_growthRate){s.paused = false;}
+            }
+            if(s.scene[i].i > 0 && s.bigMario == false){
+                s.paused = true;
+                int grow[12] = {0,-1,1,-1,1,-1,-1,2,-1,-1,2,-2};
+                int growth = 8*grow[s.scene[i].i/k_growthRate] * !(s.scene[i].i % k_growthRate);
+                s.scene[s.pli].y += growth;
+                s.scene[s.pli].bb.h -= growth;
+                s.scene[s.pli].cols[0].h -= growth;
+                s.scene[s.pli].cols[2].y -= growth;
+                if(--s.scene[i].i == 0){s.paused = false;}
             }
         }
     }
@@ -163,15 +176,40 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     switch((*er).type){
         case '@':
             vy = (*er).vy;
-            if(!((s.star || s.invincible) && ((*er).type == '@' && ((*ee).type == 'e' || (*ee).type == '&')))){
+            if(!((s.star || s.invincible) && ((*er).type == '@' && ((*ee).type == 'e' || (*ee).type == '&')))){ //TODO: invincible doesn't work because collision still happens so it still stops you
                 if(colser & 2){(*er).vx = 0;}
             }
             if(colser & (4 | 8)){(*er).vy = 0;}
             if(colser & 8){s.onGround = true;}
             switch((*ee).type){
+                case '=':
+                    if(colsee & 2){
+                        s.pipeTo = (*ee).c;
+                    }
+                    if(colsee & 4){
+                        if((*ee).c == '\0'){(*er).y++;}
+                        else{(*er).y--;}
+                    }
+                    if(colsee & 8 && (*ee).c != '\0'){
+                        cl_pipe();
+                    }
+                    break;
+                case ']':
+                    if(colsee & 2){
+                        s.pipeTo = (*ee).c;
+                        (*er).x++;
+                    }
+                    if(colsee & 4){
+                        if((*ee).c == '\0'){(*er).x--;}
+                        else{(*er).x++;}
+                    }
+                    if(colsee & 8 && (*ee).c != '\0'){
+                        cl_pipe();
+                    }
+                    break;
                 case '?':
                     if(colsee & 2 && (*ee).i == act_nothing){
-                        (*ee).i = act_bounce;
+                        (*ee).i = act_bounce; //coin-producing code is in mh_update()
                         (*ee).hidden = false;
                     }
                     if(colsee & 4 && !(colsee & (8 | 2))){
@@ -212,7 +250,11 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     break;
                 case 'e':
                     if((*ee).physical == true){
-                        if(colsee & 2){
+                        if(s.star){
+                            ai_kill(ee);
+                            s.score+=100;
+                        }
+                        else if(colsee & 2){
                             int x_temp = (*ee).x;
                             int y_temp = (*ee).y-8;
                             (*ee) = ob_objFchar('E');
@@ -220,15 +262,17 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                             (*ee).y = y_temp;
                             (*ee).i = k_corpseLife;
                             cl_smallJump();
-                        }
-                        else if(s.star){
-                            ai_kill(ee);
+                            s.score+=100*s.multibounce;
                         }
                         else{gl_killed();}
                     }
                     break;
                 case '&':
-                    if(colsee & 2){
+                    if(s.star){
+                        ai_kill(ee);
+                        s.score+=100;
+                    }
+                    else if(colsee & 2){
                         int x_temp = (*ee).x;
                         int y_temp = (*ee).y-8;
                         (*ee) = ob_objFchar('7');
@@ -236,9 +280,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                         (*ee).y = y_temp;
                         (*ee).i = k_shellLife;
                         cl_smallJump();
-                    }
-                    else if(s.star){
-                        ai_kill(ee);
+                        s.score+=100*s.multibounce;
                     }
                     else{gl_killed();}
                     break;
@@ -246,14 +288,19 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     if(colsee & 2){
                         (*ee).vx = 2.0;
                         (*er).vx = -0.5;
+                        (*ee).nps = 1;
+                        s.score += 400+100*s.multibounce;
                     }
                     if(colsee & 4){
                         (*ee).vx = -2.0;
                         (*er).vx = 0.5;
+                        (*ee).nps = 1;
+                        s.score += 400+100*s.multibounce;
                     }
                     if(!(colsee & (4|2))){
                         if(s.star){
                             ai_kill(ee);
+                            s.score += 200;
                         }
                         else{gl_killed();}
                     }
@@ -277,6 +324,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             if((*er).i != act_nothing){
                 if(((*ee).type == 'e' || (*ee).type == '&') && (*ee).physical == true){
                     ai_kill(ee);
+                    s.score += 100;
                 }
                 if((*ee).type == 'r' || (*ee).type == 'g'){
                     (*ee).vx = -(*ee).vx;
@@ -320,6 +368,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                 (*er).x = x_temp;
                 (*er).y = y_temp;
                 (*er).i = 2*10;
+                s.score += (*ee).type == 'e' ? 100 : 200;
             }
             if(colser & (2 | 4) && (*ee).type != '@'){
                 int x_temp = (*er).x;
@@ -338,6 +387,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             if((*ee).type == '@'){
                 cl_delObj(er);
                 cl_starman();
+                s.score += 1000;
             }
             if(colser & (2 | 4) && (*ee).type != 'e' && (*ee).type != '&'){
                 (*er).vx = -(*er).vx;
@@ -351,12 +401,14 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             if((*ee).type == '@'){
                 cl_delObj(er);
                 cl_fireMario();
+                s.score += 1000;
             }
             break;
         case 'r':
             if((*ee).type == '@'){
                 cl_delObj(er);
                 cl_bigMario();
+                s.score += 1000;
             }
             else if(colser & (2 | 4)){
                 (*er).vx = -(*er).vx;
@@ -366,6 +418,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             if((*ee).type == '@'){
                 cl_delObj(er);
                 s.lives++;
+                s.score+= 1000;
             }
             else if(colser & (2 | 4)){
                 (*er).vx = -(*er).vx;
@@ -374,6 +427,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         case 'c':
             if((*ee).type == '@'){
                 s.coins++;
+                s.score += 200;
                 cl_delObj(er);
             }
             break;

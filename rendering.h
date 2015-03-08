@@ -2,6 +2,7 @@
 #define _RENDERING_H
 #include "objects.h"
 #include "helpers.h"
+#include "parsing.h"
 #define k_nPixels 500 //resolution of screen. Never make it odd.
 #define k_drawD1 (16*7)
 #define k_drawD2 (16*8)
@@ -18,7 +19,7 @@ struct camera {
     int x;
     int y;
     double T;
-    obj* scene;
+    level scene;
     bool flip;
     bool paused;
     bool debug;

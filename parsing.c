@@ -4,8 +4,14 @@
 
 FILE* io_readFile(char* fn){
     char fn_[100];
-    sprintf(fn_, "%s%s", "../", fn);
+    sprintf(fn_, "../%s", fn);
     return sfopen(fn_, "r");
+}
+
+FILE* io_readBFile(char* fn){
+    char fn_[100];
+    sprintf(fn_, "../%s", fn);
+    return sfopen(fn_, "rb");
 }
 
 int io_getFont(bool** font, char* fn){
@@ -14,7 +20,7 @@ int io_getFont(bool** font, char* fn){
     int i=0;
     int fontSize;
     fscanf(f, "%d\n", &fontSize);
-    *font = salloc(sizeof(bool)*fontSize*43);
+    *font = salloc(sizeof(bool)*fontSize*128);
     while((c = fgetc(f)) != EOF){
         if(c == '\n'){continue;}
         else{(*font)[i++]= (c == '1' ? true : false);}
@@ -58,6 +64,7 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
     os[oname].c = 0;
     os[oname].animFrame = 0;
     os[oname].flip = false;
+    os[oname].onScreen = false;
     os[oname].nps = nps;
     os[oname].bb = (box) {.x = xpos, .y = -ypos, .w = w, .h = -h};
     os[oname].ps = salloc(sizeof(point*) * nps);
@@ -85,7 +92,7 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
                     x++;
                     break;
                 default:
-                    os[oname].ps[j][i++] = (point) {.x = x, .y = y, .r = cs[c].r, .g = cs[c].g, .b = cs[c].b};
+                    os[oname].ps[j][i++] = (point) {.x = x, .y = y, .c = c};
                     x++;
                     break;
             }
@@ -132,8 +139,10 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
                 }
                 if(c == '|' || c == '='){
                     fgetc(f);
-                    ls[lname][++i] = os['.'];
                     x++;
+                    ls[lname][++i] = os['.'];
+                    ls[lname][i].x = x*16;
+                    ls[lname][i].y = y*16;
                 }
                 i++;
                 x++;
@@ -159,6 +168,10 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
             case 'j':
                 fscanf(f, "%d", &j);
                 ls[lname][i].j = j;
+                break;
+            case 'c':
+                fscanf(f, "%c", &c);
+                ls[lname][i].c = c;
                 break;
         }
         fgetc(f);
@@ -194,3 +207,49 @@ void io_getLevels(level** ls, char* fn){
     return;
 }
 
+image * loadTexture(){
+    image *image1;
+
+    image1 = (image *) salloc(sizeof(image));
+
+    if (!getImage(image1, "menuscreen.bmp")) {
+        exit(1);
+    }
+
+    return image1;
+}
+
+int getImage(image *image, char *fn) {
+    FILE *file = io_readBFile(fn);
+    unsigned long size; // size of the image in bytes.
+    char temp; // temporary color storage for bgr-rgb conversion.
+
+    image->sizeX = 256;
+    image->sizeY = 240;
+
+    size = image->sizeX * image->sizeY * 3;
+
+    // seek past the bitmap header.
+    fseek(file, 54, SEEK_CUR);
+
+    // read the data.
+    image->data = (unsigned char *) malloc(size);
+
+    if (image->data == NULL) {
+        printf("Error allocating memory for color-corrected image data");
+        return 0;
+    }
+
+    if (fread(image->data, size, 1, file) != 1) {
+        printf("Error reading image data from %s.\n", fn);
+        return 0;
+    }
+
+    for (int i=0;i<size;i+=3) { // reverse all of the colors. (bgr -> rgb)
+        temp = image->data[i];
+        image->data[i] = image->data[i+2];
+        image->data[i+2] = temp;
+    }
+
+    return 1;
+}

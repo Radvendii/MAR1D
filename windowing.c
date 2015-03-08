@@ -1,5 +1,9 @@
 #include "windowing.h"
 
+void wn_menuWindow(){
+    glfwMakeContextCurrent(perspWindow);
+}
+
 void wn_guiWindow(){
     glfwMakeContextCurrent(perspWindow);
 }

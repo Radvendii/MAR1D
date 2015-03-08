@@ -38,3 +38,8 @@ int intcmp(const void *aa, const void *bb){
 void intsort(int* l, int s){
     qsort(l, s, sizeof(int), intcmp);
 }
+
+double linInterp(double y1, double y2, double x1, double x2, double val){
+    return (y2-y1)/(x2-x1)*val+y2;
+}
+

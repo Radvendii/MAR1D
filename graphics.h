@@ -14,10 +14,12 @@
 #define k_FOV (70*pi/180)
 #define k_FOVrun (65*pi/180)
 #define k_fontSize 2
+#define k_camT -pi/10
 
 bool debug;
 bool *font;
 int fontSize;
+GLuint texture;
 
 extern struct state s;
 struct camera cam;
@@ -32,6 +34,7 @@ void gr_update();
 void gr_drawPersp();
 void gr_drawDim();
 void gr_drawGui();
+void gr_drawMenu();
 void gr_clear();
 
 void gr_keypress(int, int, int, int);

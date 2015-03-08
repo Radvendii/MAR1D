@@ -30,6 +30,9 @@ void cl_fireMario();
 void cl_starman();
 void cl_smallMario();
 void cl_fire();
+void cl_crouch();
+void cl_uncrouch();
+void cl_pipe();
 void cl_delObjAt(int);
 void cl_delObj(obj*);
 

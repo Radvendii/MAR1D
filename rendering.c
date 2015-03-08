@@ -10,10 +10,9 @@ void rn_dimFcamera(point *points, struct camera c){
     double ya = c.y + a*sin(c.T);
     double xb = c.x + a*cos(c.T+c.FOV);
     double yb = c.y + a*sin(c.T+c.FOV);
-    points[nPoints++] = (point) {.x = c.x, .y = c.y, c_black};
-    points[nPoints++] = (point) {.x = xa, .y = ya, c_black};
-    points[nPoints++] = (point) {.x = xb, .y = yb, c_black};
-    points[nPoints++] = (point) {.x = 0, .y = 0, c_brick};
+    points[nPoints++] = (point) {.x = c.x, .y = c.y, .c = '.'};
+    points[nPoints++] = (point) {.x = xa, .y = ya, .c = '.'};
+    points[nPoints++] = (point) {.x = xb, .y = yb, .c = '.'};
 
     for(int obj=0;;obj++) {
         if(c.scene[obj].type == '\0') {break;}
@@ -77,9 +76,9 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
                 if(i<0 || i >= k_nPixels) {continue;}
                 if(d<ds[i]){
                     ds[i] = d;
-                    screen[i*3+0] = p.r;
-                    screen[i*3+1] = p.g;
-                    screen[i*3+2] = p.b;
+                    screen[i*3+0] = io_cs[p.c].r;
+                    screen[i*3+1] = io_cs[p.c].g;
+                    screen[i*3+2] = io_cs[p.c].b;
                     if(d>k_drawD1){
                         screen[i*3+0] = (k_bgr - screen[i*3+0])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+0];
                         screen[i*3+1] = (k_bgg - screen[i*3+1])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+1];

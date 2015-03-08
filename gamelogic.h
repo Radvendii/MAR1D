@@ -8,19 +8,28 @@
 #define act_bounce 16
 #define act_bounceU 1
 #define act_bounceD (act_bounce/2 + act_bounceU*2)
-#define act_startGrow 1
 
+#define act_startGrow 1
 #define k_growthRate 7
-#define k_dieStart 120
-#define k_dieStartMoving 100
-#define k_dieStartBlack 50
+
+#define k_dieStart 170
+#define k_dieStartMoving 150
+#define k_dieStartBlack 1000
 
 #define k_corpseLife 80
-#define k_shellLife 160;
+#define k_shellLife 160
 
+#define k_timeTick 30
+#define k_time 400
+
+#define k_menuTime 200
+#define k_menuStatic 201
 
 struct state {
-    obj* scene;
+    char level;
+    char loc;
+    char pipeTo;
+    level scene;
     int pli;
     bool onGround;
     bool paused;
@@ -40,8 +49,13 @@ struct state {
     int star;
     int lives;
     int coins;
+    int score;
+    int time;
+    int multibounce;
     int moveFrameY;
     int moveFrameX;
+
+    int menu;
 };
 
 struct state s;
@@ -49,6 +63,7 @@ struct state s;
 int gl_playerIndex();
 
 void gl_resetLevel();
+void gl_loadLevel(char, char);
 void gl_win();
 
 void gl_init();

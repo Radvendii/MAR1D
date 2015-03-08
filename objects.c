@@ -26,7 +26,7 @@ obj ob_objFchar(char c){
 }
 
 void ob_printPoint(point p){
-    printf("{ x: %d, y: %d, r: %hhd, g: %hhd, b: %hhd }\n", p.x, p.y, p.r, p.g, p.b);
+    printf("{ x: %d, y: %d, c:%c }\n", p.x, p.y, p.c);
 }
 
 void ob_realifyPoint(point *p, int x, int y){
@@ -46,9 +46,9 @@ float f_round(float f){
 }
 
 bool ob_p_isTerm(point p){
-    return (p.x == 124214 && p.y == 143512 && p.r == 100 && p.g == 100 && p.b == 100);
+    return (p.x == 124214 && p.y == 143512 && p.c == '\0');
 }
 
 bool ob_p_isSkip(point p){
-    return (p.x == 124214 && p.y == 141312 && p.r == 100 && p.g == 100 && p.b == 100);
+    return (p.x == 124214 && p.y == 141312 && p.c == '\0');
 }

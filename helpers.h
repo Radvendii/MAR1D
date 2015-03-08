@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <string.h>
 
 #define pi (22/7.0)
 
@@ -13,5 +14,6 @@ void sfclose(FILE*);
 void* salloc(size_t);
 void* resalloc(void*, size_t);
 void intsort(int*, int);
+double linInterp(double, double, double, double, double);
 
 #endif
