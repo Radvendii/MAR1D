@@ -29,9 +29,9 @@ void rn_dimFcamera(point *points, struct camera c){
 
 void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     for(int i=0;i<k_nPixels;i++){
-        screen[i*3]=k_bgr;
-        screen[i*3+1]=k_bgg;
-        screen[i*3+2]=k_bgb;
+        screen[i*3]=c.bgr;
+        screen[i*3+1]=c.bgg;
+        screen[i*3+2]=c.bgb;
         if(c.flashD && c.animFrame/16 % 2){
             screen[i*3+0] /= 2;
             screen[i*3+1] /= 2;
@@ -80,9 +80,9 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
                     screen[i*3+1] = io_cs[p.c].g;
                     screen[i*3+2] = io_cs[p.c].b;
                     if(d>k_drawD1){
-                        screen[i*3+0] = (k_bgr - screen[i*3+0])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+0];
-                        screen[i*3+1] = (k_bgg - screen[i*3+1])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+1];
-                        screen[i*3+2] = (k_bgb - screen[i*3+2])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+2];
+                        screen[i*3+0] = (c.bgr - screen[i*3+0])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+0];
+                        screen[i*3+1] = (c.bgg - screen[i*3+1])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+1];
+                        screen[i*3+2] = (c.bgb - screen[i*3+2])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+2];
                     }
                     if(c.flashD && c.animFrame/16 % 2){
                         screen[i*3+0] /= 2;

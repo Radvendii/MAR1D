@@ -12,6 +12,7 @@ void gl_init(){
     s.loc = '1';
     s.bigMario = false;
     s.star = false;
+    s.check = 0;
     s.invincible = false;
     s.dead = false;
     s.fire = false;
@@ -46,7 +47,9 @@ void gl_die(){
 }
 
 void gl_win(){
-    s.menu = k_menuStatic;
+    s.menu = k_menuWin;
+    gl_resetLevel();
+    s.lives = 3;
 }
 
 void gl_loadLevel(char l, char w){
@@ -55,7 +58,7 @@ void gl_loadLevel(char l, char w){
     int wi;
     for(i=0; ob_levels[l][i].type != '\0';i++){
         s.scene[i] = ob_levels[l][i];
-        if(w != '\0' && ob_levels[l][i].type == '.' && ob_levels[l][i].c == w){wi = i;}
+        if(w != '\0' && (ob_levels[l][i].type == '.' || ob_levels[l][i].type == '`') && ob_levels[l][i].c == w){wi = i;}
     }
     s.scene[i].type = '\0';
     s.pli = gl_playerIndex();
@@ -75,10 +78,20 @@ void gl_loadLevel(char l, char w){
         if(s.scene[i].type == 'e' || s.scene[i].type == '&'){s.scene[i].vx=-0.5;}
     }
     s.loc = l;
+    if(l == 's'){ //TODO: make this not a kludge
+        io_cs['l'] = (color) {.r = 0, .g = 255, .b = 255};
+        io_cs['b'] = (color) {.r = 0, .g = 139, .b = 139};
+        io_cs['d'] = (color) {.r = 0, .g = 92, .b = 92};
+    }
+    else{
+        io_cs['l'] = (color) {.r = 231, .g = 95, .b = 19};
+        io_cs['b'] = (color) {.r = 255, .g = 128, .b = 57};
+        io_cs['d'] = (color) {.r = 212, .g = 76, .b = 0};
+    }
 }
 
 void gl_resetLevel(){
-    gl_loadLevel(s.level, '\0');
+    gl_loadLevel(s.level, s.check);
     s.time = k_timeTick * k_time;
     if(!s.lives){s.menu = k_menuStatic;}
 }
@@ -95,6 +108,9 @@ void gl_update(){
         if(s.scene[i].x<s.leftMost || (s.scene[i].x > s.leftMost+16*20 && s.scene[i].onScreen == true)){
             cl_delObjAt(i);
         }
+    }
+    if(s.scene[s.pli].x > 76 * 16){ //TODO: Make this not a kludge
+        s.check = '1';
     }
     s.pli = gl_playerIndex();
     if(!s.paused){

@@ -9,6 +9,7 @@
 #include "windowing.h"
 #include "parsing.h"
 #include <time.h>
+#include <ao/ao.h>
 //TODO: s/GUI/HUD/g
 struct state s;
 
@@ -37,8 +38,8 @@ int main(void){
             wn_dimWindow();
             gr_clear();
             gr_drawDim();
-            wn_guiWindow();
-            gr_drawGui();
+            wn_hudWindow();
+            gr_drawHud();
             wn_update();
         }
     }

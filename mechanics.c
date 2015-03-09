@@ -182,13 +182,19 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
             if(colser & (4 | 8)){(*er).vy = 0;}
             if(colser & 8){s.onGround = true;}
             switch((*ee).type){
+                //case '`': //TODO: checkpoints
+                    //s.check = '1';
+                    //break;
                 case '=':
                     if(colsee & 2){
                         s.pipeTo = (*ee).c;
                     }
                     if(colsee & 4){
-                        if((*ee).c == '\0'){(*er).y++;}
-                        else{(*er).y--;}
+                        if(s.time % 3){
+                            if((*ee).c == '\0'){(*er).y++;}
+                            else{(*er).y--;}
+                        }
+                        (*er).j++;
                     }
                     if(colsee & 8 && (*ee).c != '\0'){
                         cl_pipe();
@@ -200,8 +206,10 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                         (*er).x++;
                     }
                     if(colsee & 4){
-                        if((*ee).c == '\0'){(*er).x--;}
-                        else{(*er).x++;}
+                        if(s.time % 3){
+                            if((*ee).c == '\0'){(*er).x--;}
+                            else{(*er).x++;}
+                        }
                     }
                     if(colsee & 8 && (*ee).c != '\0'){
                         cl_pipe();
@@ -306,6 +314,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     }
                     break;
                 case '!':
+                    s.score+=400;
                     gl_win();
                     break;
                 case '~':

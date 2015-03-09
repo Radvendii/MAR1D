@@ -23,11 +23,21 @@ void gr_cursormove(double xPos, double yPos){
 }
 
 void gr_update(){
+    if(s.loc == '1'){ //TODO: make this not a kludge
+        cam.bgr = k_bgr;
+        cam.bgg = k_bgg;
+        cam.bgb = k_bgb;
+    }
+    else{
+        cam.bgr = 0;
+        cam.bgg = 0;
+        cam.bgb = 0;
+    }
     cam.animFrame++;
     for(int i=0; cam.scene[i].type != '\0'; i++){
         cam.scene[i].animFrame++;
     }
-    //TODO: 3rd person deathcam
+    //TODO: 3rd person deathcam?
     cam.x = s.scene[s.pli].x+14;
     cam.y = s.scene[s.pli].y-2;
     cam.flashD = s.invincible && !s.star;
@@ -128,7 +138,7 @@ void gr_drawDim(){
     glLoadIdentity();
 
     glBegin(GL_QUADS);
-    glColor3ub(k_bgr, k_bgg, k_bgb);
+    glColor3ub(cam.bgr, cam.bgg, cam.bgb);
     glVertex2f(-1.f, -1.f);
     glVertex2f(-1.f, 1.f);
     glVertex2f(1.f, 1.f);
@@ -142,8 +152,8 @@ void gr_clear(){
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void gr_drawGui(){
-    char gui[500];
+void gr_drawHud(){
+    char hud[500];
 
     char score[7];
     sprintf(score, "%d", s.score);
@@ -169,41 +179,47 @@ void gr_drawGui(){
         time[i]='0';
     }
     sprintf(time+i, "%d", s.time/k_timeTick);
-    sprintf(gui, "MAR1D          WORLD  TIME\n%s  @x%s    1-1    %s", score, coins, time);
+    sprintf(hud, "MAR1D          WORLD  TIME\n%s  @x%s    1-1    %s", score, coins, time);
     glColor3f(1.0, 1.0, 1.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glOrtho(0, k_guiWindowW, 0, k_guiWindowH, -1, 1);
-    gr_text(gui, 5, k_guiWindowH-5);
+    glOrtho(0, k_hudWindowW, 0, k_hudWindowH, -1, 1);
+    gr_text(hud, 5, k_hudWindowH-5);
 }
 
 void gr_drawMenu(){
-    glEnable(GL_TEXTURE_2D);
-    //glFrustum(-1, 1, -1, 1, -2, -1); //TODO: make this part perspective?
+    glColor3f(1.f, 1.f, 1.f);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glPushMatrix();
-    float rot = linInterp(0.0, 90.0, k_menuTime, 0.0, s.menu);
-    glRotatef(rot, 0.f, 1.f, 0.f);
-
-    glColor3f(1.f, 1.f, 1.f);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f);
-    glTexCoord2f(1.f, 0.f); glVertex2f(1.f, -1.f);
-    glTexCoord2f(1.f, 1.f); glVertex2f(1.f, 1.f);
-    glTexCoord2f(0.f, 1.f); glVertex2f(-1.f, 1.f);
-    glEnd();
-    glPopMatrix();
-    if(s.menu != k_menuStatic){
+    if(s.menu > k_menuStatic){
+        glOrtho(-k_menuWindowW/2, k_menuWindowW/2, 0, k_menuWindowH, -1, 1);
+        gr_text("CONGRATULATIONS!\n\nYOUVE WON LEVEL 1!\n\nMORE COMING AT SOME POINT", -16-8, k_menuWindowH-20);
         s.menu--;
     }
-    glDisable(GL_TEXTURE_2D);
+    else{
+        glPushMatrix();
+        float rot = linInterp(0.0, 90.0, k_menuTime, 0.0, s.menu);
+        glRotatef(rot, 0.f, 1.f, 0.f);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f);
+        glTexCoord2f(1.f, 0.f); glVertex2f(1.f, -1.f);
+        glTexCoord2f(1.f, 1.f); glVertex2f(1.f, 1.f);
+        glTexCoord2f(0.f, 1.f); glVertex2f(-1.f, 1.f);
+        glEnd();
+        glPopMatrix();
+        if(s.menu != k_menuStatic){
+            s.menu--;
+        }
+        glDisable(GL_TEXTURE_2D);
+    }
 }
 
 void gr_init(){

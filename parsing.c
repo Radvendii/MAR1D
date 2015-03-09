@@ -154,7 +154,7 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
     char obj;
     int j;
     fgetc(f);
-    while(fgetc(f) == 'P'){
+    while(fgetc(f) == 'P'){ //TODO: better syntax for this
         fscanf(f, ";%d%c", &i, &prop);
         switch(prop){
             case 'h':

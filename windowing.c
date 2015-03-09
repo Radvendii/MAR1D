@@ -4,7 +4,7 @@ void wn_menuWindow(){
     glfwMakeContextCurrent(perspWindow);
 }
 
-void wn_guiWindow(){
+void wn_hudWindow(){
     glfwMakeContextCurrent(perspWindow);
 }
 

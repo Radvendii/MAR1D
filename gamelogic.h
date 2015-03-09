@@ -4,6 +4,7 @@
 #include "controls.h"
 #include "mechanics.h"
 #include "enemies.h"
+#include "parsing.h"
 #define act_nothing 0
 #define act_bounce 16
 #define act_bounceU 1
@@ -14,7 +15,7 @@
 
 #define k_dieStart 170
 #define k_dieStartMoving 150
-#define k_dieStartBlack 1000
+#define k_dieStartBlack 100
 
 #define k_corpseLife 80
 #define k_shellLife 160
@@ -24,11 +25,13 @@
 
 #define k_menuTime 200
 #define k_menuStatic 201
+#define k_menuWin k_menuStatic+250
 
 struct state {
     char level;
     char loc;
     char pipeTo;
+    char check;
     level scene;
     int pli;
     bool onGround;
