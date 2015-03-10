@@ -5,6 +5,7 @@
 #include "objects.h"
 #include "gamelogic.h"
 #include "mechanics.h"
+#include "audio.h"
 
 #define k_xVel 0.05
 #define k_yVel (3.9+abs(s.scene[s.pli].vx)*s.bigMario/5)

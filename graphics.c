@@ -153,33 +153,8 @@ void gr_clear(){
 }
 
 void gr_drawHud(){
-    char hud[500];
-
-    char score[7];
-    sprintf(score, "%d", s.score);
-    int i;
-    int len = strlen(score);
-    for(i=0;i<6-len;i++){
-        score[i]='0';
-    }
-    sprintf(score+i, "%d", s.score);
-
-    char coins[3];
-    sprintf(coins, "%d", s.coins);
-    len = strlen(coins);
-    for(i=0;i<2-len;i++){
-        coins[i]='0';
-    }
-    sprintf(coins+i, "%d", s.coins);
-
-    char time[4];
-    sprintf(time, "%d", s.time/k_timeTick);
-    len = strlen(time);
-    for(i=0;i<3-len;i++){
-        time[i]='0';
-    }
-    sprintf(time+i, "%d", s.time/k_timeTick);
-    sprintf(hud, "MAR1D          WORLD  TIME\n%s  @x%s    1-1    %s", score, coins, time);
+    char hud[55];
+    sprintf(hud, "MAR1D          WORLD  TIME\n%06d  @x%02d    1-1    %03d", s.score, s.coins, s.time/k_timeTick);
     glColor3f(1.0, 1.0, 1.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -217,6 +192,9 @@ void gr_drawMenu(){
         glPopMatrix();
         if(s.menu != k_menuStatic){
             s.menu--;
+            if(!s.menu){
+                gl_load();
+            }
         }
         glDisable(GL_TEXTURE_2D);
     }

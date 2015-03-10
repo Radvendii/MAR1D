@@ -26,6 +26,7 @@ void mh_update(){
         }
         if(s.scene[i].i <= act_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#')){
             if(s.bigMario && s.scene[i].type == '#' && s.scene[i].i == act_bounce-1){
+                au_play(SND_blockbreak);
                 s.score += 50;
                 int l;
                 for(l=0;s.scene[l].type != '\0';l++);
@@ -49,6 +50,7 @@ void mh_update(){
             if(s.scene[i].j){s.scene[i].j--;}
             if(s.scene[i].c == 'c'){
                 s.coins++;
+                au_play(SND_coin);
                 s.score += 200;
             }
             else{
@@ -230,6 +232,9 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     }
                     break;
                 case 'D':
+                    if(colsee & 2 && colsee & 4 ){
+                        au_play(SND_blockhit);
+                    }
                     if(colsee & 2 && !(colsee & 4)){
                         (*er).vx = 0;
                         (*er).x++;
@@ -243,6 +248,9 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     break;
                 case '#':
                     if(colsee & 2 && (*ee).i == act_nothing){
+                        if(!s.bigMario){
+                            au_play(SND_blockhit);
+                        }
                         (*ee).i = act_bounce; //brick-breaking code is in mh_update()
                     }
                     if(colsee & 4 && !(colsee & (8 | 2))){
@@ -436,6 +444,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         case 'c':
             if((*ee).type == '@'){
                 s.coins++;
+                au_play(SND_coin);
                 s.score += 200;
                 cl_delObj(er);
             }

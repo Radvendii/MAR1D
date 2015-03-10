@@ -78,14 +78,6 @@ void cl_crouch(){
 
 }
 
-void cl_jumpStart(){
-    if(s.onGround) {
-        s.scene[s.pli].vy = k_yVel;
-        s.gravity/=5;
-        s.upcount = k_nJumpFrames;
-    }
-}
-
 void cl_starman(){
     s.star = 1000;
     s.invincible = 1000;
@@ -97,6 +89,7 @@ void cl_fireMario(){
 
 void cl_bigMario(){
     if(s.bigMario == false){
+        au_play(SND_mushroomeat);
         s.bigMario = true;
         s.scene[s.pli].i = act_startGrow;
     }
@@ -107,6 +100,7 @@ void cl_bigMario(){
 
 void cl_smallMario(){
     if(s.bigMario == true){
+        au_play(SND_shrink);
         s.bigMario = false;
         s.fire = false;
         cl_uncrouch();
@@ -120,6 +114,15 @@ void cl_smallJump(){
         s.scene[s.pli].vy = k_yVel;
         s.onGround = false;
         s.multibounce++;
+}
+
+void cl_jumpStart(){
+    if(s.onGround) {
+        if(s.bigMario){au_play(SND_jumpbig);} else{au_play(SND_jump);}
+        s.scene[s.pli].vy = k_yVel;
+        s.gravity/=5;
+        s.upcount = k_nJumpFrames;
+    }
 }
 
 void cl_jumpEnd(){

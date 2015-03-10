@@ -21,9 +21,12 @@ void gl_init(){
     s.coins = 0;
     s.score = 0;
     s.scene = salloc(sizeof(obj) * k_nMaxObj);
-    gl_loadLevel(s.level, '\0');
 
     s.time = k_time*k_timeTick;
+}
+
+void gl_load(){
+    gl_loadLevel(s.level, '\0');
 }
 
 void gl_killed(){
@@ -36,6 +39,8 @@ void gl_killed(){
 }
 
 void gl_die(){
+    au_mainStop();
+    au_play(SND_death);
     cl_uncrouch();
     cl_smallMario();
     s.paused = true;
@@ -79,11 +84,13 @@ void gl_loadLevel(char l, char w){
     }
     s.loc = l;
     if(l == 's'){ //TODO: make this not a kludge
+        au_mainPlay(SND_underground);
         io_cs['l'] = (color) {.r = 0, .g = 255, .b = 255};
         io_cs['b'] = (color) {.r = 0, .g = 139, .b = 139};
         io_cs['d'] = (color) {.r = 0, .g = 92, .b = 92};
     }
     else{
+        au_mainPlay(SND_overworld);
         io_cs['l'] = (color) {.r = 231, .g = 95, .b = 19};
         io_cs['b'] = (color) {.r = 255, .g = 128, .b = 57};
         io_cs['d'] = (color) {.r = 212, .g = 76, .b = 0};

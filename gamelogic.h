@@ -67,6 +67,7 @@ int gl_playerIndex();
 
 void gl_resetLevel();
 void gl_loadLevel(char, char);
+void gl_load();
 void gl_win();
 
 void gl_init();
