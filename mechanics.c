@@ -306,12 +306,14 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     break;
                 case '7':
                     if(colsee & 2){
+                        au_play(SND_shot);
                         (*ee).vx = 2.0;
                         (*er).vx = -0.5;
                         (*ee).nps = 1;
                         s.score += 400+100*s.multibounce;
                     }
                     if(colsee & 4){
+                        au_play(SND_shot);
                         (*ee).vx = -2.0;
                         (*er).vx = 0.5;
                         (*ee).nps = 1;
@@ -326,8 +328,10 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     }
                     break;
                 case '!':
-                    s.score+=400;
-                    gl_win();
+                    if(!s.won){
+                        s.score+=400;
+                        gl_win();
+                    }
                     break;
                 case '~':
                     gl_die();
@@ -438,6 +442,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         case 'g':
             if((*ee).type == '@'){
                 cl_delObj(er);
+                au_play(SND_oneup);
                 s.lives++;
                 s.score+= 1000;
             }

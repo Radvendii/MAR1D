@@ -98,15 +98,17 @@ void playDaemon(){
         else{
             if(main){
                 mainFork = fork();
-                frk = mainFork;
+                if(mainFork == 0){
+                    au_playloop(snd);
+                    exit(0);
+                }
             }
             else{
-                frk = fork();
+                if(fork() == 0){
+                    au_playplay(snd);
+                    exit(0);
+                }
             }
-        }
-        if(frk == 0){
-            au_playplay(snd);
-            exit(0);
         }
     }
 }
@@ -115,6 +117,14 @@ void au_playplay(int snd){
     au_initEach();
     ao_play(device, sounds[snd], sz[snd]);
     au_deinitEach();
+}
+
+void au_playloop(int snd){
+    au_initEach();
+    while(1){
+        ao_play(device, sounds[snd], sz[snd]);
+    }
+    au_deinitEach(); //Calls this via signal() in au_initEach()
 }
 
 void au_initEach(){

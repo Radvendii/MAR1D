@@ -26,6 +26,7 @@ void gl_init(){
 }
 
 void gl_load(){
+    s.won = false;
     gl_loadLevel(s.level, '\0');
     s.time = k_timeTick * k_time;
     s.lives = 3;
@@ -57,6 +58,7 @@ void gl_win(){
     s.menu = k_menuWin;
     au_mainStop();
     au_playplay(SND_levelend);
+    s.won = true;
     s.lives = 3;
 }
 
@@ -125,6 +127,7 @@ void gl_update(){
     s.pli = gl_playerIndex();
     if(!s.paused){
         if(s.invincible){s.invincible--;}
+        if(s.invincible == 50){au_mainPlay(SND_overworld);}
         if(s.star){s.star--;}
         if(s.time){s.time--;}
         else{gl_die();}

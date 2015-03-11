@@ -81,6 +81,7 @@ void cl_crouch(){
 }
 
 void cl_starman(){
+    au_mainPlay(SND_starmusic);
     s.star = 1000;
     s.invincible = 1000;
 }
@@ -142,6 +143,7 @@ void cl_click(int button, int action, int mods){
 
 void cl_fire(){
     if(s.nFBalls < 2){
+        au_play(SND_fireball);
         s.nFBalls++;
         int i=0;
         for(i=0;s.scene[i].type != '\0' && s.scene[i].type != '.';i++);

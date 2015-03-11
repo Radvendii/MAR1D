@@ -58,6 +58,7 @@ void au_init();
 void au_deinit();
 void au_play(int);
 void au_playplay(int);
+void au_playloop(int);
 void au_mainPlay(int);
 void au_mainStop();
 void au_loadSounds();
