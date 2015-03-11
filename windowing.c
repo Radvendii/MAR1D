@@ -58,9 +58,9 @@ void cursor_callback(GLFWwindow *window, double xPos, double yPos){
 }
 
 void wn_init(){
-    glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
+    glfwSetErrorCallback(error_callback);
     dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, "dimWindow", NULL, NULL);
     perspWindow = glfwCreateWindow(k_perspWindowW, k_perspWindowH, "perspWindow", NULL, NULL);
     if (!perspWindow)

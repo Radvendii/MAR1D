@@ -8,17 +8,17 @@
 #include "graphics.h"
 #include "windowing.h"
 #include "parsing.h"
+#include "audio.h"
+#include <unistd.h>
 #include <time.h>
-#include <pthread.h>
-//TODO: s/GUI/HUD/g
 struct state s;
 
 int main(void){
+    au_init();
     ob_init();
     gl_init();
     wn_init();
     gr_init();
-    au_init();
 
     glfwSetTime(0.0);
     srand(time(NULL));
@@ -44,11 +44,11 @@ int main(void){
             wn_update();
         }
     }
-    au_deinit();
     gr_deinit();
     wn_deinit();
     gl_deinit();
     ob_deinit();
+    au_deinit();
     exit(EXIT_SUCCESS);
 
     return 0;

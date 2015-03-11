@@ -1,7 +1,8 @@
 #ifndef _AUDIO_H
 #define _AUDIO_H
 #include "helpers.h"
-#include <pthread.h>
+#include "windowing.h"
+#include <unistd.h>
 #include <ao/ao.h>
 #define SND_blockbreak 0
 #define SND_blockhit 1
@@ -53,12 +54,13 @@
 
 void au_init();
 void au_deinit();
-void* au_threaded(void*);
-void au_threadCleanup(void*);
 void au_play(int);
 void au_mainPlay(int);
 void au_mainStop();
 void au_loadSounds();
+void au_initEach();
+void au_deinitEach();
 char* au_loadSound(char*, int*);
+void playDaemon();
 
 #endif

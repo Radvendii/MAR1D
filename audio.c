@@ -1,8 +1,10 @@
 #include "audio.h"
-static pthread_key_t key;
+//static pthread_key_t key;
 int default_driver;
 ao_sample_format format;
-static pthread_t mainThread;
+ao_device* device;
+int piperw[2];
+//static pthread_t mainThread;
 char* sounds[k_nSounds];
 int sz[k_nSounds];
 char fileNames[k_nSounds][40] = {
@@ -60,6 +62,7 @@ FILE* au_readBFile(char* fn){
 }
 
 void au_init(){
+    au_loadSounds();
     ao_initialize();
 
     memset(&format, 0, sizeof(format));
@@ -69,11 +72,30 @@ void au_init(){
 
     format.byte_format = AO_FMT_LITTLE;
     default_driver = ao_default_driver_id();
-    pthread_key_create(&key, NULL);
-    au_loadSounds();
-    //for(int i=0;i<20;i++){
-        //au_play(SND_jump);
-    //}
+    pipe(piperw);
+    if(fork() == 0){ //This is the fork that does everything. I have to keep it uncontaminated by GLFW.
+        playDaemon();
+        exit(0);
+    }
+    close(piperw[0]);
+}
+
+void playDaemon(){
+    int snd;
+    close(piperw[1]);
+    while(read(piperw[0], &snd, sizeof(int)) > 0){
+        if(fork() == 0){
+            au_initEach();
+            ao_play(device, sounds[snd], sz[snd]);
+            au_deinitEach();
+            exit(0);
+        }
+    }
+    close(piperw[0]);
+}
+
+void au_initEach(){
+    device = ao_open_live(default_driver, &format, NULL);
 }
 
 void au_loadSounds(){
@@ -95,35 +117,18 @@ char* au_loadSound(char* fn, int* sz){
 }
 
 void au_deinit(){
-    /*
-     *ao_shutdown();
-     *for(int i=0;i<k_nSounds;i++){
-     *    free(sounds[i]);
-     *}
-     */
+    for(int i=0;i<k_nSounds;i++){
+        free(sounds[i]);
+    }
+    ao_shutdown();
 }
 
-void* au_threaded(void* arg){
-    printf("here\n");
-    ao_device* device = ao_open_live(default_driver, &format, NULL);
-    printf("here2\n");
-    pthread_setspecific(key, ao_open_live(default_driver, &format, NULL));
-    pthread_cleanup_push(au_threadCleanup, pthread_getspecific(key));
-    //ao_play(device, sounds[(int)arg], sz[(int)arg]);
+void au_deinitEach(){
     ao_close(device);
-    ao_play(pthread_getspecific(key), sounds[(int)arg], sz[(int)arg]);
-    pthread_cleanup_pop(1);
-    return NULL;
-}
-
-void au_threadCleanup(void* arg){
-    ao_close((ao_device*) arg);
 }
 
 void au_play(int snd){
-    pthread_t pth;
-    pthread_create(&pth, NULL, au_threaded, snd);
-    pthread_detach(pth);
+    write(piperw[1], &snd, sizeof(int));
 }
 
 void au_mainPlay(int snd){
@@ -134,10 +139,11 @@ void au_mainPlay(int snd){
     else{
         au_mainStop();
     }
-    pthread_create(&mainThread, NULL, au_threaded, snd);
-    pthread_detach(mainThread);
+    au_play(snd);
+    //pthread_create(&mainThread, NULL, au_threaded, snd);
+    //pthread_detach(mainThread);
 }
 
 void au_mainStop(){
-    pthread_cancel(mainThread);
+    //pthread_cancel(mainThread);
 }
