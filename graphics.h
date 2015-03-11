@@ -14,7 +14,7 @@
 #define k_FOV (70*pi/180)
 #define k_FOVrun (65*pi/180)
 #define k_fontSize 2
-#define k_camT -pi/10
+#define k_camT -pi/10 //initial camera angle
 
 bool debug;
 bool *font;

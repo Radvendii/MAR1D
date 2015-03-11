@@ -17,8 +17,8 @@ void gr_cursormove(double xPos, double yPos){
     last = yPos;
     if(!s.menu && !s.paused){
         cam.T = fmod(cam.T-offset*0.000436, 2*pi);
-        if(cam.T < -pi/2){cam.T = -pi/2;}
-        if(cam.T > pi/2-k_FOV){cam.T = pi/2-k_FOV;}
+        if(cam.T < -pi/2 - k_FOV/2){cam.T = -pi/2 - k_FOV/2;}
+        if(cam.T > pi/2-k_FOV/2){cam.T = pi/2-k_FOV/2;}
     }
 }
 
@@ -138,7 +138,8 @@ void gr_drawDim(){
     glLoadIdentity();
 
     glBegin(GL_QUADS);
-    glColor3ub(cam.bgr, cam.bgg, cam.bgb);
+    //glColor3ub(cam.bgr, cam.bgg, cam.bgb);
+    glColor3f(1.0, 1.0, 1.0);
     glVertex2f(-1.f, -1.f);
     glVertex2f(-1.f, 1.f);
     glVertex2f(1.f, 1.f);
@@ -172,8 +173,10 @@ void gr_drawMenu(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     if(s.menu > k_menuStatic){
+        char hud[90];
+        sprintf(hud, "CONGRATULATIONS!\n\nYOUVE WON LEVEL 1!\n\nMORE COMING AT SOME POINT\n\nSCORE %06d", s.score);
         glOrtho(-k_menuWindowW/2, k_menuWindowW/2, 0, k_menuWindowH, -1, 1);
-        gr_text("CONGRATULATIONS!\n\nYOUVE WON LEVEL 1!\n\nMORE COMING AT SOME POINT", -16-8, k_menuWindowH-20);
+        gr_text(hud, -32-8, k_menuWindowH-20);
         s.menu--;
     }
     else{

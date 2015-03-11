@@ -25,7 +25,7 @@
 
 #define k_menuTime 200
 #define k_menuStatic 201
-#define k_menuWin k_menuStatic+250
+#define k_menuWin k_menuStatic+500
 
 struct state {
     char level;
@@ -58,6 +58,7 @@ struct state {
     int multibounce;
     int moveFrameY;
     int moveFrameX;
+    bool lowTime;
 
     int menu;
 };

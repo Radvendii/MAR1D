@@ -68,7 +68,7 @@ void cl_crouch(){
         au_play(SND_pipe);
         s.scene[s.pli].y--;
     }
-    if(!s.crouch){
+    else if(!s.crouch){
         s.crouch = true;
         if(s.bigMario){
             s.scene[s.pli].y -= 16;

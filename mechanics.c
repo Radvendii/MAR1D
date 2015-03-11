@@ -4,6 +4,7 @@ void mh_init(){
     s.pipeTo = '\0';
     s.onGround = true;
     s.paused = false;
+    s.won = false;
     s.gravity = k_gravity;
     s.upcount = 0;
     s.moveFrameY = 0;
@@ -151,7 +152,9 @@ bool mh_collision(int i1, int i2){
     ob_realifyBox(&b1, s.scene[i1].x, s.scene[i1].y);
     ob_realifyBox(&b2, s.scene[i2].x, s.scene[i2].y);
     ret = k_boxInter(b1, b2);
-    if(s.scene[i1].type == '@' && s.scene[i2].type == 'E'){ret = false;}
+    if(s.scene[i1].type == '@' && s.scene[i2].type == 'E'){return false;}
+    if(s.scene[i1].type == '@' && s.invincible && (s.scene[i2].type == 'e' || s.scene[i2].type == '&' || s.scene[i2].type == '7')){return false;}
+    if(s.scene[i2].type == '@' && s.invincible && (s.scene[i1].type == 'e' || s.scene[i1].type == '&' || s.scene[i1].type == '7')){return false;}
 
     cols1 = ret;
     nCols = s.scene[i1].nCols;
@@ -181,7 +184,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     switch((*er).type){
         case '@':
             vy = (*er).vy;
-            if(!((s.star || s.invincible) && ((*er).type == '@' && ((*ee).type == 'e' || (*ee).type == '&')))){ //TODO: invincible doesn't work because collision still happens so it still stops you
+            if(!((s.star || s.invincible) && ((*er).type == '@' && ((*ee).type == 'e' || (*ee).type == '&')))){
                 if(colser & 2){(*er).vx = 0;}
             }
             if(colser & (4 | 8)){(*er).vy = 0;}
@@ -199,18 +202,18 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                             if((*ee).c == '\0'){(*er).y++;}
                             else{(*er).y--;}
                         }
-                        (*er).j++;
                     }
                     if(colsee & 8 && (*ee).c != '\0'){
                         cl_pipe();
                     }
                     break;
                 case ']':
-                    if(colsee & 2){
+                    //if(colsee & 2){
+                        //s.pipeTo = (*ee).c;
+                        //(*er).x++;
+                    //}
+                    if(colsee & (2|4)){
                         s.pipeTo = (*ee).c;
-                        (*er).x++;
-                    }
-                    if(colsee & 4){
                         if(s.time % 3){
                             if((*ee).c == '\0'){(*er).x--;}
                             else{(*er).x++;}
@@ -329,7 +332,6 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                     break;
                 case '!':
                     if(!s.won){
-                        s.score+=400;
                         gl_win();
                     }
                     break;

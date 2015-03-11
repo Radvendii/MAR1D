@@ -168,6 +168,15 @@ void au_play(int snd){
     write(piperw[1], &snd, sizeof(int));
 }
 
+void au_lowTime(){
+    au_mainStop();
+    au_play(SND_lowtime);
+    if(fork() == 0){
+        sleep(3);
+        au_mainPlay(au_mainAudio-1);
+    }
+}
+
 void au_mainPlay(int snd){
     static bool first = true;
     if(first){
@@ -176,6 +185,7 @@ void au_mainPlay(int snd){
     else{
         au_mainStop();
     }
+    au_mainAudio = snd;
     snd = (snd << 1) | 1;
     write(piperw[1], &snd, sizeof(int));
 }
