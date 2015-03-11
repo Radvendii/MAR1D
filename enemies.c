@@ -13,6 +13,7 @@ void ai_killAt(int i){
 }
 
 void ai_kill(obj* e){
+    au_play(SND_shot);
     (*e).physical = false;
     (*e).vy = 8;
 }

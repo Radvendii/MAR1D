@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <time.h>
 struct state s;
+//TODO: can lower camera more
 
 int main(void){
     au_init();

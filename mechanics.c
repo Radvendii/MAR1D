@@ -58,6 +58,9 @@ void mh_update(){
                 s.scene[l] = ob_objFchar(s.scene[i].c);
                 s.scene[l].x = s.scene[i].x;
                 s.scene[l].y = s.scene[i].y+16;
+                if(s.scene[i].c == 'r' || s.scene[i].c == 'g'){
+                    au_play(SND_mushroomappear);
+                }
                 if(s.scene[i].c != 'R'){
                     s.scene[l].vx = 0.5;
                 }
@@ -214,6 +217,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
                         }
                     }
                     if(colsee & 8 && (*ee).c != '\0'){
+                        au_play(SND_pipe);
                         cl_pipe();
                     }
                     break;

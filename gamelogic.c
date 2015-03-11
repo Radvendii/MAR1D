@@ -27,6 +27,8 @@ void gl_init(){
 
 void gl_load(){
     gl_loadLevel(s.level, '\0');
+    s.time = k_timeTick * k_time;
+    s.lives = 3;
 }
 
 void gl_killed(){
@@ -53,7 +55,8 @@ void gl_die(){
 
 void gl_win(){
     s.menu = k_menuWin;
-    gl_resetLevel();
+    au_mainStop();
+    au_playplay(SND_levelend);
     s.lives = 3;
 }
 

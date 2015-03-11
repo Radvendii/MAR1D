@@ -62,8 +62,10 @@ void cl_uncrouch(){
         }
     }
 }
+
 void cl_crouch(){
     if(s.pipeTo != '\0'){
+        au_play(SND_pipe);
         s.scene[s.pli].y--;
     }
     if(!s.crouch){
@@ -111,9 +113,10 @@ void cl_smallMario(){
 }
 
 void cl_smallJump(){
-        s.scene[s.pli].vy = k_yVel;
-        s.onGround = false;
-        s.multibounce++;
+    au_play(SND_stomp);
+    s.scene[s.pli].vy = k_yVel;
+    s.onGround = false;
+    s.multibounce++;
 }
 
 void cl_jumpStart(){

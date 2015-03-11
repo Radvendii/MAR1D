@@ -74,28 +74,52 @@ void au_init(){
     default_driver = ao_default_driver_id();
     pipe(piperw);
     if(fork() == 0){ //This is the fork that does everything. I have to keep it uncontaminated by GLFW.
+        close(piperw[1]);
         playDaemon();
+        close(piperw[0]);
         exit(0);
     }
     close(piperw[0]);
 }
 
 void playDaemon(){
+    unsigned int _snd;
     int snd;
-    close(piperw[1]);
-    while(read(piperw[0], &snd, sizeof(int)) > 0){
-        if(fork() == 0){
-            au_initEach();
-            ao_play(device, sounds[snd], sz[snd]);
-            au_deinitEach();
+    bool main;
+    pid_t mainFork;
+    pid_t frk;
+    while(read(piperw[0], &_snd, sizeof(int)) > 0){
+        snd = _snd >> 1;
+        main = _snd & 1;
+        if(snd == k_killMain && mainFork){
+            kill(mainFork, SIGTERM);
+            mainFork = 0;
+        }
+        else{
+            if(main){
+                mainFork = fork();
+                frk = mainFork;
+            }
+            else{
+                frk = fork();
+            }
+        }
+        if(frk == 0){
+            au_playplay(snd);
             exit(0);
         }
     }
-    close(piperw[0]);
+}
+
+void au_playplay(int snd){
+    au_initEach();
+    ao_play(device, sounds[snd], sz[snd]);
+    au_deinitEach();
 }
 
 void au_initEach(){
     device = ao_open_live(default_driver, &format, NULL);
+    signal(SIGTERM, au_deinitEach);
 }
 
 void au_loadSounds(){
@@ -120,6 +144,8 @@ void au_deinit(){
     for(int i=0;i<k_nSounds;i++){
         free(sounds[i]);
     }
+    au_mainStop();
+    close(piperw[1]);
     ao_shutdown();
 }
 
@@ -128,6 +154,7 @@ void au_deinitEach(){
 }
 
 void au_play(int snd){
+    snd = snd << 1;
     write(piperw[1], &snd, sizeof(int));
 }
 
@@ -139,11 +166,12 @@ void au_mainPlay(int snd){
     else{
         au_mainStop();
     }
-    au_play(snd);
-    //pthread_create(&mainThread, NULL, au_threaded, snd);
-    //pthread_detach(mainThread);
+    snd = (snd << 1) | 1;
+    write(piperw[1], &snd, sizeof(int));
 }
 
 void au_mainStop(){
-    //pthread_cancel(mainThread);
+    pid_t mainFrk;
+    int sig = k_killMain << 1;
+    write(piperw[1], &sig, sizeof(int));
 }
