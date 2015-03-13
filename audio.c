@@ -156,6 +156,7 @@ void au_deinit(){
     }
     au_mainStop();
     close(piperw[1]);
+    kill(-1, SIGKILL);
     ao_shutdown();
 }
 
@@ -174,6 +175,7 @@ void au_lowTime(){
     if(fork() == 0){
         sleep(3);
         au_mainPlay(au_mainAudio-1);
+        exit(0);
     }
 }
 
