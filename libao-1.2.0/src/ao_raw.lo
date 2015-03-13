@@ -8,5 +8,5 @@
 pic_object='.libs/ao_raw.o'
 
 # Name of the non-PIC object
-non_pic_object=none
+non_pic_object='ao_raw.o'
 

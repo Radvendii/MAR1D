@@ -8,7 +8,7 @@
 #include "rendering.h"
 #include "parsing.h"
 #include "windowing.h"
-#define k_lineSize 50
+#define k_lineSize 1
 #define k_tBeforeFOVChange 40
 #define k_durationFOVChange 20
 #define k_FOV (70*pi/180)

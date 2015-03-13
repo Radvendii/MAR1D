@@ -11,7 +11,7 @@ dlname='libmacosx.so'
 library_names='libmacosx.so libmacosx.so'
 
 # The name of the static archive.
-old_library=''
+old_library='libmacosx.a'
 
 # Linker flags that can not go in dependency_libs.
 inherited_linker_flags='  -framework AudioUnit -framework CoreAudio -framework CoreServices'

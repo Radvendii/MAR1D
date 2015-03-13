@@ -8,5 +8,5 @@
 pic_object='.libs/ao_aixs.o'
 
 # Name of the non-PIC object
-non_pic_object=none
+non_pic_object='ao_aixs.o'
 

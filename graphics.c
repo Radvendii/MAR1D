@@ -156,7 +156,7 @@ void gr_clear(){
 void gr_drawHud(){
     char hud[55];
     sprintf(hud, "MAR1D          WORLD  TIME\n%06d  @x%02d    1-1    %03d", s.score, s.coins, s.time/k_timeTick);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.5, 0.5, 0.5);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);

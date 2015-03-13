@@ -11,7 +11,7 @@ dlname='libao.4.dylib'
 library_names='libao.4.dylib libao.dylib'
 
 # The name of the static archive.
-old_library=''
+old_library='libao.a'
 
 # Linker flags that can not go in dependency_libs.
 inherited_linker_flags=' '

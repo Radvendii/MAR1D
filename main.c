@@ -12,7 +12,8 @@
 #include <unistd.h>
 #include <time.h>
 struct state s;
-//TODO: can lower camera more
+//for when I come back to this project:
+//http://8bithorse.blogspot.com/2010/11/super-mario-bros-101.html
 
 int main(void){
     au_init();

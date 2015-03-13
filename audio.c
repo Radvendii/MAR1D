@@ -57,7 +57,7 @@ char fileNames[k_nSounds][40] = {
 };
 FILE* au_readBFile(char* fn){
     char fn_[100];
-    sprintf(fn_, "../sounds/%s", fn);
+    sprintf(fn_, "./resources/sounds/%s", fn);
     return sfopen(fn_, "rb");
 }
 

@@ -11,7 +11,7 @@ dlname='libpulse.so'
 library_names='libpulse.so libpulse.so'
 
 # The name of the static archive.
-old_library=''
+old_library='libpulse.a'
 
 # Linker flags that can not go in dependency_libs.
 inherited_linker_flags=' '
