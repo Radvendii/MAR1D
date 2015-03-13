@@ -5,10 +5,6 @@ set (fp_mario_VERSION_MAJOR 0)
 set (fp_mario_VERSION_MINOR 0)
 set (fp_mario_VERSION_PATCH 1)
 
-FIND_PATH(LIBAO_INCLUDE_DIR ao.h /usr/local/include/ao /usr/include/ao)
-FIND_LIBRARY(LIBAO_LIBRARIES NAMES ao PATH /usr/lib /usr/local/lib)
-SET(LIBAO_LIBRARIES /usr/local/lib/libao.a)
-
 add_subdirectory(./glfw-3.0.4/)
 add_subdirectory(./resources/)
 include_directories(./glfw-3.0.4/include/)
@@ -24,11 +20,9 @@ add_library (GraphicsL graphics.c)
 add_library (ParsingL parsing.c)
 add_library (EnemiesL enemies.c)
 add_library (AudioL audio.c)
-add_library (libao STATIC ${LIBAO_LIBRARIES})
-set_target_properties (libao PROPERTIES LINKER_LANGUAGE C)
 
 add_executable(Main main.c)
-target_link_libraries(Main AudioL ParsingL EnemiesL RenderingL GraphicsL GamelogicL WindowingL ObjectsL HelpersL ControlsL MechanicsL glfw ${GLFW_LIBRARIES} ${LIBAO_LIBRARIES})
+target_link_libraries(Main AudioL ParsingL EnemiesL RenderingL GraphicsL GamelogicL WindowingL ObjectsL HelpersL ControlsL MechanicsL glfw ${GLFW_LIBRARIES})
 
 set(CMAKE_BUILD_TYPE Debug)
 set ( CMAKE_VERBOSE_MAKEFILE true )

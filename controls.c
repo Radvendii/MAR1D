@@ -83,11 +83,11 @@ void cl_crouch(){
 void cl_starman(){
     au_mainPlay(SND_starmusic);
     s.star = 1000;
-    s.invincible = 1000;
 }
 
 void cl_fireMario(){
     s.fire = true;
+    au_play(SND_mushroomeat);
 }
 
 void cl_bigMario(){

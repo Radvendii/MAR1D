@@ -55,7 +55,7 @@ void gl_die(){
 void gl_win(){
     if(!s.won){
         au_mainStop();
-        au_playplay(SND_levelend);
+        au_playWait(SND_levelend);
         s.won = true;
         s.score+=400;
         s.paused = true;
@@ -130,6 +130,7 @@ void gl_resetLevel(){
     if(s.lives){
         cl_smallMario();
         gl_loadLevel(s.level, s.check);
+        s.lowTime = false;
         s.time = k_timeTick * k_time;
     }
     else{s.menu = k_menuStatic;}
