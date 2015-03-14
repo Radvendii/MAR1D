@@ -1,6 +1,6 @@
 # MAR1D
 
-Have you ever considered Mario's perspective? This a game written by Taeer Baryaam that is a first-person clone of Mario. But wait, you say, Mario is 2D! How could you have a first-person view? Well, the answer, my friend, is that you can, but unlike a first person view of a 3D game, which is actually projected onto a 2D screen, this is a first person view of a 2D game, and therefore projected onto a 1D screen, in other words a line. If you're confused, read Flatland.
+Have you ever considered Mario's perspective? This a game written by my friend Radvendii (I helped a little, and it started on my github and he was too lazy to move it) that is a first-person clone of Mario. But wait, you say, Mario is 2D! How could you have a first-person view? Well, the answer, my friend, is that you can, but unlike a first person view of a 3D game, which is actually projected onto a 2D screen, this is a first person view of a 2D game, and therefore projected onto a 1D screen, in other words a line. If you're confused, read Flatland.
 
 # Playing the Game
 
