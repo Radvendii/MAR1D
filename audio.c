@@ -96,8 +96,8 @@ pid_t au_play(int snd){
     sprintf(cmd, "./resources/sounds/%s", fileNames[snd]);
     pid_t frk = fork();
     if(frk == 0){
-        execl("/usr/bin/afplay", "afplay", cmd, NULL);
-        exit(1); //should never reach here
+        execl("/usr/bin/env", k_player, k_player, cmd, NULL); //k_player twice to pass the name as first parameter
+        exit(1);
     }
     else{
         return frk;

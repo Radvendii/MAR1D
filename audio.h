@@ -52,6 +52,7 @@
 #define SND_vine 45
 #define k_nSounds 46
 #define k_killMain k_nSounds
+#define k_player "afplay"
 
 int au_mainAudio;
 
