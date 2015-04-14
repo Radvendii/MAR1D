@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 #include "helpers.h"
 #include "objects.h"
-#include "gameLogic.h"
+#include "gamelogic.h"
 #include "graphics.h"
 
 #define k_dimWindowH 512
