@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 2.8)
+project(fp_mario)
+
+set (fp_mario_VERSION_MAJOR 0)
+set (fp_mario_VERSION_MINOR 0)
+set (fp_mario_VERSION_PATCH 1)
+set(CMAKE_C_FLAGS "-std=gnu99")
+
+add_subdirectory(../lib/glfw-3.0.4/ ./glfw)
+add_subdirectory(../resources/ ./resources)
+include_directories(../lib/glfw-3.0.4/include/ ./glfw)
+set(BUILD_SHARED_LIBS OFF)
+set(BUILD_STATIC_LIBS ON)
+add_library (ObjectsL STATIC objects.c)
+add_library (RenderingL STATIC rendering.c)
+add_library (HelpersL STATIC helpers.c)
+add_library (ControlsL STATIC controls.c)
+add_library (MechanicsL STATIC mechanics.c)
+add_library (WindowingL STATIC windowing.c)
+add_library (GamelogicL STATIC gamelogic.c)
+add_library (GraphicsL STATIC graphics.c)
+add_library (ParsingL STATIC parsing.c)
+add_library (EnemiesL STATIC enemies.c)
+add_library (AudioL STATIC audio.c)
+
+add_executable(Main main.c objects.c rendering.c helpers.c controls.c mechanics.c windowing.c gamelogic.c graphics.c parsing.c enemies.c audio.c)
+target_link_libraries(Main glfw ${GLFW_LIBRARIES})
+
+set(CMAKE_BUILD_TYPE Debug)
+set ( CMAKE_VERBOSE_MAKEFILE true )
+#TODO: FIGURE OUT ABOUT WARNING FOR UNINITIALIZED VARIABLE ACCESS
