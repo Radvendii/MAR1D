@@ -23,7 +23,7 @@ int main(void){
     gr_init();
 
     glfwSetTime(0.0);
-    srand(time(NULL));
+    /* srand(time(NULL)); */
 
     while(!wn_shouldClose()) {
         if(s.menu){
