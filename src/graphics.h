@@ -26,7 +26,7 @@ struct camera cam;
 unsigned char *perspScreen;
 point *dimScreen;
 
-void gr_text(char *, GLfloat, GLfloat);
+void gr_text(bool, char *, GLfloat, GLfloat);
 
 void gr_init();
 void gr_deinit();

@@ -57,30 +57,38 @@ void gr_update(){
     rn_perspFcamera(perspScreen, cam, NULL);
 }
 
-void gr_char(char c, GLfloat* x, GLfloat* y){
-    glPointSize(k_fontSize);
-    glBegin(GL_POINTS);
-    for(int i=0;i<fontSize;i++){
-        if(font[(c)*fontSize+i]){
-        glVertex2f(*x+(i%7)*k_fontSize, *y-(i/7)*k_fontSize);
-        }
+void gr_char(bool vert, char c, GLfloat* x, GLfloat* y){
+  glPointSize(k_fontSize);
+  glBegin(GL_POINTS);
+  for(int i=0;i<fontSize;i++){
+    if(font[(c)*fontSize+i]){
+      glVertex2f(*x+(i%7)*k_fontSize, *y-(i/7)*k_fontSize);
     }
-    glEnd();
-    *y -= 8*k_fontSize;
+  }
+  glEnd();
+  if(vert){*y -= 8*k_fontSize;}
+  else{*x += 8*k_fontSize;}
 }
 
-void gr_text(char *s, GLfloat x, GLfloat y){
-    float y_orig = y;
-    while(*s != '\0'){
-        if(*s == '\n'){
-            x+=8*k_fontSize;
-            y=y_orig;
-        }
-        else{
-            gr_char(*s, &x, &y);
-        }
-        s++;
+void gr_text(bool vert, char *s, GLfloat x, GLfloat y){
+  float x_orig = x;
+  float y_orig = y;
+  while(*s != '\0'){
+    if(*s == '\n'){
+      if(vert){
+        x+=8*k_fontSize;
+        y=y_orig;
+      }
+      else{
+        y-=8*k_fontSize;
+        x=x_orig;
+      }
     }
+    else{
+      gr_char(vert, *s, &x, &y);
+    }
+    s++;
+  }
 }
 
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
@@ -162,7 +170,7 @@ void gr_drawHud(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glOrtho(0, k_hudWindowW, 0, k_hudWindowH, -1, 1);
-    gr_text(hud, 5, k_hudWindowH-5);
+    gr_text(true, hud, 5, k_hudWindowH-5);
 }
 
 void gr_drawMenu(){
@@ -176,7 +184,7 @@ void gr_drawMenu(){
         char hud[90];
         sprintf(hud, "CONGRATULATIONS!\n\nYOUVE WON LEVEL 1!\n\nMORE COMING AT SOME POINT\n\nSCORE %06d", s.score);
         glOrtho(-k_menuWindowW/2, k_menuWindowW/2, 0, k_menuWindowH, -1, 1);
-        gr_text(hud, -32-8, k_menuWindowH-20);
+        gr_text(false, hud, -k_menuWindowW/2+20, k_menuWindowH-20);
         s.menu--;
     }
     else{
