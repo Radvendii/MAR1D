@@ -7,9 +7,9 @@ color* io_cs;
 obj* io_os;
 
 typedef struct {
-    unsigned long sizeX;
-    unsigned long sizeY;
-    unsigned char *data;
+  unsigned long sizeX;
+  unsigned long sizeY;
+  unsigned char *data;
 } image;
 
 FILE* io_readFile(char*);

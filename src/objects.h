@@ -9,55 +9,55 @@
 #define p_skipPoint ((point){ .x=124214, .y=141312, .c = '\0'}) //Hope this point never actually comes up... :P
 
 typedef struct {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
 } color;
 
 typedef struct {
-    int x;
-    int y;
-    char c;
+  int x;
+  int y;
+  char c;
 } point;
 
 typedef struct {
-    int x;
-    int y;
-    int w;
-    int h;
+  int x;
+  int y;
+  int w;
+  int h;
 } box;
 
 typedef struct{
-    int x;
-    int y;
-    double vx;
-    double vy;
-    bool gravity;
-    bool physical;
-    int i;
-    int j;
-    char c;
-    bool active;
+  int x;
+  int y;
+  double vx;
+  double vy;
+  bool gravity;
+  bool physical;
+  int i;
+  int j;
+  char c;
+  bool active;
 
-    bool hidden;
-    bool flip;
-    int animFrame;
-    bool onScreen;
+  bool hidden;
+  bool flip;
+  int animFrame;
+  bool onScreen;
 
-    char type;
-    point** ps;
-    int nps;
-    box bb;
-    box* cols;
-    int nCols;
+  char type;
+  point** ps;
+  int nps;
+  box bb;
+  box* cols;
+  int nCols;
 } obj;
 
 obj ob_objFchar(char);
 
 //typedef struct {
-    //obj* os;
-    //color* cs;
-    //int* checks;
+//obj* os;
+//color* cs;
+//int* checks;
 //} level;
 
 typedef obj* level;

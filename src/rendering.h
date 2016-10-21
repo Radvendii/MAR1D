@@ -15,25 +15,25 @@
 #define k_animFreq 10
 
 struct camera {
-    double FOV;
-    int x;
-    int y;
-    double T;
-    level scene;
-    bool flip;
-    bool paused;
-    bool debug;
-    bool flashD;
-    bool flashB;
-    unsigned char bgr;
-    unsigned char bgg;
-    unsigned char bgb;
-    int flashG;
-    bool redTint;
-    int drawD;
-    int animFrame;
-    int yshift;
-    int xshift;
+  double FOV;
+  int x;
+  int y;
+  double T;
+  level scene;
+  bool flip;
+  bool paused;
+  bool debug;
+  bool flashD;
+  bool flashB;
+  unsigned char bgr;
+  unsigned char bgg;
+  unsigned char bgb;
+  int flashG;
+  bool redTint;
+  int drawD;
+  int animFrame;
+  int yshift;
+  int xshift;
 };
 
 void rn_dimFcamera(point*, struct camera);
