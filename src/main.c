@@ -30,10 +30,17 @@ int main(void){
   while(!wn_shouldClose()) {
     if(s.userPaused){wn_disable_mouse(false);}
     else{wn_disable_mouse(true);}
+    wn_menuWindow();
+    gr_clear();
+    wn_perspWindow();
+    gr_clear();
+    wn_dimWindow();
+    gr_clear();
+    wn_hudWindow();
+    gr_clear();
 
     if(s.menu){
       wn_menuWindow();
-      gr_clear();
       gr_drawMenu();
       wn_update();
     }
@@ -41,10 +48,8 @@ int main(void){
       gl_update();
       gr_update();
       wn_perspWindow();
-      gr_clear();
       gr_drawPersp();
       wn_dimWindow();
-      gr_clear();
       gr_drawDim();
       wn_hudWindow();
       gr_drawHud();
