@@ -13,6 +13,7 @@
 #define k_durationFOVChange 20
 #define k_FOV (70*pi/180)
 #define k_FOVrun (65*pi/180)
+#define k_camSpeed 0.0005
 #define k_fontSize 2
 #define k_camT -pi/10 //initial camera angle
 

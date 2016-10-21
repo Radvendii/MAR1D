@@ -16,7 +16,7 @@ void gr_cursormove(double xPos, double yPos){
   double offset = yPos-last;
   last = yPos;
   if(!s.menu && !s.paused){
-    cam.T = fmod(cam.T-offset*0.000436, 2*pi);
+    cam.T = fmod(cam.T-offset*k_camSpeed, 2*pi);
     if(cam.T < -pi/2 - k_FOV/2){cam.T = -pi/2 - k_FOV/2;}
     if(cam.T > pi/2-k_FOV/2){cam.T = pi/2-k_FOV/2;}
   }
