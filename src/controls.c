@@ -195,6 +195,7 @@ void cl_keypress(int key, int scancode, int action, int mods){
 
     if (key == GLFW_KEY_Q && action == GLFW_PRESS){
         s.paused = !s.paused;
+        s.userPaused = !s.userPaused;
     }
 }
 

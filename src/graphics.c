@@ -23,38 +23,40 @@ void gr_cursormove(double xPos, double yPos){
 }
 
 void gr_update(){
+  if(!s.paused){
     if(s.loc == '1'){ //TODO: make this not a kludge
-        cam.bgr = k_bgr;
-        cam.bgg = k_bgg;
-        cam.bgb = k_bgb;
+      cam.bgr = k_bgr;
+      cam.bgg = k_bgg;
+      cam.bgb = k_bgb;
     }
     else{
-        cam.bgr = 0;
-        cam.bgg = 0;
-        cam.bgb = 0;
+      cam.bgr = 0;
+      cam.bgg = 0;
+      cam.bgb = 0;
     }
     cam.animFrame++;
     for(int i=0; cam.scene[i].type != '\0'; i++){
-        cam.scene[i].animFrame++;
+      cam.scene[i].animFrame++;
     }
-    //TODO: 3rd person deathcam?
-    cam.x = s.scene[s.pli].x+14;
-    cam.y = s.scene[s.pli].y-2;
     cam.flashD = s.invincible && !s.star;
     cam.flashB = s.star;
     cam.redTint = s.fire;
     cam.flip = s.flip;
 
     if(s.run < k_tBeforeFOVChange || cam.flip){
-        cam.FOV = k_FOV;
+      cam.FOV = k_FOV;
     }
     else{
-        cam.FOV = (k_FOVrun - k_FOV)/(k_durationFOVChange)*(s.run - k_tBeforeFOVChange)+k_FOV;
+      cam.FOV = (k_FOVrun - k_FOV)/(k_durationFOVChange)*(s.run - k_tBeforeFOVChange)+k_FOV;
     }
     if(s.run>k_tBeforeFOVChange+k_durationFOVChange){s.run = k_tBeforeFOVChange+k_durationFOVChange;}
 
-    rn_dimFcamera(dimScreen, cam);
-    rn_perspFcamera(perspScreen, cam, NULL);
+  }
+  //TODO: 3rd person deathcam?
+  cam.x = s.scene[s.pli].x+14;
+  cam.y = s.scene[s.pli].y-2;
+  rn_dimFcamera(dimScreen, cam);
+  rn_perspFcamera(perspScreen, cam, NULL);
 }
 
 void gr_char(bool vert, char c, GLfloat* x, GLfloat* y){
@@ -136,6 +138,15 @@ void gr_points(point *ps){
 
 void gr_drawPersp(){
     gr_pixels(perspScreen);
+    if(s.userPaused){
+      glColor3f(0.5, 0.5, 0.5);
+      glMatrixMode(GL_PROJECTION);
+      glLoadIdentity();
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      glOrtho(-k_perspWindowW/2, k_perspWindowW/2, -k_perspWindowH/2, k_perspWindowH/2, -1, 1);
+      gr_text(false, "PAUSED", -3*7*k_fontSize, 0);
+    }
 }
 
 void gr_drawDim(){
@@ -182,7 +193,7 @@ void gr_drawMenu(){
     glLoadIdentity();
     if(s.menu > k_menuStatic){
         char hud[90];
-        sprintf(hud, "CONGRATULATIONS!\n\nYOUVE WON LEVEL 1!\n\nMORE COMING AT SOME POINT\n\nSCORE %06d", s.score);
+        sprintf(hud, "CONGRATULATIONS!\n\nYOUVE WON LEVEL 1!\n\nSCORE %06d", s.score);
         glOrtho(-k_menuWindowW/2, k_menuWindowW/2, 0, k_menuWindowH, -1, 1);
         gr_text(false, hud, -k_menuWindowW/2+20, k_menuWindowH-20);
         s.menu--;

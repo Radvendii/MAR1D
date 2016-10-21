@@ -77,13 +77,17 @@ void wn_init(){
     glfwSetWindowPos(dimWindow, k_dimWindowX, 50);
     glfwSetWindowPos(perspWindow, k_perspWindowX, 50);
 
-    glfwSetInputMode(perspWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
+    wn_disable_mouse(true);
     glLineWidth(1.5f);
 
     glfwSetKeyCallback(perspWindow, key_callback);
     glfwSetMouseButtonCallback(perspWindow, click_callback);
     glfwSetKeyCallback(dimWindow, key_callback);
     glfwSetCursorPosCallback(perspWindow, cursor_callback);
+}
+
+void wn_disable_mouse(bool disable) {
+  glfwSetInputMode(perspWindow, GLFW_CURSOR, (disable ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 }
 
 void wn_deinit(){

@@ -16,42 +16,47 @@ struct state s;
 //http://8bithorse.blogspot.com/2010/11/super-mario-bros-101.html
 
 int main(void){
-    au_init();
-    ob_init();
-    gl_init();
-    wn_init();
-    gr_init();
+  au_init();
+  ob_init();
+  gl_init();
+  wn_init();
+  gr_init();
 
-    glfwSetTime(0.0);
-    /* srand(time(NULL)); */
+  glfwSetTime(0.0);
+  /* srand(time(NULL)); */
 
-    while(!wn_shouldClose()) {
-        if(s.menu){
-            wn_menuWindow();
-            gr_clear();
-            gr_drawMenu();
-            wn_update();
-        }
-        else{
-            gl_update();
-            gr_update();
-            wn_perspWindow();
-            gr_clear();
-            gr_drawPersp();
-            wn_dimWindow();
-            gr_clear();
-            gr_drawDim();
-            wn_hudWindow();
-            gr_drawHud();
-            wn_update();
-        }
+  s.userPaused = true;
+  s.paused = true;
+  while(!wn_shouldClose()) {
+    if(s.userPaused){wn_disable_mouse(false);}
+    else{wn_disable_mouse(true);}
+
+    if(s.menu){
+      wn_menuWindow();
+      gr_clear();
+      gr_drawMenu();
+      wn_update();
     }
-    gr_deinit();
-    wn_deinit();
-    gl_deinit();
-    ob_deinit();
-    au_deinit();
-    exit(EXIT_SUCCESS);
+    else{
+      gl_update();
+      gr_update();
+      wn_perspWindow();
+      gr_clear();
+      gr_drawPersp();
+      wn_dimWindow();
+      gr_clear();
+      gr_drawDim();
+      wn_hudWindow();
+      gr_drawHud();
+      wn_update();
+    }
+  }
+  gr_deinit();
+  wn_deinit();
+  gl_deinit();
+  ob_deinit();
+  au_deinit();
+  exit(EXIT_SUCCESS);
 
-    return 0;
+  return 0;
 }

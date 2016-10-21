@@ -124,6 +124,8 @@ void gl_loadLevel(char l, char w){
         io_cs['b'] = (color) {.r = 255, .g = 128, .b = 57};
         io_cs['d'] = (color) {.r = 212, .g = 76, .b = 0};
     }
+    s.paused = false;
+    s.userPaused = false;
 }
 
 void gl_resetLevel(){

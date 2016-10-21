@@ -30,6 +30,8 @@ void wn_update();
 
 bool wn_shouldClose();
 
+void wn_disable_mouse(bool);
+
 void wn_debugInit();
 void wn_debugDeinit();
 void wn_init();
