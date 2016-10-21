@@ -76,9 +76,9 @@ void mh_update(){
       s.scene[i].i = temp.i;
     }
     if(s.scene[i].type == '@'){
+      int grow[12] = {0,1,-1,1,-1,1,1,-2,1,1,-2,2};
       if(s.scene[i].i && s.bigMario == true && s.scene[i].i < 12*k_growthRate){
         s.paused = true;
-        int grow[12] = {0,1,-1,1,-1,1,1,-2,1,1,-2,2};
         int growth = 8*grow[s.scene[i].i/k_growthRate] * !(s.scene[i].i % k_growthRate);
         s.scene[s.pli].y += growth;
         s.scene[s.pli].bb.h -= growth;
@@ -88,8 +88,7 @@ void mh_update(){
       }
       if(s.scene[i].i > 0 && s.bigMario == false){
         s.paused = true;
-        int grow[12] = {0,-1,1,-1,1,-1,-1,2,-1,-1,2,-2};
-        int growth = 8*grow[s.scene[i].i/k_growthRate] * !(s.scene[i].i % k_growthRate);
+        int growth = -8*grow[12 - s.scene[i].i/k_growthRate] * !(s.scene[i].i % k_growthRate);
         s.scene[s.pli].y += growth;
         s.scene[s.pli].bb.h -= growth;
         s.scene[s.pli].cols[0].h -= growth;
