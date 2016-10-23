@@ -76,27 +76,12 @@ void killfrk(int signo){
   exit(0);
 }
 
-/*void au_playplay(int snd){*/
-/*char cmd[100];*/
-/*sprintf(cmd, "./resources/sounds/%s", fileNames[snd]);*/
-/*frk = fork();*/
-/*if(frk == 0){*/
-/*execl("/usr/bin/afplay", "afplay", cmd, NULL);*/
-/*exit(1); //should never reach here*/
-/*}*/
-/*else{*/
-/*int sig;*/
-/*sigaction(SIGTERM, &sa, NULL);*/
-/*waitpid(frk, &sig, 0);*/
-/*}*/
-/*}*/
-
-pid_t au_play(int snd){
+pid_t au_playplay(int snd, bool loop){
   char cmd[100];
   sprintf(cmd, "./resources/sounds/%s", fileNames[snd]);
   pid_t frk = fork();
   if(frk == 0){
-    execl("/usr/bin/env", k_player, k_player, cmd, NULL); //k_player twice to pass the name as first parameter
+    execl("./resources/play", "./resources/play", k_player, cmd, (loop ? "1" : ""), NULL); //k_player twice to pass the name as first parameter
     exit(1);
   }
   else{
@@ -104,11 +89,14 @@ pid_t au_play(int snd){
   }
 }
 
+pid_t au_play(int snd){
+  return au_playplay(snd, false);
+}
+
 void au_playWait(int snd){
   pid_t frk = au_play(snd);
   int sig;
   waitpid(frk, &sig, 0);
-  /*au_playplay(snd);*/
 }
 
 void au_mainPlay(int snd){
@@ -120,9 +108,11 @@ void au_mainPlay(int snd){
     au_mainStop();
   }
   au_mainAudio = snd;
-  musicF = au_play(snd);
+  musicF = au_playplay(snd, true);
 }
 
 void au_mainStop(){
-  kill(musicF, SIGTERM);
+  char cmd[100];
+  sprintf(cmd, "kill -9 $(pgrep -P %d) %d", musicF, musicF);
+  system(cmd);
 }

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+while 
+/usr/bin/env $1 $2;
+[ $3 ]
+do :
+done

@@ -63,7 +63,6 @@ pid_t au_play(int);
 void au_mainPlay(int);
 void au_lowTime();
 void au_playWait(int);
-void au_playplay(int);
 void au_mainStop();
 void killfrk(int);
 
