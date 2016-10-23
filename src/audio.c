@@ -81,7 +81,8 @@ pid_t au_playplay(int snd, bool loop){
   sprintf(cmd, "./resources/sounds/%s", fileNames[snd]);
   pid_t frk = fork();
   if(frk == 0){
-    execl("./resources/play", "./resources/play", k_player, cmd, (loop ? "1" : ""), NULL); //k_player twice to pass the name as first parameter
+    execl("./resources/play", "./resources/play", k_player, cmd, (loop ? "1" : ""), NULL);
+      //first argument twice to pass the name as first parameter
     exit(1);
   }
   else{
