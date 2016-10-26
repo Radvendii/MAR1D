@@ -66,7 +66,7 @@ void au_lowTime(){
   au_play(SND_lowtime);
   if(fork() == 0){
     sleep(3);
-    au_mainPlay(--au_mainAudio);
+    au_mainPlay(au_mainAudio-1);
     exit(0);
   }
 }
