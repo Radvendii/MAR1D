@@ -136,7 +136,10 @@ void gl_resetLevel(){
     s.lowTime = false;
     s.time = k_timeTick * k_time;
   }
-  else{s.menu = k_menuStatic;}
+  else{
+    au_playWait(SND_gameover);
+    s.menu = k_menuStatic;
+  }
 }
 
 void gl_update(){
