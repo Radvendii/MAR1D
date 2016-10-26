@@ -22,6 +22,7 @@
 
 #define k_timeTick 30
 #define k_time 400
+#define k_timeLow 101
 
 #define k_menuTime 200
 #define k_menuStatic 201

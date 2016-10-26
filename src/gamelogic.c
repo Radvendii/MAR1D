@@ -166,7 +166,7 @@ void gl_update(){
     if(s.time){s.time--;}
     else{gl_die();}
 
-    if(s.time == 101*k_timeTick){
+    if(s.time == k_timeLow*k_timeTick){
       au_lowTime();
       s.lowTime = true;
     }
