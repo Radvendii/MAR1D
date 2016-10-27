@@ -3,8 +3,9 @@
 #include "helpers.h"
 #include "windowing.h"
 #include <signal.h>
-#include <sys/types.h>
 #include <unistd.h>
+#include <ao/ao.h>
+/* #include <pthread.h> */
 #define SND_blockbreak 0
 #define SND_blockhit 1
 #define SND_boom 2
@@ -53,17 +54,23 @@
 #define SND_vine 45
 #define k_nSounds 46
 #define k_killMain k_nSounds
-#define k_player "aplay"
 
 int au_mainAudio;
 
+void au_test();
 void au_init();
 void au_deinit();
-pid_t au_play(int);
+void au_play(int);
+void au_playWait(int);
+void au_playplay(int);
+void au_playloop(int);
 void au_mainPlay(int);
 void au_lowTime();
-void au_playWait(int);
 void au_mainStop();
-void killfrk(int);
+void au_loadSounds();
+void au_initEach();
+void au_deinitEach();
+char* au_loadSound(char*, int*);
+void playDaemon();
 
 #endif
