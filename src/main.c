@@ -25,8 +25,6 @@ int main(void){
   glfwSetTime(0.0);
   /* srand(time(NULL)); */
 
-  s.userPaused = true;
-  s.paused = true;
   while(!wn_shouldClose()) {
     if(s.userPaused){wn_disable_mouse(false);}
     else{wn_disable_mouse(true);}
@@ -40,6 +38,8 @@ int main(void){
     gr_clear();
 
     if(s.menu){
+      s.userPaused = true;
+      s.paused = true;
       wn_menuWindow();
       gr_drawMenu();
       wn_update();
@@ -56,6 +56,7 @@ int main(void){
       wn_update();
     }
   }
+
   gr_deinit();
   wn_deinit();
   gl_deinit();

@@ -58,7 +58,6 @@ void gl_win(){
     au_playWait(SND_levelend);
     s.won = true;
     s.score+=400;
-    s.userPaused = true;
     s.paused = true;
     au_mainPlay(SND_scorering);
   }
