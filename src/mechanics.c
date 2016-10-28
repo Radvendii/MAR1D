@@ -127,17 +127,15 @@ void mh_move(int i){
   double xMove = s.scene[i].vx;
   if(abs(s.scene[i].vy) < 1){
     if((s.moveFrameY %= k_moveFrames) == 0){yMove *= k_moveFrames;}
-    else{goto AFTER_Y_MOTION;}
+    else{yMove = 0;}
   }
   cl_move(i, 'y', yMove);
- AFTER_Y_MOTION: ;
 
   if(abs(s.scene[i].vx) < 1){
     if((s.moveFrameX %= k_moveFrames) == 0){xMove *= k_moveFrames;}
-    else{goto AFTER_X_MOTION;}
+    else{xMove = 0;}
   }
   cl_move(i, 'x', xMove);
- AFTER_X_MOTION: ;
 }
 
 bool mh_collision(int i1, int i2){
