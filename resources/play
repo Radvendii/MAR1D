@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-while
-    $1 $2;
-    [ $3 ]
-do :
-done
