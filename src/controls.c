@@ -103,10 +103,10 @@ void cl_bigMario(){
 
 void cl_smallMario(){
   if(s.bigMario == true){
+    cl_uncrouch();
     au_play(SND_shrink);
     s.bigMario = false;
     s.fire = false;
-    cl_uncrouch();
     for(int i=0; s.scene[i].type != '\0';i++){
       if(s.scene[i].type == '?' && s.scene[i].c == 'R'){s.scene[i].c = 'r';}
     }
