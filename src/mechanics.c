@@ -461,4 +461,3 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     break;
   }
 }
-
