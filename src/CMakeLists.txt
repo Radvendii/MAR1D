@@ -27,8 +27,7 @@ add_library (ParsingL STATIC parsing.c)
 add_library (EnemiesL STATIC enemies.c)
 add_library (AudioL STATIC audio.c)
 
-# add_executable(Main ao_example.c)
-add_executable(Main main.c objects.c rendering.c helpers.c controls.c mechanics.c windowing.c gamelogic.c graphics.c parsing.c enemies.c audio.c)
+add_executable(MAR1D main.c objects.c rendering.c helpers.c controls.c mechanics.c windowing.c gamelogic.c graphics.c parsing.c enemies.c audio.c)
 target_link_libraries(Main glfw ${GLFW_LIBRARIES})
 target_link_libraries(Main ${AO_LIBRARIES})
 
