@@ -162,6 +162,7 @@ void gl_update(){
     if(s.invincible){s.invincible--;}
     if(s.invincible == 50){au_mainPlay(SND_overworld);}
     if(s.star){s.star--;}
+    if(s.star == 50){au_mainPlay(SND_overworld);} //this should really be more general than SND_overworld (like for time running out)
     if(s.time){s.time--;}
     else{gl_die();}
 
