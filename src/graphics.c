@@ -16,7 +16,7 @@ void gr_cursormove(double xPos, double yPos){
   double offset = yPos-last;
   last = yPos;
   if(!s.menu && !s.paused){
-    cam.T = fmod(cam.T-offset*k_camSpeed, 2*pi);
+    cam.T = fmod(cam.T-offset*camSpeed, 2*pi);
     if(cam.T < -pi/2 - k_FOV/2){cam.T = -pi/2 - k_FOV/2;}
     if(cam.T > pi/2-k_FOV/2){cam.T = pi/2-k_FOV/2;}
   }
@@ -96,10 +96,10 @@ void gr_text(bool vert, char *s, GLfloat x, GLfloat y){
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
   glBegin(GL_QUADS);
   glColor3ub(r, g, b);
-  glVertex2f(-k_lineSize, y);
-  glVertex2f(-k_lineSize, y+1);
-  glVertex2f(k_lineSize, y+1);
-  glVertex2f(k_lineSize, y);
+  glVertex2f(-lineSize, y);
+  glVertex2f(-lineSize, y+1);
+  glVertex2f(lineSize, y+1);
+  glVertex2f(lineSize, y);
   glEnd();
 }
 
@@ -222,7 +222,10 @@ void gr_drawMenu(){
   }
 }
 
-void gr_init(){
+void gr_init(int _lineSize, int _sensitivity){
+  lineSize = _lineSize;
+  camSpeed = _sensitivity / 10000.0;
+
   cam.animFrame=0;
   cam.drawD = k_drawD;
   cam.FOV = k_FOV;

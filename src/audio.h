@@ -56,9 +56,9 @@
 #define k_killMain k_nSounds
 
 int au_mainAudio;
+bool mute, effects;
 
-void au_test();
-void au_init();
+void au_init(bool, bool);
 void au_deinit();
 void au_play(int);
 void au_playWait(int);

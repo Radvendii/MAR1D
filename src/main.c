@@ -10,17 +10,50 @@
 #include "parsing.h"
 #include "audio.h"
 #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include <time.h>
 struct state s;
 //for when I come back to this project:
 //http://8bithorse.blogspot.com/2010/11/super-mario-bros-101.html
 
-int main(void){
-  au_init();
+int main(int argc, char **argv){
+  bool mute = false;
+  bool effects = false;
+  int lineSize = 1;
+  int sensitivity = 5;
+  bool reverse = false;
+  int c;
+  while ((c = getopt(argc, argv, "mfw::s:r")) != -1){
+    switch (c){
+    case 'm':
+      mute = true;
+      break;
+    case 'f':
+      effects = true;
+      break;
+    case 'w':
+      if(optarg == NULL){
+        lineSize = 30;
+      }
+      else{
+        lineSize = atoi(optarg);
+      }
+      break;
+    case 's':
+      sensitivity = atoi(optarg);
+      break;
+    case 'r':
+      reverse = true;
+      break;
+    }
+  }
+  au_init(mute, effects);
   ob_init();
   gl_init();
   wn_init();
-  gr_init();
+  gr_init(lineSize, sensitivity * (reverse ? -1 : 1));
 
   glfwSetTime(0.0);
   /* srand(time(NULL)); */

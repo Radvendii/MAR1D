@@ -54,13 +54,16 @@ char fileNames[k_nSounds][40] = {
   "underwater.raw",
   "vine.raw"
 };
+
 FILE* au_readBFile(char* fn){
   char fn_[100];
   sprintf(fn_, "./resources/sounds/%s", fn);
   return sfopen(fn_, "rb");
 }
 
-void au_init(){
+void au_init(bool _mute, bool _effects){
+  mute = _mute;
+  effects = _effects;
   au_loadSounds();
   ao_initialize();
 
@@ -166,15 +169,19 @@ void au_deinitEach(){
 }
 
 void au_play(int snd){
-  snd = snd << 1;
-  write(piperw[1], &snd, sizeof(int));
+  if(!mute || effects){
+    snd = snd << 1;
+    write(piperw[1], &snd, sizeof(int));
+  }
 }
 void au_playWait(int snd){
-  //need to repeat this code because au_deinitEach() calls exit();
-  default_driver = ao_default_driver_id();
-  device = ao_open_live(default_driver, &format, NULL);
-  ao_play(device, sounds[snd], sz[snd]);
-  ao_close(device);
+  if(!mute || effects){
+    //need to repeat this code because au_deinitEach() calls exit();
+    default_driver = ao_default_driver_id();
+    device = ao_open_live(default_driver, &format, NULL);
+    ao_play(device, sounds[snd], sz[snd]);
+    ao_close(device);
+  }
 }
 
 void au_lowTime(){
@@ -188,16 +195,12 @@ void au_lowTime(){
 }
 
 void au_mainPlay(int snd){
-  static bool first = true;
-  if(first){
-    first = false;
-  }
-  else{
+  if(!mute){
     au_mainStop();
+    au_mainAudio = snd;
+    snd = (snd << 1) | 1;
+    write(piperw[1], &snd, sizeof(int));
   }
-  au_mainAudio = snd;
-  snd = (snd << 1) | 1;
-  write(piperw[1], &snd, sizeof(int));
 }
 
 void au_mainStop(){

@@ -8,15 +8,15 @@
 #include "rendering.h"
 #include "parsing.h"
 #include "windowing.h"
-#define k_lineSize 30
 #define k_tBeforeFOVChange 40
 #define k_durationFOVChange 20
 #define k_FOV (70*pi/180)
 #define k_FOVrun (65*pi/180)
-#define k_camSpeed 0.0005
 #define k_fontSize 2
 #define k_camT -pi/10 //initial camera angle
 
+float camSpeed;
+int lineSize;
 bool debug;
 bool *font;
 int fontSize;
@@ -29,7 +29,7 @@ point *dimScreen;
 
 void gr_text(bool, char *, GLfloat, GLfloat);
 
-void gr_init();
+void gr_init(int, int);
 void gr_deinit();
 void gr_update();
 void gr_drawPersp();
