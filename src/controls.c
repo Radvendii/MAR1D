@@ -104,7 +104,9 @@ void cl_bigMario(){
 void cl_smallMario(){
   if(s.bigMario == true){
     cl_uncrouch();
-    au_play(SND_shrink);
+    if(!s.dead){
+      au_play(SND_shrink);
+    }
     s.bigMario = false;
     s.fire = false;
     for(int i=0; s.scene[i].type != '\0';i++){

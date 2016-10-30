@@ -40,6 +40,7 @@ void gl_killed(){
 }
 
 void gl_die(){
+  s.dead = k_dieStart;
   au_mainStop();
   au_play(SND_death);
   cl_uncrouch();
@@ -48,7 +49,6 @@ void gl_die(){
   s.scene[s.pli].physical = false;
   s.scene[s.pli].vy=10;
   s.scene[s.pli].vx=0;
-  s.dead = k_dieStart;
   s.lives--;
 }
 
