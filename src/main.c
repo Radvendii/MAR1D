@@ -21,11 +21,11 @@ struct state s;
 int main(int argc, char **argv){
   bool mute = false;
   bool effects = false;
-  int lineSize = 1;
+  int lineSize = 30;
   int sensitivity = 5;
   bool reverse = false;
   int c;
-  while ((c = getopt(argc, argv, "mfw::s:r")) != -1){
+  while ((c = getopt(argc, argv, "mfw:s:r")) != -1){
     switch (c){
     case 'm':
       mute = true;
@@ -34,12 +34,7 @@ int main(int argc, char **argv){
       effects = true;
       break;
     case 'w':
-      if(optarg == NULL){
-        lineSize = 30;
-      }
-      else{
-        lineSize = atoi(optarg);
-      }
+      lineSize = atoi(optarg);
       break;
     case 's':
       sensitivity = atoi(optarg);

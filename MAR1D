@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./build/MAR1D -w30
+./build/MAR1D
