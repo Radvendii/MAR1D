@@ -23,7 +23,7 @@ I'll be trying to put out binaries in the near future, but for now you'll have t
 The `./build/MAR1D` executable takes a few command line arguments (note that all numerical arguments must be integers):
 * `-m` mutes the audio
 * `-f` unmutes the sound effects if the audio is muted, so it does nothing on its own, but `-mf` will enable only sound effects.
-* `-w` makes the display area wide. This is enabled by default if you run `./MAR1D`. `-w##` sets the display area to a width of `##` pixels
+* `-w` makes the display area wide (linux only, raises an error on mac). This is enabled by default if you run `./MAR1D`. `-w##` sets the display area to a width of `##` pixels
 * `-s##` sets the mouse sensitivity.
 * `-r` reverses the mouse y axis. Not sure why this is necessary, but lots of games seem to include it.
 
