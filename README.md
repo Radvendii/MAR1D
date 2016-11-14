@@ -1,6 +1,9 @@
 MAR1D
 =====
 
+## Beta
+The game is currently in beta. Please let me know if you find any bugs so I can fix them!
+
 ## Description
 The original Super Mario Bros as you've never seen it. Step into Mario's shoes in this first person clone of the classic Mario game. True to the original, however, the game still takes place in a two dimensional world. You must view the world as mario does, as a one dimensional line.
 
@@ -65,8 +68,8 @@ Licensed under AGPL v3.0, check COPYING for more details
 ## Credits
 * Edwin Abbott Abbott
   * Writing Flatland and inspiring this game
-* Maurice Guégan
-  * Making Mari0, and inspiring me to hack on Mario
+* [Maurice Guégan](http://stabyourself.net/about/)
+  * Making [Mari0](http://stabyourself.net/about/), and inspiring me to hack on Mario
   * The audio files in MAR1D are from Mari0
   * Helping me out with the game logic for spawning enemies
   * Being an awesome guy
