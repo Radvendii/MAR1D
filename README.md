@@ -18,9 +18,9 @@ Other notable similar exploits include:
 * Send me any I'm missing! I love playing with these things :)
 
 ## Playing the Game
-I'll be trying to put out binaries in the near future, but for now you'll have to compile it yourself, and then run the `./MAR1D` executable in the main directory, or `./build/MAR1D` with optional command line arguments as described below.
+I'll be trying to put out binaries in the near future, but for now you'll have to compile it yourself, and then run the `./MAR1D` executable in the main directory, or `./install/bin/MAR1D` (or wherever you've installed it) with optional command line arguments as described below.
 
-The `./build/MAR1D` executable takes a few command line arguments (note that all numerical arguments must be integers):
+The `./install/bin/MAR1D` executable takes a few command line arguments (note that all numerical arguments must be integers):
 * `-m` mutes the audio
 * `-f` unmutes the sound effects if the audio is muted, so it does nothing on its own, but `-mf` will enable only sound effects.
 * `-w##` sets the display area to a width of `##` pixels.
