@@ -10,7 +10,7 @@ find_library(AO_LIBRARIES ao)
 
 set(RESOURCE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/share/mar1d/resources/)
 configure_file(resources.h.in resources.h @ONLY)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(../lib/glfw-3.0.4/ ./glfw)
 include_directories(../lib/glfw-3.0.4/include/)
@@ -18,7 +18,7 @@ add_subdirectory(../resources/ ./resources)
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_STATIC_LIBS ON)
 
-add_executable(MAR1D main.c objects.c rendering.c helpers.c controls.c mechanics.c windowing.c gamelogic.c graphics.c parsing.c enemies.c audio.c)
+add_executable(MAR1D main.c objects.c rendering.c helpers.c controls.c mechanics.c windowing.c gamelogic.c graphics.c parsing.c enemies.c audio.c resources.c)
 target_link_libraries(MAR1D glfw ${GLFW_LIBRARIES})
 target_link_libraries(MAR1D ${AO_LIBRARIES})
 

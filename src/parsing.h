@@ -13,7 +13,6 @@ typedef struct {
   unsigned char *data;
 } image;
 
-FILE* io_readFile(char*);
 int io_getFont(bool**, char*);
 
 void io_getColor(FILE*,color[127]);

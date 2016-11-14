@@ -1,19 +1,7 @@
 #include "parsing.h"
 
-FILE* io_readFile(char* fn){
-  static char fn_[1000];
-  sprintf(fn_, k_resources"%s", fn);
-  return sfopen(fn_, "r");
-}
-
-FILE* io_readBFile(char* fn){
-  static char fn_[1000];
-  sprintf(fn_, k_resources"%s", fn);
-  return sfopen(fn_, "rb");
-}
-
 int io_getFont(bool** font, char* fn){
-  FILE* f = io_readFile(fn);
+  FILE* f = rs_getFile(fn);
   int c;
   int i=0;
   int fontSize;
@@ -177,7 +165,7 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
 }
 
 void io_getLevels(level** ls, char* fn){
-  FILE *f = io_readFile(fn);
+  FILE *f = rs_getFile(fn);
   io_os = salloc(sizeof(obj) * 127);
   for(int i=0;i<127;i++){io_os[i].ps = NULL;}
   io_cs = salloc(sizeof(color)*127);
@@ -218,7 +206,7 @@ image * loadTexture(){
 }
 
 int getImage(image *image, char *fn) {
-  FILE *file = io_readBFile(fn);
+  FILE *file = rs_getBFile(fn);
   unsigned long size; // size of the image in bytes.
   char temp; // temporary color storage for bgr-rgb conversion.
 

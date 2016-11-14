@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 #include "helpers.h"
+#include "resources.h"
 #include "objects.h"
 #include "rendering.h"
 #include "gamelogic.h"

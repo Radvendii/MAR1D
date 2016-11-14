@@ -8,58 +8,53 @@ int piperw[2];
 char* sounds[k_nSounds];
 int sz[k_nSounds];
 char fileNames[k_nSounds][40] = {
-  "blockbreak.raw",
-  "blockhit.raw",
-  "boom.raw",
-  "bowserfall.raw",
-  "bridgebreak.raw",
-  "bulletbill.raw",
-  "castle-fast.raw",
-  "castle.raw",
-  "castleend.raw",
-  "coin.raw",
-  "death.raw",
-  "fire.raw", "fireball.raw",
-  "gameover.raw",
-  "intermission.raw",
-  "jump.raw",
-  "jumpbig.raw",
-  "konami.raw",
-  "levelend.raw",
-  "lowtime.raw",
-  "mushroomappear.raw",
-  "mushroomeat.raw",
-  "oneup.raw",
-  "overworld-fast.raw",
-  "overworld.raw",
-  "pause.raw",
-  "pipe.raw",
-  "portal1open.raw",
-  "portal2open.raw",
-  "portalenter.raw",
-  "portalfizzle.raw",
-  "princessmusic.raw",
-  "rainboom.raw",
-  "scorering.raw",
-  "shot.raw",
-  "shrink.raw",
-  "stab.raw",
-  "starmusic-fast.raw",
-  "starmusic.raw",
-  "stomp.raw",
-  "swim.raw",
-  "underground-fast.raw",
-  "underground.raw",
-  "underwater-fast.raw",
-  "underwater.raw",
-  "vine.raw"
+  "sounds/blockbreak.raw",
+  "sounds/blockhit.raw",
+  "sounds/boom.raw",
+  "sounds/bowserfall.raw",
+  "sounds/bridgebreak.raw",
+  "sounds/bulletbill.raw",
+  "sounds/castle-fast.raw",
+  "sounds/castle.raw",
+  "sounds/castleend.raw",
+  "sounds/coin.raw",
+  "sounds/death.raw",
+  "sounds/fire.raw",
+  "sounds/fireball.raw",
+  "sounds/gameover.raw",
+  "sounds/intermission.raw",
+  "sounds/jump.raw",
+  "sounds/jumpbig.raw",
+  "sounds/konami.raw",
+  "sounds/levelend.raw",
+  "sounds/lowtime.raw",
+  "sounds/mushroomappear.raw",
+  "sounds/mushroomeat.raw",
+  "sounds/oneup.raw",
+  "sounds/overworld-fast.raw",
+  "sounds/overworld.raw",
+  "sounds/pause.raw",
+  "sounds/pipe.raw",
+  "sounds/portal1open.raw",
+  "sounds/portal2open.raw",
+  "sounds/portalenter.raw",
+  "sounds/portalfizzle.raw",
+  "sounds/princessmusic.raw",
+  "sounds/rainboom.raw",
+  "sounds/scorering.raw",
+  "sounds/shot.raw",
+  "sounds/shrink.raw",
+  "sounds/stab.raw",
+  "sounds/starmusic-fast.raw",
+  "sounds/starmusic.raw",
+  "sounds/stomp.raw",
+  "sounds/swim.raw",
+  "sounds/underground-fast.raw",
+  "sounds/underground.raw",
+  "sounds/underwater-fast.raw",
+  "sounds/underwater.raw",
+  "sounds/vine.raw"
 };
-
-FILE* au_readBFile(char* fn){
-  static char fn_[1000];
-  sprintf(fn_, k_resources"sounds/%s", fn);
-  return sfopen(fn_, "rb");
-}
 
 void au_init(bool _mute, bool _effects){
   mute = _mute;
@@ -143,7 +138,7 @@ void au_loadSounds(){
 }
 
 char* au_loadSound(char* fn, int* sz){
-  FILE* f = au_readBFile(fn);
+  FILE* f = rs_getBFile(fn);
   char *buffer;
   fseek(f, 0L, SEEK_END);
   *sz = ftell(f);

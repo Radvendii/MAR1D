@@ -1,1 +1,9 @@
+#ifndef _RESOURCES_H
+#define _RESOURCES_H
+#include "helpers.h"
+#include <stdio.h>
 #define k_resources "@RESOURCE_DIRECTORY@"
+
+FILE *rs_getBFile(char *);
+FILE *rs_getFile(char *);
+#endif
