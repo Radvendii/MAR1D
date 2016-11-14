@@ -73,7 +73,7 @@ Licensed under AGPL v3.0, check COPYING for more details
   * The audio files in MAR1D are from Mari0
   * Helping me out with the game logic for spawning enemies
   * Being an awesome guy
-* Owen Lynch
+* [Owen Lynch](http://github.com/olynch)
   * Hosting the game on his github
   * Helping out with some of the coding (Especially setting up cmake. I hate compiling C code)
   * Being a great friend
@@ -81,7 +81,7 @@ Licensed under AGPL v3.0, check COPYING for more details
   * Testing
   * Moral Support
   * Putting up with me getting sucked into coding for long stretches
-* Yavni
+* [Yavni](http://yavni.org/)
   * Photoshoping the menuscreen image
   * Coming up with the title "MAR1D"
 * Nintendo
