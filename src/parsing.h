@@ -2,6 +2,7 @@
 #define _PARSING_H
 #include "helpers.h"
 #include "objects.h"
+#include "resources.h"
 
 color* io_cs;
 obj* io_os;

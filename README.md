@@ -35,6 +35,7 @@ The `./build/MAR1D` executable takes a few command line arguments (note that all
 
 ### Linux
 It should be enough to just run ./compile.sh from the main source directory if you have all the dependencies.
+If you would like to install it under a certain prefix, you can modify ./compile.sh to change `-DCMAKE_INSTALL_PREFIX=../install` to point to wherever you would like to install it
 ***NOTE:*** If you use nix(os), there's a nix package for MAR1D upcoming. If you don't use nixos, you should!
 
 ### Mac OS X

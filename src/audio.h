@@ -5,6 +5,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <ao/ao.h>
+#include "resources.h"
 /* #include <pthread.h> */
 #define SND_blockbreak 0
 #define SND_blockhit 1

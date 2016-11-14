@@ -3,3 +3,4 @@ CMakeFiles/*
 *CMakeCache.txt*
 *Makefile*
 build/*
+install/*

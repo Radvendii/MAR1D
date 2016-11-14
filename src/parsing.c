@@ -1,14 +1,14 @@
 #include "parsing.h"
 
 FILE* io_readFile(char* fn){
-  char fn_[100];
-  sprintf(fn_, "./resources/%s", fn);
+  static char fn_[1000];
+  sprintf(fn_, k_resources"%s", fn);
   return sfopen(fn_, "r");
 }
 
 FILE* io_readBFile(char* fn){
-  char fn_[100];
-  sprintf(fn_, "./resources/%s", fn);
+  static char fn_[1000];
+  sprintf(fn_, k_resources"%s", fn);
   return sfopen(fn_, "rb");
 }
 
