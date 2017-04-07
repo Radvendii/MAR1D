@@ -18,6 +18,7 @@ Other notable similar exploits include:
 * [magictile](http://roice3.org/magictile/)
 * [A Slower Speed of Light](http://gamelab.mit.edu/games/a-slower-speed-of-light/)
 * [Antichamber](http://www.antichamber-game.com/)
+* [Hyperrogue](http://www.roguetemple.com/z/hyper/)
 * Send me any I'm missing! I love playing with these things :)
 
 ## Playing the Game
