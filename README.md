@@ -18,6 +18,8 @@ Other notable similar exploits include:
 * [magictile](http://roice3.org/magictile/)
 * [A Slower Speed of Light](http://gamelab.mit.edu/games/a-slower-speed-of-light/)
 * [Antichamber](http://www.antichamber-game.com/)
+* [Hyperrogue](http://www.roguetemple.com/z/hyper/)
+* [4D Toys](http://www.4dtoys.com/) (Though I've never personally played it)
 * Send me any I'm missing! I love playing with these things :)
 
 ## Playing the Game
@@ -39,7 +41,8 @@ The `./install/bin/MAR1D` executable takes a few command line arguments (note th
 ### Linux
 It should be enough to just run ./compile.sh from the main source directory if you have all the dependencies.
 If you would like to install it under a certain prefix, you can modify ./compile.sh to change `-DCMAKE_INSTALL_PREFIX=../install` to point to wherever you would like to install it
-***NOTE:*** If you use nix(os), there's a nix package for MAR1D upcoming. If you don't use nixos, you should!
+
+***NOTE:*** If you use nix(os), there's a nix package for MAR1D under 'mar1d'. If you don't use nix(os), you should!
 
 ### Mac OS X
 * Homebrew
@@ -69,11 +72,11 @@ Licensed under AGPL v3.0, check COPYING for more details
 * Edwin Abbott Abbott
   * Writing Flatland and inspiring this game
 * [Maurice Guégan](http://stabyourself.net/about/)
-  * Making [Mari0](http://stabyourself.net/about/), and inspiring me to hack on Mario
+  * Making [Mari0](http://stabyourself.net/mari0/), and inspiring me to hack on Mario
   * The audio files in MAR1D are from Mari0
   * Helping me out with the game logic for spawning enemies
   * Being an awesome guy
-* [Owen Lynch](http://github.com/olynch)
+* Owen Lynch
   * Hosting the game on his github
   * Helping out with some of the coding (Especially setting up cmake. I hate compiling C code)
   * Being a great friend
@@ -81,7 +84,7 @@ Licensed under AGPL v3.0, check COPYING for more details
   * Testing
   * Moral Support
   * Putting up with me getting sucked into coding for long stretches
-* [Yavni](http://yavni.org/)
+* Yavni
   * Photoshoping the menuscreen image
   * Coming up with the title "MAR1D"
 * Nintendo
