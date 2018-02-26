@@ -59,7 +59,7 @@ If you're using homebrew, run
 
 to install the dependencies, then run 
 
-`C_INCLUDE_PATH=/usr/local/Cellar/libao/1.2.0/include/ ./compile.sh`
+`C_INCLUDE_PATH=/usr/local/Cellar/libao/1.2.2/include/ ./compile.sh`
 
 from the main source directory. It appears homebrew puts libao in a weird place.
 
