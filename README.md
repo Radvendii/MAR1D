@@ -4,6 +4,12 @@ MAR1D
 ## Beta
 The game is currently in beta. Please let me know if you find any bugs so I can fix them!
 
+### TODO
+
+* add running
+* add stomping (jump then crouch to break blocks while big mario)
+* should be able to kill goombas while jumping up at them? (check if this is indeed the case)
+
 ## Description
 The original Super Mario Bros as you've never seen it. Step into Mario's shoes in this first person clone of the classic Mario game. True to the original, however, the game still takes place in a two dimensional world. You must view the world as mario does, as a one dimensional line.
 
@@ -53,7 +59,7 @@ If you're using homebrew, run
 
 to install the dependencies, then run 
 
-`C_INCLUDE_PATH=/usr/local/Cellar/libao/1.2.0/include/ ./compile.sh`
+`C_INCLUDE_PATH=/usr/local/Cellar/libao/1.2.2/include/ ./compile.sh`
 
 from the main source directory. It appears homebrew puts libao in a weird place.
 
