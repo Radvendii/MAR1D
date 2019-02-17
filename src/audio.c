@@ -1,12 +1,11 @@
 #include "audio.h"
-//static pthread_key_t key;
 int default_driver;
-ao_sample_format format;
-ao_device* device;
-int piperw[2];
-//static pthread_t mainThread;
-char* sounds[k_nSounds];
+ALCdevice *device;
+ALCcontext *context;
 int sz[k_nSounds];
+ALuint buffers[k_nSounds];
+ALuint mainSource;
+ALuint sources[k_nSounds];
 char fileNames[k_nSounds][40] = {
   "sounds/blockbreak.raw",
   "sounds/blockhit.raw",
@@ -60,122 +59,76 @@ void au_init(bool _mute, bool _effects){
   mute = _mute;
   effects = _effects;
   au_loadSounds();
-  ao_initialize();
 
-  memset(&format, 0, sizeof(format));
-  format.bits = 16;
-  format.channels = 1;
-  format.rate = 44100;
-
-  format.byte_format = AO_FMT_LITTLE;
-  pipe(piperw);
-  if(fork() == 0){ //This is the fork that does everything. I have to keep it uncontaminated by GLFW.
-    close(piperw[1]);
-    playDaemon();
-    close(piperw[0]);
-    exit(0);
+  alGetError();
+  device = alcOpenDevice(NULL);
+  if (!device) {
+    printf("Failed to load audio device.");
+    exit(1);
   }
-  close(piperw[0]);
-}
-
-void playDaemon(){
-  unsigned int _snd;
-  int snd;
-  bool main;
-  pid_t mainFork;
-  pid_t frk;
-  while(read(piperw[0], &_snd, sizeof(int)) > 0){
-    snd = _snd >> 1;
-    main = _snd & 1;
-    if(snd == k_killMain){
-      if(mainFork){
-        kill(mainFork, SIGTERM);
-        mainFork = 0;
-      }
-    }
-    else{
-      if(main){
-        mainFork = fork();
-        if(mainFork == 0){
-          au_playloop(snd);
-          exit(0);
-        }
-      }
-      else{
-        if(fork() == 0){
-          au_playplay(snd);
-          exit(0);
-        }
-      }
-    }
-  }
-}
-
-void au_playplay(int snd){
-  au_initEach();
-  ao_play(device, sounds[snd], sz[snd]);
-  au_deinitEach();
-}
-
-void au_playloop(int snd){
-  au_initEach();
-  while(1){
-    ao_play(device, sounds[snd], sz[snd]);
-  }
-  au_deinitEach(); //In reality, calls this via signal() in au_initEach()
-}
-
-void au_initEach(){
-  default_driver = ao_default_driver_id();
-  device = ao_open_live(default_driver, &format, NULL);
-  signal(SIGTERM, au_deinitEach);
+  context = alcCreateContext(device, NULL);
+  alcMakeContextCurrent(context);
+  alGenSources((ALuint)1, &mainSource);
+  /* alSourcef(mainSource, AL_PITCH, 1); */
+  /* alSourcef(mainSource, AL_GAIN, 1); */
+  /* alSource3f(mainSource, AL_POSITION, 0, 0, 0); */
+  /* alSource3f(mainSource, AL_VELOCITY, 0, 0, 0); */
+  alSourcei(mainSource, AL_LOOPING, AL_TRUE);
+  alGenSources((ALuint)k_nSounds, sources);
 }
 
 void au_loadSounds(){
   for(int i=0;i<k_nSounds;i++){
-    sounds[i] = au_loadSound(fileNames[i], &sz[i]);
+    FILE* f = rs_getBFile(fileNames[i]);
+    ALvoid *data;
+    fseek(f, 0L, SEEK_END);
+    sz[i] = ftell(f);
+    fseek(f, 0L, SEEK_SET);
+    data = salloc(sz[i] * sizeof(char));
+    fread(data, sz[i], 1, f);
+    sfclose(f);
+    alBufferData(buffers[i], AL_FORMAT_MONO16, data, (ALsizei)*sz, 44100);
   }
-}
-
-char* au_loadSound(char* fn, int* sz){
-  FILE* f = rs_getBFile(fn);
-  char *buffer;
-  fseek(f, 0L, SEEK_END);
-  *sz = ftell(f);
-  fseek(f, 0L, SEEK_SET);
-  buffer = salloc(*sz * sizeof(char));
-  fread(buffer, *sz, 1, f);
-  sfclose(f);
-  return buffer;
 }
 
 void au_deinit(){
   au_mainStop();
-  for(int i=0;i<k_nSounds;i++){
-    free(sounds[i]);
-  }
-  close(piperw[1]);
-  ao_shutdown();
+  alDeleteSources(1, &mainSource);
+  alDeleteSources(k_nSounds, sources);
+  alDeleteBuffers(k_nSounds, buffers);
+  alcMakeContextCurrent(NULL);
+  alcDestroyContext(context);
+  alcCloseDevice(device);
 }
 
-void au_deinitEach(){
-  ao_close(device);
-  exit(0);
+ALuint firstAvailableSource() {
+  ALint source_state;
+  while(true){
+    for(int i=0;i < k_nSounds; i++) {
+      alGetSourcei(sources[i], AL_SOURCE_STATE, &source_state);
+      if(source_state != AL_PLAYING){
+        return i;
+      }
+    }
+  }
 }
 
 void au_play(int snd){
   if(!mute || effects){
-    snd = snd << 1;
-    write(piperw[1], &snd, sizeof(int));
+    ALuint source = firstAvailableSource();
+    alSourcei(source, AL_BUFFER, buffers[snd]);
+    alSourcePlay(source);
   }
 }
 void au_playWait(int snd){
   if(!mute || effects){
-    //need to repeat this code because au_deinitEach() calls exit();
-    default_driver = ao_default_driver_id();
-    device = ao_open_live(default_driver, &format, NULL);
-    ao_play(device, sounds[snd], sz[snd]);
-    ao_close(device);
+    ALint source_state;
+    ALuint source = firstAvailableSource();
+    alSourcei(source, AL_BUFFER, buffers[snd]);
+    alSourcePlay(source);
+    do {
+      alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+    } while (source_state == AL_PLAYING);
   }
 }
 
@@ -192,13 +145,11 @@ void au_lowTime(){
 void au_mainPlay(int snd){
   if(!mute){
     au_mainStop();
-    au_mainAudio = snd;
-    snd = (snd << 1) | 1;
-    write(piperw[1], &snd, sizeof(int));
+    alSourcei(mainSource, AL_BUFFER, buffers[snd]);
+    alSourcePlay(mainSource);
   }
 }
 
 void au_mainStop(){
-  int sig = (k_killMain << 1) | 1;
-  write(piperw[1], &sig, sizeof(int));
+  alSourceStop(mainSource);
 }

@@ -20,6 +20,7 @@ struct state s;
 //http://8bithorse.blogspot.com/2010/11/super-mario-bros-101.html
 
 int main(int argc, char **argv){
+  printf("0\n");
   bool mute = false;
   bool effects = false;
   int lineSize = 30;
@@ -54,6 +55,8 @@ int main(int argc, char **argv){
   glfwSetTime(0.0);
   /* srand(time(NULL)); */
 
+  s.menu = 1;
+
   while(!wn_shouldClose()) {
     if(s.userPaused){wn_disable_mouse(false);}
     else{wn_disable_mouse(true);}
@@ -61,8 +64,8 @@ int main(int argc, char **argv){
     gr_clear();
     wn_perspWindow();
     gr_clear();
-    wn_dimWindow();
-    gr_clear();
+    /* wn_dimWindow(); */
+    /* gr_clear(); */
     wn_hudWindow();
     gr_clear();
 
@@ -78,8 +81,8 @@ int main(int argc, char **argv){
       gr_update();
       wn_perspWindow();
       gr_drawPersp();
-      wn_dimWindow();
-      gr_drawDim();
+      /* wn_dimWindow(); */
+      /* gr_drawDim(); */
       wn_hudWindow();
       gr_drawHud();
       wn_update();

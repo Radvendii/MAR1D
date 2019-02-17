@@ -6,7 +6,8 @@ void gr_keypress(int key, int scancode, int action, int mods){
   }
   if ((key == GLFW_KEY_ENTER) && action == GLFW_PRESS){
     if(s.menu == k_menuStatic){
-      s.menu = k_menuTime;
+      /* s.menu = k_menuTime; */
+      s.menu = 0;
     }
   }
 }
@@ -60,7 +61,7 @@ void gr_update(){
 }
 
 void gr_char(bool vert, char c, GLfloat* x, GLfloat* y){
-  glPointSize(k_fontSize);
+  /* glPointSize(k_fontSize); */
   glBegin(GL_POINTS);
   for(int i=0;i<fontSize;i++){
     if(font[(c)*fontSize+i]){
@@ -94,8 +95,8 @@ void gr_text(bool vert, char *s, GLfloat x, GLfloat y){
 }
 
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
-  glBegin(GL_QUADS);
   glColor3ub(r, g, b);
+  glBegin(GL_QUADS);
   glVertex2f(-lineSize, y);
   glVertex2f(-lineSize, y+1);
   glVertex2f(lineSize, y+1);
@@ -203,14 +204,14 @@ void gr_drawMenu(){
     float rot = linInterp(0.0, 90.0, k_menuTime, 0.0, s.menu);
     glRotatef(rot, 0.f, 1.f, 0.f);
 
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f);
-    glTexCoord2f(1.f, 0.f); glVertex2f(1.f, -1.f);
-    glTexCoord2f(1.f, 1.f); glVertex2f(1.f, 1.f);
-    glTexCoord2f(0.f, 1.f); glVertex2f(-1.f, 1.f);
-    glEnd();
+    /* glEnable(GL_TEXTURE_2D); */
+    /* glBindTexture(GL_TEXTURE_2D, texture); */
+    /* glBegin(GL_QUADS); */
+    /* glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f); */
+    /* glTexCoord2f(1.f, 0.f); glVertex2f(1.f, -1.f); */
+    /* glTexCoord2f(1.f, 1.f); glVertex2f(1.f, 1.f); */
+    /* glTexCoord2f(0.f, 1.f); glVertex2f(-1.f, 1.f); */
+    /* glEnd(); */
     glPopMatrix();
     if(s.menu != k_menuStatic){
       s.menu--;
@@ -239,16 +240,16 @@ void gr_init(int _lineSize, int _sensitivity){
   fontSize = io_getFont(&font, "mario.font");
   s.menu = k_menuStatic;
 
-  image *im;
-  im = loadTexture();
+  /* image *im; */
+  /* im = loadTexture(); */
 
-  wn_menuWindow();
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im->sizeX, im->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, im->data);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+  /* wn_menuWindow(); */
+  /* glGenTextures(1, &texture); */
+  /* glBindTexture(GL_TEXTURE_2D, texture); */
+  /* glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im->sizeX, im->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, im->data); */
+  /* glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); */
+  /* glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); */
+  /* glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL); */
 }
 
 void gr_deinit(){

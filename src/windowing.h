@@ -17,7 +17,7 @@
 #define k_dimWindowX 0
 #define k_perspWindowX (k_dimWindowX+k_dimWindowW)
 
-GLFWwindow* dimWindow;
+/* GLFWwindow* dimWindow; */
 GLFWwindow* perspWindow;
 
 void wn_menuWindow();

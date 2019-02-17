@@ -150,8 +150,8 @@ bool mh_collision(int i1, int i2){
   ob_realifyBox(&b2, s.scene[i2].x, s.scene[i2].y);
   ret = k_boxInter(b1, b2);
   if(s.scene[i1].type == '@' && s.scene[i2].type == 'E'){return false;}
-  if(s.scene[i1].type == '@' && s.invincible && (s.scene[i2].type == 'e' || s.scene[i2].type == '&' || s.scene[i2].type == '7')){return false;}
-  if(s.scene[i2].type == '@' && s.invincible && (s.scene[i1].type == 'e' || s.scene[i1].type == '&' || s.scene[i1].type == '7')){return false;}
+  if(s.scene[i1].type == '@' && s.invincible && (s.scene[i2].type == 'e' || s.scene[i2].type == '&' || s.scene[i2].type == '7')){ret = false;}
+  if(s.scene[i2].type == '@' && s.invincible && (s.scene[i1].type == 'e' || s.scene[i1].type == '&' || s.scene[i1].type == '7')){ret = false;}
 
   cols1 = ret;
   nCols = s.scene[i1].nCols;
@@ -181,7 +181,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
   switch((*er).type){
   case '@':
     vy = (*er).vy;
-    if(!((s.star || s.invincible) && ((*er).type == '@' && ((*ee).type == 'e' || (*ee).type == '&')))){
+    if(!((s.star || s.invincible) && ((*ee).type == 'e' || (*ee).type == '&'))){
       if(colser & 2){(*er).vx = 0;}
     }
     if(colser & (4 | 8)){(*er).vy = 0;}
@@ -274,6 +274,9 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           ai_kill(ee);
           s.score+=100;
         }
+        else if(colsee & (4 | 8)){
+          gl_killed();
+        }
         else if(colsee & 2){
           int x_temp = (*ee).x;
           int y_temp = (*ee).y-8;
@@ -284,13 +287,15 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           cl_smallJump();
           s.score+=100*s.multibounce;
         }
-        else{gl_killed();}
       }
       break;
     case '&':
       if(s.star){
         ai_kill(ee);
         s.score+=100;
+      }
+      else if(colsee & (4 | 8)){
+        gl_killed();
       }
       else if(colsee & 2){
         int x_temp = (*ee).x;
@@ -302,7 +307,6 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         cl_smallJump();
         s.score+=100*s.multibounce;
       }
-      else{gl_killed();}
       break;
     case '7':
       if(colsee & 2){
@@ -357,12 +361,12 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     }
     break;
   case 'e':
-    if((*er).physical == true && colser & (4 | 8)){
+    if((*er).physical == true && colser & (4 | 8) && !((*ee).type == '@' && s.invincible)){
       (*er).vx = -(*er).vx;
     }
     break;
   case '&':
-    if((*er).physical == true && colser & (4 | 8)){
+    if((*er).physical == true && colser & (4 | 8) && !((*ee).type == '@' && s.invincible)){
       (*er).vx = -(*er).vx;
       (*er).flip = !(*er).flip;
     }
@@ -377,7 +381,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       }
       break;
     default:
-      if(colser & (8 | 16)){
+      if(colser & (8 | 16) && !((*ee).type == '@' && s.invincible)){
         (*er).vx = -(*er).vx;
       }
       break;

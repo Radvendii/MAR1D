@@ -4,7 +4,8 @@
 #include "windowing.h"
 #include <signal.h>
 #include <unistd.h>
-#include <ao/ao.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 #include "resources.h"
 /* #include <pthread.h> */
 #define SND_blockbreak 0
@@ -64,14 +65,11 @@ void au_deinit();
 void au_play(int);
 void au_playWait(int);
 void au_playplay(int);
-void au_playloop(int);
 void au_mainPlay(int);
 void au_lowTime();
 void au_mainStop();
 void au_loadSounds();
 void au_initEach();
 void au_deinitEach();
-char* au_loadSound(char*, int*);
-void playDaemon();
 
 #endif

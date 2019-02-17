@@ -13,24 +13,24 @@ void wn_perspWindow(){
 }
 
 void wn_dimWindow(){
-  glfwMakeContextCurrent(dimWindow);
+//  glfwMakeContextCurrent(dimWindow);
 }
 
 void wn_update(){
-  if(debug && !glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
-    glfwShowWindow(dimWindow);
-    glfwShowWindow(perspWindow);
-  }
-  if(!debug && glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
-    glfwHideWindow(dimWindow);
-  }
+  // if(debug && !glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
+  //   glfwShowWindow(dimWindow);
+  //   glfwShowWindow(perspWindow);
+  // }
+  // if(!debug && glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
+  //   glfwHideWindow(dimWindow);
+  // }
   glfwSwapBuffers(perspWindow);
-  glfwSwapBuffers(dimWindow);
+  // glfwSwapBuffers(dimWindow);
   glfwPollEvents();
 }
 
 bool wn_shouldClose(){
-  return glfwWindowShouldClose(dimWindow) || glfwWindowShouldClose(perspWindow);
+  return /* glfwWindowShouldClose(dimWindow) || */ glfwWindowShouldClose(perspWindow);
 }
 
 void error_callback(int error, const char* description){
@@ -62,19 +62,19 @@ void wn_init(){
     exit(EXIT_FAILURE);
   glfwSetErrorCallback(error_callback);
   glfwWindowHint(GLFW_RESIZABLE, false);
-  dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, "dimWindow", NULL, NULL);
+  /* dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, "dimWindow", NULL, NULL); */
   perspWindow = glfwCreateWindow(k_perspWindowW, k_perspWindowH, "perspWindow", NULL, NULL);
   if (!perspWindow)
     {
       glfwTerminate();
       exit(EXIT_FAILURE);
     }
-  if (!dimWindow)
-    {
-      glfwTerminate();
-      exit(EXIT_FAILURE);
-    }
-  glfwSetWindowPos(dimWindow, k_dimWindowX, 50);
+  /* if (!dimWindow) */
+  /*   { */
+  /*     glfwTerminate(); */
+  /*     exit(EXIT_FAILURE); */
+  /*   } */
+  /* glfwSetWindowPos(dimWindow, k_dimWindowX, 50); */
   glfwSetWindowPos(perspWindow, k_perspWindowX, 50);
 
   wn_disable_mouse(true);
@@ -82,7 +82,7 @@ void wn_init(){
 
   glfwSetKeyCallback(perspWindow, key_callback);
   glfwSetMouseButtonCallback(perspWindow, click_callback);
-  glfwSetKeyCallback(dimWindow, key_callback);
+  /* glfwSetKeyCallback(dimWindow, key_callback); */
   glfwSetCursorPosCallback(perspWindow, cursor_callback);
 }
 
@@ -91,7 +91,7 @@ void wn_disable_mouse(bool disable) {
 }
 
 void wn_deinit(){
-  glfwDestroyWindow(dimWindow);
+  /* glfwDestroyWindow(dimWindow); */
   glfwDestroyWindow(perspWindow);
   glfwTerminate();
 }
