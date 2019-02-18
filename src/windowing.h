@@ -16,6 +16,8 @@
 #define k_menuWindowW 512
 #define k_dimWindowX 0
 #define k_perspWindowX (k_dimWindowX+k_dimWindowW)
+#define k_perspWindowName "MAR1D"
+#define k_dimWindowName "Debug"
 
 GLFWwindow* dimWindow;
 GLFWwindow* perspWindow;

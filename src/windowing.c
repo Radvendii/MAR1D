@@ -62,8 +62,8 @@ void wn_init(){
     exit(EXIT_FAILURE);
   glfwSetErrorCallback(error_callback);
   glfwWindowHint(GLFW_RESIZABLE, false);
-  dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, "dimWindow", NULL, NULL);
-  perspWindow = glfwCreateWindow(k_perspWindowW, k_perspWindowH, "perspWindow", NULL, NULL);
+  dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, k_dimWindowName, NULL, NULL);
+  perspWindow = glfwCreateWindow(k_perspWindowW, k_perspWindowH, k_perspWindowName, NULL, NULL);
   if (!perspWindow)
     {
       glfwTerminate();
