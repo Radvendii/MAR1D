@@ -4,9 +4,9 @@
 #include "helpers.h"
 #include "parsing.h"
 #define k_nPixels 500 //resolution of screen. Never make it odd.
-#define k_drawD1 (16*8)
-#define k_drawD2 (16*10)
-#define k_drawD k_drawD2
+#define k_drawD1 (16*7)
+#define k_drawD2 (16*8)
+#define k_drawD 16*16
 #define k_bgr 107
 #define k_bgg 136
 #define k_bgb 255

@@ -48,16 +48,24 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
     }
   }
   float ds[k_nPixels];
-  for(int i=0;i<k_nPixels;i++){ds[i] = c.drawD;}
+  for(int i=0; i<k_nPixels; i++){
+    ds[i] = c.drawD;
+  }
   float d;
   int D;
   point p;
   int y;
   for(int obj = 0; c.scene[obj].type != '\0'; obj++) {
-    if(c.scene[obj].hidden == true || c.scene[obj].type == '.') {continue;}
-    for(point* pp=c.scene[obj].ps[c.scene[obj].animFrame/k_animFreq % c.scene[obj].nps];!ob_p_isTerm(p = *pp);pp++) {
-      if(ob_p_isSkip(p)){continue;}
-      if(c.scene[obj].flip){p.x = c.scene[obj].bb.w - p.x;}
+    if(c.scene[obj].hidden == true || c.scene[obj].type == '.'){
+      continue;
+    }
+    for(point* pp = c.scene[obj].ps[c.scene[obj].animFrame / k_animFreq % c.scene[obj].nps]; !ob_p_isTerm(p = *pp); pp++) {
+      if(ob_p_isSkip(p)){
+        continue;
+      }
+      if(c.scene[obj].flip){
+        p.x = c.scene[obj].bb.w - p.x;
+      }
       ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
       p.x -= c.x;
       p.y -= c.y;
@@ -66,21 +74,25 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
       alpha = fmod(alpha - c.T, 2*pi);
       if(alpha > pi){alpha -= 2*pi;}
 
-      if(alpha<-0.5 || alpha>c.FOV+0.5){continue;}
+      if(alpha < -0.5 || alpha > c.FOV+0.5){
+        continue;
+      }
       y = (tan(alpha-c.FOV/2) + tan(c.FOV/2) ) / (2*tan(c.FOV/2)) * k_nPixels;
       d = sqrt(p.x*p.x + p.y*p.y);
       D = ceil(1/(2*d*tan(c.FOV/2))*k_nPixels);
-      for(int i=y-D;i<y+D;i++){
-        if(i<0 || i >= k_nPixels) {continue;}
-        if(d<ds[i]){
+      for(int i = y - D; i < y + D; i++){
+        if(i < 0 || i >= k_nPixels){
+          continue;
+        }
+        if(d < ds[i] && abs(p.x) < k_drawD2){
           ds[i] = d;
           screen[i*3+0] = io_cs[p.c].r;
           screen[i*3+1] = io_cs[p.c].g;
           screen[i*3+2] = io_cs[p.c].b;
-          if(d>k_drawD1){
-            screen[i*3+0] = (c.bg.r - screen[i*3+0])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+0];
-            screen[i*3+1] = (c.bg.g - screen[i*3+1])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+1];
-            screen[i*3+2] = (c.bg.b - screen[i*3+2])/(k_drawD2 - k_drawD1)*(d-k_drawD1) + screen[i*3+2];
+          if(p.x > k_drawD1){
+            screen[i*3+0] = (c.bg.r - screen[i*3+0])/(k_drawD2 - k_drawD1)*(p.x-k_drawD1) + screen[i*3+0];
+            screen[i*3+1] = (c.bg.g - screen[i*3+1])/(k_drawD2 - k_drawD1)*(p.x-k_drawD1) + screen[i*3+1];
+            screen[i*3+2] = (c.bg.b - screen[i*3+2])/(k_drawD2 - k_drawD1)*(p.x-k_drawD1) + screen[i*3+2];
           }
           if(c.flashD && c.animFrame/16 % 2){
             screen[i*3+0] /= 2;
