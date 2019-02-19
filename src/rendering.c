@@ -14,11 +14,11 @@ void rn_dimFcamera(point *points, struct camera c){
   points[nPoints++] = (point) {.x = xa, .y = ya, .c = '.'};
   points[nPoints++] = (point) {.x = xb, .y = yb, .c = '.'};
 
-  for(obj* obj = c.scene; (*obj).type != '\0'; obj++) {
+  for(int obj = 0; c.scene[obj].type != '\0'; obj++) {
     for(int pn=0;;pn++) {
-      if(ob_p_isTerm(p = (*obj).ps[(*obj).animFrame/k_animFreq % (*obj).nps][pn])){break;}
+      if(ob_p_isTerm(p = c.scene[obj].ps[c.scene[obj].animFrame/k_animFreq % c.scene[obj].nps][pn])){break;}
 
-      ob_realifyPoint(&p, (*obj).x, (*obj).y);
+      ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
       points[nPoints++] = p;
     }
   }
@@ -53,12 +53,12 @@ void rn_perspFcamera(unsigned char *screen, struct camera c, point *points){
   int D;
   point p;
   int y;
-  for(obj* obj = c.scene; (*obj).type != '\0'; obj++) {
-    if((*obj).hidden == true || (*obj).type == '.') {continue;}
-    for(point* pp=(*obj).ps[(*obj).animFrame/k_animFreq % (*obj).nps];!ob_p_isTerm(p = *pp);pp++) {
+  for(int obj = 0; c.scene[obj].type != '\0'; obj++) {
+    if(c.scene[obj].hidden == true || c.scene[obj].type == '.') {continue;}
+    for(point* pp=c.scene[obj].ps[c.scene[obj].animFrame/k_animFreq % c.scene[obj].nps];!ob_p_isTerm(p = *pp);pp++) {
       if(ob_p_isSkip(p)){continue;}
-      if((*obj).flip){p.x = (*obj).bb.w - p.x;}
-      ob_realifyPoint(&p, (*obj).x, (*obj).y);
+      if(c.scene[obj].flip){p.x = c.scene[obj].bb.w - p.x;}
+      ob_realifyPoint(&p, c.scene[obj].x, c.scene[obj].y);
       p.x -= c.x;
       p.y -= c.y;
       double alpha = atan2(p.y, p.x);
