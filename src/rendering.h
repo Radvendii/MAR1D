@@ -25,9 +25,7 @@ struct camera {
   bool debug;
   bool flashD;
   bool flashB;
-  unsigned char bgr;
-  unsigned char bgg;
-  unsigned char bgb;
+  color bg;
   int flashG;
   bool redTint;
   int drawD;

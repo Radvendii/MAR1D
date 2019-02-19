@@ -25,14 +25,14 @@ void gr_cursormove(double xPos, double yPos){
 void gr_update(){
   if(!s.paused){
     if(s.loc == '1'){ //TODO: make this not a kludge
-      cam.bgr = k_bgr;
-      cam.bgg = k_bgg;
-      cam.bgb = k_bgb;
+      cam.bg.r = k_bgr;
+      cam.bg.g = k_bgg;
+      cam.bg.b = k_bgb;
     }
     else{
-      cam.bgr = 0;
-      cam.bgg = 0;
-      cam.bgb = 0;
+      cam.bg.r = 0;
+      cam.bg.g = 0;
+      cam.bg.b = 0;
     }
     cam.animFrame++;
     for(int i=0; cam.scene[i].type != '\0'; i++){
