@@ -23,7 +23,7 @@ int main(int argc, char **argv){
   bool mute = false;
   bool effects = false;
   int lineSize = 30;
-  int sensitivity = 5;
+  int sensitivity = 10;
   bool reverse = false;
   int c;
   while ((c = getopt(argc, argv, "mfw:s:r")) != -1){
