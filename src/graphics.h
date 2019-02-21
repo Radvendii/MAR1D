@@ -25,6 +25,7 @@ GLuint texture;
 extern struct state s;
 struct camera cam;
 unsigned char *perspScreen;
+int imageWidth;
 point *dimScreen;
 
 void gr_text(bool, char *, GLfloat, GLfloat);

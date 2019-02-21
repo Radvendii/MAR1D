@@ -104,6 +104,13 @@ void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
 }
 
 void gr_pixels(unsigned char *renderArr){
+  if(debug) {
+    FILE *imageFile = sfopen("image.raw", "wb");
+    fwrite(renderArr, sizeof(unsigned char), k_nPixels * 3, imageFile);
+    sfclose(imageFile);
+    imageWidth++;
+  }
+
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
@@ -157,7 +164,7 @@ void gr_drawDim(){
   glLoadIdentity();
 
   glBegin(GL_QUADS);
-  //glColor3ub(cam.bgr, cam.bgg, cam.bgb);
+  // glColor3ub(cam.bg.r, cam.bg.g, cam.bg.b);
   glColor3f(1.0, 1.0, 1.0);
   glVertex2f(-1.f, -1.f);
   glVertex2f(-1.f, 1.f);
@@ -233,6 +240,7 @@ void gr_init(int _lineSize, int _sensitivity){
   cam.T = k_camT;
   debug = false;
   perspScreen = salloc(sizeof(unsigned char)*k_nPixels*3);
+  imageWidth = 0;
   for(int i=0; i<k_nPixels*3; i++){perspScreen[i]=0;}
   dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
   dimScreen[0] = p_termPoint;
@@ -255,4 +263,9 @@ void gr_deinit(){
   free(perspScreen);
   free(dimScreen);
   free(font);
+  if(debug){
+    char imageFile[100];
+    sprintf(imageFile, "image_%dx%d.raw", k_nPixels, imageWidth);
+    rename("image.raw", imageFile);
+  }
 }
