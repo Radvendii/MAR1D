@@ -5,6 +5,7 @@ void cl_init(){
   s.forward = false;
   s.upcount = 0;
   s.run = false;
+  s.runWarp = false;
   s.multibounce=0;
 }
 
@@ -14,14 +15,14 @@ void cl_update(){
     if(s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
   }
   else{
-    if(s.forward && s.scene[s.pli].vx<k_xVelMax){s.scene[s.pli].vx+=k_xVel;}
+    if(s.forward && s.scene[s.pli].vx < (s.run ? k_xVelRunMax : k_xVelMax)){s.scene[s.pli].vx+=k_xVel;}
     if(!s.forward && s.onGround && s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
-    if(s.backward && s.scene[s.pli].vx>-k_xVelMax){s.scene[s.pli].vx-=k_xVel;}
+    if(s.backward && -s.scene[s.pli].vx<(s.run ? k_xVelRunMax : k_xVelMax)){s.scene[s.pli].vx-=k_xVel;}
     if(!s.backward && s.onGround && s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
   }
   if(!--s.upcount){cl_jumpEnd();}
-  if(k_xVelMax - s.scene[s.pli].vx < 0.0001){s.run++;}
-  else if(s.run){s.run--;}
+  if(s.scene[s.pli].vx > k_xVelMax){s.runWarp++;}
+  else if(s.runWarp){s.runWarp--;}
   if(s.onGround){s.multibounce = 0;}
 }
 
@@ -173,11 +174,19 @@ void cl_keypress(int key, int scancode, int action, int mods){
     if(!s.flip){s.backward = false;}
     else{s.forward = false;}
   }
+
   if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
     bool temp = s.forward;
     s.forward = s.backward;
     s.backward = temp;
     s.flip = !s.flip;
+  }
+
+  if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS){
+    s.run = true;
+  }
+  if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE){
+    s.run = false;
   }
 
   if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
@@ -187,10 +196,10 @@ void cl_keypress(int key, int scancode, int action, int mods){
     cl_jumpEnd();
   }
 
-  if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS){
+  if (key == GLFW_KEY_LEFT_CONTROL&& action == GLFW_PRESS){
     cl_crouch();
   }
-  if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE){
+  if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE){
     cl_uncrouch();
   }
 

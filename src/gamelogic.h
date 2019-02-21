@@ -51,7 +51,8 @@ struct state {
   int dead;
   int nFBalls;
   int invincible;
-  int run;
+  bool run;
+  int runWarp;
   int star;
   int lives;
   int coins;

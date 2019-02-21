@@ -43,13 +43,13 @@ void gr_update(){
     cam.redTint = s.fire;
     cam.flip = s.flip;
 
-    if(s.run < k_tBeforeFOVChange || cam.flip){
+    if(s.runWarp < k_tBeforeFOVChange || cam.flip){
       cam.FOV = k_FOV;
     }
     else{
-      cam.FOV = (k_FOVrun - k_FOV)/(k_durationFOVChange)*(s.run - k_tBeforeFOVChange)+k_FOV;
+      cam.FOV = (k_FOVrun - k_FOV)/(k_durationFOVChange)*(s.runWarp - k_tBeforeFOVChange)+k_FOV;
     }
-    if(s.run>k_tBeforeFOVChange+k_durationFOVChange){s.run = k_tBeforeFOVChange+k_durationFOVChange;}
+    if(s.runWarp>k_tBeforeFOVChange+k_durationFOVChange){s.runWarp = k_tBeforeFOVChange+k_durationFOVChange;}
 
   }
   //TODO: 3rd person deathcam?
