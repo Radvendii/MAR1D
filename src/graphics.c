@@ -105,7 +105,7 @@ void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
 
 void gr_pixels(unsigned char *renderArr){
   if(debug) {
-    FILE *imageFile = sfopen("image.raw", "wb");
+    FILE *imageFile = sfopen("mar1d_image.raw", "wb");
     fwrite(renderArr, sizeof(unsigned char), k_nPixels * 3, imageFile);
     sfclose(imageFile);
     imageWidth++;
@@ -265,7 +265,7 @@ void gr_deinit(){
   free(font);
   if(debug){
     char imageFile[100];
-    sprintf(imageFile, "image_%dx%d.raw", k_nPixels, imageWidth);
+    sprintf(imageFile, "mar1d_%dx%d.raw", k_nPixels, imageWidth);
     rename("image.raw", imageFile);
   }
 }
