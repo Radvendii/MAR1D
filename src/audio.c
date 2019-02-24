@@ -128,7 +128,7 @@ void au_playloop(int snd){
 void au_initEach(){
   default_driver = ao_default_driver_id();
   device = ao_open_live(default_driver, &format, NULL);
-  signal(SIGTERM, au_deinitEach);
+  /* signal(SIGTERM, au_deinitEach); */
 }
 
 void au_loadSounds(){
