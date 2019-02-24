@@ -68,6 +68,14 @@ I haven't tested this with macports. If someone wants to do that and tell me if 
 ## License
 Licensed under AGPL v3.0, check COPYING for more details
 
+## Extras
+
+Below is a screencap of me playing through the first stage, as well as an image depicting the same video, with time on the x-axis.
+
+![mar1d-gif](./mar1d.gif)
+
+![mar1d-png](./mar1d.png)
+
 ## Credits
 * Edwin Abbott Abbott
   * Writing Flatland and inspiring this game
