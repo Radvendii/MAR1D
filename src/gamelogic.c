@@ -151,7 +151,7 @@ void gl_update(){
   for(int i=0;s.scene[i].type != '\0';i++){
     if(s.scene[i].x<s.leftMost+16*16){s.scene[i].onScreen = true;}
     if(s.scene[i].x<s.leftMost || (s.scene[i].x > s.leftMost+16*20 && s.scene[i].onScreen == true)){
-      cl_delObjAt(i);
+      /* cl_delObjAt(i); */
     }
   }
   if(s.scene[s.pli].x > 76 * 16){ //TODO: Make this not a kludge
