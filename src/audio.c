@@ -3,10 +3,10 @@
 int default_driver;
 ao_sample_format format;
 ao_device* device;
-int piperw[2];
+int piperw[2]; //For communicating with the main audio fork
 //static pthread_t mainThread;
-char* sounds[k_nSounds];
-int sz[k_nSounds];
+char* sounds[k_nSounds]; // The actual sound file information
+int sz[k_nSounds]; // sz[i] is the size of the sounds[i] buffer
 char fileNames[k_nSounds][40] = {
   "sounds/blockbreak.raw",
   "sounds/blockhit.raw",
@@ -62,12 +62,13 @@ void au_init(bool _mute, bool _effects){
   au_loadSounds();
   ao_initialize();
 
+  // Stuff for libao
   memset(&format, 0, sizeof(format));
   format.bits = 16;
   format.channels = 1;
   format.rate = 44100;
-
   format.byte_format = AO_FMT_LITTLE;
+
   pipe(piperw);
   if(fork() == 0){ //This is the fork that does everything. I have to keep it uncontaminated by GLFW.
     close(piperw[1]);
@@ -82,11 +83,12 @@ void playDaemon(){
   unsigned int _snd;
   int snd;
   bool main;
-  pid_t mainFork;
-  pid_t frk;
+  pid_t mainFork = 0;
+  pid_t frk = 0;
+
   while(read(piperw[0], &_snd, sizeof(int)) > 0){
     snd = _snd >> 1;
-    main = _snd & 1;
+    main = _snd & 1; // Last bit represents whether the sound should be played as the main sound loop
     if(snd == k_killMain){
       if(mainFork){
         kill(mainFork, SIGTERM);
@@ -94,14 +96,14 @@ void playDaemon(){
       }
     }
     else{
-      if(main){
+      if(main && !mainFork){
         mainFork = fork();
         if(mainFork == 0){
           au_playloop(snd);
           exit(0);
         }
       }
-      else{
+      else{ // Just a normal sound to play
         if(fork() == 0){
           au_playplay(snd);
           exit(0);
@@ -122,13 +124,12 @@ void au_playloop(int snd){
   while(1){
     ao_play(device, sounds[snd], sz[snd]);
   }
-  au_deinitEach(); //In reality, calls this via signal() in au_initEach()
+  au_deinitEach();
 }
 
 void au_initEach(){
   default_driver = ao_default_driver_id();
   device = ao_open_live(default_driver, &format, NULL);
-  /* signal(SIGTERM, au_deinitEach); */
 }
 
 void au_loadSounds(){
@@ -165,7 +166,7 @@ void au_deinitEach(){
 
 void au_play(int snd){
   if(!mute || effects){
-    snd = snd << 1;
+    snd = snd << 1; // Last bit is 0 because it's not to be played in the main loop
     write(piperw[1], &snd, sizeof(int));
   }
 }
@@ -181,10 +182,9 @@ void au_playWait(int snd){
 
 void au_lowTime(){
   au_mainStop();
-  au_play(SND_lowtime);
   if(fork() == 0){
-    sleep(3);
-    au_mainPlay(au_mainAudio-1);
+    au_playWait(SND_lowtime);
+    au_mainPlay(au_mainAudio-1); // The low time versions are always one less than the normal versions.
     exit(0);
   }
 }
@@ -193,7 +193,7 @@ void au_mainPlay(int snd){
   if(!mute){
     au_mainStop();
     au_mainAudio = snd;
-    snd = (snd << 1) | 1;
+    snd = (snd << 1) | 1; // Last bit is 1 because it's to be played in the main loop
     write(piperw[1], &snd, sizeof(int));
   }
 }

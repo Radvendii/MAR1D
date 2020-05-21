@@ -126,13 +126,13 @@ void cl_jumpStart(){
   if(s.onGround) {
     if(s.bigMario){au_play(SND_jumpbig);} else{au_play(SND_jump);}
     s.scene[s.pli].vy = k_yVel;
-    s.gravity/=5;
+    s.gravity /= 5;
     s.upcount = k_nJumpFrames;
   }
 }
 
 void cl_jumpEnd(){
-  s.gravity= k_gravity;
+  s.gravity = k_gravity;
 }
 
 void cl_click(int button, int action, int mods){

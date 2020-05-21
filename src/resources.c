@@ -1,5 +1,7 @@
 #include "resources.h"
 
+// Prepends the resource directory name and then opens that file as either text or binary
+
 FILE* rs_getFile(char* fn){
   char *fn_ = salloc(sizeof(char) * (strlen(fn) + 1) + sizeof(k_resources));
   sprintf(fn_, k_resources"%s", fn);

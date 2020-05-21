@@ -22,11 +22,11 @@
 GLFWwindow* dimWindow;
 GLFWwindow* perspWindow;
 
+// Activate different windows. No guarantee these are actually different windows.
 void wn_menuWindow();
 void wn_hudWindow();
 void wn_perspWindow();
 void wn_dimWindow();
-
 
 void wn_update();
 
@@ -34,8 +34,6 @@ bool wn_shouldClose();
 
 void wn_disable_mouse(bool);
 
-void wn_debugInit();
-void wn_debugDeinit();
 void wn_init();
 void wn_deinit();
 

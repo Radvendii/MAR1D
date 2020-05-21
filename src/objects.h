@@ -5,8 +5,9 @@
 //TODO: remove need for k_nMax___
 
 #define k_nMaxObj 1000 //maximum number of objects in a world
-#define p_termPoint ((point){ .x=124214, .y=143512, .c = '\0'}) //Hope this point never actually comes up... :P
-#define p_skipPoint ((point){ .x=124214, .y=141312, .c = '\0'}) //Hope this point never actually comes up... :P
+// Special points. Won't conflict with actual points because '\0' is not a valid colour.
+#define p_termPoint ((point){ .x=124214, .y=143512, .c = '\0'}) // Point which terminates the array of points.
+#define p_skipPoint ((point){ .x=124214, .y=141312, .c = '\0'}) // Special point that is simply skipped. This is useful so that all frames of an animation can be made to have the same number of points.
 
 typedef struct {
   unsigned char r;
@@ -17,7 +18,7 @@ typedef struct {
 typedef struct {
   int x;
   int y;
-  char c;
+  char c; // Colour
 } point;
 
 typedef struct {
@@ -28,32 +29,40 @@ typedef struct {
 } box;
 
 typedef struct{
+  // Position
   int x;
   int y;
+
+  // Velocity
   double vx;
   double vy;
-  bool gravity;
-  bool physical;
+
+  bool gravity; // Affected by gravity
+  bool physical; // Should collisions register
+  bool active; // Whether they should act / move.
+  bool hidden; // Whether to render
+  bool onScreen; // Is it visible to the player
+  bool flip; // Whether to flip the rendering of the object. Useful for e.g. enemies which turn around when they hit a wall.
+
+  // Counters for various things. Depends on the object.
   int i;
   int j;
+
   char c;
-  bool active;
 
-  bool hidden;
-  bool flip;
-  int animFrame;
-  bool onScreen;
+  int animFrame; // Each object needs it's own animation counter so that the animation starts at the beginning when the object appears.
 
-  char type;
-  point** ps;
-  int nps;
-  box bb;
-  box* cols;
-  int nCols;
+  char type; // Each object type is associated with a character.
+  point** ps; // ps[i] is the ith frame of animation.
+  int nps; // Number of points
+  box bb; // bounding box
+  box* cols; // The areas of collision detection.
+  int nCols; // Number of collision detection boxes.
 } obj;
 
 obj ob_objFchar(char);
 
+//TODO: Why didn't I do this?
 //typedef struct {
 //obj* os;
 //color* cs;
@@ -75,4 +84,3 @@ bool ob_p_isTerm(point);
 bool ob_p_isSkip(point);
 
 #endif
-

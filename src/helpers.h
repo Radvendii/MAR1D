@@ -8,12 +8,16 @@
 
 #define pi (22/7.0)
 
+// Safe versions of various functions (checks for errors)
 FILE* sfopen(char*, char*);
 void sfclose(FILE*);
 
 void* salloc(size_t);
 void* resalloc(void*, size_t);
-void intsort(int*, int);
+
+void intsort(int*, int); // Sorts a list of ints with specified length.
+                         // This is never used and I'm not sure why it's here.
+
 double linInterp(double, double, double, double, double);
 
 #endif

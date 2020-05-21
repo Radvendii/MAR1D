@@ -1,5 +1,6 @@
 #include "enemies.h"
 
+// Enemies are initially inactive unless they are right next to the player
 void ai_init(){
   for(int i=0;s.scene[i].type != '\0';i++){
     if((s.scene[i].type == 'e' || s.scene[i].type == '&') && s.scene[i].x >  s.scene[s.pli].x + (16*8)){
@@ -12,6 +13,7 @@ void ai_killAt(int i){
   ai_kill(&s.scene[i]);
 }
 
+// Makes the enemy nonphysical and shorter / squashed.
 void ai_kill(obj* e){
   au_play(SND_shot);
   (*e).physical = false;
@@ -26,6 +28,7 @@ void ai_update(){
   }
 }
 
+// Activates enemies in groups
 void ai_activate(int x, int y){
   for(int i=0;s.scene[i].type != '\0'; i++){
     if(s.scene[i].x == x && s.scene[i].y == y && s.scene[i].active == false){

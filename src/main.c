@@ -45,6 +45,8 @@ int main(int argc, char **argv){
       break;
     }
   }
+
+  // Order matters for intializations
   au_init(mute, effects);
   ob_init();
   gl_init();
@@ -55,6 +57,7 @@ int main(int argc, char **argv){
   /* srand(time(NULL)); */
 
   while(!wn_shouldClose()) {
+    //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
     if(s.userPaused){wn_disable_mouse(false);}
     else{wn_disable_mouse(true);}
     wn_menuWindow();

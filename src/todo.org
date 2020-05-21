@@ -1,0 +1,106 @@
+* Features
+** DONE running
+CLOSED: [2019-02-21 Thu 11:14]
+** DONE missing sounds
+CLOSED: [2016-10-27 Thu 14:24]
+*** pause
+*** game over
+** DONE when paused
+CLOSED: [2016-10-23 Sun 10:22]
+*** DONE release mouse
+CLOSED: [2016-10-20 Thu 21:29]
+*** DONE say PAUSED
+CLOSED: [2016-10-20 Thu 20:50]
+*** DONE pause sound
+CLOSED: [2016-10-23 Sun 09:54]
+*** DONE pause animations?
+CLOSED: [2016-10-20 Thu 20:50]
+** DONE game image underneath menu
+CLOSED: [2016-10-20 Thu 17:54]
+** DONE horizontal text
+CLOSED: [2016-10-20 Thu 16:04]
+** DONE floating windows
+CLOSED: [2016-10-20 Thu 14:11]
+* Bugfixes
+** errors
+Assertion 'pthread_mutex_destroy(&m->mutex) == 0' failed at pulsecore/mutex-posix.c:83, function pa_mutex_free(). Aborting.
+** DONE when you have redflower and you get another, it plays bigmario sound
+CLOSED: [2016-10-30 Sun 12:05]
+not a bug
+** DONE bigmario falls into the pit, it plays both die music and shrink music at the same time
+CLOSED: [2016-10-30 Sun 11:52]
+** DONE starman audio never ends
+CLOSED: [2016-10-30 Sun 11:33]
+** DONE game crashes on userPause and on scorering
+CLOSED: [2016-10-27 Thu 19:29]
+*** LOL I WAS CALLING EXIT()
+** DONE scorering has delays
+CLOSED: [2016-10-27 Thu 19:25]
+** DONE pretty sure main audio won't loop
+CLOSED: [2016-10-23 Sun 08:35]
+*** there's no loop [[./audio.c::114][here]]
+** DONE fall through floor
+CLOSED: [2016-10-21 Fri 04:09]
+*** when invincible and pit
+** DONE when big and die, get transported weirdly
+CLOSED: [2016-10-21 Fri 04:06]
+*** probably [[./gamelogic.c::33][here]]
+**** hahahahaha no. it was [[./mechanics.c::89][here]]:
+* kludgefixes / refactoring
+** checkpoints
+*** currently [[./gamelogic.c::162][here]]
+*** should be in [[../resources/data]]
+** glfwSetTime
+*** is called [[./ main.c::25][here]]
+*** should be called in [[./windowing.c]] or [[./graphics.c]]?
+** gl_load() is called from graphics.c [[./graphics.c::218][here]]
+** the way different music for different areas is done is not scaleable
+*** [[./gamelogic.c::115][current method]]
+*** should be defined in the data file
+** DONE bring back original audio files (no looping)
+CLOSED: [2016-10-23 Sun 09:24]
+*** DONE credit mari0
+CLOSED: [2016-10-30 Sun 11:33]
+** DONE sometimes calling gr_clear() and sometimes not
+CLOSED: [2016-10-21 Fri 00:24]
+* Ideas
+** 3rd person deathcam
+** DONE draw distance a little bit longer
+CLOSED: [2016-10-30 Sun 13:55]
+** DONE make pits look black
+CLOSED: [2016-10-30 Sun 13:55]
+** DONE settings
+CLOSED: [2016-10-30 Sun 13:41]
+*** DONE for now, command line arguments
+CLOSED: [2016-10-30 Sun 13:41]
+*** DONE reverse mouse
+CLOSED: [2016-10-30 Sun 13:41]
+*** DONE mouse sensitivity
+CLOSED: [2016-10-30 Sun 13:39]
+*** DONE width of view
+CLOSED: [2016-10-30 Sun 13:25]
+*** DONE mute
+CLOSED: [2016-10-30 Sun 13:11]
+** DONE AUDIO
+CLOSED: [2016-10-30 Sun 11:35]
+*** DONE libao
+CLOSED: [2016-10-30 Sun 11:34]
+**** weird errors
+**** mainFork not terminating
+*** aplay/afplay
+**** windows compatibility
+***** aplay
+***** pgrep
+***** kill
+**** mac compatibility
+***** pgrep
+****** package pgrep with the game
+**** delay in looping (really only an issue for scorering)
+*** portaudio
+**** how the fuck do I play a file?
+** DONE clear all of the screens at once and then draw on all of them
+CLOSED: [2016-10-21 Fri 00:24]
+* Beaurocracy
+** better readme
+** binaries
+** .app bundle for pussy-ass mac users

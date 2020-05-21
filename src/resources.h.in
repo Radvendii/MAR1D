@@ -2,7 +2,7 @@
 #define _RESOURCES_H
 #include "helpers.h"
 #include <stdio.h>
-#define k_resources "@RESOURCE_DIRECTORY@"
+#define k_resources "@RESOURCE_DIRECTORY@" //To be filled in by cmake
 
 FILE *rs_getBFile(char *);
 FILE *rs_getFile(char *);

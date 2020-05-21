@@ -19,7 +19,6 @@ void wn_dimWindow(){
 void wn_update(){
   if(debug && !glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
     glfwShowWindow(dimWindow);
-    glfwShowWindow(perspWindow);
   }
   if(!debug && glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
     glfwHideWindow(dimWindow);
@@ -58,12 +57,13 @@ void cursor_callback(GLFWwindow *window, double xPos, double yPos){
 }
 
 void wn_init(){
-  if (!glfwInit())
+  if(!glfwInit()){
     exit(EXIT_FAILURE);
+  }
   glfwSetErrorCallback(error_callback);
   glfwWindowHint(GLFW_RESIZABLE, false);
-  dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, k_dimWindowName, NULL, NULL);
   perspWindow = glfwCreateWindow(k_perspWindowW, k_perspWindowH, k_perspWindowName, NULL, NULL);
+  dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, k_dimWindowName, NULL, NULL);
   if (!perspWindow)
     {
       glfwTerminate();
@@ -76,6 +76,8 @@ void wn_init(){
     }
   glfwSetWindowPos(dimWindow, k_dimWindowX, 50);
   glfwSetWindowPos(perspWindow, k_perspWindowX, 50);
+
+  glfwSetWindowAttrib(dimWindow, GLFW_FOCUS_ON_SHOW, false); // when the debug window shows, it shouldn't move focus
 
   wn_disable_mouse(true);
   glLineWidth(1.5f);

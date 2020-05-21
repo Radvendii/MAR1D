@@ -1,21 +1,30 @@
 #include "parsing.h"
 
+// Reads a font specification from a file. 
+// The file should start with a number specifying the size of each character in pixels.
+// Then it should have a grid for each character in the ascii character set, where 1 represents the pixel being on and 0 (or anything else) represents it being off.
 int io_getFont(bool** font, char* fn){
   FILE* f = rs_getFile(fn);
   int c;
   int i=0;
   int fontSize;
+
   fscanf(f, "%d\n", &fontSize);
+
   *font = salloc(sizeof(bool)*fontSize*128);
+
   while((c = fgetc(f)) != EOF){
     if(c == '\n'){continue;}
-    else{(*font)[i++]= (c == '1' ? true : false);}
+    else{(*font)[i++] = (c == '1' ? true : false);}
   }
+
   sfclose(f);
   return fontSize;
 }
 
-void io_getColor(FILE* f, color cs[127]){//cs must be an array 127 big
+// Parses a color. Color data should start with a C and then be followed by a character specifying the name of the color, then the R, G, B values from 0-255 separated by '.'s.
+// e.g. "CG:0.171.0" assigns a shade of green to the character 'G'
+void io_getColor(FILE* f, color cs[127]){ //cs must be an array 127 big. One for each character
   char cname;
   color c;
   fscanf(f, "%c:", &cname);
@@ -23,7 +32,54 @@ void io_getColor(FILE* f, color cs[127]){//cs must be an array 127 big
   return;
 }
 
-void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays of point arrays
+// Parses an object. Object data should start with an O, followed by a character specifying the name of the object.
+// It must then have a number, specifying the number of frames of animation the object has. Then a number of attributes:
+// ps: The number of points in each frame. (this must be constant between frames. Use the '0' point to fill in points when needed)
+// pos: The position of the top left corner of the bounding box, relative to the top left corner of the object.
+// dim: The dimensions of the bounding box.
+// cols: The number of colision boxes, for specifying different parts of the object that can act in different ways when they collide with something.
+// grav: 1 if the object should fall with gravity, 0 otherwise
+// phys: 1 if the object is physical and should colide with things, 0 otherwise
+// hid: 1 if the object should be hidden / invisible, 0 otherwise.
+// The next lines contain the specifications of the collision boxes. They have a C, and then `pos` and `dim`, just as above
+// For example, the speicification of the fireball object looks as follows:
+// Oo4; ps:23; pos:0,0; dim:8x8; cols:3; grav:1; phys:0; hid:0;
+// C; pos:0,5; dim:1x1;
+// C; pos:7,5; dim:1x1;
+// C; pos:1,7; dim:5x1;
+//   1111
+//  r    1
+// r   . 1
+// r     1
+// r   11
+// r  r
+//  r r ,
+//   r,, ,
+//   rrrr
+//  r    r
+//  r     1
+// rrr    1
+// ,  1   1
+//  , 1   1
+// ,   111
+//   ,
+// , ,,r
+//  , r r
+//    r  r
+//  11   r
+// 1   . r
+// 1     r
+// 1    r
+//  1111
+//      ,
+//  111   ,
+// 1   1 ,
+// 1   1  ,
+// 1    rrr
+// 1     r
+//  r    r
+//   rrrr
+void io_getObj(FILE* f, obj os[127], color cs[127]){ //TODO: Make objects have arrays of point arrays
   char oname;
   int nps;
   int size;
@@ -87,6 +143,22 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //Make objects have arrays 
   }
 }
 
+// Parses a level
+// Levels should be specified by an L followed by a character label for the level.
+// Then the number of objects in the level.
+// Then a grid, specifying where objects of each type are.
+// There is special syntax for question mark blocks. The character above that block will not be an actual object in the scene, but will rather be the object contained in the block.
+// The character immediately following a pipe character is ignored, so that you can specify pipes as two-wide.
+// e.g.
+// ==
+// ||
+// ||
+// ||
+// After the level, there can be any number of property definitions. This is the character P followed by the number object in the scene that should have this property set, and then the property, and then the value the property should be set to.
+// h: object should be Hidden
+// v: object should Visually look like the object specified (char)
+// j: the `.j` attribute should be set as specified (int)
+// c: the `.c` attribute should be set as specified (char)
 void io_getLevel(FILE* f, level ls[127], obj os[127]){
   char lname;
   int size;
@@ -107,6 +179,7 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
       ls[lname][i] = os[c];
       ls[lname][i].x = x*16;
       ls[lname][i].y = y*16;
+      //TODO: These should not be hard-coded
       if(c == '&'){
         ls[lname][i].y += 7;
       }
@@ -118,7 +191,7 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
         for(int j=0;j<i;j++){
           if(ls[lname][j].x == ls[lname][i].x && ls[lname][j].y == ls[lname][i].y+16){
             ls[lname][i].c = ls[lname][j].type;
-            ls[lname][j] = os['.'];
+            ls[lname][j] = os['.']; //TODO: This shouldn't be hard-coded if the object itself is defined in the data file
             break;
           }
         }
@@ -136,17 +209,19 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
     }
   }
   ls[lname][i].type = '\0';
+
+  // Parse the properties
   char prop;
   char obj;
   int j;
   fgetc(f);
-  while(fgetc(f) == 'P'){ //TODO: better syntax for this
+  while(fgetc(f) == 'P'){ // Stands for "Property" //TODO: better syntax for this
     fscanf(f, ";%d%c", &i, &prop);
     switch(prop){
     case 'h':
       ls[lname][i].hidden = true;
       break;
-    case 'v':
+    case 'v': // Transforms the visual appearance of the object
       fscanf(f, "%c", &obj);
       ls[lname][i].ps = os[obj].ps;
       ls[lname][i].nps = os[obj].nps;
@@ -164,6 +239,10 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
   }
 }
 
+// The main entry point for parsing the data file. Writes to the object and color maps is_os and io_cs.
+// Data is specified by beginning with a C for a color, an O for an object and an L for a level.
+// Parsing of each type of data is handled by the functions above.
+//TODO: Put parsing of the char after the data specifier in this function, then simplify the functions above.
 void io_getLevels(level** ls, char* fn){
   FILE *f = rs_getFile(fn);
   io_os = salloc(sizeof(obj) * 127);
@@ -193,6 +272,8 @@ void io_getLevels(level** ls, char* fn){
   return;
 }
 
+// Functions for loading the menuscreen texture.
+//TODO: Clean this up and give these functions better names.
 image * loadTexture(){
   image *image1;
 

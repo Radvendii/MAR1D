@@ -29,6 +29,7 @@ void ob_printPoint(point p){
   printf("{ x: %d, y: %d, c:%c }\n", p.x, p.y, p.c);
 }
 
+// Shift by it's coordinate position in the world
 void ob_realifyPoint(point *p, int x, int y){
   (*p).x += x;
   (*p).y += y;
@@ -41,10 +42,13 @@ void ob_realifyBox(box *b, int x, int y){
   return;
 }
 
+// Rounds to the nearest tenth. Not sure why I made this function, and it's not called anywhere.
 float f_round(float f){
   return( (((int) (f*10 + ((f > 0) ? 0.5: -0.5))))/10.0);
 }
 
+// Need some way to terminate the array of points, so I've made a specific value that is the terminator. This tests if it's that.
+// Won't conflict with any actual points, because '\0' is not a valid color
 bool ob_p_isTerm(point p){
   return (p.x == 124214 && p.y == 143512 && p.c == '\0');
 }

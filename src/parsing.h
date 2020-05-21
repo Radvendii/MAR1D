@@ -15,7 +15,7 @@ typedef struct {
 
 int io_getFont(bool**, char*);
 
-void io_getColor(FILE*,color[127]);
+void io_getColor(FILE*, color[127]);
 
 void io_getLevel(FILE*, level[127], obj[127]);
 
