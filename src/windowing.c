@@ -77,7 +77,7 @@ void wn_init(){
   glfwSetWindowPos(dimWindow, k_dimWindowX, 50);
   glfwSetWindowPos(perspWindow, k_perspWindowX, 50);
 
-  glfwSetWindowAttrib(dimWindow, GLFW_FOCUS_ON_SHOW, false); // when the debug window shows, it shouldn't move focus
+  /* glfwSetWindowAttrib(dimWindow, GLFW_FOCUS_ON_SHOW, false); // when the debug window shows, it shouldn't move focus */
 
   wn_disable_mouse(true);
   glLineWidth(1.5f);
