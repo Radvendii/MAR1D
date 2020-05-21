@@ -146,7 +146,7 @@ void gr_points(point *ps){
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-  glOrtho(-cam.drawD2+cam.x, cam.drawD2+cam.x, cam.y-cam.drawD2, cam.y+cam.drawD2, -1, 1);
+  glOrtho(-cam.drawD+cam.x, cam.drawD+cam.x, cam.y-cam.drawD, cam.y+cam.drawD, -1, 1);
 
   glPointSize(360.0/k_drawD2);
   glBegin(GL_POINTS);
