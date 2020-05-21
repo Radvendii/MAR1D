@@ -22,22 +22,22 @@ O#1; ps:60; pos:0,0; dim:15x15; cols:3; grav:0; phys:1; hid:0;
 C; pos:7,14; dim:1x1;
 C; pos:10,14; dim:5x1;
 C; pos:0,14; dim:5x1;
-lllllll,lllllll,
-b              .
-b              .
-,              .
+lllllllllllllll.
 b              b
 b              b
 b              b
-,              .
-b              .
-b              .
-b              .
-,              ,
 b              b
 b              b
 b              b
-...,.......,....
+b              b
+b              b
+b              b
+b              b
+b              b
+b              b
+b              b
+b              b
+...............,
 
 Ob1; ps:18; pos:0,0; dim:0x0; cols:0; grav:1; phys:0; hid:0;
   bbb
@@ -50,25 +50,25 @@ b      b
    bbb
 
 O-1; ps:60; pos:0,0; dim:15x15; cols:0; grav:0; phys:1; hid:0;
-dbbbbbbbb,dbbbbd
+dbbbbbbbbbbbbbbd
 d              .
 d              .
 d              .
 d              .
-d              d
 d              .
 d              .
 d              .
 d              .
-,              .
 d              .
 d              .
 d              .
 d              .
-,......db......d
+d              .
+d              .
+,..............d
 
 OX1; ps:60; pos:0,0; dim:15x15; cols:0; grav:0; phys:1; hid:0;
-llllllllllllllld
+,lllllllllllllld
 b              .
 b              .
 b              .
