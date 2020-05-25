@@ -10,19 +10,49 @@ void cl_init(){
 }
 
 void cl_update(){
-  if(s.crouch){
-    if(s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
-    if(s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
+
+  // current max x velocity
+  double xVelMax = s.run ? k_xVelRunMax : k_xVelMax;
+
+  // reference to player's x velocity
+  double *vx = &(s.scene[s.pli].vx);
+
+  // -1 if moving backward
+  //  0 if not moving
+  //  1 if moving forward
+  int dirMove = (s.forward - s.backward);
+
+  if(s.crouch){ // no control if you're crouched
+      *vx -= copysign(k_xVel, *vx);
   }
   else{
-    if(s.forward && s.scene[s.pli].vx < (s.run ? k_xVelRunMax : k_xVelMax)){s.scene[s.pli].vx+=k_xVel;}
-    if(!s.forward && s.onGround && s.scene[s.pli].vx>0){s.scene[s.pli].vx-=k_xVel;}
-    if(s.backward && -s.scene[s.pli].vx<(s.run ? k_xVelRunMax : k_xVelMax)){s.scene[s.pli].vx-=k_xVel;}
-    if(!s.backward && s.onGround && s.scene[s.pli].vx<0){s.scene[s.pli].vx+=k_xVel;}
+    // accelerate as long as we're holding the key and haven't exceeded max velocity
+    if(dirMove * *vx < xVelMax){*vx+=dirMove * k_xVel;}
+
+    // slow down if we're not actively going in the direction of motion
+    if(s.onGround && dirMove * *vx<=0){*vx-=copysign(k_xVel, *vx);}
   }
+
+  // cap out at max velocity
+  if(fabs(*vx) > xVelMax){*vx = copysign(xVelMax, *vx);}
+
+  if(fabs(*vx) < k_xVelMin){ // if we're moving slowly
+    if(dirMove * *vx > 0) {// if we're trying to move in that direction
+      *vx = copysign(k_xVelMin, *vx); // give us a boost, so we start moving immediately
+    }
+    else { // if we're not trying to move in that direction
+      *vx = 0; // halt
+    }
+  }
+
+  // jump times out
   if(!--s.upcount){cl_jumpEnd();}
-  if(s.scene[s.pli].vx > k_xVelMax){s.runWarp++;}
+
+  // running also zooms vision, to accentuate the effect
+  if(*vx > k_xVelMax){s.runWarp++;}
   else if(s.runWarp){s.runWarp--;}
+
+  // reset bounce counter when we land
   if(s.onGround){s.multibounce = 0;}
 }
 
