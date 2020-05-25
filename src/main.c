@@ -16,8 +16,10 @@
 #include <ctype.h>
 #include <time.h>
 struct state s;
-//for when I come back to this project:
-//http://8bithorse.blogspot.com/2010/11/super-mario-bros-101.html
+// for when I come back to this project:
+// http://8bithorse.blogspot.com/2010/11/super-mario-bros-101.html
+// detailed mechanics that I definitely got wrong:
+// https://www.speedrun.com/smb1/guide/pbl9d
 
 int main(int argc, char **argv){
   bool mute = false;
