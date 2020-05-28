@@ -1,4 +1,4 @@
-#include <GLFW/glfw3.h>
+#include "SDL.h"
 #include "helpers.h"
 #include "resources.h"
 #include "objects.h"
@@ -55,7 +55,7 @@ int main(int argc, char **argv){
   wn_init();
   gr_init(lineSize, sensitivity * (reverse ? -1 : 1));
 
-  glfwSetTime(0.0);
+  /* glfwSetTime(0.0); */
   /* srand(time(NULL)); */
 
   while(!wn_shouldClose()) {
@@ -91,6 +91,7 @@ int main(int argc, char **argv){
     }
   }
 
+  // deinit in reverse order
   gr_deinit();
   wn_deinit();
   gl_deinit();

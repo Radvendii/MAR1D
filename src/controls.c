@@ -166,7 +166,7 @@ void cl_jumpEnd(){
 }
 
 void cl_click(int button, int action, int mods){
-  if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+  if(button == SDL_BUTTON_LEFT && action == SDL_PRESSED){
     if(s.fire){
       cl_fire();
     }
@@ -187,53 +187,53 @@ void cl_fire(){
 }
 
 void cl_keypress(int key, int scancode, int action, int mods){
-  if (key == GLFW_KEY_W && action == GLFW_PRESS){
+  if (key == SDLK_w && action == SDL_PRESSED){
     if(!s.flip){s.forward = true;}
     else{s.backward = true;}
   }
-  if (key == GLFW_KEY_W && action == GLFW_RELEASE){
+  if (key == SDLK_w && action == SDL_RELEASED){
     if(!s.flip){s.forward = false;}
     else{s.backward = false;}
   }
 
-  if (key == GLFW_KEY_S && action == GLFW_PRESS){
+  if (key == SDLK_s && action == SDL_PRESSED){
     if(!s.flip){s.backward = true;}
     else{s.forward = true;}
   }
-  if (key == GLFW_KEY_S && action == GLFW_RELEASE){
+  if (key == SDLK_s && action == SDL_RELEASED){
     if(!s.flip){s.backward = false;}
     else{s.forward = false;}
   }
 
-  if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
+  if ((key == SDLK_a || key == SDLK_d) && action == SDL_PRESSED){
     bool temp = s.forward;
     s.forward = s.backward;
     s.backward = temp;
     s.flip = !s.flip;
   }
 
-  if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS){
+  if (key == SDLK_LSHIFT && action == SDL_PRESSED){
     s.run = true;
   }
-  if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE){
+  if (key == SDLK_LSHIFT && action == SDL_RELEASED){
     s.run = false;
   }
 
-  if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){
+  if (key == SDLK_SPACE && action == SDL_PRESSED){
     cl_jumpStart();
   }
-  if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE){
+  if (key == SDLK_SPACE && action == SDL_RELEASED){
     cl_jumpEnd();
   }
 
-  if (key == GLFW_KEY_LEFT_CONTROL&& action == GLFW_PRESS){
+  if (key == SDLK_LCTRL&& action == SDL_PRESSED){
     cl_crouch();
   }
-  if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE){
+  if (key == SDLK_LCTRL && action == SDL_RELEASED){
     cl_uncrouch();
   }
 
-  if (key == GLFW_KEY_Q && action == GLFW_PRESS){
+  if (key == SDLK_q && action == SDL_PRESSED){
     if(s.paused && !s.userPaused) {return;}
     s.paused = !s.paused;
     s.userPaused = !s.userPaused;

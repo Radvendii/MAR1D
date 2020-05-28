@@ -1,10 +1,10 @@
 #include "graphics.h"
 
 void gr_keypress(int key, int scancode, int action, int mods){
-  if ((key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS){
+  if ((key == SDLK_a || key == SDLK_d) && action == SDL_PRESSED){
     cam.flip = !cam.flip;
   }
-  if ((key == GLFW_KEY_ENTER) && action == GLFW_PRESS){
+  if ((key == SDLK_RETURN) && action == SDL_PRESSED){
     if(s.menu == k_menuStatic){
       s.menu = k_menuTime;
     }

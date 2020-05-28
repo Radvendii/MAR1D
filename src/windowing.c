@@ -1,99 +1,117 @@
 #include "windowing.h"
 
+bool quit = false;
+SDL_GLContext perspContext;
+SDL_GLContext dimContext;
+
 void wn_menuWindow(){
-  glfwMakeContextCurrent(perspWindow);
+  SDL_GL_MakeCurrent(perspWindow, perspContext);
 }
 
 void wn_hudWindow(){
-  glfwMakeContextCurrent(perspWindow);
+  SDL_GL_MakeCurrent(perspWindow, perspContext);
 }
 
 void wn_perspWindow(){
-  glfwMakeContextCurrent(perspWindow);
+  SDL_GL_MakeCurrent(perspWindow, perspContext);
 }
 
 void wn_dimWindow(){
-  glfwMakeContextCurrent(dimWindow);
-}
-
-void wn_update(){
-  if(debug && !glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
-    glfwShowWindow(dimWindow);
-  }
-  if(!debug && glfwGetWindowAttrib(dimWindow, GLFW_VISIBLE)){
-    glfwHideWindow(dimWindow);
-  }
-  glfwSwapBuffers(perspWindow);
-  glfwSwapBuffers(dimWindow);
-  glfwPollEvents();
+  SDL_GL_MakeCurrent(dimWindow, perspContext);
 }
 
 bool wn_shouldClose(){
-  return glfwWindowShouldClose(dimWindow) || glfwWindowShouldClose(perspWindow);
+  return quit; // glfwWindowShouldClose(dimWindow) || glfwWindowShouldClose(perspWindow);
 }
 
-void error_callback(int error, const char* description){
-  fputs(description, stderr);
-}
-
-void click_callback(GLFWwindow* w, int button, int action, int mods){
+void click_callback(int window, int button, int action, int mods){
   cl_click(button, action, mods);
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-    glfwSetWindowShouldClose(window, GL_TRUE);
+void key_callback(int window, SDL_Keycode key, SDL_Scancode scancode, int action, int mods){
+  if (key == SDLK_ESCAPE && action == SDL_PRESSED){
+    quit = true;
   }
 
-  if (key == GLFW_KEY_J && action == GLFW_PRESS){
+  if (key == SDLK_j && action == SDL_PRESSED){
     debug = !debug;
   }
   cl_keypress(key, scancode, action, mods);
   gr_keypress(key, scancode, action, mods);
 }
 
-void cursor_callback(GLFWwindow *window, double xPos, double yPos){
+void cursor_callback(int window, double xPos, double yPos){
   gr_cursormove(xPos, yPos);
 }
 
 void wn_init(){
-  if(!glfwInit()){
+  if(SDL_Init(SDL_INIT_VIDEO & SDL_INIT_EVENTS)){
+    printf("Unable to initialize SDL: %s", SDL_GetError());
     exit(EXIT_FAILURE);
   }
-  glfwSetErrorCallback(error_callback);
-  glfwWindowHint(GLFW_RESIZABLE, false);
-  perspWindow = glfwCreateWindow(k_perspWindowW, k_perspWindowH, k_perspWindowName, NULL, NULL);
-  dimWindow = glfwCreateWindow(k_dimWindowW, k_dimWindowH, k_dimWindowName, NULL, NULL);
+  /* glfwWindowHint(GLFW_RESIZABLE, false); */
+  perspWindow = SDL_CreateWindow(k_perspWindowName, k_perspWindowX, 50, k_perspWindowW, k_perspWindowH, SDL_WINDOW_OPENGL);
+  dimWindow = SDL_CreateWindow(k_dimWindowName, k_dimWindowX, 50, k_dimWindowW, k_dimWindowH, SDL_WINDOW_OPENGL);
   if (!perspWindow)
     {
-      glfwTerminate();
+      SDL_Quit();
       exit(EXIT_FAILURE);
     }
   if (!dimWindow)
     {
-      glfwTerminate();
+      SDL_Quit();
       exit(EXIT_FAILURE);
     }
-  glfwSetWindowPos(dimWindow, k_dimWindowX, 50);
-  glfwSetWindowPos(perspWindow, k_perspWindowX, 50);
 
   /* glfwSetWindowAttrib(dimWindow, GLFW_FOCUS_ON_SHOW, false); // when the debug window shows, it shouldn't move focus */
+  SDL_SetWindowResizable(perspWindow, SDL_FALSE);
+  SDL_SetWindowResizable(dimWindow, SDL_TRUE);
 
   wn_disable_mouse(true);
   glLineWidth(1.5f);
+  perspContext = SDL_GL_CreateContext(perspWindow);
+  dimContext = SDL_GL_CreateContext(dimWindow);
+}
 
-  glfwSetKeyCallback(perspWindow, key_callback);
-  glfwSetMouseButtonCallback(perspWindow, click_callback);
-  glfwSetKeyCallback(dimWindow, key_callback);
-  glfwSetCursorPosCallback(perspWindow, cursor_callback);
+void wn_update(){
+  if(debug && SDL_GetWindowFlags(dimWindow) & SDL_WINDOW_HIDDEN){
+    SDL_ShowWindow(dimWindow);
+  }
+  if(!debug && SDL_GetWindowFlags(dimWindow) & SDL_WINDOW_SHOWN){
+    SDL_HideWindow(dimWindow);
+  }
+  SDL_GL_SwapWindow(perspWindow);
+  SDL_GL_SwapWindow(dimWindow);
+
+  /* TODO: all of this is bad. move it, change it, something.
+   * It's glfw-style but in sdl
+   */
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    switch(event.type) {
+      case SDL_KEYDOWN:
+      case SDL_KEYUP:
+        key_callback(event.key.windowID, event.key.keysym.sym, event.key.keysym.scancode, event.key.state, event.key.keysym.mod);
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+      case SDL_MOUSEBUTTONUP:
+        click_callback(event.button.windowID, event.button.button, event.button.state, 0);
+        break;
+      case SDL_MOUSEMOTION:
+        cursor_callback(event.motion.windowID, event.motion.x, event.motion.y);
+        break;
+    }
+  }
+  /* glfwPollEvents(); */
 }
 
 void wn_disable_mouse(bool disable) {
-  glfwSetInputMode(perspWindow, GLFW_CURSOR, (disable ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
+  SDL_CaptureMouse(!disable);
+  // glfwSetInputMode(perspWindow, GLFW_CURSOR, (disable ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 }
 
 void wn_deinit(){
-  glfwDestroyWindow(dimWindow);
-  glfwDestroyWindow(perspWindow);
-  glfwTerminate();
+  SDL_DestroyWindow(perspWindow);
+  SDL_DestroyWindow(dimWindow);
+  SDL_Quit();
 }

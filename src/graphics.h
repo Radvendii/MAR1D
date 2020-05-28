@@ -1,6 +1,10 @@
 #ifndef _GRAPHICS_H
 #define _GRAPHICS_H
-#include <GLFW/glfw3.h> //for openGL functions
+// #include <GLFW/glfw3.h> //for openGL functions
+// need opengl functions here
+#include <SDL_opengl.h>
+#include <GL/glu.h>
+#include <SDL.h>
 #include <unistd.h>
 #include "helpers.h"
 #include "objects.h"

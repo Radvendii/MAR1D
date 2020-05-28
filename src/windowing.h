@@ -1,6 +1,6 @@
 #ifndef _WINDOWING_H
 #define _WINDOWING_H
-#include <GLFW/glfw3.h>
+#include "SDL.h"
 #include "helpers.h"
 #include "objects.h"
 #include "gamelogic.h"
@@ -19,8 +19,8 @@
 #define k_perspWindowName "MAR1D"
 #define k_dimWindowName "Debug"
 
-GLFWwindow* dimWindow;
-GLFWwindow* perspWindow;
+SDL_Window* dimWindow;
+SDL_Window* perspWindow;
 
 // Activate different windows. No guarantee these are actually different windows.
 void wn_menuWindow();

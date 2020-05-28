@@ -22,19 +22,14 @@ stdenv.mkDerivation rec {
 
   buildInputs =
     [
+      SDL2
       alsaLib
       alsaOss
       cmake
       doxygen
       libao
       libpthreadstubs
-      mesa_glu
-      x11
-      xinput_calibrator
-      xorg.libXrandr
-      xorg.libXi
-      xorg.xinput
-      xorg.libXxf86vm
+      libGLU
     ];
 
   preConfigure = ''

@@ -1,6 +1,6 @@
 #ifndef _CONTROLS_H
 #define _CONTROLS_H
-#include <GLFW/glfw3.h> //for keypress keycodes (e.g. GLFW_KEY_W)
+#include "SDL.h"
 #include "helpers.h"
 #include "objects.h"
 #include "gamelogic.h"
@@ -22,6 +22,7 @@
 extern struct state s;
 
 void cl_init();
+void cl_event();
 void cl_update();
 void cl_keypress(int, int, int, int);
 void cl_click(int,int,int);
