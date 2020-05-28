@@ -234,7 +234,7 @@ void cl_keypress(int key, int scancode, int action, int mods){
   }
 
   if (key == SDLK_q && action == SDL_PRESSED){
-    if(s.paused && !s.userPaused) {return;}
+    if(s.menu || s.paused && !s.userPaused) {return;}
     s.paused = !s.paused;
     s.userPaused = !s.userPaused;
     if(s.paused){
