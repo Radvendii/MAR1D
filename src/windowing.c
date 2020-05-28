@@ -108,7 +108,7 @@ void wn_update(){
 }
 
 void wn_disable_mouse(bool disable) {
-  SDL_CaptureMouse(!disable);
+  SDL_SetRelativeMouseMode(disable);
   // glfwSetInputMode(perspWindow, GLFW_CURSOR, (disable ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 }
 
