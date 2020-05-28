@@ -5,11 +5,11 @@ SDL_GLContext perspContext;
 SDL_GLContext dimContext;
 
 void wn_menuWindow(){
-  SDL_GL_MakeCurrent(perspWindow, perspContext);
+  wn_perspWindow();
 }
 
 void wn_hudWindow(){
-  SDL_GL_MakeCurrent(perspWindow, perspContext);
+  wn_perspWindow();
 }
 
 void wn_perspWindow(){
@@ -80,7 +80,9 @@ void wn_update(){
   if(!debug && SDL_GetWindowFlags(dimWindow) & SDL_WINDOW_SHOWN){
     SDL_HideWindow(dimWindow);
   }
+  wn_perspWindow();
   SDL_GL_SwapWindow(perspWindow);
+  wn_dimWindow();
   SDL_GL_SwapWindow(dimWindow);
 
   /* TODO: all of this is bad. move it, change it, something.
