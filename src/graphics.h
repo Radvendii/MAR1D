@@ -43,7 +43,7 @@ void gr_drawHud();
 void gr_drawMenu();
 void gr_clear();
 
-void gr_keypress(int, int, int, int);
+void gr_keypress(int, int, int);
 void gr_cursormove(double, double);
 
 void gr_pixels(unsigned char*);

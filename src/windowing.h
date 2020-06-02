@@ -28,6 +28,12 @@ void wn_hudWindow();
 void wn_perspWindow();
 void wn_dimWindow();
 
+// Event processing
+void wn_click(int, int, int);
+void wn_keypress(SDL_Keycode, int, int);
+void wn_mousemove(double, double);
+void wn_processEvents();
+
 void wn_update();
 
 bool wn_shouldClose();

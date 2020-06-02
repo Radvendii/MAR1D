@@ -24,7 +24,7 @@ extern struct state s;
 void cl_init();
 void cl_event();
 void cl_update();
-void cl_keypress(int, int, int, int);
+void cl_keypress(int, int, int);
 void cl_click(int,int,int);
 void cl_cursormove(double, double);
 bool cl_move1(int, char, bool);

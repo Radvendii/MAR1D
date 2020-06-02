@@ -1,22 +1,19 @@
 #include "graphics.h"
 
-void gr_keypress(int key, int scancode, int action, int mods){
-  if ((key == SDLK_a || key == SDLK_d) && action == SDL_PRESSED){
+void gr_keypress(int key, int state, int mods){
+  if ((key == SDLK_a || key == SDLK_d) && state == SDL_PRESSED){
     cam.flip = !cam.flip;
   }
-  if ((key == SDLK_RETURN) && action == SDL_PRESSED){
+  if ((key == SDLK_RETURN) && state == SDL_PRESSED){
     if(s.menu == k_menuStatic){
       s.menu = k_menuTime;
     }
   }
 }
 
-void gr_cursormove(double xPos, double yPos){
-  static double last = 0; // Stores the last cursor position so we can calculate offset.
-  double offset = yPos-last;
-  last = yPos;
+void gr_mousemove(double xMove, double yMove){
   if(!s.menu && !s.paused){
-    cam.T = fmod(cam.T-offset*camSpeed, 2*pi);
+    cam.T = fmod(cam.T-yMove*camSpeed, 2*pi);
     // Bound the camera angle by straight down and straight up. 
     // Don't want people spinning the camera 360.
     if(cam.T < -pi/2 - k_FOV/2){cam.T = -pi/2 - k_FOV/2;}

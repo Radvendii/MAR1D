@@ -186,54 +186,54 @@ void cl_fire(){
   }
 }
 
-void cl_keypress(int key, int scancode, int action, int mods){
-  if (key == SDLK_w && action == SDL_PRESSED){
+void cl_keypress(int key, int state, int mods){
+  if (key == SDLK_w && state == SDL_PRESSED){
     if(!s.flip){s.forward = true;}
     else{s.backward = true;}
   }
-  if (key == SDLK_w && action == SDL_RELEASED){
+  if (key == SDLK_w && state == SDL_RELEASED){
     if(!s.flip){s.forward = false;}
     else{s.backward = false;}
   }
 
-  if (key == SDLK_s && action == SDL_PRESSED){
+  if (key == SDLK_s && state == SDL_PRESSED){
     if(!s.flip){s.backward = true;}
     else{s.forward = true;}
   }
-  if (key == SDLK_s && action == SDL_RELEASED){
+  if (key == SDLK_s && state == SDL_RELEASED){
     if(!s.flip){s.backward = false;}
     else{s.forward = false;}
   }
 
-  if ((key == SDLK_a || key == SDLK_d) && action == SDL_PRESSED){
+  if ((key == SDLK_a || key == SDLK_d) && state == SDL_PRESSED){
     bool temp = s.forward;
     s.forward = s.backward;
     s.backward = temp;
     s.flip = !s.flip;
   }
 
-  if (key == SDLK_LSHIFT && action == SDL_PRESSED){
+  if (key == SDLK_LSHIFT && state == SDL_PRESSED){
     s.run = true;
   }
-  if (key == SDLK_LSHIFT && action == SDL_RELEASED){
+  if (key == SDLK_LSHIFT && state == SDL_RELEASED){
     s.run = false;
   }
 
-  if (key == SDLK_SPACE && action == SDL_PRESSED){
+  if (key == SDLK_SPACE && state == SDL_PRESSED){
     cl_jumpStart();
   }
-  if (key == SDLK_SPACE && action == SDL_RELEASED){
+  if (key == SDLK_SPACE && state == SDL_RELEASED){
     cl_jumpEnd();
   }
 
-  if (key == SDLK_LCTRL&& action == SDL_PRESSED){
+  if (key == SDLK_LCTRL&& state == SDL_PRESSED){
     cl_crouch();
   }
-  if (key == SDLK_LCTRL && action == SDL_RELEASED){
+  if (key == SDLK_LCTRL && state == SDL_RELEASED){
     cl_uncrouch();
   }
 
-  if (key == SDLK_q && action == SDL_PRESSED){
+  if (key == SDLK_q && state == SDL_PRESSED){
     if(s.menu || s.paused && !s.userPaused) {return;}
     s.paused = !s.paused;
     s.userPaused = !s.userPaused;
