@@ -23,6 +23,7 @@ stdenv.mkDerivation rec {
   buildInputs =
     [
       SDL2
+      SDL2_mixer
       alsaLib
       alsaOss
       cmake
