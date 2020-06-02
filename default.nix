@@ -32,10 +32,6 @@ stdenv.mkDerivation rec {
       libGLU
     ];
 
-  preConfigure = ''
-    cd src
-  '';
-
   meta = with stdenv.lib; {
     description = "First person Super Mario Bros";
     longDescription = ''
