@@ -21,7 +21,11 @@ struct state s;
 // detailed mechanics that I definitely got wrong:
 // https://www.speedrun.com/smb1/guide/pbl9d
 
+// TODO: Should I use "atexit" and separate out a mn_init() and mn_deinit() functions?
+
 int main(int argc, char **argv){
+
+  // default values
   bool mute = false;
   bool effects = false;
   int lineSize = 30;
@@ -49,16 +53,19 @@ int main(int argc, char **argv){
   }
 
   // Order matters for intializations
-  au_init(mute, effects);
   ob_init();
   gl_init();
   wn_init();
+  au_init(mute, effects);
   gr_init(lineSize, sensitivity * (reverse ? -1 : 1));
 
-  /* glfwSetTime(0.0); */
-  /* srand(time(NULL)); */
-
   while(!wn_shouldClose()) {
+    au_update();
+    if(au_waiting != -1) {
+      sleep(0.1);
+      continue;
+    }
+
     //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
     if(s.userPaused){wn_disable_mouse(false);}
     else{wn_disable_mouse(true);}
@@ -79,6 +86,7 @@ int main(int argc, char **argv){
       wn_update();
     }
     else{
+      au_update();
       gl_update();
       gr_update();
       wn_perspWindow();

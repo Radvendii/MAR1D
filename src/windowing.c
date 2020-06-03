@@ -68,7 +68,7 @@ void wn_mousemove(double xMove, double yMove){
 }
 
 void wn_init(){
-  if(SDL_Init(SDL_INIT_VIDEO & SDL_INIT_EVENTS)){
+  if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS)){
     printf("Unable to initialize SDL: %s", SDL_GetError());
     exit(EXIT_FAILURE);
   }

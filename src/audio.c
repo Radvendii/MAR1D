@@ -1,204 +1,173 @@
 #include "audio.h"
-//static pthread_key_t key;
-int default_driver;
-ao_sample_format format;
-ao_device* device;
-int piperw[2]; //For communicating with the main audio fork
-//static pthread_t mainThread;
-char* sounds[k_nSounds]; // The actual sound file information
-int sz[k_nSounds]; // sz[i] is the size of the sounds[i] buffer
-char fileNames[k_nSounds][40] = {
-  "sounds/blockbreak.raw",
-  "sounds/blockhit.raw",
-  "sounds/boom.raw",
-  "sounds/bowserfall.raw",
-  "sounds/bridgebreak.raw",
-  "sounds/bulletbill.raw",
-  "sounds/castle-fast.raw",
-  "sounds/castle.raw",
-  "sounds/castleend.raw",
-  "sounds/coin.raw",
-  "sounds/death.raw",
-  "sounds/fire.raw",
-  "sounds/fireball.raw",
-  "sounds/gameover.raw",
-  "sounds/intermission.raw",
-  "sounds/jump.raw",
-  "sounds/jumpbig.raw",
-  "sounds/konami.raw",
-  "sounds/levelend.raw",
-  "sounds/lowtime.raw",
-  "sounds/mushroomappear.raw",
-  "sounds/mushroomeat.raw",
-  "sounds/oneup.raw",
-  "sounds/overworld-fast.raw",
-  "sounds/overworld.raw",
-  "sounds/pause.raw",
-  "sounds/pipe.raw",
-  "sounds/portal1open.raw",
-  "sounds/portal2open.raw",
-  "sounds/portalenter.raw",
-  "sounds/portalfizzle.raw",
-  "sounds/princessmusic.raw",
-  "sounds/rainboom.raw",
-  "sounds/scorering.raw",
-  "sounds/shot.raw",
-  "sounds/shrink.raw",
-  "sounds/stab.raw",
-  "sounds/starmusic-fast.raw",
-  "sounds/starmusic.raw",
-  "sounds/stomp.raw",
-  "sounds/swim.raw",
-  "sounds/underground-fast.raw",
-  "sounds/underground.raw",
-  "sounds/underwater-fast.raw",
-  "sounds/underwater.raw",
-  "sounds/vine.raw"
+Mix_Chunk *sounds[k_nSounds];
+
+#define k_soundsDir k_resourceDir"sounds/"
+
+// This must match the `#define`d SND_ values in audio.h
+const char *soundFileNames[] = {
+  k_soundsDir"blockbreak.ogg",
+  k_soundsDir"blockhit.ogg",
+  k_soundsDir"boom.ogg",
+  k_soundsDir"bowserfall.ogg",
+  k_soundsDir"bridgebreak.ogg",
+  k_soundsDir"bulletbill.ogg",
+  k_soundsDir"castle-fast.ogg",
+  k_soundsDir"castle.ogg",
+  k_soundsDir"castleend.ogg",
+  k_soundsDir"coin.ogg",
+  k_soundsDir"death.ogg",
+  k_soundsDir"fire.ogg",
+  k_soundsDir"fireball.ogg",
+  k_soundsDir"gameover.ogg",
+  k_soundsDir"intermission.ogg",
+  k_soundsDir"jump.ogg",
+  k_soundsDir"jumpbig.ogg",
+  k_soundsDir"konami.ogg",
+  k_soundsDir"levelend.ogg",
+  k_soundsDir"lowtime.ogg",
+  k_soundsDir"mushroomappear.ogg",
+  k_soundsDir"mushroomeat.ogg",
+  k_soundsDir"oneup.ogg",
+  k_soundsDir"overworld-fast.ogg",
+  k_soundsDir"overworld.ogg",
+  k_soundsDir"pause.ogg",
+  k_soundsDir"pipe.ogg",
+  k_soundsDir"portal1open.ogg",
+  k_soundsDir"portal2open.ogg",
+  k_soundsDir"portalenter.ogg",
+  k_soundsDir"portalfizzle.ogg",
+  k_soundsDir"princessmusic.ogg",
+  k_soundsDir"rainboom.ogg",
+  k_soundsDir"scorering.ogg",
+  k_soundsDir"shot.ogg",
+  k_soundsDir"shrink.ogg",
+  k_soundsDir"stab.ogg",
+  k_soundsDir"starmusic-fast.ogg",
+  k_soundsDir"starmusic.ogg",
+  k_soundsDir"stomp.ogg",
+  k_soundsDir"swim.ogg",
+  k_soundsDir"underground-fast.ogg",
+  k_soundsDir"underground.ogg",
+  k_soundsDir"underwater-fast.ogg",
+  k_soundsDir"underwater.ogg",
+  k_soundsDir"vine.ogg"
 };
+
+// Janky workaround because there's no way to play one sound after another with SDL
+int lowtime_done = false;
 
 void au_init(bool _mute, bool _effects){
   mute = _mute;
   effects = _effects;
+  au_waiting = -1;
+
+  err = Mix_OpenAudio(k_mix_frequency, k_mix_format, k_mix_channels, k_mix_chunksize);
+  if(err == -1){
+    printf("Failed to open audio: %s\n", Mix_GetError());
+    exit(EXIT_FAILURE);
+  }
+  err = Mix_AllocateChannels(k_nSounds);
+  if(err != k_nSounds){
+    printf("Couldn't allocate %d mixing channels. Got %d instead.", k_nSounds, err);
+    exit(EXIT_FAILURE);
+  }
+
+  Mix_ChannelFinished(au_channelFinished);
+
   au_loadSounds();
-  ao_initialize();
-
-  // Stuff for libao
-  memset(&format, 0, sizeof(format));
-  format.bits = 16;
-  format.channels = 1;
-  format.rate = 44100;
-  format.byte_format = AO_FMT_LITTLE;
-
-  pipe(piperw);
-  if(fork() == 0){ //This is the fork that does everything. I have to keep it uncontaminated by GLFW.
-    close(piperw[1]);
-    playDaemon();
-    close(piperw[0]);
-    exit(0);
-  }
-  close(piperw[0]);
 }
 
-void playDaemon(){
-  unsigned int _snd;
-  int snd;
-  bool main;
-  pid_t mainFork = 0;
-  pid_t frk = 0;
+void au_channelFinished(int channel) {
+  if(channel == au_waiting) {
+    au_waiting = -1;
+  }
 
-  while(read(piperw[0], &_snd, sizeof(int)) > 0){
-    snd = _snd >> 1;
-    main = _snd & 1; // Last bit represents whether the sound should be played as the main sound loop
-    if(snd == k_killMain){
-      if(mainFork){
-        kill(mainFork, SIGTERM);
-        mainFork = 0;
-      }
-    }
-    else{
-      if(main && !mainFork){
-        mainFork = fork();
-        if(mainFork == 0){
-          au_playloop(snd);
-          exit(0);
-        }
-      }
-      else{ // Just a normal sound to play
-        if(fork() == 0){
-          au_playplay(snd);
-          exit(0);
-        }
-      }
-    }
+  switch(channel){
+    case SND_lowtime:
+      // Low time just finished playing.
+      // We cannot directly play the main audio here (see Mix_ChannelFinished documentation)
+      // So we set lowtime_done flag to signal to restart mainAudio
+      lowtime_done = true;
+      break;
+    default:
+      break;
   }
 }
 
-void au_playplay(int snd){
-  au_initEach();
-  ao_play(device, sounds[snd], sz[snd]);
-  au_deinitEach();
-}
-
-void au_playloop(int snd){
-  au_initEach();
-  while(1){
-    ao_play(device, sounds[snd], sz[snd]);
+void au_update() {
+  if(lowtime_done) {
+    au_mainPlay(--au_mainAudio);// play the low-time version of the current music (always one less)
+    lowtime_done = false; // reset flag
   }
-  au_deinitEach();
-}
-
-void au_initEach(){
-  default_driver = ao_default_driver_id();
-  device = ao_open_live(default_driver, &format, NULL);
 }
 
 void au_loadSounds(){
+  memset(sounds, 0, sizeof(Mix_Chunk *) * k_nSounds);
   for(int i=0;i<k_nSounds;i++){
-    sounds[i] = au_loadSound(fileNames[i], &sz[i]);
+    sounds[i] = Mix_LoadWAV(soundFileNames[i]);
+    if(!sounds[i]) {
+      printf("Unable to load sound file %s: %s\n", soundFileNames[i], SDL_GetError());
+      exit(EXIT_FAILURE);
+    }
   }
-}
-
-char* au_loadSound(char* fn, int* sz){
-  FILE* f = rs_getBFile(fn);
-  char *buffer;
-  fseek(f, 0L, SEEK_END);
-  *sz = ftell(f);
-  fseek(f, 0L, SEEK_SET);
-  buffer = salloc(*sz * sizeof(char));
-  fread(buffer, *sz, 1, f);
-  sfclose(f);
-  return buffer;
 }
 
 void au_deinit(){
+  // Stop all audio
+  Mix_HaltChannel(-1);
+  // Stop main audio separately in case it is ever implemented differently
   au_mainStop();
-  for(int i=0;i<k_nSounds;i++){
-    free(sounds[i]);
-  }
-  close(piperw[1]);
-  ao_shutdown();
-}
 
-void au_deinitEach(){
-  ao_close(device);
-  exit(0);
+  for(int i=0;i<k_nSounds;i++){
+    Mix_FreeChunk(sounds[i]);
+  }
+  Mix_CloseAudio();
+
 }
 
 void au_play(int snd){
   if(!mute || effects){
-    snd = snd << 1; // Last bit is 0 because it's not to be played in the main loop
-    write(piperw[1], &snd, sizeof(int));
+    err = Mix_PlayChannel(snd, sounds[snd], 0);
+    if(err == -1) {
+      printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+      exit(EXIT_FAILURE);
+    }
   }
 }
+
 void au_playWait(int snd){
+  if(au_waiting != -1) {
+    printf("Can't wait for more than one audio at once. How did you even get here?\n");
+    exit(EXIT_FAILURE);
+  }
   if(!mute || effects){
-    //need to repeat this code because au_deinitEach() calls exit();
-    default_driver = ao_default_driver_id();
-    device = ao_open_live(default_driver, &format, NULL);
-    ao_play(device, sounds[snd], sz[snd]);
-    ao_close(device);
+    err = Mix_PlayChannel(snd, sounds[snd], 0);
+    if(err == -1) {
+      printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+      exit(EXIT_FAILURE);
+    }
+    au_waiting = snd;
   }
 }
 
 void au_lowTime(){
   au_mainStop();
-  if(fork() == 0){
-    au_playWait(SND_lowtime);
-    au_mainPlay(au_mainAudio-1); // The low time versions are always one less than the normal versions.
-    exit(0);
-  }
+  au_play(SND_lowtime);
 }
 
 void au_mainPlay(int snd){
   if(!mute){
     au_mainStop();
     au_mainAudio = snd;
-    snd = (snd << 1) | 1; // Last bit is 1 because it's to be played in the main loop
-    write(piperw[1], &snd, sizeof(int));
+    err = Mix_PlayChannel(snd, sounds[snd], -1);
+    if(err == -1) {
+      printf("perspWindow has focus? %d\n", SDL_GetWindowFlags(perspWindow) & SDL_WINDOW_INPUT_FOCUS);
+      printf("Unable to play main sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+      exit(EXIT_FAILURE);
+    }
   }
 }
 
 void au_mainStop(){
-  int sig = (k_killMain << 1) | 1;
-  write(piperw[1], &sig, sizeof(int));
+  Mix_HaltChannel(au_mainAudio);
 }

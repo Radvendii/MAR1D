@@ -8,6 +8,8 @@
 
 #define pi (22/7.0)
 
+int err; // global variable for capturing error codes
+
 // Safe versions of various functions (checks for errors)
 FILE* sfopen(char*, char*);
 void sfclose(FILE*);

@@ -239,7 +239,7 @@ void cl_keypress(int key, int state, int mods){
     s.userPaused = !s.userPaused;
     if(s.paused){
       au_mainStop();
-      au_playWait(SND_pause);
+      au_play(SND_pause);
     }
     else{
       au_mainPlay(au_mainAudio);

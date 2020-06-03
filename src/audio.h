@@ -2,9 +2,8 @@
 #define _AUDIO_H
 #include "helpers.h"
 #include "windowing.h"
-#include <signal.h>
-#include <unistd.h>
-#include <ao/ao.h>
+#include "SDL.h"
+#include "SDL_mixer.h"
 #include "resources.h"
 /* #include <pthread.h> */
 #define SND_blockbreak 0
@@ -56,22 +55,28 @@
 #define k_nSounds 46
 #define k_killMain k_nSounds
 
+#define k_mix_frequency MIX_DEFAULT_FREQUENCY
+#define k_mix_format AUDIO_S16SYS
+#define k_mix_channels 2
+#define k_mix_chunksize 512
+
+// sound that we are waiting to complete
+// -1 indicates no sound
+int au_waiting;
+
 int au_mainAudio;
 bool mute, effects;
 
 void au_init(bool, bool);
+void au_update();
+void au_channelFinished(int);
 void au_deinit();
 void au_play(int);
 void au_playWait(int);
-void au_playplay(int);
-void au_playloop(int);
 void au_mainPlay(int);
 void au_lowTime();
 void au_mainStop();
 void au_loadSounds();
-void au_initEach();
-void au_deinitEach();
-char* au_loadSound(char*, int*);
 void playDaemon();
 
 #endif
