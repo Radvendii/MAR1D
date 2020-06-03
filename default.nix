@@ -24,12 +24,7 @@ stdenv.mkDerivation rec {
     [
       SDL2
       SDL2_mixer
-      alsaLib
-      alsaOss
       cmake
-      doxygen
-      libao
-      libpthreadstubs
       libGLU
     ];
 

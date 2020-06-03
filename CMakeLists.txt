@@ -17,7 +17,6 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 
 # find libraries
 
-find_library(AO_LIBRARIES ao)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -37,7 +36,6 @@ set(BUILD_STATIC_LIBS ON)
 file(GLOB SOURCES "src/*.c")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} ${AO_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} SDL2::Main SDL2::Mixer)
 target_link_libraries(${PROJECT_NAME} OpenGL::OpenGL OpenGL::GLU)
 target_link_libraries(${PROJECT_NAME} m) # math
