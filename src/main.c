@@ -12,7 +12,13 @@
 #include "audio.h"
 #include <stdio.h>
 #include <stdlib.h>
+// Windows users don't deserve command line options.
+#ifndef _WIN32
+#  include <getopt.h>
+#endif
+
 struct state s;
+
 // for when I come back to this project:
 // http://8bithorse.blogspot.com/2010/11/super-mario-bros-101.html
 // detailed mechanics that I definitely got wrong:
@@ -29,6 +35,7 @@ int main(int argc, char **argv){
   int sensitivity = 10;
   bool reverse = false;
   int c;
+#ifndef _WIN32
   while ((c = getopt(argc, argv, "mfw:s:r")) != -1){
     switch (c){
     case 'm':
@@ -48,6 +55,7 @@ int main(int argc, char **argv){
       break;
     }
   }
+#endif
 
   // Order matters for intializations
   ob_init();
@@ -58,10 +66,6 @@ int main(int argc, char **argv){
 
   while(!wn_shouldClose()) {
     au_update();
-    if(au_waiting != -1) {
-      sleep(0.1);
-      continue;
-    }
 
     //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
     if(s.userPaused){wn_disable_mouse(false);}

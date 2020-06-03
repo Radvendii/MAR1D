@@ -55,8 +55,7 @@ void gl_die(){
 void gl_win(){
   if(!s.won){
     au_mainStop();
-    au_play(SND_levelend);
-    sleep(2);
+    au_playWait(SND_levelend);
     s.won = true;
     s.score+=400;
     s.paused = true;

@@ -5,7 +5,6 @@
 #include <SDL_opengl.h>
 #include <GL/glu.h>
 #include <SDL.h>
-#include <unistd.h>
 #include "helpers.h"
 #include "objects.h"
 #include "gamelogic.h"
@@ -44,7 +43,7 @@ void gr_drawMenu();
 void gr_clear();
 
 void gr_keypress(int, int, int);
-void gr_cursormove(double, double);
+void gr_mousemove(double, double);
 
 void gr_pixels(unsigned char*);
 

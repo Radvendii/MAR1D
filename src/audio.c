@@ -95,6 +95,10 @@ void au_channelFinished(int channel) {
 }
 
 void au_update() {
+  while(au_waiting != -1) {
+    SDL_Delay(200);
+  }
+
   if(lowtime_done) {
     au_mainPlay(--au_mainAudio);// play the low-time version of the current music (always one less)
     lowtime_done = false; // reset flag
