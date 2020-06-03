@@ -10,11 +10,8 @@
 #include "windowing.h"
 #include "parsing.h"
 #include "audio.h"
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <time.h>
 struct state s;
 // for when I come back to this project:
 // http://8bithorse.blogspot.com/2010/11/super-mario-bros-101.html
