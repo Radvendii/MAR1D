@@ -1,6 +1,6 @@
 #ifndef _WINDOWING_H
 #define _WINDOWING_H
-#include "SDL.h"
+#include <SDL.h>
 #include "helpers.h"
 #include "objects.h"
 #include "gamelogic.h"

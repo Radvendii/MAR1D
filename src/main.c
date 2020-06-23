@@ -1,4 +1,4 @@
-#include "SDL.h"
+#include <SDL.h>
 #include "helpers.h"
 #include "resources.h"
 #include "objects.h"

@@ -2,8 +2,8 @@
 #define _AUDIO_H
 #include "helpers.h"
 #include "windowing.h"
-#include "SDL.h"
-#include "SDL_mixer.h"
+#include <SDL.h>
+#include <SDL_mixer.h>
 #include "resources.h"
 /* #include <pthread.h> */
 #define SND_blockbreak 0
