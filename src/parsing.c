@@ -269,6 +269,7 @@ void io_getLevels(level** ls, char* fn){
       break;
     }
   }
+  sfclose(f);
   return;
 }
 
@@ -304,11 +305,13 @@ int getImage(image *image, char *fn) {
 
   if (image->data == NULL) {
     printf("Error allocating memory for color-corrected image data");
+    sfclose(file);
     return 0;
   }
 
   if (fread(image->data, size, 1, file) != 1) {
     printf("Error reading image data from %s.\n", fn);
+    sfclose(file);
     return 0;
   }
 
@@ -318,5 +321,6 @@ int getImage(image *image, char *fn) {
     image->data[i+2] = temp;
   }
 
+  sfclose(file);
   return 1;
 }
