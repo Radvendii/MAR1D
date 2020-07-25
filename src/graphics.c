@@ -118,6 +118,7 @@ void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
 void gr_pixels(unsigned char *renderArr){
   if(debug) {
     // Write output to the image file so we can make an image timelapse of gameplay
+    // TODO: write output to internal buffer so we're not saving a partial file?
     FILE *imageFile = sfopen("mar1d_image.raw", "wb");
     fwrite(renderArr, sizeof(unsigned char), k_nPixels * 3, imageFile);
     sfclose(imageFile);
