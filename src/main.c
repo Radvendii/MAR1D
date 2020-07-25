@@ -80,6 +80,7 @@ int main(int argc, char **argv){
     gr_clear();
 
     if(s.menu){
+      // TODO: pausing while in the main menu bugs out
       s.userPaused = true;
       s.paused = true;
       wn_menuWindow();
