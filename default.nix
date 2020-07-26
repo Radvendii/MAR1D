@@ -26,6 +26,7 @@ stdenv.mkDerivation rec {
       SDL2_mixer
       cmake
       libGLU
+      libconfig
     ];
 
   meta = with stdenv.lib; {

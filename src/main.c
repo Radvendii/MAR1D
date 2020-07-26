@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <libconfig.h>
 #include "helpers.h"
 #include "resources.h"
 #include "objects.h"
@@ -28,30 +29,44 @@ struct state s;
 
 int main(int argc, char **argv){
 
+  // resources must be initialized before io_readConfig()
+  rs_init();
+
   // default values
-  bool mute = false;
-  bool effects = false;
-  int lineSize = 30;
-  int sensitivity = 10;
-  bool reverse = false;
-  int c;
+  config conf = {
+    .mute = false,
+    .effects = false,
+    .lineSize = 30,
+    .sensitivity = 10,
+    .reverseMouseY = false
+  };
+
+  // Pull config from file
+  io_readConfig(&conf);
+
 #ifndef _WIN32
+  /* Look, I'm not going to bother porting this to windows.
+   * If you want command line options, you can get a real OS.
+   * Or you can port it yourself and submit a pull request. */
+
+  // Overwrite default / conf file configurations with command line options.
+  int c;
   while ((c = getopt(argc, argv, "mfw:s:r")) != -1){
     switch (c){
     case 'm':
-      mute = true;
+      conf.mute = true;
       break;
     case 'f':
-      effects = true;
+      conf.effects = true;
       break;
     case 'w':
-      lineSize = atoi(optarg);
+      conf.lineSize = atoi(optarg);
       break;
     case 's':
-      sensitivity = atoi(optarg);
+      conf.sensitivity = atoi(optarg);
       break;
     case 'r':
-      reverse = true;
+      conf.reverseMouseY = true;
       break;
     }
   }
@@ -61,8 +76,8 @@ int main(int argc, char **argv){
   ob_init();
   gl_init();
   wn_init();
-  au_init(mute, effects);
-  gr_init(lineSize, sensitivity * (reverse ? -1 : 1));
+  au_init(conf.mute, conf.effects);
+  gr_init(conf.lineSize, conf.sensitivity * (conf.reverseMouseY ? -1 : 1));
 
   while(!wn_shouldClose()) {
     au_update();
@@ -103,10 +118,11 @@ int main(int argc, char **argv){
 
   // deinit in reverse order
   gr_deinit();
+  au_deinit();
   wn_deinit();
   gl_deinit();
   ob_deinit();
-  au_deinit();
+  rs_deinit();
   exit(EXIT_SUCCESS);
 
   return 0;

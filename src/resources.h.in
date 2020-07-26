@@ -2,8 +2,17 @@
 #define _RESOURCES_H
 #include "helpers.h"
 #include <stdio.h>
-#define k_resourceDir "@RESOURCE_DIRECTORY@" //To be filled in by cmake
+#define k_resourceDir "@RESOURCE_DIRECTORY@" // To be filled in by cmake
+#define k_configFileName "MAR1D.conf"
+
+char *configDir;
+
+void rs_init();
+void rs_deinit();
 
 FILE *rs_getBFile(char *);
 FILE *rs_getFile(char *);
+
+FILE *rs_getConfigRead();
+FILE *rs_getConfigWrite();
 #endif

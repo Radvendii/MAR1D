@@ -20,6 +20,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(libconfig REQUIRED)
 
 # set resources.h file with correct path
 
@@ -29,6 +30,9 @@ configure_file(src/resources.h.in resources.h @ONLY)
 # include directories
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${LIBCONFIG_INCLUDE_DIRS})
+
+# build with static libraries so things just work
 
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_STATIC_LIBS ON)
@@ -38,6 +42,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} SDL2::Main SDL2::Mixer)
 target_link_libraries(${PROJECT_NAME} OpenGL::OpenGL OpenGL::GLU)
+target_link_libraries(${PROJECT_NAME} ${LIBCONFIG_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} m) # math
 
 install(TARGETS MAR1D DESTINATION bin)

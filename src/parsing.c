@@ -245,6 +245,7 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
 //TODO: Put parsing of the char after the data specifier in this function, then simplify the functions above.
 void io_getLevels(level** ls, char* fn){
   FILE *f = rs_getFile(fn);
+  // TODO: who the fuck owns io_os / io_cs?? if it's io_ then it should be parsing.c, but we don't even have an init() or deinit() function
   io_os = salloc(sizeof(obj) * 127);
   for(int i=0;i<127;i++){io_os[i].ps = NULL;}
   io_cs = salloc(sizeof(color)*127);
@@ -271,6 +272,62 @@ void io_getLevels(level** ls, char* fn){
   }
   sfclose(f);
   return;
+}
+
+// Reads a config at the file name specified, and reutrns the config object.
+void io_readConfig(config *c){
+  FILE *f = rs_getConfigRead();
+  if(!f){
+    printf("Unable to read configuration file. Using default.\n");
+    return; // return without modifying c
+  }
+  config_t conf;
+  config_init(&conf);
+  config_read(&conf, f);
+
+  // If any options are not specified in the config file, they will simply not be modified
+  config_lookup_bool(&conf, "mute", &(c->mute));
+  config_lookup_bool(&conf, "effects", &(c->effects));
+  config_lookup_int(&conf, "lineSize", &(c->lineSize));
+  config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
+  config_lookup_bool(&conf, "reverseMouseY", &(c->reverseMouseY));
+
+  fclose(f);
+  config_destroy(&conf);
+}
+
+// Writes a config to the file name specified.
+void io_writeConfig(config c){
+  FILE *f = rs_getConfigWrite();
+  if(!f){
+    printf("Unable to write configuration file.\n");
+    return;
+  }
+  config_t conf;
+  config_setting_t *root, *set;
+  config_init(&conf);
+
+  root = config_root_setting(&conf);
+
+  set = config_setting_add(root, "mute", CONFIG_TYPE_BOOL);
+  config_setting_set_bool(set, c.mute);
+
+  set = config_setting_add(root, "effects", CONFIG_TYPE_BOOL);
+  config_setting_set_bool(set, c.effects);
+
+  set = config_setting_add(root, "lineSize", CONFIG_TYPE_INT);
+  config_setting_set_int(set, c.lineSize);
+
+  set = config_setting_add(root, "sensitivity", CONFIG_TYPE_INT);
+  config_setting_set_int(set, c.sensitivity);
+
+  set = config_setting_add(root, "reverseMouseY", CONFIG_TYPE_BOOL);
+  config_setting_set_bool(set, c.reverseMouseY);
+
+  config_write(&conf, f);
+
+  fclose(f);
+  config_destroy(&conf);
 }
 
 // Functions for loading the menuscreen texture.
