@@ -1,8 +1,19 @@
 MAR1D
 =====
 
-## Beta
-The game is currently in beta. Please let me know if you find any bugs so I can fix them!
+## Under Construction
+The game is undergoing a lot of changes. I'd like to get it into shape so I can be proud to put it out there. Until I do, don't expect the README to match the game or anything like that.
+
+Four things need to get done:
+
+- Easy install & cross-compatibility.
+  - As much as I might want everyone to just switch to linux, it's not going to happen. And a Nix package is certainly not sufficient for most people. I'd like the game to have a download-and-go package for Mac, Linux, and, yes, Windows.
+- Menu
+  - Not everyone can use command line options. I need a menu screen for settings, remapping controls, etc.
+- Playtesting
+  - I don't need this to play *exactly* like the original, but for a while I was missing running, which is pretty essential. When I'm done with the first two I'm going to need some people to test it and make sure I'm not missing anything glaring.
+- A website
+  - It's gotta be presentable.
 
 ## Description
 The original Super Mario Bros as you've never seen it. Step into Mario's shoes in this first person clone of the classic Mario game. True to the original, however, the game still takes place in a two dimensional world. You must view the world as mario does, as a one dimensional line.
@@ -20,6 +31,7 @@ Other notable similar exploits include:
 * [Antichamber](http://www.antichamber-game.com/)
 * [Hyperrogue](http://www.roguetemple.com/z/hyper/)
 * [4D Toys](http://www.4dtoys.com/) (Though I've never personally played it)
+* [Hyperbolica](https://store.steampowered.com/app/1256230/Hyperbolica/) (Someone seems to have actually made my dream game.)
 * Send me any I'm missing! I love playing with these things :)
 
 ## Playing the Game
@@ -35,8 +47,10 @@ The `./install/bin/MAR1D` executable takes a few command line arguments (note th
 ## Compiling
 ### Dependencies
 * Cmake
-* Doxygen
-* libao
+* SDL2
+* SDL2_mixer
+* GLU
+* libconfig
 
 ### Linux
 It should be enough to just run ./compile.sh from the main source directory if you have all the dependencies.
@@ -45,28 +59,9 @@ If you would like to install it under a certain prefix, you can modify ./compile
 ***NOTE:*** If you use nix(os), there's a nix package for MAR1D under 'mar1d'. If you don't use nix(os), you should!
 
 ### Mac OS X
-* Homebrew
-
-If you're using homebrew, run 
-
-`brew install cmake doxygen libao` 
-
-to install the dependencies, then run 
-
-`C_INCLUDE_PATH=/usr/local/Cellar/libao/1.2.2/include/ ./compile.sh`
-
-from the main source directory. It appears homebrew puts libao in a weird place.
-
-* Nix
-
-I'll hopefully be able to make and test a nix package for MAR1D on mac soon, so look forward to that : )
-
-* Macports
-
-I haven't tested this with macports. If someone wants to do that and tell me if there are any hiccups, that would be great. The only problem should be locating where macports puts libao and setting `C_INCLUD_PATH` to that before running `./compile.sh`.
 
 ## License
-Licensed under AGPL v3.0, check COPYING for more details
+Licensed under AGPL v3.0, check COPYING for more details. If you have something you want to do with it that doesn't work under that license, let me know. Basically, if you're trying to make and share awesome things with it, I want to help you do that.
 
 ## Extras
 
@@ -94,7 +89,7 @@ Below is a screencap of me playing through the first stage, as well as an image 
   * Putting up with me getting sucked into coding for long stretches
 * Yavni
   * Photoshoping the menuscreen image
-  * Coming up with the title "MAR1D"
+  * Coming up with the name "MAR1D"
 * Nintendo
   * Making Super Mario Bros
   * Inspiring game makers

@@ -41,7 +41,7 @@ int main(int argc, char **argv){
     .reverseMouseY = false
   };
 
-  // Pull config from file
+  // pull config from file
   io_readConfig(&conf);
 
 #ifndef _WIN32
@@ -49,7 +49,7 @@ int main(int argc, char **argv){
    * If you want command line options, you can get a real OS.
    * Or you can port it yourself and submit a pull request. */
 
-  // Overwrite default / conf file configurations with command line options.
+  // overwrite default / conf file settings with command line options.
   int c;
   while ((c = getopt(argc, argv, "mfw:s:r")) != -1){
     switch (c){
