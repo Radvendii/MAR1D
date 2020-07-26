@@ -17,7 +17,7 @@ void wn_perspWindow(){
 }
 
 void wn_dimWindow(){
-  SDL_GL_MakeCurrent(dimWindow, perspContext);
+  SDL_GL_MakeCurrent(dimWindow, dimContext);
 }
 
 bool wn_shouldClose(){
