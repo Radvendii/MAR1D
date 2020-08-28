@@ -15,8 +15,13 @@
 #define k_durationFOVChange 20
 #define k_FOV (70*pi/180)
 #define k_FOVrun (65*pi/180)
-#define k_fontSize 2
 #define k_camT -pi/10 //initial camera angle
+// dimensions of the font
+// TODO: read this from the font file
+#define k_fontWidth 7
+#define k_fontHeight 7
+// scale the font up
+#define k_fontSize 2
 
 float camSpeed;
 int lineSize;
