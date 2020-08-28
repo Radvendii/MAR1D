@@ -73,7 +73,7 @@ void gr_char(char c, GLfloat x, GLfloat y){
   for(int i=0;i<fontSize;i++){
     if(font[(c)*fontSize+i]){
       //TODO: This hard-codes the dimensions of the font. Fix that.
-      glVertex2f(*x+(i%7)*k_fontSize, *y-(i/7)*k_fontSize);
+      glVertex2f(x+(i%7) * k_fontSize, y-(i/7) * k_fontSize);
     }
   }
   glEnd();
@@ -83,8 +83,8 @@ void gr_char(char c, GLfloat x, GLfloat y){
 void gr_text(bool vert, char *s, GLfloat x, GLfloat y){
   float x_orig = x;
   float y_orig = y;
-  for(;*s != '\0';s++){
-    if(*s == '\n'){
+  for(int i=0; s[i] != '\0'; i++){
+    if(s[i] == '\n'){
       if(vert){
         x+=8*k_fontSize;
         y=y_orig;
