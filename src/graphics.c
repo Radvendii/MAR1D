@@ -67,7 +67,7 @@ void gr_update(){
 }
 
 // Render a text character
-void gr_char(bool vert, char c, GLfloat* x, GLfloat* y){
+void gr_char(char c, GLfloat x, GLfloat y){
   glPointSize(k_fontSize);
   glBegin(GL_POINTS);
   for(int i=0;i<fontSize;i++){
@@ -77,9 +77,6 @@ void gr_char(bool vert, char c, GLfloat* x, GLfloat* y){
     }
   }
   glEnd();
-  // Shift over for next character
-  if(vert){*y -= 8*k_fontSize;}
-  else{*x += 8*k_fontSize;}
 }
 
 // Renders a text string
@@ -98,7 +95,14 @@ void gr_text(bool vert, char *s, GLfloat x, GLfloat y){
       }
     }
     else{
-      gr_char(vert, *s, &x, &y);
+      gr_char(s[i], x, y);
+      // Shift over for next character
+      if(vert){
+        y -= 8*k_fontSize;
+      }
+      else{
+        x += 8*k_fontSize;
+      }
     }
   }
 }
