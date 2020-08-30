@@ -2,6 +2,7 @@
 #define _WINDOWING_H
 #include <SDL.h>
 #include "helpers.h"
+#include "menu.h"
 #include "objects.h"
 #include "gamelogic.h"
 #include "graphics.h"

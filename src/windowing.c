@@ -33,13 +33,16 @@ void wn_processEvents(){
         if(!event.key.repeat){
           wn_keypress(event.key.keysym.sym, event.key.state, event.key.keysym.mod);
         }
+        mu_keypress(event.key.keysym.sym, event.key.state, event.key.keysym.mod);
         break;
       case SDL_MOUSEBUTTONDOWN:
       case SDL_MOUSEBUTTONUP:
         wn_click(event.button.button, event.button.state, 0);
+        mu_mouseclick(event.button.button, event.button.state, 0);
         break;
       case SDL_MOUSEMOTION:
         wn_mousemove(event.motion.xrel, event.motion.yrel);
+        mu_mousemove(event.motion.x, event.motion.y);
         break;
       default:
         break;

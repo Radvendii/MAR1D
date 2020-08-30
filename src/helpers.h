@@ -8,6 +8,16 @@
 
 #define pi (22/7.0)
 
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+
+#define BOUND_BELOW(x, min) if ( (x) < (min) ) { (x) = (min); }
+#define BOUND_ABOVE(x, max) if ( (x) > (max) ) { (x) = (max); }
+// precondition: max > min
+#define BOUND(x, min, max)                        \
+     if ( (x) < (min) ) { (x) = (min); }          \
+     else if ( (x) > (max) ) { (x) = (max); }
+
 int err; // global variable for capturing error codes
 
 // Safe versions of various functions (checks for errors)

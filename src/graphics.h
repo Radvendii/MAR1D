@@ -22,6 +22,9 @@
 #define k_fontHeight 7
 // scale the font up
 #define k_fontSize 2
+// define the space a character takes up
+#define k_charSpaceX (((k_fontWidth) + 1) * (k_fontSize))
+#define k_charSpaceY (((k_fontHeight) + 1) * (k_fontSize))
 
 float camSpeed;
 int lineSize;

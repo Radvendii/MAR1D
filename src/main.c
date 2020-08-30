@@ -11,6 +11,7 @@
 #include "windowing.h"
 #include "parsing.h"
 #include "audio.h"
+#include "menu.h"
 #include <stdio.h>
 #include <stdlib.h>
 // Windows users don't deserve command line options.
@@ -30,6 +31,7 @@ struct state s;
 int main(int argc, char **argv){
 
   // resources must be initialized before io_readConfig()
+  // but settings must be loaded before we can initialize the rest
   rs_init();
 
   // default values
@@ -73,48 +75,51 @@ int main(int argc, char **argv){
 #endif
 
   // Order matters for intializations
+  mu_init();
   ob_init();
   gl_init();
   wn_init();
   au_init(conf.mute, conf.effects);
   gr_init(conf.lineSize, conf.sensitivity * (conf.reverseMouseY ? -1 : 1));
 
-  while(!wn_shouldClose()) {
-    au_update();
+  mu_main(); // start the program with the menu
 
-    //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
-    if(s.userPaused){wn_disable_mouse(false);}
-    else{wn_disable_mouse(true);}
-    wn_menuWindow();
-    gr_clear();
-    wn_perspWindow();
-    gr_clear();
-    wn_dimWindow();
-    gr_clear();
-    wn_hudWindow();
-    gr_clear();
+  /* while(!wn_shouldClose()) { */
+  /*   au_update(); */
 
-    if(s.menu){
-      // TODO: pausing while in the main menu bugs out
-      s.userPaused = true;
-      s.paused = true;
-      wn_menuWindow();
-      gr_drawMenu();
-      wn_update();
-    }
-    else{
-      au_update();
-      gl_update();
-      gr_update();
-      wn_perspWindow();
-      gr_drawPersp();
-      wn_dimWindow();
-      gr_drawDim();
-      wn_hudWindow();
-      gr_drawHud();
-      wn_update();
-    }
-  }
+  /*   //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop. */
+  /*   if(s.userPaused){wn_disable_mouse(false);} */
+  /*   else{wn_disable_mouse(true);} */
+  /*   wn_menuWindow(); */
+  /*   gr_clear(); */
+  /*   wn_perspWindow(); */
+  /*   gr_clear(); */
+  /*   wn_dimWindow(); */
+  /*   gr_clear(); */
+  /*   wn_hudWindow(); */
+  /*   gr_clear(); */
+
+  /*   if(s.menu){ */
+  /*     // TODO: pausing while in the main menu bugs out */
+  /*     s.userPaused = true; */
+  /*     s.paused = true; */
+  /*     wn_menuWindow(); */
+  /*     gr_drawMenu(); */
+  /*     wn_update(); */
+  /*   } */
+  /*   else{ */
+  /*     au_update(); */
+  /*     gl_update(); */
+  /*     gr_update(); */
+  /*     wn_perspWindow(); */
+  /*     gr_drawPersp(); */
+  /*     wn_dimWindow(); */
+  /*     gr_drawDim(); */
+  /*     wn_hudWindow(); */
+  /*     gr_drawHud(); */
+  /*     wn_update(); */
+  /*   } */
+  /* } */
 
   // deinit in reverse order
   gr_deinit();
@@ -122,6 +127,7 @@ int main(int argc, char **argv){
   wn_deinit();
   gl_deinit();
   ob_deinit();
+  mu_deinit();
   rs_deinit();
   exit(EXIT_SUCCESS);
 

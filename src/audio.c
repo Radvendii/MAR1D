@@ -139,6 +139,7 @@ void au_play(int snd){
   }
 }
 
+// TODO: this seems to not be working
 void au_playWait(int snd){
   if(au_waiting != -1) {
     printf("Can't wait for more than one audio at once. How did you even get here?\n");
