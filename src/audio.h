@@ -67,7 +67,7 @@ int au_waiting;
 int au_mainAudio;
 bool mute, effects;
 
-void au_init(bool, bool);
+void au_init();
 void au_update();
 void au_channelFinished(int);
 void au_deinit();

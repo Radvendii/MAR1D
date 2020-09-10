@@ -14,15 +14,6 @@ typedef struct {
   unsigned char *data;
 } image;
 
-// TODO: `volume`, `volumeEffects`, `volumeMusic` instead of `mute` and `effects`
-typedef struct {
-  bool mute;
-  bool effects;
-  int lineSize;
-  int sensitivity;
-  bool reverseMouseY;
-} config; // not to be confused with config_t from libconfig
-
 // TODO: not all of these should be public functions
 
 int io_getFont(bool**, char*);
@@ -40,6 +31,6 @@ void io_readConfig(config *);
 void io_writeConfig(config);
 
 image* loadTexture();
-int getImage(image*, char*);
+bool io_getImage(image*, char*);
 
 #endif

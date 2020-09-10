@@ -69,12 +69,18 @@ struct state {
   int moveFrameX;
   bool lowTime; // Is the player low on time
 
-  int menu; // This variable keeps track of which part of the game we are in (menu, main game, win screen)
+  /* int menu; // This variable keeps track of which part of the game we are in (menu, main game, win screen) */
 };
 
 struct state s;
 
 int gl_playerIndex();
+
+void gl_main(); // main game loop
+
+void gl_keypress(SDL_KeyboardEvent ev);
+void gl_mouseclick(SDL_MouseButtonEvent ev);
+void gl_mousemove(SDL_MouseMotionEvent ev);
 
 void gl_resetLevel();
 void gl_loadLevel(char, char);

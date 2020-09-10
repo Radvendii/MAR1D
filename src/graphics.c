@@ -4,16 +4,11 @@ void gr_keypress(int key, int state, int mods){
   if ((key == SDLK_a || key == SDLK_d) && state == SDL_PRESSED){
     cam.flip = !cam.flip;
   }
-  if ((key == SDLK_RETURN) && state == SDL_PRESSED){
-    if(s.menu == k_menuStatic){
-      s.menu = k_menuTime;
-    }
-  }
 }
 
 void gr_mousemove(double xMove, double yMove){
-  if(!s.menu && !s.paused){
-    cam.T = fmod(cam.T-yMove*camSpeed, 2*pi);
+  if(!s.paused){
+    cam.T = fmod(cam.T-yMove*k_camSpeed, 2*pi);
     // Bound the camera angle by straight down and straight up. 
     // Don't want people spinning the camera 360.
     if(cam.T < -pi/2 - k_FOV/2){cam.T = -pi/2 - k_FOV/2;}
@@ -66,6 +61,29 @@ void gr_update(){
   rn_perspFcamera(perspScreen, cam);
 }
 
+void gr_color(color c) {
+  glColor3ub(c.r, c.g, c.b);
+}
+
+void gr_rectLTRB(color c, float left, float top, float right, float bottom) {
+  glBegin(GL_QUADS);
+  gr_color(c);
+  glVertex2f(left, top);
+  glVertex2f(right, top);
+  glVertex2f(right, bottom);
+  glVertex2f(left, bottom);
+  glEnd();
+}
+void gr_rectLTWH(color c, float left, float top, float width, float height) {
+  gr_rectLTRB(c, left, top, left + width, top - height);
+}
+void gr_rectCCWH(color c, float centerX, float centerY, float width, float height) {
+  gr_rectLTWH(c, centerX - width / 2, centerY + height / 2, width, height);
+}
+void gr_rectLCWH(color c, float left, float centerY, float width, float height) {
+  gr_rectLTWH(c, left, centerY + height / 2, width, height);
+}
+
 // Render a text character
 void gr_char(char c, GLfloat x, GLfloat y){
   glPointSize(k_fontSize);
@@ -85,11 +103,11 @@ void gr_text(bool vert, char *s, GLfloat x_orig, GLfloat y_orig){
   for(int i=0; s[i] != '\0'; i++){
     if(s[i] == '\n'){
       if(vert){
-        x += k_charSpaceX;
+        x += k_fontSpaceX;
         y = y_orig;
       }
       else{
-        y -= k_charSpaceY;
+        y -= k_fontSpaceY;
         x = x_orig;
       }
     }
@@ -97,24 +115,19 @@ void gr_text(bool vert, char *s, GLfloat x_orig, GLfloat y_orig){
       gr_char(s[i], x, y);
       // Shift over for next character
       if(vert){
-        y -= k_charSpaceY;
+        y -= k_fontSpaceY;
       }
       else{
-        x += k_charSpaceX;
+        x += k_fontSpaceX;
       }
     }
   }
 }
 
+//TODO: make this use gr_color()?
 // Render a "pixel" of the vertical screen
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
-  glBegin(GL_QUADS);
-  glColor3ub(r, g, b);
-  glVertex2f(-lineSize, y);
-  glVertex2f(-lineSize, y+1);
-  glVertex2f(lineSize, y+1);
-  glVertex2f(lineSize, y);
-  glEnd();
+  gr_rectLTRB((color) {.r = r, .g = g, .b = b}, -conf.lineSize, y+1, conf.lineSize, y);
 }
 
 // Render an array of pixels
@@ -198,6 +211,14 @@ void gr_clear(){
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void gr_menuWindowMatrix() {
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  glOrtho(0, k_menuWindowW, 0, k_menuWindowH, -1, 1);
+}
+
 void gr_drawHud(){
   char hud[60];
   // Formatting of this is very finicky
@@ -213,49 +234,46 @@ void gr_drawHud(){
 }
 
 void gr_drawMenu(){
-  glColor3f(1.f, 1.f, 1.f);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
+  /* glColor3f(1.f, 1.f, 1.f); */
+  /* glMatrixMode(GL_PROJECTION); */
+  /* glLoadIdentity(); */
 
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  if(s.menu > k_menuStatic){
-    char hud[100];
-    sprintf(hud, "CONGRATULATIONS!\n\nYOUVE WON LEVEL 1-1!\n\nSCORE %06d", s.score);
-    glOrtho(-k_menuWindowW/2, k_menuWindowW/2, 0, k_menuWindowH, -1, 1);
-    gr_text(false, hud, -k_menuWindowW/2+20, k_menuWindowH-20);
-    s.menu--;
-  }
-  else{ // The beginning menu
+  /* glMatrixMode(GL_MODELVIEW); */
+  /* glLoadIdentity(); */
+  /* if(s.menu > k_menuStatic){ */
+  /*   char hud[100]; */
+  /*   sprintf(hud, "CONGRATULATIONS!\n\nYOUVE WON LEVEL 1-1!\n\nSCORE %06d", s.score); */
+  /*   glOrtho(-k_menuWindowW/2, k_menuWindowW/2, 0, k_menuWindowH, -1, 1); */
+  /*   gr_text(false, hud, -k_menuWindowW/2+20, k_menuWindowH-20); */
+  /*   s.menu--; */
+  /* } */
+  /* else{ // The beginning menu */
 
-    // Rotate the image when the user starts the game
-    glPushMatrix();
-    float rot = linInterp(0.0, 90.0, k_menuTime, 0.0, s.menu);
-    glRotatef(rot, 0.f, 1.f, 0.f);
+  /*   // Rotate the image when the user starts the game */
+  /*   glPushMatrix(); */
+  /*   float rot = linInterp(0.0, 90.0, k_menuTime, 0.0, s.menu); */
+  /*   glRotatef(rot, 0.f, 1.f, 0.f); */
 
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f);
-    glTexCoord2f(1.f, 0.f); glVertex2f(1.f, -1.f);
-    glTexCoord2f(1.f, 1.f); glVertex2f(1.f, 1.f);
-    glTexCoord2f(0.f, 1.f); glVertex2f(-1.f, 1.f);
-    glEnd();
-    glPopMatrix();
-    if(s.menu != k_menuStatic){
-      s.menu--;
-      if(!s.menu){ // End of menu animation
-        gl_load();
-      }
-    }
-    glDisable(GL_TEXTURE_2D);
-  }
+  /*   glEnable(GL_TEXTURE_2D); */
+  /*   glBindTexture(GL_TEXTURE_2D, texture); */
+  /*   glBegin(GL_QUADS); */
+  /*   glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f); */
+  /*   glTexCoord2f(1.f, 0.f); glVertex2f(1.f, -1.f); */
+  /*   glTexCoord2f(1.f, 1.f); glVertex2f(1.f, 1.f); */
+  /*   glTexCoord2f(0.f, 1.f); glVertex2f(-1.f, 1.f); */
+  /*   glEnd(); */
+  /*   glPopMatrix(); */
+  /*   if(s.menu != k_menuStatic){ */
+  /*     s.menu--; */
+  /*     if(!s.menu){ // End of menu animation */
+  /*       gl_load(); */
+  /*     } */
+  /*   } */
+  /*   glDisable(GL_TEXTURE_2D); */
+  /* } */
 }
 
-void gr_init(int _lineSize, int _sensitivity){
-  lineSize = _lineSize; // Width of virtual screen
-  camSpeed = _sensitivity / 10000.0;
-
+void gr_init(){
   cam.animFrame=0;
   cam.drawD = k_drawD;
   cam.FOV = k_FOV;
@@ -268,7 +286,7 @@ void gr_init(int _lineSize, int _sensitivity){
   dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
   dimScreen[0] = p_termPoint;
   fontSize = io_getFont(&font, "mario.font");
-  s.menu = k_menuStatic;
+  /* s.menu = k_menuStatic; */
 
   image *im;
   im = loadTexture(); // From parsing.c
@@ -276,10 +294,14 @@ void gr_init(int _lineSize, int _sensitivity){
   wn_menuWindow();
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im->sizeX, im->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, im->data);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im->sizeX, im->sizeY, 0, GL_BGR, GL_UNSIGNED_BYTE, im->data);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+}
+
+void gr_image(image im, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2) {
+
 }
 
 void gr_deinit(){

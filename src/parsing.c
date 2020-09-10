@@ -337,25 +337,40 @@ image * loadTexture(){
 
   image1 = (image *) salloc(sizeof(image));
 
-  if (!getImage(image1, "menuscreen.bmp")) {
+  if (!io_getImage(image1, "menuscreen_bg.bmp")) {
     exit(1);
   }
 
   return image1;
 }
 
-int getImage(image *image, char *fn) {
+bool io_getImage(image *image, char *fn) {
   FILE *file = rs_getBFile(fn);
   unsigned long size; // size of the image in bytes.
-  char temp; // temporary color storage for bgr-rgb conversion.
+  unsigned char header[54]; // Each BMP file begins by a 54-bytes header
+  unsigned int width, height;
+  unsigned int dataPos;
 
-  image->sizeX = 256;
-  image->sizeY = 240;
+  if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
+    printf("Error reading header data from %s.\n", fn);
+    return false;
+  }
 
-  size = image->sizeX * image->sizeY * 3;
+  if ( header[0]!='B' || header[1]!='M' ){
+    printf("Error parsing header from %s. (no \"BM\")\n", fn);
+    return false;
+  }
 
-  // seek past the bitmap header.
-  fseek(file, 54, SEEK_CUR);
+  // Read ints from the byte array
+  dataPos      = *(int*)&(header[0x0A]);
+  image->sizeX = *(int*)&(header[0x12]);
+  image->sizeY = *(int*)&(header[0x16]);
+
+  size = image->sizeX * image->sizeY * 3; // 3 : one byte for each Red, Green and Blue component
+
+  if (dataPos > 54) { // bigger header size
+    fseek(file, dataPos, SEEK_SET);
+  }
 
   // read the data.
   image->data = (unsigned char *) malloc(size);
@@ -363,21 +378,15 @@ int getImage(image *image, char *fn) {
   if (image->data == NULL) {
     printf("Error allocating memory for color-corrected image data");
     sfclose(file);
-    return 0;
+    return false;
   }
 
   if (fread(image->data, size, 1, file) != 1) {
     printf("Error reading image data from %s.\n", fn);
     sfclose(file);
-    return 0;
-  }
-
-  for (int i=0;i<size;i+=3) { // reverse all of the colors. (bgr -> rgb)
-    temp = image->data[i];
-    image->data[i] = image->data[i+2];
-    image->data[i+2] = temp;
+    return false;
   }
 
   sfclose(file);
-  return 1;
+  return true;
 }

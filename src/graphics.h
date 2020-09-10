@@ -22,11 +22,13 @@
 #define k_fontHeight 7
 // scale the font up
 #define k_fontSize 2
+#define k_fontPadX (k_fontSize)
+#define k_fontPadY (k_fontSize)
 // define the space a character takes up
-#define k_charSpaceX (((k_fontWidth) + 1) * (k_fontSize))
-#define k_charSpaceY (((k_fontHeight) + 1) * (k_fontSize))
+#define k_fontSpaceX ((k_fontWidth) * (k_fontSize) + (k_fontPadY))
+#define k_fontSpaceY ((k_fontHeight) * (k_fontSize) + (k_fontPadY))
+#define k_camSpeed (conf.sensitivity * (conf.reverseMouseY ? -1 : 1) / 10000.0)
 
-float camSpeed;
 int lineSize;
 bool debug;
 bool *font;
@@ -35,13 +37,23 @@ GLuint texture;
 
 extern struct state s;
 struct camera cam;
+// perhaps this should be an array of `color`s instead?
 unsigned char *perspScreen;
 int imageWidth;
 point *dimScreen;
 
-void gr_text(bool, char *, GLfloat, GLfloat);
+void gr_color(color);
 
-void gr_init(int, int);
+void gr_text(bool, char *, GLfloat, GLfloat);
+// Basic rectangle drawing
+void gr_rectLTRB(color, float left, float top, float right, float bottom);
+void gr_rectLTWH(color, float left, float top, float width, float height);
+void gr_rectCCWH(color, float centerX, float centerY, float width, float height);
+void gr_rectLCWH(color, float left, float centerY, float width, float height);
+
+void gr_image(image, GLfloat, GLfloat, GLfloat, GLfloat);
+
+void gr_init();
 void gr_deinit();
 void gr_update();
 void gr_drawPersp();

@@ -26,16 +26,16 @@ struct state s;
 // detailed mechanics that I definitely got wrong:
 // https://www.speedrun.com/smb1/guide/pbl9d
 
-// TODO: Should I use "atexit" and separate out a mn_init() and mn_deinit() functions?
-
 int main(int argc, char **argv){
+
+  quit = false;
 
   // resources must be initialized before io_readConfig()
   // but settings must be loaded before we can initialize the rest
   rs_init();
 
   // default values
-  config conf = {
+  conf = (config) {
     .mute = false,
     .effects = false,
     .lineSize = 30,
@@ -79,47 +79,10 @@ int main(int argc, char **argv){
   ob_init();
   gl_init();
   wn_init();
-  au_init(conf.mute, conf.effects);
-  gr_init(conf.lineSize, conf.sensitivity * (conf.reverseMouseY ? -1 : 1));
+  au_init();
+  gr_init();
 
   mu_main(); // start the program with the menu
-
-  /* while(!wn_shouldClose()) { */
-  /*   au_update(); */
-
-  /*   //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop. */
-  /*   if(s.userPaused){wn_disable_mouse(false);} */
-  /*   else{wn_disable_mouse(true);} */
-  /*   wn_menuWindow(); */
-  /*   gr_clear(); */
-  /*   wn_perspWindow(); */
-  /*   gr_clear(); */
-  /*   wn_dimWindow(); */
-  /*   gr_clear(); */
-  /*   wn_hudWindow(); */
-  /*   gr_clear(); */
-
-  /*   if(s.menu){ */
-  /*     // TODO: pausing while in the main menu bugs out */
-  /*     s.userPaused = true; */
-  /*     s.paused = true; */
-  /*     wn_menuWindow(); */
-  /*     gr_drawMenu(); */
-  /*     wn_update(); */
-  /*   } */
-  /*   else{ */
-  /*     au_update(); */
-  /*     gl_update(); */
-  /*     gr_update(); */
-  /*     wn_perspWindow(); */
-  /*     gr_drawPersp(); */
-  /*     wn_dimWindow(); */
-  /*     gr_drawDim(); */
-  /*     wn_hudWindow(); */
-  /*     gr_drawHud(); */
-  /*     wn_update(); */
-  /*   } */
-  /* } */
 
   // deinit in reverse order
   gr_deinit();

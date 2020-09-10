@@ -56,9 +56,7 @@ const char *soundFileNames[] = {
 // Janky workaround because there's no way to play one sound after another with SDL
 int lowtime_done = false;
 
-void au_init(bool _mute, bool _effects){
-  mute = _mute;
-  effects = _effects;
+void au_init(){
   au_waiting = -1;
 
   err = Mix_OpenAudio(k_mix_frequency, k_mix_format, k_mix_channels, k_mix_chunksize);
@@ -130,7 +128,7 @@ void au_deinit(){
 }
 
 void au_play(int snd){
-  if(!mute || effects){
+  if(!conf.mute || conf.effects){
     err = Mix_PlayChannel(snd, sounds[snd], 0);
     if(err == -1) {
       printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
@@ -145,7 +143,7 @@ void au_playWait(int snd){
     printf("Can't wait for more than one audio at once. How did you even get here?\n");
     exit(EXIT_FAILURE);
   }
-  if(!mute || effects){
+  if(!conf.mute || conf.effects){
     err = Mix_PlayChannel(snd, sounds[snd], 0);
     if(err == -1) {
       printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
@@ -161,7 +159,7 @@ void au_lowTime(){
 }
 
 void au_mainPlay(int snd){
-  if(!mute){
+  if(!conf.mute){
     au_mainStop();
     au_mainAudio = snd;
     err = Mix_PlayChannel(snd, sounds[snd], -1);

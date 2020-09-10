@@ -30,14 +30,18 @@ void wn_perspWindow();
 void wn_dimWindow();
 
 // Event processing
-void wn_click(int, int, int);
-void wn_keypress(SDL_Keycode, int, int);
-void wn_mousemove(double, double);
+void wn_eventCallbacks(void (*keypress)(SDL_KeyboardEvent),
+                       void (*mouseclick)(SDL_MouseButtonEvent),
+                       void (*mousemove)(SDL_MouseMotionEvent));
+void wn_keypressCallback(void (*callback)(SDL_KeyboardEvent));
+void wn_mouseclickCallback(void (*callback)(SDL_MouseButtonEvent));
+void wn_mousemoveCallback(void (*callback)(SDL_MouseMotionEvent));
+void wn_keypress(SDL_KeyboardEvent);
+void wn_mouseclick(SDL_MouseButtonEvent);
+void wn_mousemove(SDL_MouseMotionEvent);
 void wn_processEvents();
 
 void wn_update();
-
-bool wn_shouldClose();
 
 void wn_disable_mouse(bool);
 

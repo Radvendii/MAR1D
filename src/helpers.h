@@ -13,10 +13,25 @@
 
 #define BOUND_BELOW(x, min) if ( (x) < (min) ) { (x) = (min); }
 #define BOUND_ABOVE(x, max) if ( (x) > (max) ) { (x) = (max); }
-// precondition: max > min
+
+// precondition: min <= max
+// postcondition: min <= x <= max
 #define BOUND(x, min, max)                        \
      if ( (x) < (min) ) { (x) = (min); }          \
      else if ( (x) > (max) ) { (x) = (max); }
+
+// TODO: `volume`, `volumeEffects`, `volumeMusic` instead of `mute` and `effects`
+typedef struct {
+  bool mute;
+  bool effects;
+  int lineSize;
+  int sensitivity;
+  bool reverseMouseY;
+} config; // not to be confused with config_t from libconfig
+
+config conf;
+
+bool quit; // global variable for exiting all loops and quitting the game
 
 int err; // global variable for capturing error codes
 

@@ -11,6 +11,62 @@ void gl_init(){
   s.scene = salloc(sizeof(obj) * k_nMaxObj);
 }
 
+void gl_main() {
+  wn_eventCallbacks(&gl_keypress, &gl_mouseclick, &gl_mousemove);
+  gl_load();
+  while (!quit) {
+
+    //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
+    if (s.userPaused) {
+      wn_disable_mouse(false);
+    }
+    else {
+      wn_disable_mouse(true);
+    }
+
+    wn_menuWindow();
+    gr_clear();
+    wn_perspWindow();
+    gr_clear();
+    wn_dimWindow();
+    gr_clear();
+    wn_hudWindow();
+    gr_clear();
+
+    // update the state
+    au_update();
+    gl_update();
+    gr_update();
+
+    // draw updates
+    wn_perspWindow();
+    gr_drawPersp();
+    wn_dimWindow();
+    gr_drawDim();
+    wn_hudWindow();
+    gr_drawHud();
+    wn_update();
+  }
+}
+
+void gl_keypress(SDL_KeyboardEvent ev) {
+  if (ev.keysym.sym== SDLK_ESCAPE && ev.state == SDL_PRESSED){
+    quit = true;
+  }
+  if (!ev.repeat) {
+    cl_keypress(ev.keysym.sym, ev.state, ev.keysym.mod);
+    gr_keypress(ev.keysym.sym, ev.state, ev.keysym.mod);
+  }
+}
+
+void gl_mouseclick(SDL_MouseButtonEvent ev) {
+  cl_click(ev.button, ev.state);
+}
+
+void gl_mousemove(SDL_MouseMotionEvent ev) {
+  gr_mousemove(ev.xrel, ev.yrel);
+}
+
 void gl_load(){
   s.level = '1';
   s.loc = '1';
@@ -67,7 +123,7 @@ void gl_win(){
   }
   else{
     au_mainStop();
-    s.menu = k_menuWin;
+    /* s.menu = k_menuWin; */
     s.lives = 3;
   }
 }
@@ -137,7 +193,7 @@ void gl_resetLevel(){
   }
   else{
     au_playWait(SND_gameover);
-    s.menu = k_menuStatic;
+    /* s.menu = k_menuStatic; */
   }
 }
 

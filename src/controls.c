@@ -165,7 +165,7 @@ void cl_jumpEnd(){
   s.gravity = k_gravity;
 }
 
-void cl_click(int button, int action, int mods){
+void cl_click(int button, int action){
   if(button == SDL_BUTTON_LEFT && action == SDL_PRESSED){
     if(s.fire){
       cl_fire();
@@ -234,7 +234,7 @@ void cl_keypress(int key, int state, int mods){
   }
 
   if (key == SDLK_q && state == SDL_PRESSED){
-    if(s.menu || s.paused && !s.userPaused) {return;}
+    if(s.paused && !s.userPaused) {return;}
     s.paused = !s.paused;
     s.userPaused = !s.userPaused;
     if(s.paused){

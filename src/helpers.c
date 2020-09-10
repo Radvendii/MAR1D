@@ -39,7 +39,7 @@ void intsort(int* l, int s){
   qsort(l, s, sizeof(int), intcmp);
 }
 
-double linInterp(double y1, double y2, double x1, double x2, double val){
-  return (y2-y1)/(x2-x1)*val+y2;
+double linInterp(double y0, double y1, double x0, double x1, double x){
+  return (y1-y0)/(x1-x0)*(x-x0)+y0;
 }
 

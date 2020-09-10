@@ -1,6 +1,9 @@
 #include "windowing.h"
 
-bool quit = false;
+void (*keypressCallback)(SDL_KeyboardEvent);
+void (*mouseclickCallback)(SDL_MouseButtonEvent);
+void (*mousemoveCallback)(SDL_MouseMotionEvent);
+
 SDL_GLContext perspContext;
 SDL_GLContext dimContext;
 
@@ -20,8 +23,24 @@ void wn_dimWindow(){
   SDL_GL_MakeCurrent(dimWindow, dimContext);
 }
 
-bool wn_shouldClose(){
-  return quit; // glfwWindowShouldClose(dimWindow) || glfwWindowShouldClose(perspWindow);
+void wn_eventCallbacks(void (*keypress)(SDL_KeyboardEvent),
+                       void (*mouseclick)(SDL_MouseButtonEvent),
+                       void (*mousemove)(SDL_MouseMotionEvent)) {
+  wn_keypressCallback(keypress);
+  wn_mouseclickCallback(mouseclick);
+  wn_mousemoveCallback(mousemove);
+}
+
+void wn_keypressCallback(void (*callback)(SDL_KeyboardEvent)) {
+  keypressCallback = callback;
+}
+
+void wn_mouseclickCallback(void (*callback)(SDL_MouseButtonEvent)) {
+  mouseclickCallback = callback;
+}
+
+void wn_mousemoveCallback(void (*callback)(SDL_MouseMotionEvent)) {
+  mousemoveCallback = callback;
 }
 
 void wn_processEvents(){
@@ -30,19 +49,14 @@ void wn_processEvents(){
     switch(event.type) {
       case SDL_KEYDOWN:
       case SDL_KEYUP:
-        if(!event.key.repeat){
-          wn_keypress(event.key.keysym.sym, event.key.state, event.key.keysym.mod);
-        }
-        mu_keypress(event.key.keysym.sym, event.key.state, event.key.keysym.mod);
+        wn_keypress(event.key);
         break;
       case SDL_MOUSEBUTTONDOWN:
       case SDL_MOUSEBUTTONUP:
-        wn_click(event.button.button, event.button.state, 0);
-        mu_mouseclick(event.button.button, event.button.state, 0);
+        wn_mouseclick(event.button);
         break;
       case SDL_MOUSEMOTION:
-        wn_mousemove(event.motion.xrel, event.motion.yrel);
-        mu_mousemove(event.motion.x, event.motion.y);
+        wn_mousemove(event.motion);
         break;
       default:
         break;
@@ -50,24 +64,31 @@ void wn_processEvents(){
   }
 }
 
-void wn_click(int button, int action, int mods){
-  cl_click(button, action, mods);
+void wn_keypress(SDL_KeyboardEvent ev){
+  if (keypressCallback) {
+    (*keypressCallback)(ev);
+  }
+  else {
+    if (ev.keysym.sym == SDLK_ESCAPE && ev.state == SDL_PRESSED){
+      quit = true;
+    }
+
+    if (ev.keysym.sym == SDLK_j && ev.state == SDL_PRESSED){
+      debug = !debug;
+    }
+  }
 }
 
-void wn_keypress(SDL_Keycode key, int state, int mods){
-  if (key == SDLK_ESCAPE && state == SDL_PRESSED){
-    quit = true;
+void wn_mouseclick(SDL_MouseButtonEvent ev){
+  if (mouseclickCallback) {
+    (*mouseclickCallback)(ev);
   }
-
-  if (key == SDLK_j && state == SDL_PRESSED){
-    debug = !debug;
-  }
-  cl_keypress(key, state, mods);
-  gr_keypress(key, state, mods);
 }
 
-void wn_mousemove(double xMove, double yMove){
-  gr_mousemove(xMove, yMove);
+void wn_mousemove(SDL_MouseMotionEvent ev){
+  if (mousemoveCallback) {
+    (*mousemoveCallback)(ev);
+  }
 }
 
 void wn_init(){
@@ -94,6 +115,10 @@ void wn_init(){
   glLineWidth(1.5f);
   perspContext = SDL_GL_CreateContext(perspWindow);
   dimContext = SDL_GL_CreateContext(dimWindow);
+
+  wn_keypressCallback(&wn_keypress);
+  wn_mouseclickCallback(&wn_mouseclick);
+  wn_mousemoveCallback(&wn_mousemove);
 }
 
 void wn_update(){
