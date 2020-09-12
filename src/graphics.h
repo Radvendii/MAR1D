@@ -37,7 +37,7 @@ GLuint texture;
 
 extern struct state s;
 struct camera cam;
-// perhaps this should be an array of `color`s instead?
+// TODO: perhaps this should be an array of `color`s instead?
 unsigned char *perspScreen;
 int imageWidth;
 point *dimScreen;

@@ -20,6 +20,8 @@
      if ( (x) < (min) ) { (x) = (min); }          \
      else if ( (x) > (max) ) { (x) = (max); }
 
+#define SQUARE(x) ((x) * (x))
+
 // TODO: `volume`, `volumeEffects`, `volumeMusic` instead of `mute` and `effects`
 typedef struct {
   bool mute;
@@ -46,5 +48,6 @@ void intsort(int*, int); // Sorts a list of ints with specified length.
                          // This is never used and I'm not sure why it's here.
 
 double linInterp(double, double, double, double, double);
+double subLinInterp(double, double, double, double, double);
 
 #endif

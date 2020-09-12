@@ -43,3 +43,8 @@ double linInterp(double y0, double y1, double x0, double x1, double x){
   return (y1-y0)/(x1-x0)*(x-x0)+y0;
 }
 
+double subLinInterp(double y0, double y1, double x0, double x1, double x){
+  double a = (x1 - x0) / SQUARE((y1 - y0));
+  return sqrt((x - x0) / a) + y0;
+
+}

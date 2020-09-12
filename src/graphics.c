@@ -124,7 +124,6 @@ void gr_text(bool vert, char *s, GLfloat x_orig, GLfloat y_orig){
   }
 }
 
-//TODO: make this use gr_color()?
 // Render a "pixel" of the vertical screen
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
   gr_rectLTRB((color) {.r = r, .g = g, .b = b}, -conf.lineSize, y+1, conf.lineSize, y);

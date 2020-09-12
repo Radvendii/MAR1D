@@ -69,10 +69,10 @@ void mu_startGame() {
     gr_clear();
     // Rotate the image when the user starts the game
     // TODO: zoom in on mario, either before rotating, or during
-    tX = linInterp(-1, 1, 0, k_menuWindowW, k_marioX+20);
+    tX = linInterp(-1, 1, 0, k_menuWindowW, linInterp(k_marioX, k_marioX+10, k_zoomUntil, k_menuTime, MAX(i, k_zoomUntil)));
     tY = linInterp(-1, 1, 0, k_menuWindowH, k_marioY);
-    s  = linInterp(1.0, 5.0, 0, k_zoomUntil, MIN(i, k_zoomUntil));
-    rY = linInterp(0.0, 90.0, k_zoomUntil, k_menuTime, MAX(i, k_zoomUntil));
+    s  = linInterp(1.0, 8.0, 0, k_zoomUntil, i); //MIN(i, k_zoomUntil));
+    rY = subLinInterp(0.0, 90.0, k_zoomUntil, k_menuTime, MAX(i, k_zoomUntil));
     glPushMatrix();
 
     glRotatef(rY, 0.0, 1.0, 0.0);
