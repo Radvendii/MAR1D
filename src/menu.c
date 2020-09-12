@@ -19,15 +19,34 @@ void mu_init() {
                                .kind = WK_MENU,
                                .m = (menu) { .p = &main_menu,
                                              .sel = 0,
-                                             .nWs = 1,
-                                             .ws = salloc(sizeof(widget) * 1) }};
+                                             .nWs = 5,
+                                             .ws = salloc(sizeof(widget) * 5) }};
 
-  main_menu.ws[1].m.ws[0] = (widget) { .label = "LINE WIDTH",
+  main_menu.ws[1].m.ws[0] = (widget) { .label = "MUTE",
+                                       .kind = WK_SWITCH,
+                                       .switchVal = &conf.mute };
+
+  main_menu.ws[1].m.ws[1] = (widget) { .label = "EFFECTS",
+                                       .kind = WK_SWITCH,
+                                       .switchVal = &conf.effects };
+
+  main_menu.ws[1].m.ws[2] = (widget) { .label = "LINE WIDTH",
                                        .kind = WK_SLIDER,
                                        .sliderVal = &conf.lineSize,
                                        .inc = 5,
                                        .min = 1,
                                        .max = 100 };
+
+  main_menu.ws[1].m.ws[3] = (widget) { .label = "SENSITIVITY",
+                                       .kind = WK_SLIDER,
+                                       .sliderVal = &conf.sensitivity,
+                                       .inc = 1,
+                                       .min = 1,
+                                       .max = 20 };
+
+  main_menu.ws[1].m.ws[4] = (widget) { .label = "INVERT Y",
+                                       .kind = WK_SWITCH,
+                                       .switchVal = &conf.reverseMouseY };
 
   main_menu.ws[2] = (widget) { .label = "QUIT",
                                .kind = WK_ACTION,
@@ -133,30 +152,36 @@ void mu_drawSelected(float x, float y) {
   glEnd();
 }
 
+//TODO: make k_sliderWidth dependent on the w.max in the case of line width
+//TODO: move these elsewhere
+#define RGB(x) (color) { .r = ((x) & 0xFF0000) >> 16, .g = ((x) & 0x00FF00) >> 8, .b = ((x) & 0x0000FF) >> 0 }
+#define k_colorWidgetBGDim RGB(0x4C84DC)
+#define k_colorWidgetBGLit RGB(0x70B0FF)
+#define k_colorWidgetFGDim RGB(0xCCCCCC)
+#define k_colorWidgetFGLit RGB(0xFFFFFF)
+#define k_sliderWidth 100
+#define k_switchWidth 50
+#define k_labelSpace 190 // TODO: this needs to be calculated based on the max size of the labels (calculate in drawMenu() and pass in)
 void mu_drawWidget(widget w, float x, float y) {
+  float ymid = y - k_fontHeight * k_fontSize / 2;
   switch (w.kind) {
     case WK_MENU:
       gr_text(false, w.label, x, y);
       break;
     case WK_SLIDER:
       gr_text(false, w.label, x, y);
-      //TODO: make k_sliderWidth dependent on the w.max in the case of line width
-      //TODO: move these elsewhere
-#define k_sliderWidth 100
-#define k_labelSpace 170
-#define k_colorWidgetBG ((color) {.r = 0x4C, .g = 0x84, .b = 0xDC})
-#define k_colorWidgetFG ((color) {.r = 0xFF, .g = 0xFF, .b = 0xFF})
-      float ymid = y - k_fontHeight * k_fontSize / 2;
       float dist = linInterp(0, k_sliderWidth,
-                             0, w.max, // unsure whether to use w.min here
+                             0, w.max, // TODO: unsure whether to use w.min or 0 here
                              *(w.sliderVal));
 
-      gr_rectLCWH(k_colorWidgetBG, x + k_labelSpace, ymid, k_sliderWidth, 10);
-      gr_rectLCWH(k_colorWidgetFG, x + k_labelSpace, ymid, dist, 10);
+      gr_rectLCWH(k_colorWidgetBGDim, x + k_labelSpace, ymid, k_sliderWidth, 10);
+      gr_rectLCWH(k_colorWidgetFGLit, x + k_labelSpace, ymid, dist, 10);
       break;
     case WK_SWITCH:
+      // TODO: clean up this mess
       gr_text(false, w.label, x, y);
-      gr_text(false, "SWITCH", x, y);
+      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetBGLit : k_colorWidgetBGDim, x + k_labelSpace, ymid, k_switchWidth, 14);
+      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetFGLit : k_colorWidgetFGDim, x + k_labelSpace + (*(w.switchVal) ? k_switchWidth/2 - 1  : 1), ymid, k_switchWidth/2, 12);
       break;
     case WK_ACTION:
       gr_text(false, w.label, x, y);
@@ -220,6 +245,14 @@ void mu_keypressWidget(widget *w, int key, int state, int mods) {
     case WK_SWITCH:
       if ((key == SDLK_RETURN || key == SDLK_SPACE) && state == SDL_PRESSED) {
         *(w->switchVal) ^= true;
+      }
+
+      if ((key == SDLK_LEFT || key == SDLK_a) && state == SDL_PRESSED) {
+        *(w->switchVal) = false;
+      }
+
+      if ((key == SDLK_RIGHT || key == SDLK_d) && state == SDL_PRESSED) {
+        *(w->switchVal) = true;
       }
       break;
     case WK_ACTION:
