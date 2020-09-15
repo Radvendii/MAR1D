@@ -9,6 +9,14 @@
 #define p_termPoint ((point){ .x=124214, .y=143512, .c = '\0'}) // Point which terminates the array of points.
 #define p_skipPoint ((point){ .x=124214, .y=141312, .c = '\0'}) // Special point that is simply skipped. This is useful so that all frames of an animation can be made to have the same number of points.
 
+// Sometimes it's more convenient to define a color by RGB(0xRRGGBB)
+#define RGB(x) (color) { .r = ((x) & 0xFF0000) >> 16, .g = ((x) & 0x00FF00) >> 8, .b = ((x) & 0x0000FF) >> 0 }
+#define k_colorTextLit RGB(0xfcbcb0)
+#define k_colorTextLit RGB(0xF0F0F0)
+#define k_colorTextDim RGB(0xC84C0C)
+#define k_colorTextDim RGB(0x888888)
+#define k_colorTextDim RGB(0x404040)
+
 typedef struct {
   unsigned char r;
   unsigned char g;

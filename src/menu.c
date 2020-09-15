@@ -132,16 +132,32 @@ void mu_main() {
 void mu_drawMenu(menu m, float x, float y) {
 
   // gr_text(false, w.label, x, y);
+
+  // this value will help align the widgets to start in the same place
+  // after their respective labels
+  int labelSpace = 0;
+
+  for (int i=0; i<m.nWs; i++) {
+    widget wi = m.ws[i];
+    BOUND_BELOW(labelSpace, strlen(wi.label) * k_fontSpaceX(false));
+  }
+
+  // if there's no labels, the labels don't need padding
+  // otherwise, pad by a few character widths
+  if (labelSpace > 0) {
+    labelSpace += k_fontSpaceX(false) * 2;
+  }
+
   for (int i=0; i<m.nWs; i++) {
     widget wi = m.ws[i];
 
-    float yi = y - i * k_fontSpaceY - k_headingSpace;
+    float yi = y - i * k_fontSpaceY(false) - k_headingSpace;
 
     if (i == m.sel) {
       mu_drawSelected(x, yi);
     }
 
-    mu_drawWidget(wi, x + k_selSpace, yi);
+    mu_drawWidget(labelSpace, i == m.sel, wi, x + k_selSpace, yi);
   }
 }
 
@@ -154,37 +170,37 @@ void mu_drawSelected(float x, float y) {
 
 //TODO: make k_sliderWidth dependent on the w.max in the case of line width
 //TODO: move these elsewhere
-#define RGB(x) (color) { .r = ((x) & 0xFF0000) >> 16, .g = ((x) & 0x00FF00) >> 8, .b = ((x) & 0x0000FF) >> 0 }
 #define k_colorWidgetBGDim RGB(0x4C84DC)
 #define k_colorWidgetBGLit RGB(0x70B0FF)
 #define k_colorWidgetFGDim RGB(0xCCCCCC)
 #define k_colorWidgetFGLit RGB(0xFFFFFF)
 #define k_sliderWidth 100
-#define k_switchWidth 50
-#define k_labelSpace 190 // TODO: this needs to be calculated based on the max size of the labels (calculate in drawMenu() and pass in)
-void mu_drawWidget(widget w, float x, float y) {
+#define k_switchWidth 40
+#define k_switchButtonWidth k_switchWidth * 0.40
+void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
   float ymid = y - k_fontHeight * k_fontSize / 2;
+  color textColor = selected ? k_colorTextLit : k_colorTextDim;
   switch (w.kind) {
     case WK_MENU:
-      gr_text(false, w.label, x, y);
+      gr_text(textColor, false, w.label, x, y);
       break;
     case WK_SLIDER:
-      gr_text(false, w.label, x, y);
+      gr_text(textColor, false, w.label, x, y);
       float dist = linInterp(0, k_sliderWidth,
                              0, w.max, // TODO: unsure whether to use w.min or 0 here
                              *(w.sliderVal));
 
-      gr_rectLCWH(k_colorWidgetBGDim, x + k_labelSpace, ymid, k_sliderWidth, 10);
-      gr_rectLCWH(k_colorWidgetFGLit, x + k_labelSpace, ymid, dist, 10);
+      gr_rectLCWH(k_colorWidgetBGDim, x + labelSpace, ymid, k_sliderWidth, 10);
+      gr_rectLCWH(k_colorWidgetFGLit, x + labelSpace, ymid, dist, 10);
       break;
     case WK_SWITCH:
       // TODO: clean up this mess
-      gr_text(false, w.label, x, y);
-      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetBGLit : k_colorWidgetBGDim, x + k_labelSpace, ymid, k_switchWidth, 14);
-      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetFGLit : k_colorWidgetFGDim, x + k_labelSpace + (*(w.switchVal) ? k_switchWidth/2 - 1  : 1), ymid, k_switchWidth/2, 12);
+      gr_text(textColor, false, w.label, x, y);
+      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetBGLit : k_colorWidgetBGDim, x + labelSpace, ymid, k_switchWidth, 14);
+      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetFGLit : k_colorWidgetFGDim, x + labelSpace + (*(w.switchVal) ? k_switchWidth - k_switchButtonWidth - 1  : 1), ymid, k_switchButtonWidth, 12);
       break;
     case WK_ACTION:
-      gr_text(false, w.label, x, y);
+      gr_text(textColor, false, w.label, x, y);
       break;
     default:
       fprintf(stderr, "%s not fully specified", __FUNCTION__);

@@ -8,8 +8,8 @@
 #include "graphics.h"
 #include "parsing.h"
 
-#define k_headingSpace (k_fontSpaceY * 1.5)
-#define k_selSpace (k_fontSpaceX)
+#define k_headingSpace (k_fontSpaceY(false) * 1.5)
+#define k_selSpace (k_fontSpaceX(false))
 
 /*
  * Definition of datatypes for the menu
@@ -92,7 +92,7 @@ void mu_keypressMenu(menu *, int, int, int);
 void mu_mouseclickMenu(menu *, int, int);
 void mu_mousemoveMenu(menu *, double, double);
 
-void mu_drawWidget(widget, float, float);
+void mu_drawWidget(int labelSpace, bool selected, widget, float, float);
 void mu_keypressWidget(widget *, int, int, int);
 void mu_mouseclickWidget(widget *, int, int);
 void mu_mousemoveWidget(widget *, double, double);

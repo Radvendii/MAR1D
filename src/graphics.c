@@ -97,17 +97,18 @@ void gr_char(char c, GLfloat x, GLfloat y){
 }
 
 // Renders a text string
-void gr_text(bool vert, char *s, GLfloat x_orig, GLfloat y_orig){
+void gr_text(color col, bool vert, char *s, GLfloat x_orig, GLfloat y_orig){
+  gr_color(col);
   GLfloat x = x_orig;
   GLfloat y = y_orig;
   for(int i=0; s[i] != '\0'; i++){
     if(s[i] == '\n'){
       if(vert){
-        x += k_fontSpaceX;
+        x += k_fontSpaceX(vert);
         y = y_orig;
       }
       else{
-        y -= k_fontSpaceY;
+        y -= k_fontSpaceY(vert);
         x = x_orig;
       }
     }
@@ -115,10 +116,10 @@ void gr_text(bool vert, char *s, GLfloat x_orig, GLfloat y_orig){
       gr_char(s[i], x, y);
       // Shift over for next character
       if(vert){
-        y -= k_fontSpaceY;
+        y -= k_fontSpaceY(vert);
       }
       else{
-        x += k_fontSpaceX;
+        x += k_fontSpaceX(vert);
       }
     }
   }
@@ -175,13 +176,12 @@ void gr_points(point *ps){
 void gr_drawPersp(){
   gr_pixels(perspScreen);
   if(s.userPaused){
-    glColor3f(0.5, 0.5, 0.5);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glOrtho(-k_perspWindowW/2, k_perspWindowW/2, -k_perspWindowH/2, k_perspWindowH/2, -1, 1);
-    gr_text(false, "PAUSED", -3*7*k_fontSize, 0);
+    gr_text(k_colorTextDim, false, "PAUSED", -3*7*k_fontSize, 0);
   }
 }
 
@@ -222,14 +222,13 @@ void gr_drawHud(){
   char hud[60];
   // Formatting of this is very finicky
   sprintf(hud, "   MAR1D          WORLD  TIME\n   %06d  @x%02d    1-1   %03d", s.score, s.coins, s.time/k_timeTick);
-  glColor3f(0.5, 0.5, 0.5);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glOrtho(0, k_hudWindowW, 0, k_hudWindowH, -1, 1);
 
-  gr_text(true, hud, 5, k_hudWindowH-5);
+  gr_text(k_colorTextDim, true, hud, 5, k_hudWindowH-5);
 }
 
 void gr_drawMenu(){

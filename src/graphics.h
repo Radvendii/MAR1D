@@ -1,7 +1,5 @@
 #ifndef _GRAPHICS_H
 #define _GRAPHICS_H
-// #include <GLFW/glfw3.h> //for openGL functions
-// need opengl functions here
 #include <SDL_opengl.h>
 #include <GL/glu.h>
 #include <SDL.h>
@@ -22,11 +20,12 @@
 #define k_fontHeight 7
 // scale the font up
 #define k_fontSize 2
-#define k_fontPadX (k_fontSize)
-#define k_fontPadY (k_fontSize)
-// define the space a character takes up
-#define k_fontSpaceX ((k_fontWidth) * (k_fontSize) + (k_fontPadY))
-#define k_fontSpaceY ((k_fontHeight) * (k_fontSize) + (k_fontPadY))
+#define k_fontPadChar (k_fontSize)
+#define k_fontPadLine (k_fontSize * 2)
+// TODO: define the space a character takes up
+// TODO: Also, this feels kind of ugly
+#define k_fontSpaceX(vert) ((k_fontWidth) * (k_fontSize) + (vert ? k_fontPadLine : k_fontPadChar))
+#define k_fontSpaceY(vert) ((k_fontHeight) * (k_fontSize) + (vert ? k_fontPadChar : k_fontPadLine))
 #define k_camSpeed (conf.sensitivity * (conf.reverseMouseY ? -1 : 1) / 10000.0)
 
 int lineSize;
@@ -44,7 +43,7 @@ point *dimScreen;
 
 void gr_color(color);
 
-void gr_text(bool, char *, GLfloat, GLfloat);
+void gr_text(color, bool, char *, GLfloat, GLfloat);
 // Basic rectangle drawing
 void gr_rectLTRB(color, float left, float top, float right, float bottom);
 void gr_rectLTWH(color, float left, float top, float width, float height);
