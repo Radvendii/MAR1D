@@ -18,7 +18,6 @@ void gl_main() {
   wn_eventCallbacks(&gl_keypress, &gl_mouseclick, &gl_mousemove);
   gl_load();
   gameEnd = false;
-  gl_winScreen();
   while (!quit && !gameEnd) {
 
     //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
