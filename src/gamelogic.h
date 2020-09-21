@@ -28,6 +28,8 @@
 #define k_time 400 // How much time the player has to complete the stage
 #define k_timeLow 101 // The time after which time is 'low' and the music will change.
 
+#define k_winScreenTime 6000
+
 struct state {
   char level; // The level the player is on
   char loc; //
@@ -72,6 +74,8 @@ struct state s;
 int gl_playerIndex();
 
 void gl_main(); // main game loop
+
+void gl_winScreen(); // screen that displays when the player wins the game
 
 void gl_keypress(SDL_KeyboardEvent ev);
 void gl_mouseclick(SDL_MouseButtonEvent ev);

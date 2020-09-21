@@ -58,7 +58,6 @@ void gr_update();
 void gr_drawPersp();
 void gr_drawDim();
 void gr_drawHud();
-void gr_drawMenu();
 void gr_clear();
 
 void gr_keypress(int, int, int);

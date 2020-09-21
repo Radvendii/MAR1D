@@ -230,46 +230,6 @@ void gr_drawHud(){
   gr_text(k_colorTextDim, true, hud, 5, k_hudWindowH-5);
 }
 
-void gr_drawMenu(){
-  /* glColor3f(1.f, 1.f, 1.f); */
-  /* glMatrixMode(GL_PROJECTION); */
-  /* glLoadIdentity(); */
-
-  /* glMatrixMode(GL_MODELVIEW); */
-  /* glLoadIdentity(); */
-  /* if(s.menu > k_menuStatic){ */
-  /*   char hud[100]; */
-  /*   sprintf(hud, "CONGRATULATIONS!\n\nYOUVE WON LEVEL 1-1!\n\nSCORE %06d", s.score); */
-  /*   glOrtho(-k_menuWindowW/2, k_menuWindowW/2, 0, k_menuWindowH, -1, 1); */
-  /*   gr_text(false, hud, -k_menuWindowW/2+20, k_menuWindowH-20); */
-  /*   s.menu--; */
-  /* } */
-  /* else{ // The beginning menu */
-
-  /*   // Rotate the image when the user starts the game */
-  /*   glPushMatrix(); */
-  /*   float rot = linInterp(0.0, 90.0, k_menuTime, 0.0, s.menu); */
-  /*   glRotatef(rot, 0.f, 1.f, 0.f); */
-
-  /*   glEnable(GL_TEXTURE_2D); */
-  /*   glBindTexture(GL_TEXTURE_2D, texture); */
-  /*   glBegin(GL_QUADS); */
-  /*   glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f); */
-  /*   glTexCoord2f(1.f, 0.f); glVertex2f(1.f, -1.f); */
-  /*   glTexCoord2f(1.f, 1.f); glVertex2f(1.f, 1.f); */
-  /*   glTexCoord2f(0.f, 1.f); glVertex2f(-1.f, 1.f); */
-  /*   glEnd(); */
-  /*   glPopMatrix(); */
-  /*   if(s.menu != k_menuStatic){ */
-  /*     s.menu--; */
-  /*     if(!s.menu){ // End of menu animation */
-  /*       gl_load(); */
-  /*     } */
-  /*   } */
-  /*   glDisable(GL_TEXTURE_2D); */
-  /* } */
-}
-
 void gr_init(){
   cam.animFrame=0;
   cam.drawD = k_drawD;

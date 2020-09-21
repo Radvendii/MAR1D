@@ -1,5 +1,7 @@
 #include "gamelogic.h"
 
+bool gameEnd;
+
 int gl_playerIndex(){
   int ret=0;
   for(ret=0;s.scene[ret].type != '\0' && s.scene[ret].type != '@';ret++);
@@ -11,10 +13,13 @@ void gl_init(){
   s.scene = salloc(sizeof(obj) * k_nMaxObj);
 }
 
+// main game loop
 void gl_main() {
   wn_eventCallbacks(&gl_keypress, &gl_mouseclick, &gl_mousemove);
   gl_load();
-  while (!quit) {
+  gameEnd = false;
+  gl_winScreen();
+  while (!quit && !gameEnd) {
 
     //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
     if (s.userPaused) {
@@ -47,6 +52,39 @@ void gl_main() {
     gr_drawHud();
     wn_update();
   }
+}
+
+void gl_winScreen() {
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  wn_menuWindow();
+  gr_clear();
+  wn_perspWindow();
+  gr_clear();
+  wn_dimWindow();
+  gr_clear();
+  wn_hudWindow();
+  gr_clear();
+
+  char text[512];
+  sprintf(text,
+          "CONGRATULATIONS!\n\nYOUVE WON STAGE 1-1!\n\n"
+          ""
+          "SCORE %06d\n\n"
+          "\n"
+          "THATS ALL IVE IMPLEMENTED\n"
+          "SO FAR. I HOPE YOU HAD FUN!",
+          s.score);
+  glOrtho(0, k_menuWindowW, 0, k_menuWindowH, -1, 1);
+  gr_text(k_colorTextLit, false, text, 20, k_menuWindowH-20);
+
+  wn_update();
+
+  SDL_Delay(k_winScreenTime);
+
 }
 
 void gl_keypress(SDL_KeyboardEvent ev) {
@@ -117,14 +155,14 @@ void gl_win(){
     s.paused = true;
     au_mainPlay(SND_scorering);
   }
-  else if(s.time/k_timeTick > 0){
+  else if(s.time > 0){
     s.time -= k_timeTick;
     s.score+=50;
   }
   else{
     au_mainStop();
-    /* s.menu = k_menuWin; */
-    s.lives = 3;
+    gl_winScreen();
+    gameEnd = true;
   }
 }
 
@@ -193,7 +231,7 @@ void gl_resetLevel(){
   }
   else{
     au_playWait(SND_gameover);
-    /* s.menu = k_menuStatic; */
+    gameEnd = true;
   }
 }
 
