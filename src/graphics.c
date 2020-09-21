@@ -11,8 +11,7 @@ void gr_mousemove(double xMove, double yMove){
     cam.T = fmod(cam.T-yMove*k_camSpeed, 2*pi);
     // Bound the camera angle by straight down and straight up. 
     // Don't want people spinning the camera 360.
-    if(cam.T < -pi/2 - k_FOV/2){cam.T = -pi/2 - k_FOV/2;}
-    if(cam.T > pi/2-k_FOV/2){cam.T = pi/2-k_FOV/2;}
+    BOUND(cam.T, -pi/2 - k_FOV/2, pi/2 - k_FOV/2);
   }
 }
 
