@@ -79,26 +79,39 @@ void mu_startGame() {
   mu_backgroundMatrix();
   float s, rY, tX, tY;
 
-#define k_zoomUntil ((k_menuTime) / 2)
-#define k_marioX 310.0
-#define k_marioY 82.0
-
-  for (int i=0; i<k_menuTime; i++) {
+  for (int i=0; i<k_menuAnimTime; i++) {
     wn_menuWindow();
     gr_clear();
-    // Rotate the image when the user starts the game
-    // TODO: zoom in on mario, either before rotating, or during
-    tX = linInterp(-1, 1, 0, k_menuWindowW, linInterp(k_marioX, k_marioX+10, k_zoomUntil, k_menuTime, MAX(i, k_zoomUntil)));
-    tY = linInterp(-1, 1, 0, k_menuWindowH, k_marioY);
-    s  = linInterp(1.0, 8.0, 0, k_zoomUntil, i); //MIN(i, k_zoomUntil));
-    rY = subLinInterp(0.0, 90.0, k_zoomUntil, k_menuTime, MAX(i, k_zoomUntil));
+
+    // translations
+    // zoom in a little bit more on mario (by shifting more towards his front) as we rotate
+    tX = linInterp(k_menuAnimMarioX, k_menuAnimMarioX+k_menuAnimMarioXShift,
+                   k_menuAnimStartRotation, k_menuAnimTime, // interpolate during rotation
+                   MAX(i, k_menuAnimStartRotation)); // start as we rotate
+    tY = k_menuAnimMarioY;
+
+    // convert pixels to screen units
+    tX = linInterp(-1, 1, 0, k_menuWindowW, tX);
+    tY = linInterp(-1, 1, 0, k_menuWindowH, tY);
+
+    // scale
+    s  = linInterp(1.0, k_menuAnimScale, 0, k_menuAnimTime, i);
+
+    // rotation about the vertical screen axis (putting us in mario's view)
+    // starts at k_menuAnimStartRotation
+    // subLinInterp gives us a nice slowed rotatoin near the end
+    rY = subLinInterp(0.0, 90.0, k_menuAnimStartRotation, k_menuAnimTime, MAX(i, k_menuAnimStartRotation));
+
     glPushMatrix();
 
+    // Mostly figured this out using trial and error
+    // translate, scale, translate back seems to be a way to zoom in on a point though
     glRotatef(rY, 0.0, 1.0, 0.0);
     glTranslatef(tX, tY, 0);
     glScalef(s, s, s);
     glTranslatef(-tX, -tY, 0);
 
+    // draw rotated, scaled background
     mu_drawBackground();
 
     glPopMatrix();
@@ -161,6 +174,7 @@ void mu_drawMenu(menu m, float x, float y) {
   }
 }
 
+// draw the mushroom symbol that indicates the selected widget
 void mu_drawSelected(float x, float y) {
   glPointSize(5.0);
   glBegin(GL_POINTS);
@@ -168,36 +182,32 @@ void mu_drawSelected(float x, float y) {
   glEnd();
 }
 
-//TODO: make k_sliderWidth dependent on the w.max in the case of line width
-//TODO: move these elsewhere
-#define k_colorWidgetBGDim RGB(0x4C84DC)
-#define k_colorWidgetBGLit RGB(0x70B0FF)
-#define k_colorWidgetFGDim RGB(0xCCCCCC)
-#define k_colorWidgetFGLit RGB(0xFFFFFF)
-#define k_sliderWidth 100
-#define k_switchWidth 40
-#define k_switchButtonWidth k_switchWidth * 0.40
 void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
   float ymid = y - k_fontHeight * k_fontSize / 2;
   color textColor = selected ? k_colorTextLit : k_colorTextDim;
+  // All widgets (so far) have their label displayed in front.
+  // If you add a widget for which this is not the case, this will have to be added to all of the cases
+  gr_text(textColor, false, w.label, x, y);
   switch (w.kind) {
     case WK_MENU:
       gr_text(textColor, false, w.label, x, y);
       break;
     case WK_SLIDER:
       gr_text(textColor, false, w.label, x, y);
-      float dist = linInterp(0, k_sliderWidth,
+      float dist = linInterp(0, k_sliderW,
                              0, w.max, // TODO: unsure whether to use w.min or 0 here
                              *(w.sliderVal));
 
-      gr_rectLCWH(k_colorWidgetBGDim, x + labelSpace, ymid, k_sliderWidth, 10);
-      gr_rectLCWH(k_colorWidgetFGLit, x + labelSpace, ymid, dist, 10);
+      gr_rectLCWH(k_colorWidgetBGDim, x + labelSpace, ymid, k_sliderW, k_sliderH);
+      gr_rectLCWH(k_colorWidgetFGLit, x + labelSpace, ymid, dist, k_sliderH);
       break;
     case WK_SWITCH:
-      // TODO: clean up this mess
       gr_text(textColor, false, w.label, x, y);
-      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetBGLit : k_colorWidgetBGDim, x + labelSpace, ymid, k_switchWidth, 14);
-      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetFGLit : k_colorWidgetFGDim, x + labelSpace + (*(w.switchVal) ? k_switchWidth - k_switchButtonWidth - 1  : 1), ymid, k_switchButtonWidth, 12);
+
+      // Switch socket rectangle
+      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetBGLit : k_colorWidgetBGDim, x + labelSpace, ymid, k_switchW, k_switchH);
+      // Switch internal rectangle (1 pixel border)
+      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetFGLit : k_colorWidgetFGDim, x + labelSpace + (*(w.switchVal) ? k_switchW - k_switchButtonW - 1  : 1), ymid, k_switchButtonW, k_switchH - 2);
       break;
     case WK_ACTION:
       gr_text(textColor, false, w.label, x, y);

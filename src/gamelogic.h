@@ -28,11 +28,6 @@
 #define k_time 400 // How much time the player has to complete the stage
 #define k_timeLow 101 // The time after which time is 'low' and the music will change.
 
-// Constants to define the animation from menu to the actual game, and the winning screen.
-#define k_menuTime 200
-#define k_menuStatic 201
-#define k_menuWin k_menuStatic+500
-
 struct state {
   char level; // The level the player is on
   char loc; //

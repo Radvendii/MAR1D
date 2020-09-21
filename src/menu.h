@@ -8,8 +8,43 @@
 #include "graphics.h"
 #include "parsing.h"
 
+// constants for menu formatting and spacing
 #define k_headingSpace (k_fontSpaceY(false) * 1.5)
 #define k_selSpace (k_fontSpaceX(false))
+
+// constants for menu widget properties
+
+// colors
+#define k_colorWidgetBGDim RGB(0x4C84DC)
+#define k_colorWidgetBGLit RGB(0x70B0FF)
+#define k_colorWidgetFGDim RGB(0xCCCCCC)
+#define k_colorWidgetFGLit RGB(0xFFFFFF)
+
+// dimensions
+//TODO: make k_sliderW dependent on the w.max in the case of line width
+//      (at the moment they just happen to be the same)
+#define k_sliderW 100
+#define k_sliderH 10
+#define k_switchW 40
+#define k_switchH 14
+#define k_switchButtonW ((k_switchWidth) * 0.40)
+
+/******************************************************************************/
+
+// constants to define the animation from menu to the actual game
+#define k_menuAnimTime 200
+#define k_menuAnimStartRotation ((k_menuAnimTime) / 2)
+
+// location of mario on the main menu background
+#define k_menuAnimMarioX 310.0
+#define k_menuAnimMarioY 82.0
+
+// we shift forward this amount as we rotate
+#define k_menuAnimMarioXShift 10
+
+// how much to zoom in on mario
+#define k_menuAnimScale 10.0
+
 
 /*
  * Definition of datatypes for the menu
