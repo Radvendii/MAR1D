@@ -27,7 +27,7 @@
 #define k_sliderH 10
 #define k_switchW 40
 #define k_switchH 14
-#define k_switchButtonW ((k_switchWidth) * 0.40)
+#define k_switchButtonW ((k_switchW) * 0.40)
 
 /******************************************************************************/
 
