@@ -3,7 +3,6 @@
 menu main_menu;
 menu *active_menu;
 
-
 void mu_init() {
 
   // initialize menu
@@ -46,7 +45,7 @@ void mu_init() {
 
   main_menu.ws[1].m.ws[4] = (widget) { .label = "INVERT Y",
                                        .kind = WK_SWITCH,
-                                       .switchVal = &conf.reverseMouseY };
+                                       .switchVal = &conf.invertMouseY };
 
   main_menu.ws[2] = (widget) { .label = "QUIT",
                                .kind = WK_ACTION,

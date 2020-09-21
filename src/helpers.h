@@ -28,7 +28,7 @@ typedef struct {
   bool effects;
   int lineSize;
   int sensitivity;
-  bool reverseMouseY;
+  bool invertMouseY;
 } config; // not to be confused with config_t from libconfig
 
 config conf;

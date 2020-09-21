@@ -40,7 +40,7 @@ int main(int argc, char **argv){
     .effects = false,
     .lineSize = 30,
     .sensitivity = 10,
-    .reverseMouseY = false
+    .invertMouseY = false
   };
 
   // pull config from file
@@ -68,7 +68,7 @@ int main(int argc, char **argv){
       conf.sensitivity = atoi(optarg);
       break;
     case 'r':
-      conf.reverseMouseY = true;
+      conf.invertMouseY = true;
       break;
     }
   }

@@ -26,7 +26,7 @@
 // TODO: Also, this feels kind of ugly
 #define k_fontSpaceX(vert) ((k_fontWidth) * (k_fontSize) + (vert ? k_fontPadLine : k_fontPadChar))
 #define k_fontSpaceY(vert) ((k_fontHeight) * (k_fontSize) + (vert ? k_fontPadChar : k_fontPadLine))
-#define k_camSpeed (conf.sensitivity * (conf.reverseMouseY ? -1 : 1) / 10000.0)
+#define k_camSpeed (conf.sensitivity * (conf.invertMouseY ? -1 : 1) / 10000.0)
 
 int lineSize;
 bool debug;

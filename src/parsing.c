@@ -290,7 +290,7 @@ void io_readConfig(config *c){
   config_lookup_bool(&conf, "effects", &(c->effects));
   config_lookup_int(&conf, "lineSize", &(c->lineSize));
   config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
-  config_lookup_bool(&conf, "reverseMouseY", &(c->reverseMouseY));
+  config_lookup_bool(&conf, "invertMouseY", &(c->invertMouseY));
 
   fclose(f);
   config_destroy(&conf);
@@ -321,8 +321,8 @@ void io_writeConfig(config c){
   set = config_setting_add(root, "sensitivity", CONFIG_TYPE_INT);
   config_setting_set_int(set, c.sensitivity);
 
-  set = config_setting_add(root, "reverseMouseY", CONFIG_TYPE_BOOL);
-  config_setting_set_bool(set, c.reverseMouseY);
+  set = config_setting_add(root, "invertMouseY", CONFIG_TYPE_BOOL);
+  config_setting_set_bool(set, c.invertMouseY);
 
   config_write(&conf, f);
 
