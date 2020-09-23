@@ -8,6 +8,10 @@
 #include "graphics.h"
 #include "parsing.h"
 
+// position of the menu on the screen
+#define k_menuX 100
+#define k_menuY ((k_menuWindowH) - 250)
+
 // constants for menu formatting and spacing
 #define k_headingSpace (k_fontSpaceY(false) * 1.5)
 #define k_selSpace (k_fontSpaceX(false))
@@ -142,21 +146,21 @@ void mu_deleteMenu(menu *);
 
 void mu_startGame();
 void mu_quit();
+void mu_goParent();
 
 void mu_drawSelected(float, float);
 
-int mu_widgetHeight(widget);
-int mu_widgetWidth(widget);
+int mu_labelSpace(menu);
 
 void mu_drawMenu(menu, float, float);
 void mu_keypressMenu(menu *, int, int, int);
-void mu_mouseclickMenu(menu *, int, int);
-void mu_mousemoveMenu(menu *, double, double);
+void mu_mouseclickMenu(menu *, int, int, int, int);
+void mu_mousemoveMenu(menu *, int, int, int);
 
 void mu_drawWidget(int labelSpace, bool selected, widget, float, float);
 void mu_keypressWidget(widget *, int, int, int);
-void mu_mouseclickWidget(widget *, int, int);
-void mu_mousemoveWidget(widget *, double, double);
+void mu_mouseclickWidget(widget *, int, int, int, int, int);
+void mu_mousemoveWidget(widget *, int, int, int, int);
 
 void mu_keypress(SDL_KeyboardEvent);
 void mu_mouseclick(SDL_MouseButtonEvent);

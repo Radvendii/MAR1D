@@ -49,6 +49,12 @@ void mu_init() {
               .label = "INVERT Y",
               .kind = WK_SWITCH,
               .switchVal = &conf.invertMouseY
+            },
+            // TODO: automatically add this to all submenus somehow
+            (widget) {
+              .label = "BACK",
+              .kind = WK_ACTION,
+              .action = &mu_goParent
             }
           }
         )
@@ -81,6 +87,11 @@ void mu_setParents(menu *m, menu *p) {
 
 void mu_quit() {
   quit = true;
+}
+
+// TODO: better name?
+void mu_goParent() {
+  active_menu = active_menu->p;
 }
 
 void mu_menuMatrix() {
@@ -172,14 +183,12 @@ void mu_main() {
     mu_drawBackground();
 
     mu_menuMatrix();
-    mu_drawMenu(*active_menu, 100, k_menuWindowH - 260);
+    mu_drawMenu(*active_menu, k_menuX, k_menuY);
     wn_update();
   }
 }
 
-void mu_drawMenu(menu m, float x, float y) {
-
-  // gr_text(false, w.label, x, y);
+int mu_labelSpace(menu m) {
 
   // this value will help align the widgets to start in the same place
   // after their respective labels
@@ -196,10 +205,19 @@ void mu_drawMenu(menu m, float x, float y) {
     labelSpace += k_fontSpaceX(false) * 2;
   }
 
+  return labelSpace;
+}
+
+void mu_drawMenu(menu m, float x, float y) {
+
+  gr_text(k_colorTextLit, false, "FOO", x, y);
+
+  int labelSpace = mu_labelSpace(m);
+
   for (int i=0; i<m.nWs; i++) {
     widget wi = m.ws[i];
 
-    float yi = y - i * k_fontSpaceY(false) - k_headingSpace;
+    float yi = y - k_headingSpace - i * k_fontSpaceY(false);
 
     if (i == m.sel) {
       mu_drawSelected(x, yi);
@@ -218,34 +236,34 @@ void mu_drawSelected(float x, float y) {
 }
 
 void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
-  float ymid = y - k_fontHeight * k_fontSize / 2;
+  float ymid = y - k_fontHeight * k_fontSize / 2; // middle of the text line
   color textColor = selected ? k_colorTextLit : k_colorTextDim;
   // All widgets (so far) have their label displayed in front.
   // If you add a widget for which this is not the case, this will have to be added to all of the cases
   gr_text(textColor, false, w.label, x, y);
+  x += labelSpace;
+
   switch (w.kind) {
     case WK_MENU:
-      gr_text(textColor, false, w.label, x, y);
+      /* already printed label */
       break;
     case WK_SLIDER:
-      gr_text(textColor, false, w.label, x, y);
+      ; // sacrifice an empty statement to appease the C gods
       float dist = linInterp(0, k_sliderW,
                              0, w.max, // TODO: unsure whether to use w.min or 0 here
                              *(w.sliderVal));
 
-      gr_rectLCWH(k_colorWidgetBGDim, x + labelSpace, ymid, k_sliderW, k_sliderH);
-      gr_rectLCWH(k_colorWidgetFGLit, x + labelSpace, ymid, dist, k_sliderH);
+      gr_rectLCWH(k_colorWidgetBGDim, x, ymid, k_sliderW, k_sliderH);
+      gr_rectLCWH(k_colorWidgetFGLit, x, ymid, dist, k_sliderH);
       break;
     case WK_SWITCH:
-      gr_text(textColor, false, w.label, x, y);
-
       // Switch socket rectangle
-      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetBGLit : k_colorWidgetBGDim, x + labelSpace, ymid, k_switchW, k_switchH);
+      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetBGLit : k_colorWidgetBGDim, x, ymid, k_switchW, k_switchH);
       // Switch internal rectangle (1 pixel border)
-      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetFGLit : k_colorWidgetFGDim, x + labelSpace + (*(w.switchVal) ? k_switchW - k_switchButtonW - 1  : 1), ymid, k_switchButtonW, k_switchH - 2);
+      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetFGLit : k_colorWidgetFGDim, x + (*(w.switchVal) ? k_switchW - k_switchButtonW - 1  : 1), ymid, k_switchButtonW, k_switchH - 2);
       break;
     case WK_ACTION:
-      gr_text(textColor, false, w.label, x, y);
+      /* already printed label */
       break;
     default:
       fprintf(stderr, "%s not fully specified", __FUNCTION__);
@@ -328,19 +346,25 @@ void mu_keypressWidget(widget *w, int key, int state, int mods) {
   }
 }
 
-void mu_mouseclickMenu(menu *m, int button, int action) {
-  mu_mouseclickWidget(&(m->ws[m->sel]), button, action);
+void mu_mouseclickMenu(menu *m, int button, int state, int xPos, int yPos) {
+  mu_mouseclickWidget(&(m->ws[m->sel]), button, state, xPos - k_selSpace, yPos - k_headingSpace - m->sel * k_fontSpaceY(false), mu_labelSpace(*m));
 }
 
-void mu_mouseclickWidget(widget *w, int button, int action) {
+void mu_mouseclickWidget(widget *w, int button, int state, int xPos, int yPos, int labelSpace) {
+  int x = xPos - labelSpace;
   switch (w->kind) {
     case WK_MENU:
+      active_menu = &w->m;
       break;
     case WK_SLIDER:
+      *(w->sliderVal) = x * w->max / k_sliderW;
+      BOUND(*(w->sliderVal), w->min, w->max);
       break;
-    case WK_SWITCH:
-      break;
+  case WK_SWITCH:
+    *(w->switchVal) ^= true;
+    break;
     case WK_ACTION:
+      w->action();
       break;
     default:
       fprintf(stderr, "%s not fully specified", __FUNCTION__);
@@ -349,10 +373,34 @@ void mu_mouseclickWidget(widget *w, int button, int action) {
   }
 }
 
-void mu_mousemoveMenu(menu *m, double xPos, double yPos) {
+void mu_mousemoveMenu(menu *m, int xPos, int yPos, int state) {
+  if (yPos > k_headingSpace &&
+      yPos < k_headingSpace + m->nWs * k_fontSpaceY(false) &&
+      xPos > 0
+    ) {
+    if (!state) {
+      m->sel = (yPos - k_headingSpace) / k_fontSpaceY(false);
+    }
+    mu_mousemoveWidget(&(m->ws[m->sel]), xPos - k_selSpace, yPos - k_headingSpace - m->sel * k_fontSpaceY(false), state, mu_labelSpace(*m));
+  }
 }
 
-void mu_mousemoveWidget(widget *w, double xPos, double yPos) {
+void mu_mousemoveWidget(widget *w, int xPos, int yPos, int state, int labelSpace) {
+  switch (w->kind) {
+    case WK_MENU:
+    case WK_SWITCH:
+    case WK_ACTION:
+        break;
+    case WK_SLIDER:
+      if (state & SDL_BUTTON_LMASK) {
+        mu_mouseclickWidget(w, SDL_BUTTON_LEFT, SDL_PRESSED,  xPos, yPos, labelSpace);
+      }
+      break;
+    default:
+      fprintf(stderr, "%s not fully specified", __FUNCTION__);
+      exit(EXIT_FAILURE);
+      break;
+  }
 }
 
 void mu_keypress(SDL_KeyboardEvent ev){
@@ -360,11 +408,13 @@ void mu_keypress(SDL_KeyboardEvent ev){
 }
 
 void mu_mouseclick(SDL_MouseButtonEvent ev){
-  mu_mouseclickMenu(active_menu, ev.button, ev.state);
+  if (ev.state == SDL_PRESSED) {
+    mu_mouseclickMenu(active_menu, ev.button, ev.state, ev.x - k_menuX, ev.y - (k_menuWindowH - k_menuY));
+  }
 }
 
 void mu_mousemove(SDL_MouseMotionEvent ev){
-  mu_mousemoveMenu(active_menu, ev.x, ev.y);
+  mu_mousemoveMenu(active_menu, ev.x - k_menuX, ev.y - (k_menuWindowH - k_menuY), ev.state);
 }
 
 void mu_drawBackground() {
