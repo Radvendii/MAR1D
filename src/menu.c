@@ -73,6 +73,10 @@ void mu_init() {
   mu_setParents(&main_menu, NULL);
 
   active_menu = &main_menu;
+
+  // initialize images
+  imBg = io_getImage("menuscreen_bg.bmp");
+  imSel = io_getImage("selected.bmp");
 }
 
 // recursively set all menu.p to the menu that contains it
@@ -418,15 +422,5 @@ void mu_mousemove(SDL_MouseMotionEvent ev){
 }
 
 void mu_drawBackground() {
-  glColor3f(1.f, 1.f, 1.f);
-
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glBegin(GL_QUADS);
-  glTexCoord2f(0.f, 0.f); glVertex2f(-1, -1);
-  glTexCoord2f(1.f, 0.f); glVertex2f(1, -1);
-  glTexCoord2f(1.f, 1.f); glVertex2f(1, 1);
-  glTexCoord2f(0.f, 1.f); glVertex2f(-1, 1);
-  glEnd();
-  glDisable(GL_TEXTURE_2D);
+  gr_image(imBg, -1, -1, 1, 1);
 }

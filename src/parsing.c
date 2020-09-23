@@ -330,21 +330,9 @@ void io_writeConfig(config c){
   config_destroy(&conf);
 }
 
-// Functions for loading the menuscreen texture.
-//TODO: Clean this up and give these functions better names.
-image * loadTexture(){
-  image *image1;
+image io_getImage(char *fn) {
+  image im;
 
-  image1 = (image *) salloc(sizeof(image));
-
-  if (!io_getImage(image1, "menuscreen_bg.bmp")) {
-    exit(1);
-  }
-
-  return image1;
-}
-
-bool io_getImage(image *image, char *fn) {
   FILE *file = rs_getBFile(fn);
   unsigned long size; // size of the image in bytes.
   unsigned char header[54]; // Each BMP file begins by a 54-bytes header
@@ -352,41 +340,31 @@ bool io_getImage(image *image, char *fn) {
   unsigned int dataPos;
 
   if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
-    printf("Error reading header data from %s.\n", fn);
-    return false;
+    fprintf(stderr, "Error reading header data from %s.\n", fn);
   }
 
   if ( header[0]!='B' || header[1]!='M' ){
-    printf("Error parsing header from %s. (no \"BM\")\n", fn);
-    return false;
+    fprintf(stderr, "Error parsing header from %s. (no \"BM\")\n", fn);
   }
 
   // Read ints from the byte array
-  dataPos      = *(int*)&(header[0x0A]);
-  image->sizeX = *(int*)&(header[0x12]);
-  image->sizeY = *(int*)&(header[0x16]);
+  dataPos   = *(int*)&(header[0x0A]);
+  im.sizeX = *(int*)&(header[0x12]);
+  im.sizeY = *(int*)&(header[0x16]);
 
-  size = image->sizeX * image->sizeY * 3; // 3 : one byte for each Red, Green and Blue component
+  size = im.sizeX * im.sizeY * 3; // 3 : one byte for each Red, Green and Blue component
 
   if (dataPos > 54) { // bigger header size
     fseek(file, dataPos, SEEK_SET);
   }
 
   // read the data.
-  image->data = (unsigned char *) malloc(size);
+  im.data = (unsigned char *) salloc(size);
 
-  if (image->data == NULL) {
-    printf("Error allocating memory for color-corrected image data");
-    sfclose(file);
-    return false;
-  }
-
-  if (fread(image->data, size, 1, file) != 1) {
-    printf("Error reading image data from %s.\n", fn);
-    sfclose(file);
-    return false;
+  if (fread(im.data, size, 1, file) != 1) {
+    fprintf(stderr, "Error reading image data from %s.\n", fn);
   }
 
   sfclose(file);
-  return true;
+  return im;
 }

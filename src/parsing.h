@@ -30,7 +30,6 @@ void io_getLevels(level**, char*);
 void io_readConfig(config *);
 void io_writeConfig(config);
 
-image* loadTexture();
-bool io_getImage(image*, char*);
+image io_getImage(char*);
 
 #endif

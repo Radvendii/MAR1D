@@ -101,6 +101,10 @@
 typedef struct widget widget;
 typedef struct menu menu;
 
+// images
+image imBg;
+image imSel;
+
 struct menu {
   menu *p;    // the parent menu containing this one (null if this is the highest level)
   widget *ws; // array of widgets

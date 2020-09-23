@@ -32,7 +32,6 @@ int lineSize;
 bool debug;
 bool *font;
 int fontSize;
-GLuint texture;
 
 extern struct state s;
 struct camera cam;

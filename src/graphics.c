@@ -243,22 +243,28 @@ void gr_init(){
   dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
   dimScreen[0] = p_termPoint;
   fontSize = io_getFont(&font, "mario.font");
-  /* s.menu = k_menuStatic; */
-
-  image *im;
-  im = loadTexture(); // From parsing.c
 
   wn_menuWindow();
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im->sizeX, im->sizeY, 0, GL_BGR, GL_UNSIGNED_BYTE, im->data);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 }
 
 void gr_image(image im, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2) {
+  GLuint texture;
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im.sizeX, im.sizeY, 0, GL_BGR, GL_UNSIGNED_BYTE, im.data);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.f, 0.f); glVertex2f(x1, y1);
+  glTexCoord2f(1.f, 0.f); glVertex2f(x2, y1);
+  glTexCoord2f(1.f, 1.f); glVertex2f(x2, y2);
+  glTexCoord2f(0.f, 1.f); glVertex2f(x1, y2);
+  glEnd();
+  glDisable(GL_TEXTURE_2D);
 }
 
 void gr_deinit(){
