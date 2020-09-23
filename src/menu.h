@@ -29,7 +29,7 @@
 #define k_switchH 14
 #define k_switchButtonW ((k_switchW) * 0.40)
 
-/******************************************************************************/
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // constants to define the animation from menu to the actual game
 #define k_menuAnimTime 200
@@ -45,6 +45,28 @@
 // how much to zoom in on mario
 #define k_menuAnimScale 10.0
 
+/*
+ * define a menu from a list of widgets. This is useful for initializing nested
+ * menus.
+ * - .ws will need to be freed.
+ * - .nWs is set appropriately.
+ * - .sel is initialized to 0
+ * - .p is not set.
+ *
+ * invoked as (notice the lack of (widget[]) in the argument)
+ * WS_MENU(
+ *   {
+ *     (widget) { ... },
+ *     (widget) { ... }
+ *   }
+ * )
+ */
+#define WS_MENU(...)                                                    \
+  (menu) {                                                              \
+    .ws = INIT_ARR_ON_HEAP(widget, __VA_ARGS__),                        \
+    .nWs = sizeof((widget[]) __VA_ARGS__) / sizeof(widget),             \
+    .sel = 0                                                            \
+  }
 
 /*
  * Definition of datatypes for the menu
@@ -109,10 +131,14 @@ struct widget {
   };
 };
 
+void mu_setParents(menu *m, menu *p);
+
 void mu_main();
 
 void mu_init();
 void mu_deinit();
+
+void mu_deleteMenu(menu *);
 
 void mu_startGame();
 void mu_quit();

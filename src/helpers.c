@@ -39,6 +39,16 @@ void intsort(int* l, int s){
   qsort(l, s, sizeof(int), intcmp);
 }
 
+/*
+ * makes a copy of obj on the heap, and returns a pointer to the copy.
+ * size is the size of the object
+ */
+void *heap_copy(void *obj, size_t size) {
+  void *ret = malloc(size);
+  memcpy(ret, obj, size);
+  return ret;
+}
+
 double linInterp(double y0, double y1, double x0, double x1, double x){
   return (y1-y0)/(x1-x0)*(x-x0)+y0;
 }

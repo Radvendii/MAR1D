@@ -6,51 +6,77 @@ menu *active_menu;
 void mu_init() {
 
   // initialize menu
-  main_menu = (menu) { .sel = 0,
-                       .nWs = 3,
-                       .ws = salloc(sizeof(widget) * 3) };
+  // TODO: read this in from a (json?) resource file
+  main_menu = WS_MENU(
+    {
+      (widget) {
+        .label = "START GAME",
+        .kind = WK_ACTION,
+        .action = &mu_startGame
+      },
+      (widget) {
+        .label = "OPTIONS",
+        .kind = WK_MENU,
+        .m = WS_MENU(
+          {
+            (widget) {
+              .label = "MUTE",
+              .kind = WK_SWITCH,
+              .switchVal = &conf.mute
+            },
+            (widget) {
+              .label = "EFFECTS",
+              .kind = WK_SWITCH,
+              .switchVal = &conf.effects
+            },
+            (widget) {
+              .label = "LINE WIDTH",
+              .kind = WK_SLIDER,
+              .sliderVal = &conf.lineSize,
+              .inc = 5,
+              .min = 1,
+              .max = 100
+            },
+            (widget) {
+              .label = "SENSITIVITY",
+              .kind = WK_SLIDER,
+              .sliderVal = &conf.sensitivity,
+              .inc = 1,
+              .min = 1,
+              .max = 20
+            },
+            (widget) {
+              .label = "INVERT Y",
+              .kind = WK_SWITCH,
+              .switchVal = &conf.invertMouseY
+            }
+          }
+        )
+      },
+      (widget) {
+        .label = "QUIT",
+        .kind = WK_ACTION,
+        .action = &mu_quit
+      }
+    }
+  );
 
-  main_menu.ws[0] = (widget) { .label = "START GAME",
-                               .kind = WK_ACTION,
-                               .action = &mu_startGame };
+  // TODO: I really, really want this to be incorporated in the macros above,
+  // and not it's own function. But I can't figure out an elegant way to do it
+  // right now, and I need to move on.
+  mu_setParents(&main_menu, NULL);
 
-  main_menu.ws[1] = (widget) { .label = "OPTIONS",
-                               .kind = WK_MENU,
-                               .m = (menu) { .p = &main_menu,
-                                             .sel = 0,
-                                             .nWs = 5,
-                                             .ws = salloc(sizeof(widget) * 5) }};
-
-  main_menu.ws[1].m.ws[0] = (widget) { .label = "MUTE",
-                                       .kind = WK_SWITCH,
-                                       .switchVal = &conf.mute };
-
-  main_menu.ws[1].m.ws[1] = (widget) { .label = "EFFECTS",
-                                       .kind = WK_SWITCH,
-                                       .switchVal = &conf.effects };
-
-  main_menu.ws[1].m.ws[2] = (widget) { .label = "LINE WIDTH",
-                                       .kind = WK_SLIDER,
-                                       .sliderVal = &conf.lineSize,
-                                       .inc = 5,
-                                       .min = 1,
-                                       .max = 100 };
-
-  main_menu.ws[1].m.ws[3] = (widget) { .label = "SENSITIVITY",
-                                       .kind = WK_SLIDER,
-                                       .sliderVal = &conf.sensitivity,
-                                       .inc = 1,
-                                       .min = 1,
-                                       .max = 20 };
-
-  main_menu.ws[1].m.ws[4] = (widget) { .label = "INVERT Y",
-                                       .kind = WK_SWITCH,
-                                       .switchVal = &conf.invertMouseY };
-
-  main_menu.ws[2] = (widget) { .label = "QUIT",
-                               .kind = WK_ACTION,
-                               .action = &mu_quit };
   active_menu = &main_menu;
+}
+
+// recursively set all menu.p to the menu that contains it
+void mu_setParents(menu *m, menu *p) {
+  for(int i=0; i < m->nWs; i++) {
+    if (m->ws[i].kind == WK_MENU) {
+      mu_setParents(&m->ws[i].m, m);
+    }
+  }
+  m->p = p;
 }
 
 void mu_quit() {
@@ -120,9 +146,19 @@ void mu_startGame() {
 }
 
 void mu_deinit() {
-  free(main_menu.ws[0].m.ws);
-  free(main_menu.ws);
+  mu_deleteMenu(&main_menu);
   active_menu = NULL;
+}
+
+void mu_deleteMenu(menu *m) {
+  if (m) {
+    for (int i=0; i < m->nWs; i++) {
+      if (m->ws[i].kind == WK_MENU) {
+        mu_deleteMenu(&m->ws[i].m);
+      }
+    }
+    free(m->ws);
+  }
 }
 
 void mu_main() {
