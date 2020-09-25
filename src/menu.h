@@ -13,7 +13,7 @@
 #define k_menuY (k_menuWindowH - 250)
 
 // constants for menu formatting and spacing
-#define k_headingSpace (k_fontSpaceY(false) * 1.5)
+#define k_headingSpace (k_fontSpaceY(false) * k_fontSize * 1.5)
 #define k_selSpace (k_fontCharX + 10)
 
 // constants for menu widget properties
@@ -111,7 +111,8 @@ struct menu {
 enum widgetKind { WK_MENU,     // menu
                   WK_SLIDER,   // int value slider
                   WK_SWITCH,   // bool value switch
-                  WK_ACTION }; // perform an action when selected
+                  WK_ACTION,   // perform an action when selected
+                  WK_TEXT };   // display text
 
 struct widget {
   char *label;
@@ -132,12 +133,18 @@ struct widget {
     struct { // WK_ACTION
       void (*action)(void);
     };
+    struct { // WK_TEXT
+      char *text;
+      float size;
+    }
+    // WK_TEXT just uses .label
   };
 };
 
 void mu_setParents(menu *m, menu *p);
 
 void mu_main();
+void mu_update();
 
 void mu_init();
 void mu_deinit();
@@ -157,6 +164,7 @@ void mu_keypressMenu(menu *, int, int, int);
 void mu_mouseclickMenu(menu *, int, int, int, int);
 void mu_mousemoveMenu(menu *, int, int, int);
 
+float mu_widgetH(widget);
 void mu_drawWidget(int labelSpace, bool selected, widget, float, float);
 void mu_keypressWidget(widget *, int, int, int);
 void mu_mouseclickWidget(widget *, int, int, int, int, int);

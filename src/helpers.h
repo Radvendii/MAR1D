@@ -30,6 +30,8 @@
 
 #define SQUARE(x) ((x) * (x))
 
+#define SGN(x) ((x) > 0 - (x) < 0)
+
 /*
  * arrays can be initialized with int[] foo = {1, 2, 3} syntax, but this puts
  * the array on the stack. This macro allows you to use similar syntax to
@@ -48,8 +50,8 @@
 
 // TODO: `volume`, `volumeEffects`, `volumeMusic` instead of `mute` and `effects`
 typedef struct {
-  bool mute;
-  bool effects;
+  int music;
+  int effects;
   int lineSize;
   int sensitivity;
   bool invertMouseY;

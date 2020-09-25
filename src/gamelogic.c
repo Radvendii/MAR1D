@@ -78,7 +78,7 @@ void gl_winScreen() {
           "SO FAR. I HOPE YOU HAD FUN!",
           s.score);
   glOrtho(0, k_menuWindowW, 0, k_menuWindowH, -1, 1);
-  gr_text(k_colorTextLit, false, text, 20, k_menuWindowH-20);
+  gr_text(k_colorTextLit, false, text, k_fontSize, 20, k_menuWindowH-20);
 
   wn_update();
 

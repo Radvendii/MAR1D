@@ -15,40 +15,173 @@ void mu_init() {
         .action = &mu_startGame
       },
       (widget) {
+        .label = "EXPLANATION",
+        .kind = WK_MENU,
+        .m = WS_MENU(
+          {
+            (widget) {
+              .label = "",
+              .kind = WK_TEXT,
+              .text =
+                "FIRST PERSON MARIO. THE WORLD IS\n"
+                "STILL 2D. YOU SEE THAT WORLD AS\n"
+                "MARIO DOES: A 1D LINE.\n"
+                "\n"
+                "MORE AT MAR1D.COM\n",
+              .size = 1.5
+            },
+            // TODO: automatically add this to all submenus somehow
+            (widget) {
+              .label = "BACK",
+              .kind = WK_ACTION,
+              .action = &mu_goParent
+            }
+          }
+        )
+      },
+      (widget) {
         .label = "OPTIONS",
         .kind = WK_MENU,
         .m = WS_MENU(
           {
             (widget) {
-              .label = "MUTE",
-              .kind = WK_SWITCH,
-              .switchVal = &conf.mute
+              .label = "CONTROLS",
+              .kind = WK_MENU,
+              .m = WS_MENU(
+                {
+                  (widget) {
+                    .label = "MOUSE",
+                    .kind = WK_MENU,
+                    .m = WS_MENU(
+                      {
+                        (widget) {
+                          .label = "SENSITIVITY",
+                          .kind = WK_SLIDER,
+                          .sliderVal = &conf.sensitivity,
+                          .inc = 1,
+                          .min = 1,
+                          .max = 20
+                        },
+                        (widget) {
+                          .label = "INVERT Y",
+                          .kind = WK_SWITCH,
+                          .switchVal = &conf.invertMouseY
+                        },
+                        // TODO: automatically add this to all submenus somehow
+                        (widget) {
+                          .label = "BACK",
+                          .kind = WK_ACTION,
+                          .action = &mu_goParent
+                        }
+                      }
+                    )
+                  },
+                  (widget) {
+                    .label = "KEYBOARD",
+                    .kind = WK_MENU,
+                    .m = WS_MENU(
+                      {
+                        // TODO: automatically add this to all submenus somehow
+                        (widget) {
+                          .label = "BACK",
+                          .kind = WK_ACTION,
+                          .action = &mu_goParent
+                        }
+                      }
+                    )
+                  },
+                  // TODO: automatically add this to all submenus somehow
+                  (widget) {
+                    .label = "BACK",
+                    .kind = WK_ACTION,
+                    .action = &mu_goParent
+                  }
+                }
+              )
             },
             (widget) {
-              .label = "EFFECTS",
-              .kind = WK_SWITCH,
-              .switchVal = &conf.effects
+              .label = "GRAPHICS",
+              .kind = WK_MENU,
+              .m = WS_MENU(
+                {
+                  (widget) {
+                    .label = "LINE WIDTH",
+                    .kind = WK_SLIDER,
+                    .sliderVal = &conf.lineSize,
+                    .inc = 5,
+                    .min = 1,
+                    .max = 100
+                  },
+                  (widget) {
+                    .label = "",
+                    .kind = WK_TEXT,
+                    .text =
+                      "CHANGE THE WIDTH OF THE DISPLAY\n"
+                      "LINE. THIS DOES NOT MAKE IT 2D.\n"
+                      "THERE IS ONLY 1D OF INFORMATION.\n",
+                    .size = 1.5
+                  },
+                  // TODO: automatically add this to all submenus somehow
+                  (widget) {
+                    .label = "BACK",
+                    .kind = WK_ACTION,
+                    .action = &mu_goParent
+                  }
+                }
+              )
             },
             (widget) {
-              .label = "LINE WIDTH",
-              .kind = WK_SLIDER,
-              .sliderVal = &conf.lineSize,
-              .inc = 5,
-              .min = 1,
-              .max = 100
+              .label = "SOUND",
+              .kind = WK_MENU,
+              .m = WS_MENU(
+                {
+                  (widget) {
+                    .label = "MUSIC",
+                    .kind = WK_SLIDER,
+                    .sliderVal = &conf.music,
+                    .min = 0,
+                    .max = MIX_MAX_VOLUME,
+                    .inc = 8
+                  },
+                  (widget) {
+                    .label = "EFFECTS",
+                    .kind = WK_SLIDER,
+                    .sliderVal = &conf.effects,
+                    .min = 0,
+                    .max = MIX_MAX_VOLUME,
+                    .inc = 8
+                  },
+                  // TODO: automatically add this to all submenus somehow
+                  (widget) {
+                    .label = "BACK",
+                    .kind = WK_ACTION,
+                    .action = &mu_goParent
+                  }
+                }
+              )
             },
+            // TODO: automatically add this to all submenus somehow
             (widget) {
-              .label = "SENSITIVITY",
-              .kind = WK_SLIDER,
-              .sliderVal = &conf.sensitivity,
-              .inc = 1,
-              .min = 1,
-              .max = 20
-            },
+              .label = "BACK",
+              .kind = WK_ACTION,
+              .action = &mu_goParent
+            }
+          }
+        )
+      },
+      (widget) {
+        .label = "SOURCE CODE",
+        .kind = WK_MENU,
+        .m = WS_MENU(
+          {
             (widget) {
-              .label = "INVERT Y",
-              .kind = WK_SWITCH,
-              .switchVal = &conf.invertMouseY
+              .label = "",
+              .kind = WK_TEXT,
+              .text =
+                "MAR1D IS FREE SOFTWARE LICENSED\n"
+                "UNDER AGPL. THE SOURCE CAN BE\n"
+                "FOUND AT MAR1D.COM/SOURCE\n",
+              .size = 1.5
             },
             // TODO: automatically add this to all submenus somehow
             (widget) {
@@ -169,6 +302,10 @@ void mu_startGame() {
     wn_update();
   }
   gl_main();
+
+  // take callbacks back
+  // TODO: this is janky.
+  wn_eventCallbacks(&mu_keypress, &mu_mouseclick, &mu_mousemove);
 }
 
 void mu_deinit() {
@@ -200,6 +337,14 @@ void mu_main() {
     mu_menuMatrix();
     mu_drawMenu(*active_menu, k_menuX, k_menuY);
     wn_update();
+    mu_update();
+  }
+}
+
+void mu_update() {
+  // can't select text widgets
+  while (active_menu->ws[active_menu->sel].kind == WK_TEXT) {
+    active_menu->sel++;
   }
 }
 
@@ -211,13 +356,13 @@ int mu_labelSpace(menu m) {
 
   for (int i=0; i<m.nWs; i++) {
     widget wi = m.ws[i];
-    BOUND_BELOW(labelSpace, strlen(wi.label) * k_fontSpaceX(false));
+    BOUND_BELOW(labelSpace, strlen(wi.label) * k_fontSpaceX(false) * k_fontSize);
   }
 
   // if there's no labels, the labels don't need padding
   // otherwise, pad by a few character widths
   if (labelSpace > 0) {
-    labelSpace += k_fontSpaceX(false) * 2;
+    labelSpace += k_fontSpaceX(false) * 2 * k_fontSize;
   }
 
   return labelSpace;
@@ -225,41 +370,61 @@ int mu_labelSpace(menu m) {
 
 void mu_drawMenu(menu m, float x, float y) {
 
-  gr_text(k_colorTextLit, false, m.heading, x, y);
+  gr_text(k_colorTextLit, false, m.heading, k_fontSize, x, y);
+
+  float yi = y - k_headingSpace;
 
   for (int i=0; i<m.nWs; i++) {
     widget wi = m.ws[i];
 
-    float yi = y - k_headingSpace - i * k_fontSpaceY(false);
-
     mu_drawWidget(mu_labelSpace(m), i == m.sel, wi, x, yi);
+
+    yi -= mu_widgetH(wi);
   }
 }
 
+float mu_widgetH(widget w) {
+  float size = k_fontSize;
+  char *str = w.label;
+
+  // for now this doesn't depend much on the type of widget, so we'll just special-case it
+  if (w.kind == WK_TEXT) {
+    size = w.size;
+    str = w.text;
+  }
+
+  int nLines = 1;
+
+  for (int i=0; str[i] != '\0'; i++) {
+    if (str[i] == '\n') {
+      nLines++;
+    }
+  }
+
+  return k_fontSpaceY(false) * size * nLines;
+}
+
 // draw the mushroom symbol that indicates the selected widget
-void mu_drawSelected(float x, float y) {
-  gr_image(&imSel, RECT_LTRB(x-2, y-k_fontCharX+2, x+k_fontCharX-2, y+2));
+void mu_drawSelected(float x, float ymid) {
+  gr_image(&imSel, RECT_LCWH(x-2, ymid, k_fontCharX, k_fontCharX));
 }
 
 void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
   float ymid = y - k_fontCharY / 2; // middle of the text line
 
   if (selected) {
-    mu_drawSelected(x, y);
+    mu_drawSelected(x, ymid);
   }
 
   x += k_selSpace;
 
   // All widgets (so far) have their label displayed in front.
   // If you add a widget for which this is not the case, this will have to be added to all of the cases
-  gr_text(k_colorTextLit, false, w.label, x, y);
+  gr_text(k_colorTextLit, false, w.label, k_fontSize, x, y);
 
   x += labelSpace;
 
   switch (w.kind) {
-    case WK_MENU:
-      /* already printed label */
-      break;
     case WK_SLIDER: ; // sacrifice an empty statement to appease the C gods
       float dist = linInterp(0, k_sliderW,
                              0, w.max, // TODO: unsure whether to use w.min or 0 here
@@ -281,6 +446,10 @@ void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
       gr_drawRect(k_colorBlue, button);
       gr_drawBezelOut(button);
       break;
+    case WK_TEXT:
+      gr_text(k_colorTextLit, false, w.text, w.size, x - labelSpace - k_selSpace, y);
+      break;
+    case WK_MENU:
     case WK_ACTION:
       /* already printed label */
       break;
@@ -301,8 +470,19 @@ void mu_keypressMenu(menu *m, int key, int state, int mods) {
   }
 
   if (dir) { // no need to run this on every keypress (though I suppose we could)
-    m->sel += dir;
-    BOUND(m->sel, 0, m->nWs-1);
+
+    int sel = m->sel;
+
+    do {
+      sel+=dir;
+    }
+    // skip over WK_TEXT widgets
+    while (sel >= 0 && sel < m->nWs && m->ws[sel].kind == WK_TEXT);
+
+    // If we haven't gone past the end, engage!
+    if (sel >= 0 && sel < m->nWs) {
+      m->sel = sel;
+    }
   }
 
   if (key == SDLK_ESCAPE && state == SDL_PRESSED) {
@@ -358,6 +538,8 @@ void mu_keypressWidget(widget *w, int key, int state, int mods) {
         w->action();
       }
       break;
+    case WK_TEXT:
+      break;
     default:
       fprintf(stderr, "%s not fully specified", __FUNCTION__);
       exit(EXIT_FAILURE);
@@ -366,7 +548,16 @@ void mu_keypressWidget(widget *w, int key, int state, int mods) {
 }
 
 void mu_mouseclickMenu(menu *m, int button, int state, int xPos, int yPos) {
-  mu_mouseclickWidget(&(m->ws[m->sel]), button, state, xPos - k_selSpace, yPos - k_headingSpace - m->sel * k_fontSpaceY(false), mu_labelSpace(*m));
+  int y = yPos - (k_headingSpace - k_fontPadLine * k_fontSize / 2);
+  int x = xPos - k_selSpace;
+
+  if (y > 0 && xPos > 0) { // if mouse is pressed, don't change selection
+    int i;
+    for (i=0; i<m->nWs && y > mu_widgetH(m->ws[i]); i++) {
+      y -= mu_widgetH(m->ws[i]);
+    }
+  }
+  mu_mouseclickWidget(&(m->ws[m->sel]), button, state, x, y, mu_labelSpace(*m));
 }
 
 void mu_mouseclickWidget(widget *w, int button, int state, int xPos, int yPos, int labelSpace) {
@@ -379,11 +570,13 @@ void mu_mouseclickWidget(widget *w, int button, int state, int xPos, int yPos, i
       *(w->sliderVal) = x * w->max / k_sliderW;
       BOUND(*(w->sliderVal), w->min, w->max);
       break;
-  case WK_SWITCH:
-    *(w->switchVal) ^= true;
-    break;
+    case WK_SWITCH:
+      *(w->switchVal) ^= true;
+      break;
     case WK_ACTION:
       w->action();
+      break;
+    case WK_TEXT:
       break;
     default:
       fprintf(stderr, "%s not fully specified", __FUNCTION__);
@@ -393,15 +586,19 @@ void mu_mouseclickWidget(widget *w, int button, int state, int xPos, int yPos, i
 }
 
 void mu_mousemoveMenu(menu *m, int xPos, int yPos, int state) {
-  if (yPos > k_headingSpace &&
-      yPos < k_headingSpace + m->nWs * k_fontSpaceY(false) &&
-      xPos > 0
-    ) {
-    if (!state) {
-      m->sel = (yPos - k_headingSpace) / k_fontSpaceY(false);
+  int y = yPos - (k_headingSpace - k_fontPadLine * k_fontSize / 2);
+  int x = xPos - k_selSpace;
+
+  if (y > 0 && xPos > 0) { // if mouse is pressed, don't change selection
+    int i;
+    for (i=0; i<m->nWs && y > mu_widgetH(m->ws[i]); i++) {
+      y -= mu_widgetH(m->ws[i]);
     }
-    mu_mousemoveWidget(&(m->ws[m->sel]), xPos - k_selSpace, yPos - k_headingSpace - m->sel * k_fontSpaceY(false), state, mu_labelSpace(*m));
+    if (i < m->nWs && !state) {
+      m->sel = i;
+    }
   }
+  mu_mousemoveWidget(&(m->ws[m->sel]), x, y, state, mu_labelSpace(*m));
 }
 
 void mu_mousemoveWidget(widget *w, int xPos, int yPos, int state, int labelSpace) {
@@ -409,6 +606,7 @@ void mu_mousemoveWidget(widget *w, int xPos, int yPos, int state, int labelSpace
     case WK_MENU:
     case WK_SWITCH:
     case WK_ACTION:
+    case WK_TEXT:
         break;
     case WK_SLIDER:
       if (state & SDL_BUTTON_LMASK) {
@@ -437,5 +635,5 @@ void mu_mousemove(SDL_MouseMotionEvent ev){
 }
 
 void mu_drawBackground() {
-  gr_image(&imBg, RECT_LTRB(-1, -1, 1, 1));
+  gr_image(&imBg, RECT_LTRB(-1, 1, 1, -1));
 }

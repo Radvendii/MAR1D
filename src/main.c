@@ -36,8 +36,8 @@ int main(int argc, char **argv){
 
   // default values
   conf = (config) {
-    .mute = false,
-    .effects = false,
+    .music = MIX_MAX_VOLUME,
+    .effects = MIX_MAX_VOLUME,
     .lineSize = 30,
     .sensitivity = 10,
     .invertMouseY = false
@@ -53,13 +53,13 @@ int main(int argc, char **argv){
 
   // overwrite default / conf file settings with command line options.
   int c;
-  while ((c = getopt(argc, argv, "mfw:s:r")) != -1){
+  while ((c = getopt(argc, argv, "m:f:w:s:y")) != -1){
     switch (c){
     case 'm':
-      conf.mute = true;
+      conf.music = atoi(optarg);
       break;
     case 'f':
-      conf.effects = true;
+      conf.effects = atoi(optarg);
       break;
     case 'w':
       conf.lineSize = atoi(optarg);
@@ -67,7 +67,7 @@ int main(int argc, char **argv){
     case 's':
       conf.sensitivity = atoi(optarg);
       break;
-    case 'r':
+    case 'y':
       conf.invertMouseY = true;
       break;
     }

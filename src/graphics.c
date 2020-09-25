@@ -110,41 +110,42 @@ void gr_drawBezelIn(rect rct) {
 }
 
 // Render a text character
-void gr_char(char c, GLfloat x, GLfloat y){
+void gr_char(char c, float size, GLfloat x, GLfloat y){
   glPointSize(k_fontSize);
   glBegin(GL_POINTS);
   for(int i=0;i<fontSize;i++){
     if(font[(c)*fontSize+i]){
-      glVertex2f(x + (i % k_fontWidth) * k_fontSize, y - (i / k_fontHeight) * k_fontSize);
+      glVertex2f(x + (i % k_fontW) * size, y - (i / k_fontH) * size);
     }
   }
   glEnd();
 }
 
 // Renders a text string
-void gr_text(color col, bool vert, char *s, GLfloat x_orig, GLfloat y_orig){
+void gr_text(color col, bool vert, char *s, float size, GLfloat x_orig, GLfloat y_orig){
   gr_color(col);
   GLfloat x = x_orig;
   GLfloat y = y_orig;
   for(int i=0; s[i] != '\0'; i++){
     if(s[i] == '\n'){
       if(vert){
-        x += k_fontSpaceX(vert);
+        x += k_fontSpaceX(vert) * size;
         y = y_orig;
       }
       else{
-        y -= k_fontSpaceY(vert);
+        y -= k_fontSpaceY(vert) * size;
         x = x_orig;
       }
     }
     else{
-      gr_char(s[i], x, y);
+      gr_char(s[i], size, x, y);
+
       // Shift over for next character
       if(vert){
-        y -= k_fontSpaceY(vert);
+        y -= k_fontSpaceY(vert) * size;
       }
       else{
-        x += k_fontSpaceX(vert);
+        x += k_fontSpaceX(vert) * size;
       }
     }
   }
@@ -206,7 +207,7 @@ void gr_drawPersp(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glOrtho(-k_perspWindowW/2, k_perspWindowW/2, -k_perspWindowH/2, k_perspWindowH/2, -1, 1);
-    gr_text(k_colorTextDim, false, "PAUSED", -3*7*k_fontSize, 0);
+    gr_text(k_colorTextDim, false, "PAUSED", k_fontSize, -3*k_fontSpaceX(false), 0);
   }
 }
 
@@ -253,7 +254,7 @@ void gr_drawHud(){
   glLoadIdentity();
   glOrtho(0, k_hudWindowW, 0, k_hudWindowH, -1, 1);
 
-  gr_text(k_colorTextDim, true, hud, 5, k_hudWindowH-5);
+  gr_text(k_colorTextDim, true, hud, k_fontSize, 5, k_hudWindowH-5);
 }
 
 void gr_init(){
@@ -289,10 +290,10 @@ void gr_image(image *im, rect r) {
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, im->texture);
   glBegin(GL_QUADS);
-  glTexCoord2f(0.f, 0.f); glVertex2f(r.l, r.t);
-  glTexCoord2f(1.f, 0.f); glVertex2f(r.r, r.t);
-  glTexCoord2f(1.f, 1.f); glVertex2f(r.r, r.b);
-  glTexCoord2f(0.f, 1.f); glVertex2f(r.l, r.b);
+  glTexCoord2f(0.f, 1.f); glVertex2f(r.l, r.t);
+  glTexCoord2f(1.f, 1.f); glVertex2f(r.r, r.t);
+  glTexCoord2f(1.f, 0.f); glVertex2f(r.r, r.b);
+  glTexCoord2f(0.f, 0.f); glVertex2f(r.l, r.b);
   glEnd();
   glDisable(GL_TEXTURE_2D);
 }

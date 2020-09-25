@@ -286,8 +286,8 @@ void io_readConfig(config *c){
   config_read(&conf, f);
 
   // If any options are not specified in the config file, they will simply not be modified
-  config_lookup_bool(&conf, "mute", &(c->mute));
-  config_lookup_bool(&conf, "effects", &(c->effects));
+  config_lookup_int(&conf, "music", &(c->music));
+  config_lookup_int(&conf, "effects", &(c->effects));
   config_lookup_int(&conf, "lineSize", &(c->lineSize));
   config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
   config_lookup_bool(&conf, "invertMouseY", &(c->invertMouseY));
@@ -309,11 +309,11 @@ void io_writeConfig(config c){
 
   root = config_root_setting(&conf);
 
-  set = config_setting_add(root, "mute", CONFIG_TYPE_BOOL);
-  config_setting_set_bool(set, c.mute);
+  set = config_setting_add(root, "mute", CONFIG_TYPE_INT);
+  config_setting_set_int(set, c.music);
 
-  set = config_setting_add(root, "effects", CONFIG_TYPE_BOOL);
-  config_setting_set_bool(set, c.effects);
+  set = config_setting_add(root, "effects", CONFIG_TYPE_INT);
+  config_setting_set_int(set, c.effects);
 
   set = config_setting_add(root, "lineSize", CONFIG_TYPE_INT);
   config_setting_set_int(set, c.lineSize);

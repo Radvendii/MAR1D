@@ -16,18 +16,19 @@
 #define k_camT -pi/10 //initial camera angle
 // dimensions of the font
 // TODO: read this from the font file
-#define k_fontWidth 7
-#define k_fontHeight 7
+#define k_fontW 7
+#define k_fontH 7
 // scale the font up
+// TODO: make this an argument you can pass into gr_text()
 #define k_fontSize 2
-#define k_fontPadChar (k_fontSize)
-#define k_fontPadLine (k_fontSize * 3)
-// the amount of actual space a character takes up
-#define k_fontCharX (k_fontWidth * k_fontSize)
-#define k_fontCharY (k_fontHeight * k_fontSize)
+#define k_fontPadChar 1 //  (k_fontSize)
+#define k_fontPadLine 3 // (k_fontSize * 3)
+/* // the amount of actual space a character takes up */
+#define k_fontCharX (k_fontW * k_fontSize)
+#define k_fontCharY (k_fontH * k_fontSize)
 // TODO: this feels kind of ugly
-#define k_fontSpaceX(vert) (k_fontCharX + (vert ? k_fontPadLine : k_fontPadChar))
-#define k_fontSpaceY(vert) (k_fontCharY + (vert ? k_fontPadChar : k_fontPadLine))
+#define k_fontSpaceX(vert) (k_fontW + (vert ? k_fontPadLine : k_fontPadChar))
+#define k_fontSpaceY(vert) (k_fontH + (vert ? k_fontPadChar : k_fontPadLine))
 #define k_camSpeed (conf.sensitivity * (conf.invertMouseY ? -1 : 1) / 10000.0)
 
 #define k_bezelSize 1
@@ -57,7 +58,7 @@ point *dimScreen;
 
 void gr_color(color);
 
-void gr_text(color, bool, char *, GLfloat, GLfloat);
+void gr_text(color, bool, char *, float, GLfloat, GLfloat);
 // Basic rectangle drawing
 void gr_drawRect(color, rect);
 void gr_drawBezelOut(rect);

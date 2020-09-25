@@ -93,10 +93,6 @@ void au_channelFinished(int channel) {
 }
 
 void au_update() {
-  while(au_waiting != -1) {
-    SDL_Delay(200);
-  }
-
   if(lowtime_done) {
     au_mainPlay(--au_mainAudio);// play the low-time version of the current music (always one less)
     lowtime_done = false; // reset flag
@@ -128,13 +124,12 @@ void au_deinit(){
 }
 
 void au_play(int snd){
-  if(!conf.mute || conf.effects){
-    err = Mix_PlayChannel(snd, sounds[snd], 0);
-    if(err == -1) {
-      printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
-      exit(EXIT_FAILURE);
-    }
+  err = Mix_PlayChannel(snd, sounds[snd], 0);
+  if(err == -1) {
+    printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+    exit(EXIT_FAILURE);
   }
+  Mix_Volume(snd, conf.effects);
 }
 
 // TODO: this seems to not be working
@@ -143,13 +138,15 @@ void au_playWait(int snd){
     printf("Can't wait for more than one audio at once. How did you even get here?\n");
     exit(EXIT_FAILURE);
   }
-  if(!conf.mute || conf.effects){
-    err = Mix_PlayChannel(snd, sounds[snd], 0);
-    if(err == -1) {
-      printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
-      exit(EXIT_FAILURE);
-    }
-    au_waiting = snd;
+  err = Mix_PlayChannel(snd, sounds[snd], 0);
+  if(err == -1) {
+    printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+    exit(EXIT_FAILURE);
+  }
+  Mix_Volume(snd, conf.effects);
+  au_waiting = snd;
+  while(au_waiting != -1) {
+    SDL_Delay(200);
   }
 }
 
@@ -159,15 +156,14 @@ void au_lowTime(){
 }
 
 void au_mainPlay(int snd){
-  if(!conf.mute){
-    au_mainStop();
-    au_mainAudio = snd;
-    err = Mix_PlayChannel(snd, sounds[snd], -1);
-    if(err == -1) {
-      printf("perspWindow has focus? %d\n", SDL_GetWindowFlags(perspWindow) & SDL_WINDOW_INPUT_FOCUS);
-      printf("Unable to play main sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
-      exit(EXIT_FAILURE);
-    }
+  au_mainStop();
+  au_mainAudio = snd;
+  err = Mix_PlayChannel(snd, sounds[snd], -1);
+  Mix_Volume(snd, conf.music);
+  if(err == -1) {
+    printf("perspWindow has focus? %d\n", SDL_GetWindowFlags(perspWindow) & SDL_WINDOW_INPUT_FOCUS);
+    printf("Unable to play main sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+    exit(EXIT_FAILURE);
   }
 }
 
