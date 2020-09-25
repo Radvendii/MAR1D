@@ -366,5 +366,8 @@ image io_getImage(char *fn) {
   }
 
   sfclose(file);
+
+  im.texture = 0;
+
   return im;
 }

@@ -12,6 +12,7 @@ typedef struct {
   unsigned long sizeX;
   unsigned long sizeY;
   unsigned char *data;
+  int texture;
 } image;
 
 // TODO: not all of these should be public functions

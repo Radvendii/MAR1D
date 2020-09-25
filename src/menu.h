@@ -9,20 +9,31 @@
 #include "parsing.h"
 
 // position of the menu on the screen
-#define k_menuX 100
-#define k_menuY ((k_menuWindowH) - 250)
+#define k_menuX 90
+#define k_menuY (k_menuWindowH - 250)
 
 // constants for menu formatting and spacing
 #define k_headingSpace (k_fontSpaceY(false) * 1.5)
-#define k_selSpace (k_fontSpaceX(false))
+#define k_selSpace (k_fontCharX + 10)
 
 // constants for menu widget properties
 
 // colors
-#define k_colorWidgetBGDim RGB(0x4C84DC)
+
+#define brown RGB(0xC84C0C)
+#define pink RGB(0xFCBCB0)
+#define white RGB(0xF0F0F0)
+#define dark RGB(0x404040)
+#define light RGB(0xCCCCCC)
+#define blue RGB(0x5c94fc)
+#define green RGB(0x00a800)
+
+/* #define k_colorWidgetBGDim RGB(0xC84C0C) */
+#define k_colorWidgetBGDim RGB(0xC84C0C)
 #define k_colorWidgetBGLit RGB(0x70B0FF)
-#define k_colorWidgetFGDim RGB(0xCCCCCC)
-#define k_colorWidgetFGLit RGB(0xFFFFFF)
+#define k_colorWidgetFGDim RGB(0x404040)
+/* #define k_colorWidgetFGLit RGB(0xFCBCB0) */
+#define k_colorWidgetFGLit RGB(0xF0F0F0)
 
 // dimensions
 //TODO: make k_sliderW dependent on the w.max in the case of line width
@@ -31,13 +42,13 @@
 #define k_sliderH 10
 #define k_switchW 40
 #define k_switchH 14
-#define k_switchButtonW ((k_switchW) * 0.40)
+#define k_switchButtonW (k_switchW * 0.5)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // constants to define the animation from menu to the actual game
 #define k_menuAnimTime 200
-#define k_menuAnimStartRotation ((k_menuAnimTime) / 2)
+#define k_menuAnimStartRotation (k_menuAnimTime / 2)
 
 // location of mario on the main menu background
 #define k_menuAnimMarioX 310.0
@@ -56,6 +67,7 @@
  * - .nWs is set appropriately.
  * - .sel is initialized to 0
  * - .p is not set.
+ * - .heading is not set
  *
  * invoked as (notice the lack of (widget[]) in the argument)
  * WS_MENU(
@@ -106,6 +118,7 @@ image imBg;
 image imSel;
 
 struct menu {
+  char *heading;
   menu *p;    // the parent menu containing this one (null if this is the highest level)
   widget *ws; // array of widgets
   int nWs;    // number of widgets in `ws` array

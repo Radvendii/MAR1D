@@ -6,6 +6,14 @@
 #include <math.h>
 #include <string.h>
 
+// switch the DEBUG(...) definitions to enable / disable debugging logs
+#define DEBUG(...)                              // DEBUG OFF
+#undef  DEBUG
+#define DEBUG(...) fprintf(stderr, __VA_ARGS__) // DEBUG ON
+
+// sprinkle this into the code to see where things are going wrong
+#define LINENO DEBUG("%s(%d)\n", __FILE__, __LINE__)
+
 #define pi (22/7.0)
 
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
@@ -71,5 +79,6 @@ void *heap_copy(void *obj, size_t size);
 
 double linInterp(double, double, double, double, double);
 double subLinInterp(double, double, double, double, double);
+double smoothInterp(double, double, double, double, double);
 
 #endif

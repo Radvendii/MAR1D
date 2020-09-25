@@ -71,6 +71,7 @@ void mu_init() {
   // and not it's own function. But I can't figure out an elegant way to do it
   // right now, and I need to move on.
   mu_setParents(&main_menu, NULL);
+  mu_setHeadings(&main_menu, "MAIN MENU");
 
   active_menu = &main_menu;
 
@@ -87,6 +88,17 @@ void mu_setParents(menu *m, menu *p) {
     }
   }
   m->p = p;
+}
+
+// recursively set all menu.heading to the label of the widget containing it
+// and the initial one to the input
+void mu_setHeadings(menu *m, char *heading) {
+  for(int i=0; i < m->nWs; i++) {
+    if (m->ws[i].kind == WK_MENU) {
+      mu_setHeadings(&m->ws[i].m, m->ws[i].label);
+    }
+  }
+  m->heading = heading;
 }
 
 void mu_quit() {
@@ -119,7 +131,7 @@ void mu_startGame() {
   mu_backgroundMatrix();
   float s, rY, tX, tY;
 
-  for (int i=0; i<k_menuAnimTime; i++) {
+  for (int i=0; i<k_menuAnimTime && !quit; i++) {
     wn_menuWindow();
     gr_clear();
 
@@ -135,12 +147,11 @@ void mu_startGame() {
     tY = linInterp(-1, 1, 0, k_menuWindowH, tY);
 
     // scale
-    s  = linInterp(1.0, k_menuAnimScale, 0, k_menuAnimTime, i);
+    s  = smoothInterp(1.0, k_menuAnimScale, 0, k_menuAnimTime, i);
 
     // rotation about the vertical screen axis (putting us in mario's view)
     // starts at k_menuAnimStartRotation
-    // subLinInterp gives us a nice slowed rotatoin near the end
-    rY = subLinInterp(0.0, 90.0, k_menuAnimStartRotation, k_menuAnimTime, MAX(i, k_menuAnimStartRotation));
+    rY = smoothInterp(0.0, 90.0, k_menuAnimStartRotation, k_menuAnimTime, MAX(i, k_menuAnimStartRotation));
 
     glPushMatrix();
 
@@ -214,57 +225,61 @@ int mu_labelSpace(menu m) {
 
 void mu_drawMenu(menu m, float x, float y) {
 
-  gr_text(k_colorTextLit, false, "FOO", x, y);
-
-  int labelSpace = mu_labelSpace(m);
+  gr_text(k_colorTextLit, false, m.heading, x, y);
 
   for (int i=0; i<m.nWs; i++) {
     widget wi = m.ws[i];
 
     float yi = y - k_headingSpace - i * k_fontSpaceY(false);
 
-    if (i == m.sel) {
-      mu_drawSelected(x, yi);
-    }
-
-    mu_drawWidget(labelSpace, i == m.sel, wi, x + k_selSpace, yi);
+    mu_drawWidget(mu_labelSpace(m), i == m.sel, wi, x, yi);
   }
 }
 
 // draw the mushroom symbol that indicates the selected widget
 void mu_drawSelected(float x, float y) {
-  glPointSize(5.0);
-  glBegin(GL_POINTS);
-  glVertex2f(x, y);
-  glEnd();
+  gr_image(&imSel, RECT_LTRB(x-2, y-k_fontCharX+2, x+k_fontCharX-2, y+2));
 }
 
 void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
-  float ymid = y - k_fontHeight * k_fontSize / 2; // middle of the text line
-  color textColor = selected ? k_colorTextLit : k_colorTextDim;
+  float ymid = y - k_fontCharY / 2; // middle of the text line
+
+  if (selected) {
+    mu_drawSelected(x, y);
+  }
+
+  x += k_selSpace;
+
   // All widgets (so far) have their label displayed in front.
   // If you add a widget for which this is not the case, this will have to be added to all of the cases
-  gr_text(textColor, false, w.label, x, y);
+  gr_text(k_colorTextLit, false, w.label, x, y);
+
   x += labelSpace;
 
   switch (w.kind) {
     case WK_MENU:
       /* already printed label */
       break;
-    case WK_SLIDER:
-      ; // sacrifice an empty statement to appease the C gods
+    case WK_SLIDER: ; // sacrifice an empty statement to appease the C gods
       float dist = linInterp(0, k_sliderW,
                              0, w.max, // TODO: unsure whether to use w.min or 0 here
                              *(w.sliderVal));
 
-      gr_rectLCWH(k_colorWidgetBGDim, x, ymid, k_sliderW, k_sliderH);
-      gr_rectLCWH(k_colorWidgetFGLit, x, ymid, dist, k_sliderH);
+      rect slider = RECT_LCWH(x, ymid, k_sliderW, k_sliderH);
+      rect fill = RECT_LCWH(x, ymid, dist, k_sliderH);
+      gr_drawRect(blue, slider);
+      gr_drawBezelIn(slider);
+      gr_drawRect(white, fill);
       break;
-    case WK_SWITCH:
-      // Switch socket rectangle
-      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetBGLit : k_colorWidgetBGDim, x, ymid, k_switchW, k_switchH);
-      // Switch internal rectangle (1 pixel border)
-      gr_rectLCWH(*(w.switchVal) ? k_colorWidgetFGLit : k_colorWidgetFGDim, x + (*(w.switchVal) ? k_switchW - k_switchButtonW - 1  : 1), ymid, k_switchButtonW, k_switchH - 2);
+    case WK_SWITCH: ; // sacrifice an empty statement to appease the C gods
+      rect socket = RECT_LCWH(x, ymid, k_switchW, k_switchH);
+      rect button = *(w.switchVal)
+        ? RECT_RCWH(x + k_switchW - 2, ymid, k_switchButtonW - 4, k_switchH - 4)
+        : RECT_LCWH(x + 2, ymid, k_switchButtonW - 4, k_switchH - 4);
+      gr_drawRect(*(w.switchVal) ? white : blue, socket);
+      gr_drawBezelIn(socket);
+      gr_drawRect(blue, button);
+      gr_drawBezelOut(button);
       break;
     case WK_ACTION:
       /* already printed label */
@@ -422,5 +437,5 @@ void mu_mousemove(SDL_MouseMotionEvent ev){
 }
 
 void mu_drawBackground() {
-  gr_image(imBg, -1, -1, 1, 1);
+  gr_image(&imBg, RECT_LTRB(-1, -1, 1, 1));
 }

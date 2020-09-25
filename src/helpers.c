@@ -56,5 +56,14 @@ double linInterp(double y0, double y1, double x0, double x1, double x){
 double subLinInterp(double y0, double y1, double x0, double x1, double x){
   double a = (x1 - x0) / SQUARE((y1 - y0));
   return sqrt((x - x0) / a) + y0;
+}
 
+double _smoothInterp(double x) {
+  // (1-cos(x*pi)+1)/2 smoothly interpolates between (0,0) and (1,1)
+  return (1 - cos(x*pi)) / 2;
+}
+
+// shifting the intial portion of a cos curve
+double smoothInterp(double y0, double y1, double x0, double x1, double x) {
+  return y0 + _smoothInterp((x - x0) / (x1 - x0)) * (y1 - y0);
 }

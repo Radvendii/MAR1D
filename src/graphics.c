@@ -64,23 +64,49 @@ void gr_color(color c) {
   glColor3ub(c.r, c.g, c.b);
 }
 
-void gr_rectLTRB(color c, float left, float top, float right, float bottom) {
+void gr_drawRect(color c, rect r) {
   glBegin(GL_QUADS);
   gr_color(c);
-  glVertex2f(left, top);
-  glVertex2f(right, top);
-  glVertex2f(right, bottom);
-  glVertex2f(left, bottom);
+  glVertex2f(r.l, r.t);
+  glVertex2f(r.r, r.t);
+  glVertex2f(r.r, r.b);
+  glVertex2f(r.l, r.b);
   glEnd();
 }
-void gr_rectLTWH(color c, float left, float top, float width, float height) {
-  gr_rectLTRB(c, left, top, left + width, top - height);
+
+void gr_drawBezelOut(rect rct) {
+  float l = rct.l;
+  float t = rct.t;
+  float r = rct.r;
+  float b = rct.b;
+  float s = k_bezelSize;
+
+  //top edge
+  gr_drawRect(RGB(0xffffff), RECT_LTRB(l, t + s, r, t));
+  //left edge
+  gr_drawRect(RGB(0xffffff), RECT_LTRB(l - s, t, l, b));
+  //bottom edge
+  gr_drawRect(RGB(0x000000), RECT_LTRB(l, b, r, b - s));
+  //right edge
+  gr_drawRect(RGB(0x000000), RECT_LTRB(r, t, r + s, b));
 }
-void gr_rectCCWH(color c, float centerX, float centerY, float width, float height) {
-  gr_rectLTWH(c, centerX - width / 2, centerY + height / 2, width, height);
-}
-void gr_rectLCWH(color c, float left, float centerY, float width, float height) {
-  gr_rectLTWH(c, left, centerY + height / 2, width, height);
+
+void gr_drawBezelIn(rect rct) {
+  #define k_bezelSize 1
+  float l = rct.l;
+  float t = rct.t;
+  float r = rct.r;
+  float b = rct.b;
+  float s = k_bezelSize;
+
+  //top edge
+  gr_drawRect(RGB(0x000000), RECT_LTRB(l, t + s, r, t));
+  //left edge
+  gr_drawRect(RGB(0x000000), RECT_LTRB(l - s, t, l, b));
+  //bottom edge
+  gr_drawRect(RGB(0xffffff), RECT_LTRB(l, b, r, b - s));
+  //right edge
+  gr_drawRect(RGB(0xffffff), RECT_LTRB(r, t, r + s, b));
 }
 
 // Render a text character
@@ -126,7 +152,7 @@ void gr_text(color col, bool vert, char *s, GLfloat x_orig, GLfloat y_orig){
 
 // Render a "pixel" of the vertical screen
 void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
-  gr_rectLTRB((color) {.r = r, .g = g, .b = b}, -conf.lineSize, y+1, conf.lineSize, y);
+  gr_drawRect((color) {.r = r, .g = g, .b = b}, RECT_LTRB(-conf.lineSize, y+1, conf.lineSize, y));
 }
 
 // Render an array of pixels
@@ -243,26 +269,30 @@ void gr_init(){
   dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
   dimScreen[0] = p_termPoint;
   fontSize = io_getFont(&font, "mario.font");
-
-  wn_menuWindow();
 }
 
-void gr_image(image im, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2) {
-  GLuint texture;
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im.sizeX, im.sizeY, 0, GL_BGR, GL_UNSIGNED_BYTE, im.data);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+void gr_image(image *im, rect r) {
+  /*
+   * if this image has not been loaded into a texture yet, do so now
+   * this method only makes sense if the total number of images used by the
+   * program is small. otherwise, textures may need to be unloaded
+   */
+  if (!im->texture) {
+    glGenTextures(1, &im->texture);
+    glBindTexture(GL_TEXTURE_2D, im->texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im->sizeX, im->sizeY, 0, GL_BGR, GL_UNSIGNED_BYTE, im->data);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+  }
 
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindTexture(GL_TEXTURE_2D, im->texture);
   glBegin(GL_QUADS);
-  glTexCoord2f(0.f, 0.f); glVertex2f(x1, y1);
-  glTexCoord2f(1.f, 0.f); glVertex2f(x2, y1);
-  glTexCoord2f(1.f, 1.f); glVertex2f(x2, y2);
-  glTexCoord2f(0.f, 1.f); glVertex2f(x1, y2);
+  glTexCoord2f(0.f, 0.f); glVertex2f(r.l, r.t);
+  glTexCoord2f(1.f, 0.f); glVertex2f(r.r, r.t);
+  glTexCoord2f(1.f, 1.f); glVertex2f(r.r, r.b);
+  glTexCoord2f(0.f, 1.f); glVertex2f(r.l, r.b);
   glEnd();
   glDisable(GL_TEXTURE_2D);
 }

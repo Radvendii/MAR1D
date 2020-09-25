@@ -21,12 +21,27 @@
 // scale the font up
 #define k_fontSize 2
 #define k_fontPadChar (k_fontSize)
-#define k_fontPadLine (k_fontSize * 2)
-// TODO: define the space a character takes up
-// TODO: Also, this feels kind of ugly
-#define k_fontSpaceX(vert) ((k_fontWidth) * (k_fontSize) + (vert ? k_fontPadLine : k_fontPadChar))
-#define k_fontSpaceY(vert) ((k_fontHeight) * (k_fontSize) + (vert ? k_fontPadChar : k_fontPadLine))
+#define k_fontPadLine (k_fontSize * 3)
+// the amount of actual space a character takes up
+#define k_fontCharX (k_fontWidth * k_fontSize)
+#define k_fontCharY (k_fontHeight * k_fontSize)
+// TODO: this feels kind of ugly
+#define k_fontSpaceX(vert) (k_fontCharX + (vert ? k_fontPadLine : k_fontPadChar))
+#define k_fontSpaceY(vert) (k_fontCharY + (vert ? k_fontPadChar : k_fontPadLine))
 #define k_camSpeed (conf.sensitivity * (conf.invertMouseY ? -1 : 1) / 10000.0)
+
+#define k_bezelSize 1
+
+#define RECT_LTRB(left, top, right, bottom) (rect) { .l = left, .t = top, .r = right, .b = bottom }
+#define RECT_LTWH(left, top, width, height) RECT_LTRB((left), (top), (left) + (width), (top) - (height))
+#define RECT_LBWH(left, bottom, width, height) RECT_LTWH((left), (bottom) + (height), (width), (height))
+#define RECT_CCWH(centerX, centerY, width, height) RECT_LTWH((centerX) - (width) / 2.0, (centerY) + (height) / 2.0, (width), (height))
+#define RECT_LCWH(left, centerY, width, height) RECT_LTWH((left), (centerY) + (height) / 2.0, (width), (height))
+#define RECT_RCWH(right, centerY, width, height) RECT_LCWH((right) - (width), (centerY), (width), (height))
+
+typedef struct {
+    float l, t, r, b;
+} rect;
 
 int lineSize;
 bool debug;
@@ -44,12 +59,11 @@ void gr_color(color);
 
 void gr_text(color, bool, char *, GLfloat, GLfloat);
 // Basic rectangle drawing
-void gr_rectLTRB(color, float left, float top, float right, float bottom);
-void gr_rectLTWH(color, float left, float top, float width, float height);
-void gr_rectCCWH(color, float centerX, float centerY, float width, float height);
-void gr_rectLCWH(color, float left, float centerY, float width, float height);
+void gr_drawRect(color, rect);
+void gr_drawBezelOut(rect);
+void gr_drawBezelIn(rect);
 
-void gr_image(image, GLfloat, GLfloat, GLfloat, GLfloat);
+void gr_image(image *, rect);
 
 void gr_init();
 void gr_deinit();
