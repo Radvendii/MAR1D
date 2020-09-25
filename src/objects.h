@@ -15,9 +15,19 @@
     .g = ((x) & 0x00FF00) >> 8,                                         \
     .b = ((x) & 0x0000FF) >> 0                                          \
   }
-#define k_colorTextLit RGB(0xF0F0F0)
-#define k_colorTextDim RGB(0x404040)
-#define k_colorTextMed RGB(0x888888)
+
+#define k_colorBrown RGB(0xC84C0C)
+#define k_colorPink  RGB(0xFCBCB0)
+#define k_colorWhite RGB(0xF0F0F0)
+#define k_colorDark  RGB(0x404040)
+#define k_colorLight RGB(0xCCCCCC)
+#define k_colorGray  RGB(0x888888)
+#define k_colorBlue  RGB(0x5c94fc)
+#define k_colorGreen RGB(0x00a800)
+
+#define k_colorTextLit k_colorWhite
+#define k_colorTextDim k_colorDark
+#define k_colorTextMed k_colorGray
 
 typedef struct {
   unsigned char r;

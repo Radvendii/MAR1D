@@ -18,23 +18,6 @@
 
 // constants for menu widget properties
 
-// colors
-
-#define brown RGB(0xC84C0C)
-#define pink RGB(0xFCBCB0)
-#define white RGB(0xF0F0F0)
-#define dark RGB(0x404040)
-#define light RGB(0xCCCCCC)
-#define blue RGB(0x5c94fc)
-#define green RGB(0x00a800)
-
-/* #define k_colorWidgetBGDim RGB(0xC84C0C) */
-#define k_colorWidgetBGDim RGB(0xC84C0C)
-#define k_colorWidgetBGLit RGB(0x70B0FF)
-#define k_colorWidgetFGDim RGB(0x404040)
-/* #define k_colorWidgetFGLit RGB(0xFCBCB0) */
-#define k_colorWidgetFGLit RGB(0xF0F0F0)
-
 // dimensions
 //TODO: make k_sliderW dependent on the w.max in the case of line width
 //      (at the moment they just happen to be the same)
