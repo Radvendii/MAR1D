@@ -135,9 +135,11 @@ void mu_init() {
   );
 
   // TODO: I really, really want this to be incorporated in the macros above,
-  // and not it's own function. But I can't figure out an elegant way to do it
-  // right now, and I need to move on.
+  //       and not it's own function. But I can't figure out an elegant way to do it.
+  //       I could do it if .m were a pointer to a menu, and not a menu itself
   mu_setParents(&main_menu, NULL);
+  //       this one could easily be moved into the macros. just add a set_heading
+  //       function call to the WIDGET() macro that checks if it's a menu and if so sets the heading
   mu_setHeadings(&main_menu, "MAIN MENU");
 
   active_menu = &main_menu;
