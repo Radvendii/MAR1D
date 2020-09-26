@@ -25,6 +25,8 @@
 #define k_sliderH 10
 #define k_switchW 40
 #define k_switchH 14
+#define k_keybindW 150
+#define k_keybindH 14
 #define k_switchButtonW (k_switchW * 0.5)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -182,6 +184,7 @@ void mu_deleteMenu(menu *);
 void mu_startGame();
 void mu_quit();
 void mu_goParent();
+void mu_resetKeys();
 
 void mu_drawSelected(float, float);
 

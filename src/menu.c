@@ -96,6 +96,11 @@ void mu_init() {
                   .kind = WK_KEYBIND,
                   .keyVal = &conf.keys.crouch,
                   .active = false
+                ),
+                WIDGET(
+                  .label = "RESET",
+                  .kind = WK_ACTION,
+                  .action = &mu_resetKeys
                 )
               )
             )
@@ -214,6 +219,10 @@ void mu_quit() {
 void mu_goParent() {
   active_menu->sel = 0;
   active_menu = active_menu->p;
+}
+
+void mu_resetKeys() {
+  conf.keys = k_defaultKeys;
 }
 
 void mu_menuMatrix() {
@@ -421,8 +430,9 @@ void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
       break;
     case WK_KEYBIND: ; // sacrifice an empty statement to appease the C gods
       const char *str = SDL_GetKeyName(*w.keyVal);
-      gr_text(k_colorTextLit, false, str, 1.5, x, y);
-      (w.active ? &gr_drawBezelIn : &gr_drawBezelOut)(RECT_LTWH(x, y, strlen(str) * k_fontSpaceX(false) * 1.5, k_fontH * 1.5));
+      // TODO: I don't know why that -1 has to be there ;-;
+      gr_text(k_colorTextLit, false, str, 1.6, x + (k_keybindW - strlen(str) * k_fontW * 1.6) / 2, y - 1 - (k_keybindH - k_fontH * 1.6) / 2);
+      (w.active ? &gr_drawBezelIn : &gr_drawBezelOut)(RECT_LTWH(x, y, k_keybindW, k_keybindH));
       break;
     case WK_TEXT:
       gr_text(k_colorTextLit, false, w.text, w.size, x - labelSpace - k_selSpace, y);
@@ -522,7 +532,7 @@ bool mu_keypressWidget(widget *w, int key, int state, int mods) {
     case WK_KEYBIND:
       if (w->active) {
         if (state == SDL_PRESSED) {
-          if (key != SDLK_ESCAPE && key != SDLK_q) { // reserved keys
+          if (key != SDLK_ESCAPE && key != SDLK_q) { // reserved keys TODO: this is jank.
             *w->keyVal = key;
           }
           w->active = false;

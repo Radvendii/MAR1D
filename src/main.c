@@ -35,24 +35,8 @@ int main(int argc, char **argv){
   rs_init();
 
   // default values
-  conf = (config) {
-    .music = MIX_MAX_VOLUME,
-    .effects = MIX_MAX_VOLUME,
-    .lineSize = 30,
-    .sensitivity = 10,
-    .invertMouseY = false,
-    .keys = (keybinds) {
-      .forward = SDLK_w,
-      .backward = SDLK_s,
-      .turn = SDLK_a,
-      .run = SDLK_LSHIFT,
-      .crouch = SDLK_LCTRL,
-      .jump = SDLK_SPACE
-    },
-    .altKeys = (keybinds) {
-      .turn = SDLK_d,
-    }
-  };
+
+  conf = k_defaultConf;
 
   // pull config from file
   io_readConfig(&conf);

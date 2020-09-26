@@ -6,6 +6,7 @@
 #include <math.h>
 #include <string.h>
 #include <SDL.h>
+#include <SDL_mixer.h>
 
 // switch the DEBUG(...) definitions to enable / disable debugging logs
 #define DEBUG(...)                              // DEBUG OFF
@@ -66,8 +67,29 @@
 #define APPEND_EXPANDED(x, ...) DROP_ONE(dummy, ##__VA_ARGS__, x)
 #define DROP_ONE(first, ...) __VA_ARGS__
 
-#define KEY_DN(k) ((key == conf.keys.k || key == conf.altKeys.k) && state == SDL_PRESSED)
-#define KEY_UP(k) ((key == conf.keys.k || key == conf.altKeys.k) && state == SDL_RELEASED)
+// requires that the keycode by bound to key and the state be bound to state
+#define KEY_DN(k) (key == conf.keys.k && state == SDL_PRESSED)
+#define KEY_UP(k) (key == conf.keys.k && state == SDL_RELEASED)
+
+#define k_defaultKeys                   \
+  (keybinds) {                          \
+    .forward = SDLK_w,                  \
+    .backward = SDLK_s,                 \
+    .turn = SDLK_d,                     \
+    .run = SDLK_LSHIFT,                 \
+    .crouch = SDLK_LCTRL,               \
+    .jump = SDLK_SPACE                  \
+  }
+
+#define k_defaultConf                   \
+  (config) {                            \
+    .music = MIX_MAX_VOLUME,            \
+    .effects = MIX_MAX_VOLUME,          \
+    .lineSize = 30,                     \
+    .sensitivity = 10,                  \
+    .invertMouseY = false,              \
+    .keys = k_defaultKeys               \
+  }
 
 typedef struct {
   SDL_Keycode forward;
@@ -85,7 +107,6 @@ typedef struct {
   int sensitivity;
   bool invertMouseY;
   keybinds keys;
-  keybinds altKeys;
 } config; // not to be confused with config_t from libconfig
 
 config conf;
