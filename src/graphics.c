@@ -273,6 +273,7 @@ void gr_init(){
 }
 
 void gr_image(image *im, rect r) {
+
   /*
    * if this image has not been loaded into a texture yet, do so now
    * this method only makes sense if the total number of images used by the
@@ -281,13 +282,16 @@ void gr_image(image *im, rect r) {
   if (!im->texture) {
     glGenTextures(1, &im->texture);
     glBindTexture(GL_TEXTURE_2D, im->texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, im->sizeX, im->sizeY, 0, GL_BGR, GL_UNSIGNED_BYTE, im->data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, im->sizeX, im->sizeY, 0, GL_BGRA, GL_UNSIGNED_BYTE, im->data);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
   }
 
   glEnable(GL_TEXTURE_2D);
+  glEnable(GL_ALPHA_TEST);
+  glAlphaFunc(GL_GREATER, 0.5);
+
   glBindTexture(GL_TEXTURE_2D, im->texture);
   glBegin(GL_QUADS);
   glTexCoord2f(0.f, 1.f); glVertex2f(r.l, r.t);
@@ -295,7 +299,9 @@ void gr_image(image *im, rect r) {
   glTexCoord2f(1.f, 0.f); glVertex2f(r.r, r.b);
   glTexCoord2f(0.f, 0.f); glVertex2f(r.l, r.b);
   glEnd();
+
   glDisable(GL_TEXTURE_2D);
+  glDisable(GL_ALPHA_TEST);
 }
 
 void gr_deinit(){

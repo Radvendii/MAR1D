@@ -388,7 +388,7 @@ image io_getImage(char *fn) {
   im.sizeX = *(int*)&(header[0x12]);
   im.sizeY = *(int*)&(header[0x16]);
 
-  size = im.sizeX * im.sizeY * 3; // 3 : one byte for each Red, Green and Blue component
+  size = im.sizeX * im.sizeY * 4; // 3 : one byte for each Red, Green, Blue, Alpha component
 
   if (dataPos > 54) { // bigger header size
     fseek(file, dataPos, SEEK_SET);
