@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <string.h>
+#include <SDL.h>
 
 // switch the DEBUG(...) definitions to enable / disable debugging logs
 #define DEBUG(...)                              // DEBUG OFF
@@ -65,13 +66,26 @@
 #define APPEND_EXPANDED(x, ...) DROP_ONE(dummy, ##__VA_ARGS__, x)
 #define DROP_ONE(first, ...) __VA_ARGS__
 
-// TODO: `volume`, `volumeEffects`, `volumeMusic` instead of `mute` and `effects`
+#define KEY_DN(k) ((key == conf.keys.k || key == conf.altKeys.k) && state == SDL_PRESSED)
+#define KEY_UP(k) ((key == conf.keys.k || key == conf.altKeys.k) && state == SDL_RELEASED)
+
+typedef struct {
+  SDL_Keycode forward;
+  SDL_Keycode backward;
+  SDL_Keycode turn;
+  SDL_Keycode run;
+  SDL_Keycode crouch;
+  SDL_Keycode jump;
+} keybinds;
+
 typedef struct {
   int music;
   int effects;
   int lineSize;
   int sensitivity;
   bool invertMouseY;
+  keybinds keys;
+  keybinds altKeys;
 } config; // not to be confused with config_t from libconfig
 
 config conf;

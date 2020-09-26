@@ -40,7 +40,18 @@ int main(int argc, char **argv){
     .effects = MIX_MAX_VOLUME,
     .lineSize = 30,
     .sensitivity = 10,
-    .invertMouseY = false
+    .invertMouseY = false,
+    .keys = (keybinds) {
+      .forward = SDLK_w,
+      .backward = SDLK_s,
+      .turn = SDLK_a,
+      .run = SDLK_LSHIFT,
+      .crouch = SDLK_LCTRL,
+      .jump = SDLK_SPACE
+    },
+    .altKeys = (keybinds) {
+      .turn = SDLK_d,
+    }
   };
 
   // pull config from file

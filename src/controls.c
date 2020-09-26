@@ -187,49 +187,49 @@ void cl_fire(){
 }
 
 void cl_keypress(int key, int state, int mods){
-  if (key == SDLK_w && state == SDL_PRESSED){
+  if (KEY_DN(forward)){
     if(!s.flip){s.forward = true;}
     else{s.backward = true;}
   }
-  if (key == SDLK_w && state == SDL_RELEASED){
+  if (KEY_UP(forward)){
     if(!s.flip){s.forward = false;}
     else{s.backward = false;}
   }
 
-  if (key == SDLK_s && state == SDL_PRESSED){
+  if (KEY_DN(backward)){
     if(!s.flip){s.backward = true;}
     else{s.forward = true;}
   }
-  if (key == SDLK_s && state == SDL_RELEASED){
+  if (KEY_UP(backward)){
     if(!s.flip){s.backward = false;}
     else{s.forward = false;}
   }
 
-  if ((key == SDLK_a || key == SDLK_d) && state == SDL_PRESSED){
+  if (KEY_DN(turn)){
     bool temp = s.forward;
     s.forward = s.backward;
     s.backward = temp;
     s.flip = !s.flip;
   }
 
-  if (key == SDLK_LSHIFT && state == SDL_PRESSED){
+  if (KEY_DN(run)){
     s.run = true;
   }
-  if (key == SDLK_LSHIFT && state == SDL_RELEASED){
+  if (KEY_UP(run)){
     s.run = false;
   }
 
-  if (key == SDLK_SPACE && state == SDL_PRESSED){
+  if (KEY_DN(jump)){
     cl_jumpStart();
   }
-  if (key == SDLK_SPACE && state == SDL_RELEASED){
+  if (KEY_UP(jump)){
     cl_jumpEnd();
   }
 
-  if (key == SDLK_LCTRL&& state == SDL_PRESSED){
+  if (KEY_DN(crouch)){
     cl_crouch();
   }
-  if (key == SDLK_LCTRL && state == SDL_RELEASED){
+  if (KEY_UP(crouch)){
     cl_uncrouch();
   }
 

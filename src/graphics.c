@@ -1,7 +1,7 @@
 #include "graphics.h"
 
 void gr_keypress(int key, int state, int mods){
-  if ((key == SDLK_a || key == SDLK_d) && state == SDL_PRESSED){
+  if (KEY_DN(turn) && state == SDL_PRESSED){
     cam.flip = !cam.flip;
   }
 }
