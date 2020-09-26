@@ -207,7 +207,7 @@ void gr_drawPersp(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glOrtho(-k_perspWindowW/2, k_perspWindowW/2, -k_perspWindowH/2, k_perspWindowH/2, -1, 1);
-    gr_text(k_colorTextDim, false, "PAUSED", k_fontSize, -3*k_fontSpaceX(false), 0);
+    gr_text(k_colorTextDim, false, "PAUSED", k_fontSize, -3*k_fontSpaceX(false)*k_fontSize, 0);
   }
 }
 
