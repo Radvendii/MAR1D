@@ -114,7 +114,7 @@ void gr_char(char c, float size, GLfloat x, GLfloat y){
   glPointSize(k_fontSize);
   glBegin(GL_POINTS);
   for(int i=0;i<fontSize;i++){
-    if(font[(c)*fontSize+i]){
+    if(font[toupper(c)*fontSize+i]){
       glVertex2f(x + (i % k_fontW) * size, y - (i / k_fontH) * size);
     }
   }

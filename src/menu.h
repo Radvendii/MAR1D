@@ -130,11 +130,12 @@ struct menu {
   int sel;    // the index of the selected widget
 };
 
-enum widgetKind { WK_MENU,     // menu
-                  WK_SLIDER,   // int value slider
-                  WK_SWITCH,   // bool value switch
-                  WK_ACTION,   // perform an action when selected
-                  WK_TEXT };   // display text
+enum widgetKind { WK_MENU,      // menu
+                  WK_SLIDER,    // int value slider
+                  WK_SWITCH,    // bool value switch
+                  WK_KEYBIND,   // attaches a key to an in-game action
+                  WK_ACTION,    // perform an action when selected
+                  WK_TEXT };    // display text
 
 struct widget {
   char *label;
@@ -151,6 +152,10 @@ struct widget {
     };
     struct { // WK_SWITCH
       bool *switchVal;
+    };
+    struct { // WK_KEYBIND
+      SDL_Keycode *keyVal;
+      bool active; // whether we are waiting for a keypress to overwrite the key
     };
     struct { // WK_ACTION
       void (*action)(void);
@@ -189,7 +194,7 @@ void mu_mousemoveMenu(menu *, int, int, int);
 
 float mu_widgetH(widget);
 void mu_drawWidget(int labelSpace, bool selected, widget, float, float);
-void mu_keypressWidget(widget *, int, int, int);
+bool mu_keypressWidget(widget *, int, int, int);
 void mu_mouseclickWidget(widget *, int, int, int, int, int);
 void mu_mousemoveWidget(widget *, int, int, int, int);
 

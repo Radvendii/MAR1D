@@ -61,6 +61,42 @@ void mu_init() {
               .label = "KEYBOARD",
               .kind = WK_MENU,
               .m = MENU(
+                WIDGET(
+                  .label = "FORWARD",
+                  .kind = WK_KEYBIND,
+                  .keyVal = &conf.keys.forward,
+                  .active = false
+                ),
+                WIDGET(
+                  .label = "BACKWARD",
+                  .kind = WK_KEYBIND,
+                  .keyVal = &conf.keys.backward,
+                  .active = false
+                ),
+                WIDGET(
+                  .label = "TURN AROUND",
+                  .kind = WK_KEYBIND,
+                  .keyVal = &conf.keys.turn,
+                  .active = false
+                ),
+                WIDGET(
+                  .label = "JUMP",
+                  .kind = WK_KEYBIND,
+                  .keyVal = &conf.keys.jump,
+                  .active = false
+                ),
+                WIDGET(
+                  .label = "RUN",
+                  .kind = WK_KEYBIND,
+                  .keyVal = &conf.keys.run,
+                  .active = false
+                ),
+                WIDGET(
+                  .label = "CROUCH",
+                  .kind = WK_KEYBIND,
+                  .keyVal = &conf.keys.crouch,
+                  .active = false
+                )
               )
             )
           )
@@ -176,6 +212,7 @@ void mu_quit() {
 
 // TODO: better name?
 void mu_goParent() {
+  active_menu->sel = 0;
   active_menu = active_menu->p;
 }
 
@@ -382,6 +419,11 @@ void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
       gr_drawRect(k_colorBlue, button);
       gr_drawBezelOut(button);
       break;
+    case WK_KEYBIND: ; // sacrifice an empty statement to appease the C gods
+      const char *str = SDL_GetKeyName(*w.keyVal);
+      gr_text(k_colorTextLit, false, str, 1.5, x, y);
+      (w.active ? &gr_drawBezelIn : &gr_drawBezelOut)(RECT_LTWH(x, y, strlen(str) * k_fontSpaceX(false) * 1.5, k_fontH * 1.5));
+      break;
     case WK_TEXT:
       gr_text(k_colorTextLit, false, w.text, w.size, x - labelSpace - k_selSpace, y);
       break;
@@ -397,49 +439,53 @@ void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
 }
 
 void mu_keypressMenu(menu *m, int key, int state, int mods) {
-  int dir = 0;
-  if ((key == SDLK_UP || key == SDLK_w) && state == SDL_PRESSED) {
-    dir = -1;
-  }
-  if ((key == SDLK_DOWN || key == SDLK_s) && state == SDL_PRESSED) {
-    dir = 1;
-  }
-
-  if (dir) { // no need to run this on every keypress (though I suppose we could)
-
-    int sel = m->sel;
-
-    do {
-      sel+=dir;
+  // first see if the active widget wants the keypress
+  if (!mu_keypressWidget(&(m->ws[m->sel]), key, state, mods)) {
+    int dir = 0;
+    if ((key == SDLK_UP || key == SDLK_w) && state == SDL_PRESSED) {
+      dir = -1;
     }
-    // skip over WK_TEXT widgets
-    while (sel >= 0 && sel < m->nWs && m->ws[sel].kind == WK_TEXT);
+    if ((key == SDLK_DOWN || key == SDLK_s) && state == SDL_PRESSED) {
+      dir = 1;
+    }
 
-    // If we haven't gone past the end, engage!
-    if (sel >= 0 && sel < m->nWs) {
-      m->sel = sel;
+    if (dir) { // no need to run this on every keypress (though I suppose we could)
+
+      int sel = m->sel;
+
+      do {
+        sel+=dir;
+      }
+      // skip over WK_TEXT widgets
+      while (sel >= 0 && sel < m->nWs && m->ws[sel].kind == WK_TEXT);
+
+      // If we haven't gone past the end, engage!
+      if (sel >= 0 && sel < m->nWs) {
+        m->sel = sel;
+      }
+    }
+
+    if (key == SDLK_ESCAPE && state == SDL_PRESSED) {
+      if (m->p) {
+        active_menu = m->p;
+      }
+      else {
+        mu_quit();
+      }
     }
   }
-
-  if (key == SDLK_ESCAPE && state == SDL_PRESSED) {
-    if (m->p) {
-      active_menu = m->p;
-    }
-    else {
-      mu_quit();
-    }
-  }
-
-  mu_keypressWidget(&(m->ws[m->sel]), key, state, mods);
 }
 
 
-void mu_keypressWidget(widget *w, int key, int state, int mods) {
+// returns whether or not the keypress was captured
+bool mu_keypressWidget(widget *w, int key, int state, int mods) {
   int dir = 0;
+  bool ret = false;
   switch (w->kind) {
     case WK_MENU:
       if ((key == SDLK_RETURN || key == SDLK_SPACE) && state == SDL_PRESSED) {
         active_menu = &w->m;
+        ret = true;
       }
       break;
     case WK_SLIDER:
@@ -454,24 +500,44 @@ void mu_keypressWidget(widget *w, int key, int state, int mods) {
         *(w->sliderVal) += dir * w->inc;
         *(w->sliderVal) -= dir * (*(w->sliderVal) % w->inc); // make it a multiple of w->inc
         BOUND(*(w->sliderVal), w->min, w->max);
+        ret = true;
       }
       break;
     case WK_SWITCH:
       if ((key == SDLK_RETURN || key == SDLK_SPACE) && state == SDL_PRESSED) {
         *(w->switchVal) ^= true;
+        ret = true;
       }
 
       if ((key == SDLK_LEFT || key == SDLK_a) && state == SDL_PRESSED) {
         *(w->switchVal) = false;
+        ret = true;
       }
 
       if ((key == SDLK_RIGHT || key == SDLK_d) && state == SDL_PRESSED) {
         *(w->switchVal) = true;
+        ret = true;
+      }
+      break;
+    case WK_KEYBIND:
+      if (w->active) {
+        if (state == SDL_PRESSED) {
+          if (key != SDLK_ESCAPE && key != SDLK_q) { // reserved keys
+            *w->keyVal = key;
+          }
+          w->active = false;
+          ret = true;
+        }
+      }
+      else if ((key == SDLK_RETURN || key == SDLK_SPACE) && state == SDL_PRESSED) {
+        w->active = true;
+        ret = true;
       }
       break;
     case WK_ACTION:
       if ((key == SDLK_RETURN || key == SDLK_SPACE) && state == SDL_PRESSED) {
         w->action();
+        ret = true;
       }
       break;
     case WK_TEXT:
@@ -481,6 +547,7 @@ void mu_keypressWidget(widget *w, int key, int state, int mods) {
       exit(EXIT_FAILURE);
       break;
   }
+  return ret;
 }
 
 void mu_mouseclickMenu(menu *m, int button, int state, int xPos, int yPos) {
@@ -508,6 +575,9 @@ void mu_mouseclickWidget(widget *w, int button, int state, int xPos, int yPos, i
       break;
     case WK_SWITCH:
       *(w->switchVal) ^= true;
+      break;
+    case WK_KEYBIND:
+      w->active ^= true;
       break;
     case WK_ACTION:
       w->action();
@@ -541,6 +611,7 @@ void mu_mousemoveWidget(widget *w, int xPos, int yPos, int state, int labelSpace
   switch (w->kind) {
     case WK_MENU:
     case WK_SWITCH:
+    case WK_KEYBIND:
     case WK_ACTION:
     case WK_TEXT:
         break;

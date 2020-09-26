@@ -292,7 +292,7 @@ void io_readConfig(config *c){
   config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
   config_lookup_bool(&conf, "invertMouseY", &(c->invertMouseY));
 
-  char *key = NULL;
+  const char *key = NULL;
 
 #define GET_KEY(group, k)                           \
   do {                                              \
