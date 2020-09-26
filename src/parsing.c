@@ -274,7 +274,7 @@ void io_getLevels(level** ls, char* fn){
   return;
 }
 
-// Reads a config at the file name specified, and reutrns the config object.
+// Reads the config, and reutrns the config object.
 void io_readConfig(config *c){
   FILE *f = rs_getConfigRead();
   if(!f){
@@ -292,11 +292,35 @@ void io_readConfig(config *c){
   config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
   config_lookup_bool(&conf, "invertMouseY", &(c->invertMouseY));
 
+  char *key = NULL;
+
+#define GET_KEY(group, k)                           \
+  do {                                              \
+    config_lookup_string(&conf, #group"."#k, &key); \
+    c->group.k = key ? SDL_GetKeyFromName(key) : 0; \
+    key = NULL;                                     \
+  } while (0)
+
+  GET_KEY(keys, forward);
+  GET_KEY(keys, backward);
+  GET_KEY(keys, turn);
+  GET_KEY(keys, run);
+  GET_KEY(keys, crouch);
+  GET_KEY(keys, jump);
+
+  GET_KEY(altKeys, forward);
+  GET_KEY(altKeys, backward);
+  GET_KEY(altKeys, turn);
+  GET_KEY(altKeys, run);
+  GET_KEY(altKeys, crouch);
+  GET_KEY(altKeys, jump);
+
+
   fclose(f);
   config_destroy(&conf);
 }
 
-// Writes a config to the file name specified.
+// Writes a config to the config file
 void io_writeConfig(config c){
   FILE *f = rs_getConfigWrite();
   if(!f){
@@ -309,7 +333,7 @@ void io_writeConfig(config c){
 
   root = config_root_setting(&conf);
 
-  set = config_setting_add(root, "mute", CONFIG_TYPE_INT);
+  set = config_setting_add(root, "music", CONFIG_TYPE_INT);
   config_setting_set_int(set, c.music);
 
   set = config_setting_add(root, "effects", CONFIG_TYPE_INT);
@@ -323,6 +347,33 @@ void io_writeConfig(config c){
 
   set = config_setting_add(root, "invertMouseY", CONFIG_TYPE_BOOL);
   config_setting_set_bool(set, c.invertMouseY);
+
+  config_setting_t *keys, *altKeys;
+
+#define SET_KEY(group, k)                                         \
+  do {                                                            \
+    if (c.group.k) {                                              \
+      set = config_setting_add(group, #k, CONFIG_TYPE_STRING);    \
+      config_setting_set_string(set, SDL_GetKeyName(c.group.k));  \
+    }                                                             \
+  } while (0)
+
+  keys = config_setting_add(root, "keys", CONFIG_TYPE_GROUP);
+  altKeys = config_setting_add(root, "altKeys", CONFIG_TYPE_GROUP);
+
+  SET_KEY(keys, forward);
+  SET_KEY(keys, backward);
+  SET_KEY(keys, turn);
+  SET_KEY(keys, run);
+  SET_KEY(keys, crouch);
+  SET_KEY(keys, jump);
+
+  SET_KEY(altKeys, forward);
+  SET_KEY(altKeys, backward);
+  SET_KEY(altKeys, turn);
+  SET_KEY(altKeys, run);
+  SET_KEY(altKeys, crouch);
+  SET_KEY(altKeys, jump);
 
   config_write(&conf, f);
 

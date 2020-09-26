@@ -10,7 +10,6 @@ void rs_init(){
 #else
   // On real operating systems, use a proper config dir.
   // XDG_CONFIG_HOME if it exists, otherwise ~/.config/
-  configDir = "~/.config";
 
   char *xdg_config_home = getenv("XDG_CONFIG_HOME");
   char *home = getenv("HOME");
@@ -25,9 +24,8 @@ void rs_init(){
     strcat(configDir, "/.config");
   }
   else {
-    // Sure why not. if $HOME isn't defined, use a system config folder.
-    configDir = salloc(sizeof("/etc"));
-    strcpy(configDir, "/etc");
+    configDir = salloc(strlen("~.config"));
+    strcpy(configDir, "~/.config");
   }
 #endif
 
