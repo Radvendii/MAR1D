@@ -48,6 +48,23 @@
 #define INIT_ARR_ON_HEAP(type, ...) _INIT_ARR_ON_HEAP(type, ((type[]) __VA_ARGS__))
 #define _INIT_ARR_ON_HEAP(type, arr) (type *) heap_copy(arr, sizeof(arr))
 
+/*
+ * APPEND(a, b, c) will produce b, c, a
+ * APPEND(a) will produce a
+ *
+ * this is useful when called in other macros as follows:
+ * APPEND(a, ##__VA_ARGS__)
+ *
+ * because there is no easy way to append something to __VA_ARGS__ while dealing
+ * correctly with commas and the case of __VA_ARGS__ being empty
+ *
+ * watch out for ##__VA_ARGS__ blocking macro expansion
+ */
+#define APPEND(...) APPEND_EXPAND(__VA_ARGS__)
+#define APPEND_EXPAND(...) APPEND_EXPANDED(__VA_ARGS__)
+#define APPEND_EXPANDED(x, ...) DROP_ONE(dummy, ##__VA_ARGS__, x)
+#define DROP_ONE(first, ...) __VA_ARGS__
+
 // TODO: `volume`, `volumeEffects`, `volumeMusic` instead of `mute` and `effects`
 typedef struct {
   int music;

@@ -45,7 +45,7 @@
 
 /*
  * define a menu from a list of widgets. This is useful for initializing nested
- * menus.
+ * menus. the MENU() macro adds a back button to the menu, _MENU() does not.
  * - .ws will need to be freed.
  * - .nWs is set appropriately.
  * - .sel is initialized to 0
@@ -53,19 +53,41 @@
  * - .heading is not set
  *
  * invoked as (notice the lack of (widget[]) in the argument)
- * WS_MENU(
+ * MENU(
  *   {
  *     (widget) { ... },
  *     (widget) { ... }
  *   }
  * )
  */
-#define WS_MENU(...)                                                    \
+
+#define MENU(...) MENU_EXPAND(__VA_ARGS__)
+#define MENU_EXPAND(...) MENU_EXPANDED(__VA_ARGS__)
+#define MENU_EXPANDED(...)                      \
+  _MENU(                                        \
+    APPEND(                                     \
+      WIDGET(                                   \
+        .label = "BACK",                        \
+        .kind = WK_ACTION,                      \
+        .action = &mu_goParent                  \
+      ),                                        \
+      ##__VA_ARGS__                             \
+    )                                           \
+  )
+
+#define _MENU(...)                                                      \
   (menu) {                                                              \
-    .ws = INIT_ARR_ON_HEAP(widget, __VA_ARGS__),                        \
-    .nWs = sizeof((widget[]) __VA_ARGS__) / sizeof(widget),             \
+    .ws = INIT_ARR_ON_HEAP(widget, { __VA_ARGS__ }),                    \
+    .nWs = sizeof((widget[]) { __VA_ARGS__ }) / sizeof(widget),         \
     .sel = 0                                                            \
   }
+
+#define WIDGET(...)                                                     \
+  (                                                                     \
+    (widget) {                                                          \
+      __VA_ARGS__                                                       \
+    }                                                                   \
+  )
 
 /*
  * Definition of datatypes for the menu
@@ -136,12 +158,13 @@ struct widget {
     struct { // WK_TEXT
       char *text;
       float size;
-    }
+    };
     // WK_TEXT just uses .label
   };
 };
 
 void mu_setParents(menu *m, menu *p);
+void mu_setHeadings(menu *m, char *heading);
 
 void mu_main();
 void mu_update();

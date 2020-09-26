@@ -7,197 +7,131 @@ void mu_init() {
 
   // initialize menu
   // TODO: read this in from a (json?) resource file
-  main_menu = WS_MENU(
-    {
-      (widget) {
-        .label = "START GAME",
-        .kind = WK_ACTION,
-        .action = &mu_startGame
-      },
-      (widget) {
-        .label = "EXPLANATION",
-        .kind = WK_MENU,
-        .m = WS_MENU(
-          {
-            (widget) {
+  main_menu = _MENU(
+    WIDGET(
+      .label = "START GAME",
+      .kind = WK_ACTION,
+      .action = &mu_startGame
+    ),
+    WIDGET(
+      .label = "EXPLANATION",
+      .kind = WK_MENU,
+      .m = MENU(
+        WIDGET(
+          .label = "",
+          .kind = WK_TEXT,
+          .text =
+            "FIRST PERSON MARIO. THE WORLD IS\n"
+            "STILL 2D. YOU SEE THAT WORLD AS\n"
+            "MARIO DOES: A 1D LINE.\n"
+            "\n"
+            "MORE AT MAR1D.COM\n",
+          .size = 1.5
+        )
+      )
+    ),
+    WIDGET(
+      .label = "OPTIONS",
+      .kind = WK_MENU,
+      .m = MENU(
+        WIDGET(
+          .label = "CONTROLS",
+          .kind = WK_MENU,
+          .m = MENU(
+            WIDGET(
+              .label = "MOUSE",
+              .kind = WK_MENU,
+              .m = MENU(
+                WIDGET(
+                  .label = "SENSITIVITY",
+                  .kind = WK_SLIDER,
+                  .sliderVal = &conf.sensitivity,
+                  .inc = 1,
+                  .min = 1,
+                  .max = 20
+                ),
+                WIDGET(
+                  .label = "INVERT Y",
+                  .kind = WK_SWITCH,
+                  .switchVal = &conf.invertMouseY
+                )
+              )
+            ),
+            WIDGET(
+              .label = "KEYBOARD",
+              .kind = WK_MENU,
+              .m = MENU(
+              )
+            )
+          )
+        ),
+        WIDGET(
+          .label = "GRAPHICS",
+          .kind = WK_MENU,
+          .m = MENU(
+            WIDGET(
+              .label = "LINE WIDTH",
+              .kind = WK_SLIDER,
+              .sliderVal = &conf.lineSize,
+              .inc = 5,
+              .min = 1,
+              .max = 100
+            ),
+            WIDGET(
               .label = "",
               .kind = WK_TEXT,
               .text =
-                "FIRST PERSON MARIO. THE WORLD IS\n"
-                "STILL 2D. YOU SEE THAT WORLD AS\n"
-                "MARIO DOES: A 1D LINE.\n"
-                "\n"
-                "MORE AT MAR1D.COM\n",
+                "CHANGE THE WIDTH OF THE DISPLAY\n"
+                "LINE. THIS DOES NOT MAKE IT 2D.\n"
+                "THERE IS ONLY 1D OF INFORMATION.\n",
               .size = 1.5
-            },
-            // TODO: automatically add this to all submenus somehow
-            (widget) {
-              .label = "BACK",
-              .kind = WK_ACTION,
-              .action = &mu_goParent
-            }
-          }
+            )
+          )
+        ),
+        WIDGET(
+          .label = "SOUND",
+          .kind = WK_MENU,
+          .m = MENU(
+            WIDGET(
+              .label = "MUSIC",
+              .kind = WK_SLIDER,
+              .sliderVal = &conf.music,
+              .min = 0,
+              .max = MIX_MAX_VOLUME,
+              .inc = 8
+            ),
+            WIDGET(
+              .label = "EFFECTS",
+              .kind = WK_SLIDER,
+              .sliderVal = &conf.effects,
+              .min = 0,
+              .max = MIX_MAX_VOLUME,
+              .inc = 8
+            )
+          )
         )
-      },
-      (widget) {
-        .label = "OPTIONS",
-        .kind = WK_MENU,
-        .m = WS_MENU(
-          {
-            (widget) {
-              .label = "CONTROLS",
-              .kind = WK_MENU,
-              .m = WS_MENU(
-                {
-                  (widget) {
-                    .label = "MOUSE",
-                    .kind = WK_MENU,
-                    .m = WS_MENU(
-                      {
-                        (widget) {
-                          .label = "SENSITIVITY",
-                          .kind = WK_SLIDER,
-                          .sliderVal = &conf.sensitivity,
-                          .inc = 1,
-                          .min = 1,
-                          .max = 20
-                        },
-                        (widget) {
-                          .label = "INVERT Y",
-                          .kind = WK_SWITCH,
-                          .switchVal = &conf.invertMouseY
-                        },
-                        // TODO: automatically add this to all submenus somehow
-                        (widget) {
-                          .label = "BACK",
-                          .kind = WK_ACTION,
-                          .action = &mu_goParent
-                        }
-                      }
-                    )
-                  },
-                  (widget) {
-                    .label = "KEYBOARD",
-                    .kind = WK_MENU,
-                    .m = WS_MENU(
-                      {
-                        // TODO: automatically add this to all submenus somehow
-                        (widget) {
-                          .label = "BACK",
-                          .kind = WK_ACTION,
-                          .action = &mu_goParent
-                        }
-                      }
-                    )
-                  },
-                  // TODO: automatically add this to all submenus somehow
-                  (widget) {
-                    .label = "BACK",
-                    .kind = WK_ACTION,
-                    .action = &mu_goParent
-                  }
-                }
-              )
-            },
-            (widget) {
-              .label = "GRAPHICS",
-              .kind = WK_MENU,
-              .m = WS_MENU(
-                {
-                  (widget) {
-                    .label = "LINE WIDTH",
-                    .kind = WK_SLIDER,
-                    .sliderVal = &conf.lineSize,
-                    .inc = 5,
-                    .min = 1,
-                    .max = 100
-                  },
-                  (widget) {
-                    .label = "",
-                    .kind = WK_TEXT,
-                    .text =
-                      "CHANGE THE WIDTH OF THE DISPLAY\n"
-                      "LINE. THIS DOES NOT MAKE IT 2D.\n"
-                      "THERE IS ONLY 1D OF INFORMATION.\n",
-                    .size = 1.5
-                  },
-                  // TODO: automatically add this to all submenus somehow
-                  (widget) {
-                    .label = "BACK",
-                    .kind = WK_ACTION,
-                    .action = &mu_goParent
-                  }
-                }
-              )
-            },
-            (widget) {
-              .label = "SOUND",
-              .kind = WK_MENU,
-              .m = WS_MENU(
-                {
-                  (widget) {
-                    .label = "MUSIC",
-                    .kind = WK_SLIDER,
-                    .sliderVal = &conf.music,
-                    .min = 0,
-                    .max = MIX_MAX_VOLUME,
-                    .inc = 8
-                  },
-                  (widget) {
-                    .label = "EFFECTS",
-                    .kind = WK_SLIDER,
-                    .sliderVal = &conf.effects,
-                    .min = 0,
-                    .max = MIX_MAX_VOLUME,
-                    .inc = 8
-                  },
-                  // TODO: automatically add this to all submenus somehow
-                  (widget) {
-                    .label = "BACK",
-                    .kind = WK_ACTION,
-                    .action = &mu_goParent
-                  }
-                }
-              )
-            },
-            // TODO: automatically add this to all submenus somehow
-            (widget) {
-              .label = "BACK",
-              .kind = WK_ACTION,
-              .action = &mu_goParent
-            }
-          }
+      )
+    ),
+    WIDGET(
+      .label = "SOURCE CODE",
+      .kind = WK_MENU,
+      .m = MENU(
+        WIDGET(
+          .label = "",
+          .kind = WK_TEXT,
+          .text =
+            "MAR1D IS FREE SOFTWARE LICENSED\n"
+            "UNDER AGPL. THE SOURCE CAN BE\n"
+            "FOUND AT MAR1D.COM/SOURCE\n",
+          .size = 1.5
         )
-      },
-      (widget) {
-        .label = "SOURCE CODE",
-        .kind = WK_MENU,
-        .m = WS_MENU(
-          {
-            (widget) {
-              .label = "",
-              .kind = WK_TEXT,
-              .text =
-                "MAR1D IS FREE SOFTWARE LICENSED\n"
-                "UNDER AGPL. THE SOURCE CAN BE\n"
-                "FOUND AT MAR1D.COM/SOURCE\n",
-              .size = 1.5
-            },
-            // TODO: automatically add this to all submenus somehow
-            (widget) {
-              .label = "BACK",
-              .kind = WK_ACTION,
-              .action = &mu_goParent
-            }
-          }
-        )
-      },
-      (widget) {
-        .label = "QUIT",
-        .kind = WK_ACTION,
-        .action = &mu_quit
-      }
-    }
+      )
+    ),
+    WIDGET(
+      .label = "QUIT",
+      .kind = WK_ACTION,
+      .action = &mu_quit
+    )
   );
 
   // TODO: I really, really want this to be incorporated in the macros above,
