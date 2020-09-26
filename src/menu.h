@@ -185,6 +185,7 @@ void mu_startGame();
 void mu_quit();
 void mu_goParent();
 void mu_resetKeys();
+void mu_saveConfig();
 
 void mu_drawSelected(float, float);
 

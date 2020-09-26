@@ -39,25 +39,6 @@ void mu_init() {
           .kind = WK_MENU,
           .m = MENU(
             WIDGET(
-              .label = "MOUSE",
-              .kind = WK_MENU,
-              .m = MENU(
-                WIDGET(
-                  .label = "SENSITIVITY",
-                  .kind = WK_SLIDER,
-                  .sliderVal = &conf.sensitivity,
-                  .inc = 1,
-                  .min = 1,
-                  .max = 20
-                ),
-                WIDGET(
-                  .label = "INVERT Y",
-                  .kind = WK_SWITCH,
-                  .switchVal = &conf.invertMouseY
-                )
-              )
-            ),
-            WIDGET(
               .label = "KEYBOARD",
               .kind = WK_MENU,
               .m = MENU(
@@ -101,6 +82,25 @@ void mu_init() {
                   .label = "RESET",
                   .kind = WK_ACTION,
                   .action = &mu_resetKeys
+                )
+              )
+            ),
+            WIDGET(
+              .label = "MOUSE",
+              .kind = WK_MENU,
+              .m = MENU(
+                WIDGET(
+                  .label = "SENSITIVITY",
+                  .kind = WK_SLIDER,
+                  .sliderVal = &conf.sensitivity,
+                  .inc = 1,
+                  .min = 1,
+                  .max = 20
+                ),
+                WIDGET(
+                  .label = "INVERT Y",
+                  .kind = WK_SWITCH,
+                  .switchVal = &conf.invertMouseY
                 )
               )
             )
@@ -150,6 +150,11 @@ void mu_init() {
               .inc = 8
             )
           )
+        ),
+        WIDGET(
+          .label = "SAVE",
+          .kind = WK_ACTION,
+          .action = &mu_saveConfig
         )
       )
     ),
@@ -223,6 +228,10 @@ void mu_goParent() {
 
 void mu_resetKeys() {
   conf.keys = k_defaultKeys;
+}
+
+void mu_saveConfig() {
+  io_writeConfig(conf);
 }
 
 void mu_menuMatrix() {
