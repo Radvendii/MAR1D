@@ -82,13 +82,13 @@ void gr_drawBezelOut(rect rct) {
   float s = k_bezelSize;
 
   //top edge
-  gr_drawRect(RGB(0xffffff), RECT_LTRB(l, t + s, r, t));
+  gr_drawRect(k_colorF, RECT_LTRB(l, t + s, r, t));
   //left edge
-  gr_drawRect(RGB(0xffffff), RECT_LTRB(l - s, t, l, b));
+  gr_drawRect(k_colorF, RECT_LTRB(l - s, t, l, b));
   //bottom edge
-  gr_drawRect(RGB(0x000000), RECT_LTRB(l, b, r, b - s));
+  gr_drawRect(k_color0, RECT_LTRB(l, b, r, b - s));
   //right edge
-  gr_drawRect(RGB(0x000000), RECT_LTRB(r, t, r + s, b));
+  gr_drawRect(k_color0, RECT_LTRB(r, t, r + s, b));
 }
 
 void gr_drawBezelIn(rect rct) {
@@ -100,13 +100,13 @@ void gr_drawBezelIn(rect rct) {
   float s = k_bezelSize;
 
   //top edge
-  gr_drawRect(RGB(0x000000), RECT_LTRB(l, t + s, r, t));
+  gr_drawRect(k_color0, RECT_LTRB(l, t + s, r, t));
   //left edge
-  gr_drawRect(RGB(0x000000), RECT_LTRB(l - s, t, l, b));
+  gr_drawRect(k_color0, RECT_LTRB(l - s, t, l, b));
   //bottom edge
-  gr_drawRect(RGB(0xffffff), RECT_LTRB(l, b, r, b - s));
+  gr_drawRect(k_colorF, RECT_LTRB(l, b, r, b - s));
   //right edge
-  gr_drawRect(RGB(0xffffff), RECT_LTRB(r, t, r + s, b));
+  gr_drawRect(k_colorF, RECT_LTRB(r, t, r + s, b));
 }
 
 // Render a text character

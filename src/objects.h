@@ -10,20 +10,22 @@
 #define p_skipPoint ((point){ .x=124214, .y=141312, .c = '\0'}) // Special point that is simply skipped. This is useful so that all frames of an animation can be made to have the same number of points.
 
 // Sometimes it's more convenient to define a color by RGB(0xRRGGBB)
-#define RGB(x) (color) {                                                \
-    .r = ((x) & 0xFF0000) >> 16,                                        \
-    .g = ((x) & 0x00FF00) >> 8,                                         \
-    .b = ((x) & 0x0000FF) >> 0                                          \
+#define RGB0x(hex) (color) {                    \
+    .r = ((0x##hex) & 0xFF0000) >> 16,          \
+    .g = ((0x##hex) & 0x00FF00) >> 8,           \
+    .b = ((0x##hex) & 0x0000FF) >> 0            \
   }
 
-#define k_colorBrown RGB(0xC84C0C)
-#define k_colorPink  RGB(0xFCBCB0)
-#define k_colorWhite RGB(0xF0F0F0)
-#define k_colorDark  RGB(0x404040)
-#define k_colorLight RGB(0xCCCCCC)
-#define k_colorGray  RGB(0x888888)
-#define k_colorBlue  RGB(0x5c94fc)
-#define k_colorGreen RGB(0x00a800)
+#define k_colorBrown RGB0x(C84C0C)
+#define k_colorPink  RGB0x(FCBCB0)
+#define k_colorWhite RGB0x(F0F0F0)
+#define k_colorDark  RGB0x(404040)
+#define k_colorLight RGB0x(CCCCCC)
+#define k_colorGray  RGB0x(888888)
+#define k_colorBlue  RGB0x(5c94fc)
+#define k_colorGreen RGB0x(00a800)
+#define k_colorF     RGB0x(FFFFFF)
+#define k_color0     RGB0x(000000)
 
 #define k_colorTextLit k_colorWhite
 #define k_colorTextDim k_colorDark
