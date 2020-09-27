@@ -30,6 +30,7 @@ configure_file(src/resources.h.in resources.h @ONLY)
 # include directories
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${OPENGL_INCLUDE_DIRS})
 include_directories(${LIBCONFIG_INCLUDE_DIRS})
 
 # build with static libraries so things just work
@@ -41,7 +42,7 @@ file(GLOB SOURCES "src/*.c")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} SDL2::Main SDL2::Mixer)
-target_link_libraries(${PROJECT_NAME} OpenGL::OpenGL OpenGL::GLU)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} OpenGL::GLU)
 target_link_libraries(${PROJECT_NAME} ${LIBCONFIG_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} m) # math
 
