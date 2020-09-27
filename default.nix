@@ -1,22 +1,8 @@
 with import <nixpkgs> { };
-with xorg;
-
-let 
-  width = 30;
-  mute = false;
-  effects = false;
-  sensitivity = 5;
-  reverseY = false;
-in
 
 stdenv.mkDerivation rec {
   name = "MAR1D-${version}";
   version = "0.2.0";
-  options = "-w${toString width}"
-          + " -s${toString sensitivity}"
-          + (if mute then " -m" else "")
-          + (if effects then " -f" else "")
-          + (if reverseY then " -r" else "");
 
   src = ./.;
 
