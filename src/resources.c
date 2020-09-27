@@ -6,7 +6,8 @@ void rs_init(){
 
 #ifdef _WIN32
   // On windows, just use the directory of the program as a config dir
-  configDir = getcwd(NULL, 128);
+  configDir = salloc(128 * sizeof(char));
+  getcwd(configDir, 128);
 #else
   // On real operating systems, use a proper config dir.
   // XDG_CONFIG_HOME if it exists, otherwise ~/.config/

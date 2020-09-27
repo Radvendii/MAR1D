@@ -2,6 +2,9 @@
 #define _RESOURCES_H
 #include "helpers.h"
 #include <stdio.h>
+#ifdef _WIN32
+#  include <direct.h> // for getcwd() on windows
+#endif
 #define k_resourceDir "@RESOURCE_DIRECTORY@" // To be filled in by cmake
 #define k_configFileName "MAR1D.conf"
 
