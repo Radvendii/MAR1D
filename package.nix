@@ -4,9 +4,6 @@
 , libGLU
 , libconfig
 , cmake
-# necessary for dragging dlls to the right places for windows cross-compilation
-# , glibc # for ldconfig
-# , dos2unix
 , meson
 , ninja
 , pkgconfig
@@ -19,7 +16,6 @@ stdenv.mkDerivation rec {
   src = ./.;
 
   nativeBuildInputs = [ meson ninja pkgconfig ];
-  # nativeBuildInputs = [ cmake glibc dos2unix ];
 
   buildInputs =
     [
