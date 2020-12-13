@@ -232,6 +232,9 @@ void mu_resetKeys() {
 
 void mu_saveConfig() {
   io_writeConfig(conf);
+  // TODO: goParent() shouldn't really be in the saveConfig() function. really there
+  // should be a separate function for the menu item.
+  mu_goParent();
 }
 
 void mu_menuMatrix() {
