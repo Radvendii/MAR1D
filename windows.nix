@@ -1,3 +1,12 @@
+# windows.nix
+# compile using `nix-build windows.nix` to cross-compile for windows. This file does 3 main things
+#
+# 1. Make all the libraries static. DLL hell is real, and I don't want to deal with it.
+# 2. Disable libraries / features wherever they were causing problems and could be disabled.
+# 3. Copy stuff that was enabled for Darwin that's actually needed on all non-linux systems (e.g. windows)
+#
+# This was accomplished through a boatload of trial-and-error. There may well be a better way of going about this, and I encourage someone to send a pull request.
+
 with import <nixpkgs> {
   crossSystem = {
     config = "x86_64-w64-mingw32";
@@ -26,8 +35,11 @@ with import <nixpkgs> {
         fluidsynth = null;
       }).overrideAttrs (old: {
         configureFlags = old.configureFlags
-                         ++ [ "--disable-sdltest" "--disable-smpegtest" ]
-                         ++ [ "--disable-music-mod-modplug" "--disable-music-ogg" "--disable-music-opus" ]
+                         ++ [ "--disable-sdltest" "--disable-smpegtest" ] # like darwin
+                         ++ [ "--disable-music-mod-modplug"
+                              "--disable-music-ogg"
+                              "--disable-music-opus"
+                            ] # disable libraries that were causing problems compiling statically
                          ++ [ "--enable-static" "--disable-shared" ];
         autoreconfFlags = [ "--include=./acinclude" ];
         dontDisableStatic = 1;
@@ -43,6 +55,7 @@ with import <nixpkgs> {
         buildInputs = []; # get rid of alsaLib (like for darwin)
       });
       libGL = super.libGL.overrideAttrs (old:  {
+        # like darwin
         buildCommand = ''
           mkdir -p $out/nix-support $dev
           echo ${self.mesa} >> $out/nix-support/propagated-build-inputs
@@ -81,20 +94,4 @@ with import <nixpkgs> {
   ];
 };
 
-(callPackage ./package.nix {}).overrideAttrs (old : {
-  NIX_DEBUG = 5;
-})
-# (callPackage ./package.nix {}).overrideAttrs (old : {
-#   postInstall = ''
-#     cp ${SDL2_mixer}/bin/SDL2_mixer.dll \
-#        ${SDL2}/bin/SDL2.dll ${libconfig}/bin/libconfig-11.dll \
-#        ${libmodplug}/bin/libmodplug-1.dll \
-#        ${libvorbis}/bin/libvorbis-0.dll \
-#        ${libvorbis}/bin/libvorbisfile-3.dll \
-#        ${libogg}/bin/libogg-0.dll \
-#        ${libopus}/bin/libopus-0.dll \
-#        ${opusfile}/bin/libopusfile-0.dll \
-#        ${stage-final-gcc}/x86_64-w64-mingw32/lib/libstdc++-6.dll \
-#        $out/bin
-#   '';
-# })
+callPackage ./package.nix {}
