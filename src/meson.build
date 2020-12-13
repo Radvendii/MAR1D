@@ -16,17 +16,7 @@ sources = [ 'audio.c'
 
 configure_file(input : 'resources.h.in',
                output: 'resources.h',
-               configuration:  { 'RESOURCE_DIRECTORY' : get_option('prefix') / 'share' / 'mar1d' / 'resources' / '' })
-
-cc = meson.get_compiler('c')
-math_lib = cc.find_library('m', required : false)
-
-# windows being a special snowflake
-if is_windows
-    opengl_dep = cc.find_library('opengl32', required : true)
-else
-    opengl_dep = dependency('opengl')
-endif
+               configuration:  { 'RESOURCE_DIRECTORY' : resources_directory })
 
 executable('MAR1D', sources,
            install : true,
