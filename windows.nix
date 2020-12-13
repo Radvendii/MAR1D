@@ -8,7 +8,8 @@ with import <nixpkgs> {
     (self: super: {
       libconfig = (super.libconfig.override {
       }).overrideAttrs (old: {
-        configureFlags = [ "--disable-examples" ];
+        configureFlags = [ "--disable-examples --enable-static" ];
+        dontDisableStatic = 1;
       });
       SDL2 = (super.SDL2.override {
         x11Support = false;
@@ -75,3 +76,17 @@ with import <nixpkgs> {
 };
 
 callPackage ./package.nix {}
+# (callPackage ./package.nix {}).overrideAttrs (old : {
+#   postInstall = ''
+#     cp ${SDL2_mixer}/bin/SDL2_mixer.dll \
+#        ${SDL2}/bin/SDL2.dll ${libconfig}/bin/libconfig-11.dll \
+#        ${libmodplug}/bin/libmodplug-1.dll \
+#        ${libvorbis}/bin/libvorbis-0.dll \
+#        ${libvorbis}/bin/libvorbisfile-3.dll \
+#        ${libogg}/bin/libogg-0.dll \
+#        ${libopus}/bin/libopus-0.dll \
+#        ${opusfile}/bin/libopusfile-0.dll \
+#        ${stage-final-gcc}/x86_64-w64-mingw32/lib/libstdc++-6.dll \
+#        $out/bin
+#   '';
+# })

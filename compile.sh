@@ -3,6 +3,6 @@ rm -rf ./build ./install
 mkdir build
 mkdir install
 cd build
-cmake ../src -DCMAKE_INSTALL_PREFIX=../install
+cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make
 make install

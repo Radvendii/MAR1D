@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17.2)
+cmake_minimum_required(VERSION 3.19.0)
 
 # Project Information
 
@@ -48,3 +48,41 @@ target_link_libraries(${PROJECT_NAME} m) # math
 
 install(TARGETS MAR1D DESTINATION bin)
 install(DIRECTORY resources DESTINATION share/mar1d)
+
+# *gestures inarticulately* windows!
+# in other words, windows needs all .dlls in the same folder as the executable.
+# this code makes that happen.
+install(CODE [[
+  # workaround for linux corss-compiling to windows
+  # see https://gitlab.kitware.com/cmake/cmake/-/issues/20753
+  set(CMAKE_GET_RUNTIME_DEPENDENCIES_PLATFORM "windows+pe")
+  set(CMAKE_GET_RUNTIME_DEPENDENCIES_TOOL "objdump")
+  set(CMAKE_GET_RUNTIME_DEPENDENCIES_COMMAND "./objdump_unix2dos.sh")
+
+  file(WRITE "objdump_unix2dos.sh" "${CMAKE_OBJDUMP} $@ | unix2dos")
+  file(CHMOD "objdump_unix2dos.sh" PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
+
+  file(GET_RUNTIME_DEPENDENCIES
+    EXECUTABLES $<TARGET_FILE:MAR1D>
+    RESOLVED_DEPENDENCIES_VAR _r_deps
+    UNRESOLVED_DEPENDENCIES_VAR _u_deps
+    )
+  foreach(r_dep ${_r_deps})
+    message("rdep: ${r_dep}")
+  endforeach()
+  foreach(u_dep ${_u_deps})
+    message("udep: ${u_dep}")
+  endforeach()
+  # foreach(_file ${_r_deps})
+  #   file(INSTALL
+  #     DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
+  #     TYPE SHARED_LIBRARY
+  #     FOLLLOW_SYMLINK_CHAIN
+  #     FILES "${_file}"
+  #   )
+  # endforeach()
+  # list(LENGTH _u_deps _u_length)
+  # if("${_u_length}" GREATER 0)
+  #   message(WARNING "Unresolved dependencies detected!")
+  # endif()
+]])
