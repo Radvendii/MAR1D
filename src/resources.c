@@ -6,8 +6,7 @@ void rs_init(){
 
 #ifdef _WIN32
   // On windows, just use the directory of the program as a config dir
-  configDir = salloc(128 * sizeof(char));
-  getcwd(configDir, 128);
+  configDir = strdup("");
 #else
   // On real operating systems, use a proper config dir.
   // XDG_CONFIG_HOME if it exists, otherwise ~/.config/
@@ -17,16 +16,14 @@ void rs_init(){
 
   if(xdg_config_home){
     configDir = salloc(strlen(xdg_config_home) + 1);
-    strcpy(configDir, xdg_config_home);
+    sprintf(configDir, "%s/", xdg_config_home);
   }
   else if(home){
-    configDir = salloc(strlen(home) + sizeof("/.config"));
-    strcpy(configDir, home);
-    strcat(configDir, "/.config");
+    configDir = salloc(strlen(home) + sizeof("/.config/"));
+    sprintf(configDir, "%s/.config/", home);
   }
   else {
-    configDir = salloc(strlen("~.config"));
-    strcpy(configDir, "~/.config");
+    configDir = strdup("~/.config/");
   }
 #endif
 
@@ -63,7 +60,7 @@ FILE* rs_getBFile(char* fn){
 
 FILE* rs_getConfigRead(){
   char *fn_ = salloc(strlen(configDir) + 2 + sizeof(k_configFileName));
-  sprintf(fn_, "%s/"k_configFileName, configDir);
+  sprintf(fn_, "%s"k_configFileName, configDir);
   FILE *f = fopen(fn_, "r"); // fopen not sfopen because in this case we don't care that much if it fails
   free(fn_);
   return f;
@@ -71,7 +68,7 @@ FILE* rs_getConfigRead(){
 
 FILE* rs_getConfigWrite(){
   char *fn_ = salloc(strlen(configDir) + 2 + sizeof(k_configFileName));
-  sprintf(fn_, "%s/"k_configFileName, configDir);
+  sprintf(fn_, "%s"k_configFileName, configDir);
   FILE *f = fopen(fn_, "w"); // fopen not sfopen because in this case we don't care that much if it fails
   free(fn_);
   return f;
