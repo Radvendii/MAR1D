@@ -21,9 +21,11 @@ c_args = is_windows ? ['-D LIBCONFIG_STATIC'] : []
 
 # set the resource directory path (for installation and for inside the code) based on host
 if is_windows
-    resources_install_dir = 'bin'
+    exe_install_dir = ''
+    resources_install_dir = ''
     resources_directory = 'resources' / ''
 else
+    exe_install_dir = 'bin'
     resources_install_dir = 'share' / 'mar1d'
     resources_directory = get_option('prefix') / 'share' / 'mar1d' / 'resources' / ''
 endif
