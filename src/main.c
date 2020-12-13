@@ -1,4 +1,7 @@
 #include <SDL.h>
+#ifdef _WIN32
+#define LIBCONFIG_STATIC
+#endif
 #include <libconfig.h>
 #include "helpers.h"
 #include "resources.h"

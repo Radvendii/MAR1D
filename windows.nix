@@ -25,7 +25,10 @@ with import <nixpkgs> {
       SDL2_mixer = (super.SDL2_mixer.override {
         fluidsynth = null;
       }).overrideAttrs (old: {
-        configureFlags = [ "--enable-static" ];
+        configureFlags = old.configureFlags
+                         ++ [ "--disable-sdltest" "--disable-smpegtest" ]
+                         ++ [ "--disable-music-mod-modplug" "--disable-music-ogg" "--disable-music-opus" ]
+                         ++ [ "--enable-static" "--disable-shared" ];
         autoreconfFlags = [ "--include=./acinclude" ];
         dontDisableStatic = 1;
       });
@@ -34,6 +37,9 @@ with import <nixpkgs> {
         dontDisableStatic = 1;
       });
       mpg123 = super.mpg123.overrideAttrs (old: {
+        configureFlags = old.configureFlags
+                         ++ [ "--enable-static" "--disable-shared" ];
+        dontDisableStatic = 1;
         buildInputs = []; # get rid of alsaLib (like for darwin)
       });
       libGL = super.libGL.overrideAttrs (old:  {
@@ -75,7 +81,9 @@ with import <nixpkgs> {
   ];
 };
 
-callPackage ./package.nix {}
+(callPackage ./package.nix {}).overrideAttrs (old : {
+  NIX_DEBUG = 5;
+})
 # (callPackage ./package.nix {}).overrideAttrs (old : {
 #   postInstall = ''
 #     cp ${SDL2_mixer}/bin/SDL2_mixer.dll \

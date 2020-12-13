@@ -22,7 +22,7 @@ cc = meson.get_compiler('c')
 math_lib = cc.find_library('m', required : false)
 
 # windows being a special snowflake
-if host_machine.system() == 'windows'
+if is_windows
     opengl_dep = cc.find_library('opengl32', required : true)
 else
     opengl_dep = dependency('opengl')
@@ -32,7 +32,7 @@ executable('MAR1D', sources,
            install : true,
            dependencies : [ math_lib
                           , opengl_dep
-                          , dependency('sdl2', static : true)
-                          , dependency('SDL2_mixer')
-                          , dependency('libconfig')
+                          , dependency('sdl2', static : is_windows)
+                          , dependency('SDL2_mixer', static : is_windows)
+                          , dependency('libconfig', static : is_windows)
                           ])
