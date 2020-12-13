@@ -20,6 +20,7 @@ configure_file(input : 'resources.h.in',
 
 executable('MAR1D', sources,
            install : true,
+           c_args : is_windows ? ['-D LIBCONFIG_STATIC'] : [],
            dependencies : [ math_lib
                           , opengl_dep
                           , dependency('sdl2', static : is_windows)

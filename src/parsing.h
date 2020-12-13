@@ -3,9 +3,6 @@
 #include "helpers.h"
 #include "objects.h"
 #include "resources.h"
-#ifdef _WIN32
-#define LIBCONFIG_STATIC
-#endif
 #include <libconfig.h>
 
 color* io_cs;
