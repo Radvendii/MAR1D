@@ -1,19 +1,31 @@
+# main meson.build file
+# I'm trying to avoid putting anything that refers to the contents of
+# subdirectories here, and trying to avoid putting any concerns about what the.
+# host machine is in the subdirectories.
+
 project('MAR1D', 'c')
 
 is_windows = host_machine.system() == 'windows'
 
 cc = meson.get_compiler('c')
 
+# find dependencies (depending on host)
 math_lib = cc.find_library('m', required : false)
+opengl_dep = is_windows ? cc.find_library('opengl32', required : true) : dependency('opengl')
+sdl2_dep = dependency('sdl2', static : is_windows)
+sdl2_mixer_dep = dependency('SDL2_mixer', static : is_windows)
+libconfig_dep = dependency('libconfig', static : is_windows)
 
+# libconfig needs this defined if it's static
+c_args = is_windows ? ['-D LIBCONFIG_STATIC'] : []
+
+# set the resource directory path (for installation and for inside the code) based on host
 if is_windows
     resources_install_dir = 'bin'
     resources_directory = 'resources' / ''
-    opengl_dep = cc.find_library('opengl32', required : true)
 else
     resources_install_dir = 'share' / 'mar1d'
-    resource_directory = get_option('prefix') / 'share' / 'mar1d' / 'resources' / ''
-    opengl_dep = dependency('opengl')
+    resources_directory = get_option('prefix') / 'share' / 'mar1d' / 'resources' / ''
 endif
 
 subdir('src')
