@@ -298,7 +298,7 @@ void mu_startGame() {
   gl_main();
 
   // take callbacks back
-  // TODO: this is janky.
+  // TODO: this is janky. perhaps there should be a callback stack
   wn_eventCallbacks(&mu_keypress, &mu_mouseclick, &mu_mousemove);
 }
 

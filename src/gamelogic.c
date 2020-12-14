@@ -64,6 +64,9 @@ void gl_main() {
     gr_drawHud();
     wn_update();
   }
+
+  // release mouse on game exit
+  wn_disable_mouse(false);
 }
 
 void gl_winScreen() {
