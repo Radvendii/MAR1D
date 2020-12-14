@@ -18,6 +18,12 @@ void gl_main() {
   wn_eventCallbacks(&gl_keypress, &gl_mouseclick, &gl_mousemove);
   gl_load();
   gameEnd = false;
+  /*
+   * the last SDL time at which the game was updated.
+   * used to set a constant tick rate for the game.
+   */
+  int lastSDLTime = SDL_GetTicks();
+  // main game loop
   while (!quit && !gameEnd) {
 
     //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
@@ -39,7 +45,14 @@ void gl_main() {
 
     // update the state
     au_update();
-    gl_update();
+    // fix the current time in a variable so there's no chance of an infinite loop
+    int curSDLTime = SDL_GetTicks();
+    // update the game logic until we've caught up with the current time
+    // (this will usually just be once)
+    while (curSDLTime > lastSDLTime) {
+      gl_update();
+      lastSDLTime += k_msPerGameTick;
+    }
     gr_update();
 
     // draw updates
@@ -120,7 +133,7 @@ void gl_load(){
   s.score = 0;
   s.lowTime = false;
   gl_loadLevel(s.level, '\0');
-  s.time = k_timeTick * k_time;
+  s.time = k_gameTicksPerTimeTick * k_time;
 }
 
 void gl_killed(){
@@ -155,7 +168,7 @@ void gl_win(){
     au_mainPlay(SND_scorering);
   }
   else if(s.time > 0){
-    s.time -= k_timeTick;
+    s.time -= k_gameTicksPerTimeTick;
     s.score+=50;
   }
   else{
@@ -226,7 +239,7 @@ void gl_resetLevel(){
     cl_smallMario();
     s.lowTime = false;
     gl_loadLevel(s.level, s.check);
-    s.time = k_timeTick * k_time;
+    s.time = k_gameTicksPerTimeTick * k_time;
   }
   else{
     au_playWait(SND_gameover);
@@ -259,7 +272,7 @@ void gl_update(){
     if(s.time){s.time--;}
     else{gl_die();}
 
-    if(s.time == k_timeLow*k_timeTick){
+    if(s.time == k_timeLow * k_gameTicksPerTimeTick){
       au_lowTime();
       s.lowTime = true;
     }

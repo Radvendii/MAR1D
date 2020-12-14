@@ -247,7 +247,9 @@ void gr_menuWindowMatrix() {
 void gr_drawHud(){
   char hud[60];
   // Formatting of this is very finicky
-  sprintf(hud, "   MAR1D          WORLD  TIME\n   %06d  @x%02d    1-1   %03d", s.score, s.coins, s.time/k_timeTick);
+  sprintf(hud, "   MAR1D          WORLD  TIME\n"
+               "   %06d  @x%02d    1-1   %03d",
+          s.score, s.coins, s.time/k_gameTicksPerTimeTick);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);

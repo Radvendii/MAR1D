@@ -1,10 +1,32 @@
 #ifndef _GAMELOGIC_H
 #define _GAMELOGIC_H
+#include <SDL.h>
 #include "objects.h"
 #include "controls.h"
 #include "mechanics.h"
 #include "enemies.h"
 #include "parsing.h"
+
+/*
+ * Time keeping is a little confusing because there are three different time
+ * measurements.
+ * 1. Real-World Time
+ *    This is reported by SDL_GetTicks() and is measured in milliseconds. It is
+ *    used to make sure the game runs at a constant rate regardless of how fast
+ *    the processor is. It is found only in gl_main().
+ * 2. Time Ticks
+ *    This is the number displayed in the HUD that tells the player how much
+ *    time they have left. Each one is 0.4 seconds. (in other words, 2.5 time
+ *    ticks per second)
+ * 3. Game Ticks
+ *    This keeps track of how many times the game logic has updated. There are
+ *    24 game ticks in a time tick.
+ *
+ * Unless otherwise stated, constants / variables are measured in game ticks.
+ *
+ * I found the values from the original game here:
+ * https://www.mariowiki.com/Time_Limit#Super_Mario_Bros._/_Super_Mario_Bros.:_The_Lost_Levels
+ */
 
 // Constants to define the bouncing animation for blocks
 #define act_nothing 0
@@ -24,9 +46,15 @@
 #define k_corpseLife 80 // How long until enemy corpses are removed from the game.
 #define k_shellLife 160 // How long koopas remain shells until they transform back
 
-#define k_timeTick 30 // How many frames in a time tick
-#define k_time 400 // How much time the player has to complete the stage
-#define k_timeLow 101 // The time after which time is 'low' and the music will change.
+#define k_time 400 // How much time the player has to complete the stage (in timeTicks)
+#define k_timeLow 101 // The time after which time is 'low' and the music will change (in timeTicks)
+
+#define k_gameTicksPerTimeTick 24
+#define k_timeTicksPerSec 2.5
+#define k_msPerGameTick 1000 / (k_gameTicksPerTimeTick * k_timeTicksPerSec)
+// ms  / gt   tt    ms
+// -- /  -- * --  = --
+// s /   tt   s     gt
 
 #define k_winScreenTime 6000
 
@@ -59,7 +87,7 @@ struct state {
   int lives;
   int coins;
   int score;
-  int time; // Time left in the game
+  int time; // Time left in the game (in gameTicks)
   int multibounce; // Bouncing accross multiple enemies results in a score multiplier. This keeps track of that.
   // The moveFrame variables are bookkeeping variables for when mario is moving slower than one square per frame, so that he can move one square every two frames for example.
   int moveFrameY;
