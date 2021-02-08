@@ -170,7 +170,6 @@ void au_mainPlay(int snd){
   err = Mix_PlayChannel(snd, sounds[snd], -1);
   Mix_Volume(snd, conf.music);
   if(err == -1) {
-    printf("perspWindow has focus? %d\n", SDL_GetWindowFlags(perspWindow) & SDL_WINDOW_INPUT_FOCUS);
     printf("Unable to play main sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
     exit(EXIT_FAILURE);
   }
