@@ -15,8 +15,7 @@ with import <nixpkgs> {
 
   overlays = [
     (self: super: {
-      libconfig = (super.libconfig.override {
-      }).overrideAttrs (old: {
+      libconfig = super.libconfig.overrideAttrs (old: {
         configureFlags = [ "--disable-examples --enable-static" ];
         dontDisableStatic = 1;
       });
@@ -94,4 +93,10 @@ with import <nixpkgs> {
   ];
 };
 
-callPackage ./package.nix {}
+(callPackage ./package.nix {}).overrideAttrs (old: {
+  # package it up nice and tidy for transfering to windows
+  postInstall = ''
+    cd $out
+    ${buildPackages.zip}/bin/zip -r MAR1D.zip *
+  '';
+})
