@@ -51,7 +51,7 @@
 
 #define k_gameTicksPerTimeTick 24
 #define k_timeTicksPerSec 2.5
-#define k_msPerGameTick 1000 / (k_gameTicksPerTimeTick * k_timeTicksPerSec)
+#define k_msPerGameTick (1000 / (k_gameTicksPerTimeTick * k_timeTicksPerSec))
 // ms  / gt   tt    ms
 // -- /  -- * --  = --
 // s /   tt   s     gt

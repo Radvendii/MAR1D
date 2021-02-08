@@ -261,7 +261,8 @@ void mu_startGame() {
   mu_backgroundMatrix();
   float s, rY, tX, tY;
 
-  for (int i=0; i<k_menuAnimTime && !quit; i++) {
+  int startTime = SDL_GetTicks();
+  for (float i = 0; i < k_menuAnimTime && !quit; i = (float) (SDL_GetTicks() - startTime) / k_msPerGameTick) {
     wn_menuWindow();
     gr_clear();
 
