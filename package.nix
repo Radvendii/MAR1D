@@ -9,8 +9,10 @@
 , pkgconfig
 }:
 
+with stdenv.lib;
+
 stdenv.mkDerivation rec {
-  name = "MAR1D-${version}";
+  pname = "MAR1D";
   version = "0.2.0";
 
   src = ./.;
