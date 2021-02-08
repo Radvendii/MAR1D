@@ -17,11 +17,11 @@ void rs_init(){
   char *home = getenv("HOME");
 
   if(xdg_config_home){
-    configDir = salloc(strlen(xdg_config_home) + 1);
+    configDir = salloc(strlen(xdg_config_home) + 2);
     sprintf(configDir, "%s/", xdg_config_home);
   }
   else if(home){
-    configDir = salloc(strlen(home) + sizeof("/.config/"));
+    configDir = salloc(strlen(home) + sizeof("/.config/") + 1);
     sprintf(configDir, "%s/.config/", home);
   }
   else {

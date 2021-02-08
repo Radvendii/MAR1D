@@ -20,7 +20,7 @@ sdl2_mixer_dep = dependency('SDL2_mixer', static : is_windows)
 libconfig_dep = dependency('libconfig', static : is_windows)
 
 # libconfig needs this defined if it's static
-c_args = is_windows ? ['-D LIBCONFIG_STATIC'] : []
+c_args = is_windows ? ['-D LIBCONFIG_STATIC'] : ['-Wall -Werror']
 
 # set the resource directory path (for installation and for inside the code)
 if is_windows

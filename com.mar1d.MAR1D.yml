@@ -21,3 +21,8 @@ modules:
     sources:
       - type: dir
         path: .
+finish-args:
+  - --socket=x11
+  - --socket=wayland
+  - --filesystem=home
+  - --socket=pulseaudio
