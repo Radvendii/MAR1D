@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
 Terminal=false
-Exec=@EXECUTABLE@
+Exec=@EXECUTABLE@-wrapped
 Name=MAR1D
 Icon=@ICON@
