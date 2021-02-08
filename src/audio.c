@@ -1,6 +1,11 @@
 #include "audio.h"
 Mix_Chunk *sounds[k_nSounds];
 
+int au_waiting;
+
+int au_mainAudio;
+bool mute, effects;
+
 #define k_soundsDir k_resourceDir"sounds/"
 
 // This must match the `#define`d SND_ values in audio.h

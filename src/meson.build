@@ -21,9 +21,10 @@ configure_file(input : 'resources.h.in',
 executable('MAR1D', sources,
            install : true,
            install_dir : exe_install_dir,
-           c_args : c_args,
+           # c_args : c_args,
            dependencies : [ math_lib
                           , opengl_dep
+                          , glu_dep
                           , sdl2_dep
                           , sdl2_mixer_dep
                           , libconfig_dep

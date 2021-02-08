@@ -1,5 +1,8 @@
 #include "parsing.h"
 
+color* io_cs;
+obj* io_os;
+
 // Reads a font specification from a file. 
 // The file should start with a number specifying the size of each character in pixels.
 // Then it should have a grid for each character in the ascii character set, where 1 represents the pixel being on and 0 (or anything else) represents it being off.

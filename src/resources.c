@@ -1,5 +1,7 @@
 #include "resources.h"
 
+char *configDir;
+
 void rs_init(){
 
   configDir = NULL;

@@ -44,17 +44,17 @@ typedef struct {
     float l, t, r, b;
 } rect;
 
-int lineSize;
-bool debug;
-bool *font;
-int fontSize;
+extern int lineSize;
+extern bool debug;
+extern bool *font;
+extern int fontSize;
 
 extern struct state s;
-struct camera cam;
+extern struct camera cam;
 // TODO: perhaps this should be an array of `color`s instead?
-unsigned char *perspScreen;
-int imageWidth;
-point *dimScreen;
+extern unsigned char *perspScreen;
+extern int imageWidth;
+extern point *dimScreen;
 
 void gr_color(color);
 

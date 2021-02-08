@@ -109,11 +109,11 @@ typedef struct {
   keybinds keys;
 } config; // not to be confused with config_t from libconfig
 
-config conf;
+extern config conf;
 
-bool quit; // global variable for exiting all loops and quitting the game
+extern bool quit; // global variable for exiting all loops and quitting the game
 
-int err; // global variable for capturing error codes
+extern int err; // global variable for capturing error codes
 
 // Safe versions of various functions (checks for errors)
 FILE* sfopen(char*, char*);

@@ -62,10 +62,10 @@
 
 // sound that we are waiting to complete
 // -1 indicates no sound
-int au_waiting;
+extern int au_waiting;
 
-int au_mainAudio;
-bool mute, effects;
+extern int au_mainAudio;
+extern bool mute, effects;
 
 void au_init();
 void au_update();

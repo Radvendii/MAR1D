@@ -1,6 +1,8 @@
 #include "objects.h"
 #include "parsing.h"
 
+level* ob_levels;
+
 void ob_init(){
   io_getLevels(&ob_levels, "data");
 }

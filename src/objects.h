@@ -93,7 +93,7 @@ obj ob_objFchar(char);
 //} level;
 
 typedef obj* level;
-level* ob_levels;
+extern level* ob_levels;
 
 void ob_init();
 void ob_deinit();

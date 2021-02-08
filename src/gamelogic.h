@@ -97,7 +97,7 @@ struct state {
   /* int menu; // This variable keeps track of which part of the game we are in (menu, main game, win screen) */
 };
 
-struct state s;
+extern struct state s;
 
 int gl_playerIndex();
 

@@ -1,5 +1,8 @@
 #include "windowing.h"
 
+SDL_Window* dimWindow;
+SDL_Window* perspWindow;
+
 void (*keypressCallback)(SDL_KeyboardEvent);
 void (*mouseclickCallback)(SDL_MouseButtonEvent);
 void (*mousemoveCallback)(SDL_MouseMotionEvent);

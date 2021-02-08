@@ -1,0 +1,23 @@
+app-id: com.mar1d.MAR1D
+runtime: org.freedesktop.Platform
+runtime-version: '20.08'
+platform-extensions:
+  - org.freedesktop.Platform.GL
+sdk: org.freedesktop.Sdk
+command: MAR1D
+modules:
+  - name: libconfig
+    sources:
+        - type: archive
+          url: "https://hyperrealm.github.io/libconfig/dist/libconfig-1.7.2.tar.gz"
+          sha256: 7c3c7a9c73ff3302084386e96f903eb62ce06953bb1666235fac74363a16fad9
+  - name: glu
+    sources:
+        - type: archive
+          url: "https://mesa.freedesktop.org/archive/glu/glu-9.0.1.tar.gz"
+          sha256: f6f484cfcd51e489afe88031afdea1e173aa652697e4c19ddbcb8260579a10f7
+  - name: mar1d
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .

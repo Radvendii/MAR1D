@@ -1,5 +1,8 @@
 #include "menu.h"
 
+image imBg;
+image imSel;
+
 menu main_menu;
 menu *active_menu;
 

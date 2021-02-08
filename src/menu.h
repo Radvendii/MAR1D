@@ -121,8 +121,8 @@ typedef struct widget widget;
 typedef struct menu menu;
 
 // images
-image imBg;
-image imSel;
+extern image imBg;
+extern image imSel;
 
 struct menu {
   char *heading;

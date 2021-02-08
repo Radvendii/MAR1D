@@ -5,8 +5,8 @@
 #include "resources.h"
 #include <libconfig.h>
 
-color* io_cs;
-obj* io_os;
+extern color* io_cs;
+extern obj* io_os;
 
 typedef struct {
   unsigned long sizeX;
