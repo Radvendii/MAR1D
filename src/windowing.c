@@ -98,16 +98,11 @@ void wn_init(){
   }
   perspWindow = SDL_CreateWindow(k_perspWindowName, k_perspWindowX, 100, k_perspWindowW, k_perspWindowH, SDL_WINDOW_OPENGL);
   dimWindow = SDL_CreateWindow(k_dimWindowName, k_dimWindowX, 100, k_dimWindowW, k_dimWindowH, SDL_WINDOW_OPENGL);
-  if (!perspWindow)
-    {
-      SDL_Quit();
-      exit(EXIT_FAILURE);
-    }
-  if (!dimWindow)
-    {
-      SDL_Quit();
-      exit(EXIT_FAILURE);
-    }
+  if (!perspWindow || !dimWindow) {
+    printf("Unable to create SDL windows: %s\n", SDL_GetError());
+    SDL_Quit();
+    exit(EXIT_FAILURE);
+  }
 
   SDL_SetWindowResizable(perspWindow, SDL_FALSE);
   SDL_SetWindowResizable(dimWindow, SDL_FALSE);
@@ -115,6 +110,12 @@ void wn_init(){
   glLineWidth(1.5f);
   perspContext = SDL_GL_CreateContext(perspWindow);
   dimContext = SDL_GL_CreateContext(dimWindow);
+
+  if (!perspContext || !dimContext) {
+    printf("Unable to create OpenGL contexts: %s\n", SDL_GetError());
+    SDL_Quit();
+    exit(EXIT_FAILURE);
+  }
 
   wn_keypressCallback(&wn_keypress);
   wn_mouseclickCallback(&wn_mouseclick);
