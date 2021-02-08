@@ -164,7 +164,10 @@ void au_lowTime(){
 
 void au_mainPlay(int snd){
   au_mainStop();
-  if (snd != SND_continueMain) {
+  if (snd == SND_continueMain) {
+    snd = au_mainAudio;
+  }
+  else {
     au_mainAudio = snd;
   }
   err = Mix_PlayChannel(snd, sounds[snd], -1);
