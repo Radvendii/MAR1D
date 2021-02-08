@@ -8,8 +8,6 @@
 #define k_resourceDir "@RESOURCE_DIRECTORY@" // To be filled in by cmake
 #define k_configFileName "MAR1D.conf"
 
-extern char *configDir;
-
 void rs_init();
 void rs_deinit();
 

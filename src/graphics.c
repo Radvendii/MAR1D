@@ -3,13 +3,13 @@
 int lineSize;
 bool debug;
 bool *font;
-int fontSize;
+int fontSize; // length of the array containing a single character
 
 struct camera cam;
 // TODO: perhaps this should be an array of `color`s instead?
 unsigned char *perspScreen;
-int imageWidth;
 point *dimScreen;
+int imageWidth; // the image representation of the entire playthrough so far
 
 void gr_keypress(int key, int state, int mods){
   if (KEY_DN(turn) && state == SDL_PRESSED){

@@ -20,9 +20,6 @@
 #define k_perspWindowName "MAR1D"
 #define k_dimWindowName "Debug"
 
-extern SDL_Window* dimWindow;
-extern SDL_Window* perspWindow;
-
 // Activate different windows. No guarantee these are actually different windows.
 void wn_menuWindow();
 void wn_hudWindow();

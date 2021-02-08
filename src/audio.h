@@ -53,19 +53,12 @@
 #define SND_underwater 44
 #define SND_vine 45
 #define k_nSounds 46
-#define k_killMain k_nSounds
+#define SND_continueMain k_nSounds
 
 #define k_mix_frequency MIX_DEFAULT_FREQUENCY
 #define k_mix_format AUDIO_S16SYS
 #define k_mix_channels 2
 #define k_mix_chunksize 512
-
-// sound that we are waiting to complete
-// -1 indicates no sound
-extern int au_waiting;
-
-extern int au_mainAudio;
-extern bool mute, effects;
 
 void au_init();
 void au_update();

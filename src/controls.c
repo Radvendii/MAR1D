@@ -242,7 +242,7 @@ void cl_keypress(int key, int state, int mods){
       au_play(SND_pause);
     }
     else{
-      au_mainPlay(au_mainAudio);
+      au_mainPlay(SND_continueMain);
     }
   }
 }

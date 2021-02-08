@@ -1,10 +1,12 @@
 #include "audio.h"
 Mix_Chunk *sounds[k_nSounds];
 
+
+// sound that we are waiting to complete
+// -1 indicates no sound
 int au_waiting;
 
 int au_mainAudio;
-bool mute, effects;
 
 #define k_soundsDir k_resourceDir"sounds/"
 
@@ -162,7 +164,9 @@ void au_lowTime(){
 
 void au_mainPlay(int snd){
   au_mainStop();
-  au_mainAudio = snd;
+  if (snd != SND_continueMain) {
+    au_mainAudio = snd;
+  }
   err = Mix_PlayChannel(snd, sounds[snd], -1);
   Mix_Volume(snd, conf.music);
   if(err == -1) {

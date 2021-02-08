@@ -120,10 +120,6 @@
 typedef struct widget widget;
 typedef struct menu menu;
 
-// images
-extern image imBg;
-extern image imSel;
-
 struct menu {
   char *heading;
   menu *p;    // the parent menu containing this one (null if this is the highest level)

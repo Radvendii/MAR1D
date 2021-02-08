@@ -1,7 +1,7 @@
 #include "menu.h"
 
-image imBg;
-image imSel;
+image imBg; // menu background
+image imSel; // image that appears to the left of selected item
 
 menu main_menu;
 menu *active_menu;
