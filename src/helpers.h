@@ -88,7 +88,8 @@
     .lineSize = 30,                     \
     .sensitivity = 10,                  \
     .invertMouseY = false,              \
-    .keys = k_defaultKeys               \
+    .keys = k_defaultKeys,              \
+    .debug = false                      \
   }
 
 typedef struct {
@@ -107,6 +108,7 @@ typedef struct {
   int sensitivity;
   bool invertMouseY;
   keybinds keys;
+  bool debug;
 } config; // not to be confused with config_t from libconfig
 
 extern config conf;

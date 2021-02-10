@@ -75,10 +75,6 @@ void wn_keypress(SDL_KeyboardEvent ev){
     if (ev.keysym.sym == SDLK_ESCAPE && ev.state == SDL_PRESSED){
       quit = true;
     }
-
-    if (ev.keysym.sym == SDLK_j && ev.state == SDL_PRESSED){
-      debug = !debug;
-    }
   }
 }
 
@@ -110,6 +106,10 @@ void wn_init(){
   SDL_SetWindowResizable(perspWindow, SDL_FALSE);
   SDL_SetWindowResizable(dimWindow, SDL_FALSE);
 
+  if (!conf.debug) {
+    SDL_HideWindow(dimWindow);
+  }
+
   glLineWidth(1.5f);
   perspContext = SDL_GL_CreateContext(perspWindow);
   dimContext = SDL_GL_CreateContext(dimWindow);
@@ -126,12 +126,6 @@ void wn_init(){
 }
 
 void wn_update(){
-  if(debug && SDL_GetWindowFlags(dimWindow) & SDL_WINDOW_HIDDEN){
-    SDL_ShowWindow(dimWindow);
-  }
-  if(!debug && SDL_GetWindowFlags(dimWindow) & SDL_WINDOW_SHOWN){
-    SDL_HideWindow(dimWindow);
-  }
   wn_perspWindow();
   SDL_GL_SwapWindow(perspWindow);
   wn_dimWindow();

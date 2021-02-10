@@ -294,6 +294,7 @@ void io_readConfig(config *c){
   config_lookup_int(&conf, "lineSize", &(c->lineSize));
   config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
   config_lookup_bool(&conf, "invertMouseY", &(c->invertMouseY));
+  config_lookup_bool(&conf, "debug", &(c->debug));
 
   const char *key = NULL;
 
@@ -344,13 +345,24 @@ void io_writeConfig(config c){
   set = config_setting_add(root, "invertMouseY", CONFIG_TYPE_BOOL);
   config_setting_set_bool(set, c.invertMouseY);
 
+  /*
+   * only write debug back to the config if it's true. I want this to be a fairly
+   * inaccessible option, so it shouldn't be just showing up in people's configs
+   * TODO: possibly have the same setup for all the options. Only write them
+   *       back if they're different than the default.
+   */
+  if (c.debug) {
+    set = config_setting_add(root, "debug", CONFIG_TYPE_BOOL);
+    config_setting_set_bool(set, c.debug);
+  }
+
   config_setting_t *keys;
 
   keys = config_setting_add(root, "keys", CONFIG_TYPE_GROUP);
 
 #define SET_KEY(k)                                              \
   do {                                                          \
-    if (c.keys.k) {                                            \
+    if (c.keys.k) {                                             \
       set = config_setting_add(keys, #k, CONFIG_TYPE_STRING);   \
       config_setting_set_string(set, SDL_GetKeyName(c.keys.k)); \
     }                                                           \

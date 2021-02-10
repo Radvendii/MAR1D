@@ -1,7 +1,6 @@
 #include "graphics.h"
 
 int lineSize;
-bool debug;
 bool *font;
 int fontSize; // length of the array containing a single character
 
@@ -169,7 +168,7 @@ void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
 
 // Render an array of pixels
 void gr_pixels(unsigned char *renderArr){
-  if(debug) {
+  if(conf.debug) {
     // Write output to the image file so we can make an image timelapse of gameplay
     // TODO: write output to internal buffer so we're not saving a partial file?
     FILE *imageFile = sfopen("mar1d_image.raw", "wb");
@@ -276,7 +275,6 @@ void gr_init(){
   cam.FOV = k_FOV;
   cam.scene = s.scene;
   cam.T = k_camT;
-  debug = false;
   imageWidth = 0; // Width of resulting timelapse image
   perspScreen = salloc(sizeof(unsigned char)*k_nPixels*3);
   for(int i=0;i<k_nPixels*3;i++){perspScreen[i]=0;} // Initialize to zero
@@ -321,7 +319,7 @@ void gr_deinit(){
   free(perspScreen);
   free(dimScreen);
   free(font);
-  if(debug){ // Rename image out so it's clear how big it is.
+  if(conf.debug){ // Rename image out so it's clear how big it is.
     char imageFile[100];
     sprintf(imageFile, "mar1d_%dx%d.raw", k_nPixels, imageWidth);
     rename("mar1d_image.raw", imageFile);

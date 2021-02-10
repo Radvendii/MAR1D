@@ -48,7 +48,7 @@ int main(int argc, char **argv){
 
   // overwrite default / conf file settings with command line options.
   int c;
-  while ((c = getopt(argc, argv, "m:f:w:s:y")) != -1){
+  while ((c = getopt(argc, argv, "m:f:w:s:yd")) != -1){
     switch (c){
     case 'm':
       conf.music = atoi(optarg);
@@ -64,6 +64,9 @@ int main(int argc, char **argv){
       break;
     case 'y':
       conf.invertMouseY = true;
+      break;
+    case 'd':
+      conf.debug = true;
       break;
     }
   }

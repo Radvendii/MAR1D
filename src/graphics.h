@@ -44,8 +44,6 @@ typedef struct {
     float l, t, r, b;
 } rect;
 
-extern bool debug;
-
 extern struct state s;
 
 void gr_color(color);

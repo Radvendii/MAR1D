@@ -24,7 +24,6 @@ struct camera {
   level scene;
   bool flip; // Camera facing backwards
   bool paused;
-  bool debug;
   bool flashD;
   bool flashB;
   int flashG;
