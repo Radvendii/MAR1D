@@ -61,6 +61,16 @@ void wn_processEvents(){
       case SDL_MOUSEMOTION:
         wn_mousemove(event.motion);
         break;
+    case SDL_WINDOWEVENT:
+      if (event.window.event == SDL_WINDOWEVENT_CLOSE) {
+        if (event.window.windowID == SDL_GetWindowID(perspWindow)) {
+          // TODO: should this just exit()?
+          quit = true;
+        }
+        else if (event.window.windowID == SDL_GetWindowID(dimWindow)) {
+          SDL_HideWindow(dimWindow);
+        }
+      }
       default:
         break;
     }
