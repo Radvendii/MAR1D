@@ -65,7 +65,7 @@ void rn_perspFcamera(unsigned char *screen, struct camera c){
       alpha = fmod(alpha - c.T, 2*pi);
       if(alpha > pi){alpha -= 2*pi;}
 
-      if(alpha < -0.5 || alpha > c.FOV+0.5){ // Outside FOV. TODO: 0.5 seems rather large a margin here.
+      if(alpha < -0.1 || alpha > c.FOV+0.1){ // Outside FOV.
         continue;
       }
 
