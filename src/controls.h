@@ -10,11 +10,11 @@
 // How much to increase the velocity by each timestep. 
 // For the y velocity it depends on several factors.
 #define k_xVel 0.02
-#define k_yVel (3.9+abs(s.scene[s.pli].vx)*s.bigMario/5)
+#define k_yVel (3.9+fabs(s.scene[s.pli].vx)*s.bigMario/5)
 
 #define k_xVelMax 1.5
 #define k_xVelRunMax (5.0 / 3.0 * k_xVelMax)
-#define k_xVelMin 0.5
+#define k_xVelMin 0.8
 #define k_yVelMin -4.5
 
 #define k_nJumpFrames 40 // Duration of reduced gravity.

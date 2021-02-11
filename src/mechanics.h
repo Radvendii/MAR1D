@@ -5,8 +5,6 @@
 #include "controls.h"
 #include "gamelogic.h"
 #define k_gravity -0.42
-#define k_moveFrames 2 // How frequently things move if their velocity is less than 1 per frame.
-
 #define k_activateD (16*16) // The distance at which enemies start moving.
 
 // Check if two boxes intersect

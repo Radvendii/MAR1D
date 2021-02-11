@@ -11,10 +11,10 @@
 // switch the DEBUG(...) definitions to enable / disable debugging logs
 #define DEBUG(...)                              // DEBUG OFF
 #undef  DEBUG
-#define DEBUG(...) fprintf(stderr, __VA_ARGS__) // DEBUG ON
+#define DEBUG(s, ...) fprintf(stderr, "%s(%d) "s"\n", __FILE__, __LINE__, ##__VA_ARGS__) // DEBUG ON
 
 // sprinkle this into the code to see where things are going wrong
-#define LINENO DEBUG("%s(%d)\n", __FILE__, __LINE__)
+#define LINENO DEBUG("")
 
 #define pi (22/7.0)
 
@@ -32,7 +32,7 @@
 
 #define SQUARE(x) ((x) * (x))
 
-#define SGN(x) ((x) > 0 - (x) < 0)
+#define SGN(x) (((x) > 0) - ((x) < 0))
 
 #define k_safeDelayStep 200
 

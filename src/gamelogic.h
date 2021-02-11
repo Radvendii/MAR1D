@@ -89,9 +89,6 @@ struct state {
   int score;
   int time; // Time left in the game (in gameTicks)
   int multibounce; // Bouncing accross multiple enemies results in a score multiplier. This keeps track of that.
-  // The moveFrame variables are bookkeeping variables for when mario is moving slower than one square per frame, so that he can move one square every two frames for example.
-  int moveFrameY;
-  int moveFrameX;
   bool lowTime; // Is the player low on time
 
   /* int menu; // This variable keeps track of which part of the game we are in (menu, main game, win screen) */

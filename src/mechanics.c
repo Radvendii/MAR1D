@@ -7,8 +7,6 @@ void mh_init(){
   s.won = false;
   s.gravity = k_gravity;
   s.upcount = 0;
-  s.moveFrameY = 0;
-  s.moveFrameX = 0;
 }
 
 void mh_update(){
@@ -118,24 +116,22 @@ void mh_update(){
       mh_move(s.pli);
     }
   }
-  s.moveFrameY++;
-  s.moveFrameX++;
 }
 
 void mh_move(int i){
-  double yMove = s.scene[i].vy;
-  double xMove = s.scene[i].vx;
-  if(abs(s.scene[i].vy) < 1){
-    if((s.moveFrameY %= k_moveFrames) == 0){yMove *= k_moveFrames;}
-    else{yMove = 0;}
-  }
-  cl_move(i, 'y', yMove);
+  // M for "mantissa" is the part of a number after the decimal point
+  float yMove = s.scene[i].vy;
+  float xMove = s.scene[i].vx;
+  float yMoveM = yMove - (int) yMove;
+  float xMoveM = xMove - (int) xMove;
 
-  if(abs(s.scene[i].vx) < 1){
-    if((s.moveFrameX %= k_moveFrames) == 0){xMove *= k_moveFrames;}
-    else{xMove = 0;}
-  }
-  cl_move(i, 'x', xMove);
+  // for the part of the velocity that is less than a pixel per frame, move
+  // every several frames instead (pseudo-randomly distributed)
+  if((float) rand() / RAND_MAX < fabs(yMoveM)){yMove+=SGN(yMoveM);}
+  if((float) rand() / RAND_MAX < fabs(xMoveM)){xMove+=SGN(xMoveM);}
+
+  cl_move(i, 'y', (int) yMove);
+  cl_move(i, 'x', (int) xMove);
 }
 
 bool mh_collision(int i1, int i2){

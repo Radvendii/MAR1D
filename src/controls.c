@@ -56,6 +56,7 @@ void cl_update(){
   if(s.onGround){s.multibounce = 0;}
 }
 
+// TODO: fix this so it takes in reasonable arguments
 bool cl_move1(int i, char dir, bool pos){
   bool ret=true;
   if(dir == 'x'){s.scene[i].x += (pos ? 1 : -1);}
