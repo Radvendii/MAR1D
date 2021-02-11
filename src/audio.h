@@ -65,7 +65,7 @@ void au_update();
 void au_channelFinished(int);
 void au_deinit();
 void au_play(int);
-void au_playWait(int);
+int au_playWait(int);
 void au_mainPlay(int);
 void au_lowTime();
 void au_mainStop();

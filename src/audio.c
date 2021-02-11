@@ -139,7 +139,9 @@ void au_play(int snd){
   Mix_Volume(snd, conf.effects);
 }
 
-void au_playWait(int snd){
+// returns ms it took to play
+int au_playWait(int snd){
+  int startTime = SDL_GetTicks();
   if(au_waiting != -1) {
     printf("Can't wait for more than one audio at once. How did you even get here?\n");
     exit(EXIT_FAILURE);
@@ -151,9 +153,10 @@ void au_playWait(int snd){
   }
   Mix_Volume(snd, conf.effects);
   au_waiting = snd;
-  while(au_waiting != -1) {
+  while (au_waiting != -1 && !quit) {
     SDL_Delay(200);
   }
+  return SDL_GetTicks() - startTime;
 }
 
 void au_lowTime(){

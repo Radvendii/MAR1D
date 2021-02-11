@@ -1,6 +1,11 @@
 #include "gamelogic.h"
 
+// escape from all loops and exit the game
 bool gameEnd;
+
+// Time that has been intentionally spent waiting, rather than time spent
+// executing code. This is important for synchronizing game ticks.
+int timeWaited;
 
 int gl_playerIndex(){
   int ret=0;
@@ -18,11 +23,13 @@ void gl_main() {
   wn_eventCallbacks(&gl_keypress, &gl_mouseclick, &gl_mousemove);
   gl_load();
   gameEnd = false;
+
   /*
    * the last SDL time at which the game was updated.
    * used to set a constant tick rate for the game.
    */
   int lastSDLTime = SDL_GetTicks();
+  timeWaited = 0;
   // main game loop
   while (!quit && !gameEnd) {
 
@@ -49,9 +56,10 @@ void gl_main() {
     int curSDLTime = SDL_GetTicks();
     // update the game logic until we've caught up with the current time
     // (this will usually just be once)
-    while (curSDLTime > lastSDLTime) {
+    while (curSDLTime > lastSDLTime && !gameEnd && !quit) {
       gl_update();
-      lastSDLTime += k_msPerGameTick;
+      lastSDLTime += k_msPerGameTick + timeWaited;
+      timeWaited = 0;
     }
     gr_update();
 
@@ -98,8 +106,8 @@ void gl_winScreen() {
 
   wn_update();
 
+  // TODO: this should not freeze you out of e.g. closing the window
   SDL_Delay(k_winScreenTime);
-
 }
 
 void gl_keypress(SDL_KeyboardEvent ev) {
@@ -161,7 +169,7 @@ void gl_die(){
 void gl_win(){
   if(!s.won){
     au_mainStop();
-    au_playWait(SND_levelend);
+    timeWaited += au_playWait(SND_levelend);
     s.won = true;
     s.score+=400;
     s.paused = true;
