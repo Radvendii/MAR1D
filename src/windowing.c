@@ -105,8 +105,8 @@ void wn_init(){
     printf("Unable to initialize SDL: %s", SDL_GetError());
     exit(EXIT_FAILURE);
   }
-  perspWindow = SDL_CreateWindow(k_perspWindowName, k_perspWindowX, 100, k_perspWindowW, k_perspWindowH, SDL_WINDOW_OPENGL);
   dimWindow = SDL_CreateWindow(k_dimWindowName, k_dimWindowX, 100, k_dimWindowW, k_dimWindowH, SDL_WINDOW_OPENGL);
+  perspWindow = SDL_CreateWindow(k_perspWindowName, k_perspWindowX, 100, k_perspWindowW, k_perspWindowH, SDL_WINDOW_OPENGL);
   if (!perspWindow || !dimWindow) {
     printf("Unable to create SDL windows: %s\n", SDL_GetError());
     SDL_Quit();
