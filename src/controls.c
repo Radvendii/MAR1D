@@ -56,28 +56,27 @@ void cl_update(){
   if(s.onGround){s.multibounce = 0;}
 }
 
-// TODO: fix this so it takes in reasonable arguments
-bool cl_move1(int i, char dir, bool pos){
-  bool ret=true;
-  if(dir == 'x'){s.scene[i].x += (pos ? 1 : -1);}
-  else{s.scene[i].y += (pos ? 1 : -1);}
-  for(int obj=0;s.scene[obj].type != '\0';obj++){
+bool cl_move1(int i, char dir, int inc){
+  bool ret = true;
+  if(dir == 'x'){s.scene[i].x += inc;}
+  else{s.scene[i].y += inc;}
+  for(int obj=0; s.scene[obj].type != '\0'; obj++){
     if(obj==i) {continue;}
     ret &= !mh_collision(i, obj);
   }
   if(!ret){
-    if(dir == 'x'){s.scene[i].x -= (pos ? 1 : -1);}
-    else{s.scene[i].y -= (pos ? 1 : -1);}
+    if(dir == 'x'){s.scene[i].x -= inc;}
+    else{s.scene[i].y -= inc;}
   }
   return ret;
 }
 
 bool cl_move(int i, char dir, int amt){
-  bool ret=true;
-  while(amt != 0 && ret){
-    ret = cl_move1(i, dir, amt > 0);
-    if(amt>0){amt--;}
-    else{amt++;}
+  bool ret = true;
+  int inc = SGN(amt);
+  while(amt && ret){
+    ret = cl_move1(i, dir, inc);
+    amt -= inc;
   }
   return ret;
 }
