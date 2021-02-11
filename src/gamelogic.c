@@ -103,9 +103,6 @@ void gl_winScreen() {
 }
 
 void gl_keypress(SDL_KeyboardEvent ev) {
-  if (ev.keysym.sym== SDLK_ESCAPE && ev.state == SDL_PRESSED){
-    quit = true;
-  }
   if (!ev.repeat) {
     cl_keypress(ev.keysym.sym, ev.state, ev.keysym.mod);
     gr_keypress(ev.keysym.sym, ev.state, ev.keysym.mod);

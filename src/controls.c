@@ -233,7 +233,7 @@ void cl_keypress(int key, int state, int mods){
     cl_uncrouch();
   }
 
-  if (key == SDLK_q && state == SDL_PRESSED){
+  if (key == SDLK_ESCAPE && state == SDL_PRESSED){
     if(s.paused && !s.userPaused) {return;}
     s.paused = !s.paused;
     s.userPaused = !s.userPaused;
