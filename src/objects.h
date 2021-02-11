@@ -55,6 +55,9 @@ typedef struct{
   // Position
   int x;
   int y;
+  // part left over from trying to move a non-integral amount
+  double xMantissa;
+  double yMantissa;
 
   // Velocity
   double vx;

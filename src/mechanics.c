@@ -119,16 +119,10 @@ void mh_update(){
 }
 
 void mh_move(int i){
-  // M for "mantissa" is the part of a number after the decimal point
-  float yMove = s.scene[i].vy;
-  float xMove = s.scene[i].vx;
-  float yMoveM = yMove - (int) yMove;
-  float xMoveM = xMove - (int) xMove;
-
-  // for the part of the velocity that is less than a pixel per frame, move
-  // every several frames instead (pseudo-randomly distributed)
-  if((float) rand() / RAND_MAX < fabs(yMoveM)){yMove+=SGN(yMoveM);}
-  if((float) rand() / RAND_MAX < fabs(xMoveM)){xMove+=SGN(xMoveM);}
+  double yMove = s.scene[i].vy + s.scene[i].yMantissa;
+  double xMove = s.scene[i].vx + s.scene[i].xMantissa;
+  s.scene[i].yMantissa = yMove - (int) yMove;
+  s.scene[i].xMantissa = xMove - (int) xMove;
 
   cl_move(i, 'y', (int) yMove);
   cl_move(i, 'x', (int) xMove);
@@ -201,6 +195,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       }
       break;
     case ']':
+      // TODO: why is this commented out?
       //if(colsee & 2){
       //s.pipeTo = (*ee).c;
       //(*er).x++;
@@ -219,7 +214,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       break;
     case '?':
       if(colsee & 2 && (*ee).i == act_nothing){
-        (*ee).i = act_bounce; //coin-producing code is in mh_update()
+        (*ee).i = act_bounce; // coin-producing code is in mh_update()
         (*ee).hidden = false;
       }
       if(colsee & 4 && !(colsee & (8 | 2))){

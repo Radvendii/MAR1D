@@ -29,7 +29,6 @@ int io_getFont(bool** font, char* fn){
 // e.g. "CG:0.171.0" assigns a shade of green to the character 'G'
 void io_getColor(FILE* f, color cs[127]){ //cs must be an array 127 big. One for each character
   char cname;
-  color c;
   fscanf(f, "%c:", &cname);
   fscanf(f, "%hhd.%hhd.%hhd\n", &cs[cname].r, &cs[cname].g, &cs[cname].b);
   return;
@@ -95,30 +94,29 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //TODO: Make objects have a
   int x,y,i,j;
   char c;
   fscanf(f, "%c%d; ps:%d; pos:%d,%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &oname, &nps, &size, &xpos, &ypos, &w, &h, &nCols, &grav, &phys, &hid);
-  os[oname].type = oname;
-  os[oname].gravity = grav;
-  os[oname].physical = phys;
-  os[oname].hidden = hid;
-  os[oname].active = true;
-  os[oname].x = 0;
-  os[oname].y = 0;
-  os[oname].vx = 0;
-  os[oname].vy = 0;
-  os[oname].i = 0;
-  os[oname].j = 0;
-  os[oname].c = 0;
-  os[oname].animFrame = 0;
-  os[oname].flip = false;
-  os[oname].onScreen = false;
-  os[oname].nps = nps;
-  os[oname].bb = (box) {.x = xpos, .y = -ypos, .w = w, .h = -h};
-  os[oname].ps = salloc(sizeof(point*) * nps);
-  os[oname].cols = salloc(sizeof(box) * nCols);
-  os[oname].nCols = nCols;
+  os[oname] = (obj) {
+    .type = oname,
+    .gravity = grav,
+    .physical = phys,
+    .hidden = hid,
+    .active = true,
+    .flip = false,
+    .onScreen = false,
+    .bb = (box) {
+      .x = xpos,
+      .y = -ypos,
+      .w = w,
+      .h = -h
+    },
+    .nps = nps,
+    .ps = salloc(sizeof(point*) * nps),
+    .nCols = nCols,
+    .cols = salloc(sizeof(box) * nCols)
+  };
   i=0;
-  while(i<nCols){
+  for (i=0; i < nCols; i++) {
     fscanf(f, "\nC; pos:%d,%d; dim:%dx%d;", &xpos, &ypos, &xhei, &yhei);
-    os[oname].cols[i++] = (box) {.x = xpos, .y = -ypos, .w = xhei, .h = -yhei};
+    os[oname].cols[i] = (box) {.x = xpos, .y = -ypos, .w = xhei, .h = -yhei};
   }
   for(j=0;j<nps;j++){
     y=0; x=0; i=0;
