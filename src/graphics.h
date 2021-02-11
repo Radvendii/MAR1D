@@ -21,8 +21,8 @@
 // scale the font up
 // TODO: make this an argument you can pass into gr_text()
 #define k_fontSize 2
-#define k_fontPadChar 1 //  (k_fontSize)
-#define k_fontPadLine 3 // (k_fontSize * 3)
+#define k_fontPadChar 1 // padding betweeen characters
+#define k_fontPadLine 3 // padding between lines
 /* // the amount of actual space a character takes up */
 #define k_fontCharX (k_fontW * k_fontSize)
 #define k_fontCharY (k_fontH * k_fontSize)
