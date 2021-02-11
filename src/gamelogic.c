@@ -106,8 +106,7 @@ void gl_winScreen() {
 
   wn_update();
 
-  // TODO: this should not freeze you out of e.g. closing the window
-  SDL_Delay(k_winScreenTime);
+  SAFE_DELAY(k_winScreenTime);
 }
 
 void gl_keypress(SDL_KeyboardEvent ev) {

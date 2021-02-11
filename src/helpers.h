@@ -34,6 +34,20 @@
 
 #define SGN(x) ((x) > 0 - (x) < 0)
 
+#define k_safeDelayStep 200
+
+#define SAFE_DELAY(time)                                \
+  for(int t=0; t<(time) && !quit; t+=k_safeDelayStep) { \
+    SDL_Delay(k_safeDelayStep);                         \
+    wn_processEvents();                                 \
+  }
+
+#define SAFE_DELAY_UNTIL(cond)                  \
+  while(!(cond) && !quit) {                     \
+    SDL_Delay(k_safeDelayStep);                 \
+    wn_processEvents();                         \
+  }
+
 /*
  * arrays can be initialized with int[] foo = {1, 2, 3} syntax, but this puts
  * the array on the stack. This macro allows you to use similar syntax to

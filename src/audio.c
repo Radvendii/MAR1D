@@ -153,9 +153,7 @@ int au_playWait(int snd){
   }
   Mix_Volume(snd, conf.effects);
   au_waiting = snd;
-  while (au_waiting != -1 && !quit) {
-    SDL_Delay(200);
-  }
+  SAFE_DELAY_UNTIL(au_waiting == -1);
   return SDL_GetTicks() - startTime;
 }
 
