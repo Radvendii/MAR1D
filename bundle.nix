@@ -8,7 +8,6 @@ let
     rev = "7d6bc1b21316bab6cf4a6520c2639a11c25a220e";
     sha256 = "02y38zmdplk7a9ihsxvnrzhhv7324mmf5g8hmxqizaid5k5ydpr3";
   }) { };
-    # ./nixGL/default.nix { };
   mar1d = (import ./default.nix).overrideAttrs (old: {
     # make a wrapper to call it with nixGL because something's weird with nix-bundle and OpenGL.
     # this is a super janky solution and will probably fail e.g. on AMD systems
