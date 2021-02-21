@@ -13,9 +13,9 @@ void mh_update(){
   if((int)s.scene[s.pli].vy != 0){s.onGround = false; s.pipeTo = '\0';}
   for(int i=0;s.scene[i].type != '\0';i++){
     if(s.scene[i].i == act_nothing){continue;}
-    if(s.scene[i].type == 'O' && s.scene[i].i-- == 1){cl_delObjAt(i);}
-    if(s.scene[i].type == 'E' && s.scene[i].i-- == 1){cl_delObjAt(i);}
-    if(s.scene[i].type == '7' && s.scene[i].i-- == 1 && s.scene[i].vx == 0){
+    if(s.scene[i].type == 'O' && --s.scene[i].i == act_nothing){cl_delObjAt(i);}
+    if(s.scene[i].type == 'E' && --s.scene[i].i == act_nothing){cl_delObjAt(i);}
+    if(s.scene[i].type == '7' && --s.scene[i].i == act_nothing && s.scene[i].vx == 0){
       int x_temp = s.scene[i].x;
       int y_temp = s.scene[i].y+16;
       s.scene[i] = ob_objFchar('&');
