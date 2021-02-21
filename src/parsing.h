@@ -19,11 +19,11 @@ typedef struct {
 
 int io_getFont(bool**, char*);
 
-void io_getColor(FILE*, color[127]);
+void io_getColor(FILE*, color*);
 
-void io_getLevel(FILE*, level[127], obj[127]);
+void io_getLevel(FILE*, level*, obj[127]);
 
-void io_getObj(FILE*, obj[127], color[127]);
+void io_getObj(FILE*, obj*, char, color[127]);
 
 // TODO: this is named terribly. There should be another function io_readLevels that's exposed. this should be private and take in FILE*
 void io_getLevels(level**, char*);

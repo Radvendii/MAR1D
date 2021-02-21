@@ -27,10 +27,8 @@ int io_getFont(bool** font, char* fn){
 
 // Parses a color. Color data should start with a C and then be followed by a character specifying the name of the color, then the R, G, B values from 0-255 separated by '.'s.
 // e.g. "CG:0.171.0" assigns a shade of green to the character 'G'
-void io_getColor(FILE* f, color cs[127]){ //cs must be an array 127 big. One for each character
-  char cname;
-  fscanf(f, "%c:", &cname);
-  fscanf(f, "%hhd.%hhd.%hhd\n", &cs[cname].r, &cs[cname].g, &cs[cname].b);
+void io_getColor(FILE* f, color *c){ //cs must be an array 127 big. One for each character
+  fscanf(f, ":%hhd.%hhd.%hhd\n", &c->r, &c->g, &c->b);
   return;
 }
 
@@ -81,8 +79,7 @@ void io_getColor(FILE* f, color cs[127]){ //cs must be an array 127 big. One for
 // 1     r
 //  r    r
 //   rrrr
-void io_getObj(FILE* f, obj os[127], color cs[127]){ //TODO: Make objects have arrays of point arrays
-  char oname;
+void io_getObj(FILE* f, obj *o, char oname, color cs[127]) {
   int nps;
   int size;
   int w, h;
@@ -93,8 +90,8 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //TODO: Make objects have a
   int hid;
   int x,y,i,j;
   char c;
-  fscanf(f, "%c%d; ps:%d; pos:%d,%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &oname, &nps, &size, &xpos, &ypos, &w, &h, &nCols, &grav, &phys, &hid);
-  os[oname] = (obj) {
+  fscanf(f, "%d; ps:%d; pos:%d,%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &nps, &size, &xpos, &ypos, &w, &h, &nCols, &grav, &phys, &hid);
+  *o = (obj) {
     .type = oname,
     .gravity = grav,
     .physical = phys,
@@ -116,11 +113,11 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //TODO: Make objects have a
   i=0;
   for (i=0; i < nCols; i++) {
     fscanf(f, "\nC; pos:%d,%d; dim:%dx%d;", &xpos, &ypos, &xhei, &yhei);
-    os[oname].cols[i] = (box) {.x = xpos, .y = -ypos, .w = xhei, .h = -yhei};
+    o->cols[i] = (box) {.x = xpos, .y = -ypos, .w = xhei, .h = -yhei};
   }
   for(j=0;j<nps;j++){
     y=0; x=0; i=0;
-    os[oname].ps[j] = salloc(sizeof(point) * (size+1));
+    o->ps[j] = salloc(sizeof(point) * (size+1));
     while(i<size){
       switch(c = fgetc(f)){
       case ' ':
@@ -131,16 +128,16 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //TODO: Make objects have a
         x=0;
         break;
       case '0':
-        os[oname].ps[j][i++] = p_skipPoint;
+        o->ps[j][i++] = p_skipPoint;
         x++;
         break;
       default:
-        os[oname].ps[j][i++] = (point) {.x = x, .y = y, .c = c};
+        o->ps[j][i++] = (point) {.x = x, .y = y, .c = c};
         x++;
         break;
       }
     }
-    os[oname].ps[j][i] = p_termPoint;
+    o->ps[j][i] = p_termPoint;
   }
 }
 
@@ -160,13 +157,12 @@ void io_getObj(FILE* f, obj os[127], color cs[127]){ //TODO: Make objects have a
 // v: object should Visually look like the object specified (char)
 // j: the `.j` attribute should be set as specified (int)
 // c: the `.c` attribute should be set as specified (char)
-void io_getLevel(FILE* f, level ls[127], obj os[127]){
-  char lname;
+void io_getLevel(FILE* f, level *l, obj os[127]){
   int size;
   char c;
+  fscanf(f, ":%d", &size);
   int y=0,x=0,i=0;
-  fscanf(f, "%c:%d", &lname, &size);
-  ls[lname] = salloc(sizeof(obj) * (size*3+1));
+  *l = salloc(sizeof(obj) * (size*3+1));
   while(i<size){
     switch(c = fgetc(f)){
     case ' ':
@@ -177,22 +173,22 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
       x=0;
       break;
     default:
-      ls[lname][i] = os[c];
-      ls[lname][i].x = x*16;
-      ls[lname][i].y = y*16;
+      (*l)[i] = os[c];
+      (*l)[i].x = x*16;
+      (*l)[i].y = y*16;
       //TODO: These should not be hard-coded
       if(c == '&'){
-        ls[lname][i].y += 7;
+        (*l)[i].y += 7;
       }
       if(c == '7'){
-        ls[lname][i].y -= 3;
+        (*l)[i].y -= 3;
       }
       if(c == '?'){
-        ls[lname][i].c = '.';
+        (*l)[i].c = '.';
         for(int j=0;j<i;j++){
-          if(ls[lname][j].x == ls[lname][i].x && ls[lname][j].y == ls[lname][i].y+16){
-            ls[lname][i].c = ls[lname][j].type;
-            ls[lname][j] = os['.']; //TODO: This shouldn't be hard-coded if the object itself is defined in the data file
+          if((*l)[j].x == (*l)[i].x && (*l)[j].y == (*l)[i].y+16){
+            (*l)[i].c = (*l)[j].type;
+            (*l)[j] = os['.']; //TODO: This shouldn't be hard-coded if the object itself is defined in the data file
             break;
           }
         }
@@ -200,16 +196,16 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
       if(c == '|' || c == '='){
         fgetc(f);
         x++;
-        ls[lname][++i] = os['.'];
-        ls[lname][i].x = x*16;
-        ls[lname][i].y = y*16;
+        (*l)[++i] = os['.'];
+        (*l)[i].x = x*16;
+        (*l)[i].y = y*16;
       }
       i++;
       x++;
       break;
     }
   }
-  ls[lname][i].type = '\0';
+  (*l)[i].type = '\0';
 
   // Parse the properties
   char prop;
@@ -220,20 +216,20 @@ void io_getLevel(FILE* f, level ls[127], obj os[127]){
     fscanf(f, ";%d%c", &i, &prop);
     switch(prop){
     case 'h':
-      ls[lname][i].hidden = true;
+      (*l)[i].hidden = true;
       break;
     case 'v': // Transforms the visual appearance of the object
       fscanf(f, "%c", &obj);
-      ls[lname][i].ps = os[obj].ps;
-      ls[lname][i].nps = os[obj].nps;
+      (*l)[i].ps = os[obj].ps;
+      (*l)[i].nps = os[obj].nps;
       break;
     case 'j':
       fscanf(f, "%d", &j);
-      ls[lname][i].j = j;
+      (*l)[i].j = j;
       break;
     case 'c':
       fscanf(f, "%c", &c);
-      ls[lname][i].c = c;
+      (*l)[i].c = c;
       break;
     }
     fgetc(f);
@@ -248,23 +244,28 @@ void io_getLevels(level** ls, char* fn){
   FILE *f = rs_getFile(fn);
   // TODO: who the fuck owns io_os / io_cs?? if it's io_ then it should be parsing.c, but we don't even have an init() or deinit() function
   io_os = salloc(sizeof(obj) * 127);
-  for(int i=0;i<127;i++){io_os[i].ps = NULL;}
-  io_cs = salloc(sizeof(color)*127);
-  *ls = salloc(sizeof(level)*127);
+  memset(io_os, 0, sizeof(obj) * 127);
+  io_cs = salloc(sizeof(color) * 127);
+  memset(io_cs, 0, sizeof(color) * 127);
+  *ls = salloc(sizeof(level) * 127);
+  memset(*ls, 0, sizeof(level *) * 127);
   char c;
-  for(int i=0;i<127;i++){(*ls)[i] = NULL;}
+  char name;
   while((c = fgetc(f)) != EOF){
+    if (c == 'C' || c == 'O' || c == 'L') {
+      name = fgetc(f);
+    }
     switch(c){
     case '\n':
       break;
     case 'C':
-      io_getColor(f, io_cs);
+      io_getColor(f, io_cs + name);
       break;
     case 'O':
-      io_getObj(f, io_os, io_cs);
+      io_getObj(f, io_os + name, name, io_cs);
       break;
     case 'L':
-      io_getLevel(f, *ls, io_os);
+      io_getLevel(f, *ls + name, io_os);
       break;
     default:
       while(fgetc(f) != '\n');
@@ -385,7 +386,6 @@ image io_getImage(char *fn) {
   FILE *file = rs_getBFile(fn);
   unsigned long size; // size of the image in bytes.
   unsigned char header[54]; // Each BMP file begins by a 54-bytes header
-  unsigned int width, height;
   unsigned int dataPos;
 
   if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
