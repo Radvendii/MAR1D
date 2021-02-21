@@ -124,7 +124,7 @@ void cl_bigMario(){
   if(s.bigMario == false){
     au_play(SND_mushroomeat);
     s.bigMario = true;
-    s.scene[s.pli].i = act_startGrow;
+    s.scene[s.pli].i = ACT_startGrow;
   }
   for(int i=0; s.scene[i].type != '\0';i++){
     if(s.scene[i].type == '?' && s.scene[i].c == 'r'){s.scene[i].c = 'R';}

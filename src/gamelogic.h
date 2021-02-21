@@ -28,15 +28,16 @@
  * https://www.mariowiki.com/Time_Limit#Super_Mario_Bros._/_Super_Mario_Bros.:_The_Lost_Levels
  */
 
+// ACT_ constants define the stages at which actions occurred
+
 // Constants to define the bouncing animation for blocks
-// TODO: this seems to break convention. should it be ACT_* to match SND_*?
-#define act_nothing 0
-#define act_bounce 16
-#define act_bounceU 1
-#define act_bounceD (act_bounce/2 + act_bounceU*2)
+#define ACT_nothing 0
+#define ACT_bounce 16
+#define ACT_bounceUp 1
+#define ACT_bounceDn (ACT_bounce/2 + ACT_bounceUp*2)
 
 // Constants to define the animation for mario's growth
-#define act_startGrow 1
+#define ACT_startGrow 1
 #define k_growthRate 7 // How many frames per change
 
 // Constants to define mario's death animation

@@ -12,10 +12,10 @@ void mh_init(){
 void mh_update(){
   if((int)s.scene[s.pli].vy != 0){s.onGround = false; s.pipeTo = '\0';}
   for(int i=0;s.scene[i].type != '\0';i++){
-    if(s.scene[i].i == act_nothing){continue;}
-    if(s.scene[i].type == 'O' && --s.scene[i].i == act_nothing){cl_delObjAt(i);}
-    if(s.scene[i].type == 'E' && --s.scene[i].i == act_nothing){cl_delObjAt(i);}
-    if(s.scene[i].type == '7' && --s.scene[i].i == act_nothing && s.scene[i].vx == 0){
+    if(s.scene[i].i == ACT_nothing){continue;}
+    if(s.scene[i].type == 'O' && --s.scene[i].i == ACT_nothing){cl_delObjAt(i);}
+    if(s.scene[i].type == 'E' && --s.scene[i].i == ACT_nothing){cl_delObjAt(i);}
+    if(s.scene[i].type == '7' && --s.scene[i].i == ACT_nothing && s.scene[i].vx == 0){
       int x_temp = s.scene[i].x;
       int y_temp = s.scene[i].y+16;
       s.scene[i] = ob_objFchar('&');
@@ -23,8 +23,8 @@ void mh_update(){
       s.scene[i].y = y_temp;
       s.scene[i].vx = -0.5;
     }
-    if(s.scene[i].i <= act_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#')){
-      if(s.bigMario && s.scene[i].type == '#' && s.scene[i].i == act_bounce-1){
+    if(s.scene[i].i <= ACT_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#')){
+      if(s.bigMario && s.scene[i].type == '#' && s.scene[i].i == ACT_bounce-1){
         au_play(SND_blockbreak);
         s.score += 50;
         int l;
@@ -42,9 +42,9 @@ void mh_update(){
         cl_delObjAt(i);
       }
       s.scene[i].i--;
-      s.scene[i].y -= (s.scene[i].i < act_bounceD && s.scene[i].i > act_bounceU) * 2 - 1;
+      s.scene[i].y -= (s.scene[i].i < ACT_bounceDn && s.scene[i].i > ACT_bounceUp) * 2 - 1;
     }
-    if(s.scene[i].type == '?' && s.scene[i].i == act_nothing){
+    if(s.scene[i].type == '?' && s.scene[i].i == ACT_nothing){
       int l;
       if(s.scene[i].j){s.scene[i].j--;}
       if(s.scene[i].c == 'c'){
@@ -66,7 +66,7 @@ void mh_update(){
         s.scene[l+1].type = '\0';
       }
     }
-    if(s.scene[i].type == '?' && s.scene[i].i == act_nothing && s.scene[i].j == 0){
+    if(s.scene[i].type == '?' && s.scene[i].i == ACT_nothing && s.scene[i].j == 0){
       obj temp = s.scene[i];
       s.scene[i] = ob_objFchar('D');
       s.scene[i].x = temp.x;
@@ -213,8 +213,8 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       }
       break;
     case '?':
-      if(colsee & 2 && (*ee).i == act_nothing){
-        (*ee).i = act_bounce; // coin-producing code is in mh_update()
+      if(colsee & 2 && (*ee).i == ACT_nothing){
+        (*ee).i = ACT_bounce; // coin-producing code is in mh_update()
         (*ee).hidden = false;
       }
       if(colsee & 4 && !(colsee & (8 | 2))){
@@ -242,11 +242,11 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       }
       break;
     case '#':
-      if(colsee & 2 && (*ee).i == act_nothing){
+      if(colsee & 2 && (*ee).i == ACT_nothing){
         if(!s.bigMario){
           au_play(SND_blockhit);
         }
-        (*ee).i = act_bounce; //brick-breaking code is in mh_update()
+        (*ee).i = ACT_bounce; //brick-breaking code is in mh_update()
       }
       if(colsee & 4 && !(colsee & (8 | 2))){
         (*er).vx = 0;
@@ -336,7 +336,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
   case '#':
     ;
   case '?':
-    if((*er).i != act_nothing){
+    if((*er).i != ACT_nothing){
       if(((*ee).type == 'e' || (*ee).type == '&') && (*ee).physical == true){
         ai_kill(ee);
         s.score += 100;
