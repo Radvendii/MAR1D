@@ -29,6 +29,7 @@
  */
 
 // Constants to define the bouncing animation for blocks
+// TODO: this seems to break convention. should it be ACT_* to match SND_*?
 #define act_nothing 0
 #define act_bounce 16
 #define act_bounceU 1
