@@ -27,7 +27,7 @@ int io_getFont(bool** font, char* fn){
 
 // Parses a color. Color data should start with a C and then be followed by a character specifying the name of the color, then the R, G, B values from 0-255 separated by '.'s.
 // e.g. "CG:0.171.0" assigns a shade of green to the character 'G'
-void io_getColor(FILE* f, color *c){ //cs must be an array 127 big. One for each character
+void io_getColor(FILE* f, color *c){
   fscanf(f, ":%hhd.%hhd.%hhd\n", &c->r, &c->g, &c->b);
   return;
 }
@@ -79,7 +79,7 @@ void io_getColor(FILE* f, color *c){ //cs must be an array 127 big. One for each
 // 1     r
 //  r    r
 //   rrrr
-void io_getObj(FILE* f, obj *o, char oname, color cs[127]) {
+void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
   int nps;
   int size;
   int w, h;
@@ -157,7 +157,7 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[127]) {
 // v: object should Visually look like the object specified (char)
 // j: the `.j` attribute should be set as specified (int)
 // c: the `.c` attribute should be set as specified (char)
-void io_getLevel(FILE* f, level *l, obj os[127]){
+void io_getLevel(FILE* f, level *l, obj os[CHAR_MAX]){
   int size;
   char c;
   fscanf(f, ":%d", &size);
@@ -243,12 +243,12 @@ void io_getLevel(FILE* f, level *l, obj os[127]){
 void io_getLevels(level** ls, char* fn){
   FILE *f = rs_getFile(fn);
   // TODO: who the fuck owns io_os / io_cs?? if it's io_ then it should be parsing.c, but we don't even have an init() or deinit() function
-  io_os = salloc(sizeof(obj) * 127);
-  memset(io_os, 0, sizeof(obj) * 127);
-  io_cs = salloc(sizeof(color) * 127);
-  memset(io_cs, 0, sizeof(color) * 127);
-  *ls = salloc(sizeof(level) * 127);
-  memset(*ls, 0, sizeof(level *) * 127);
+  io_os = salloc(sizeof(obj) * CHAR_MAX);
+  memset(io_os, 0, sizeof(obj) * CHAR_MAX);
+  io_cs = salloc(sizeof(color) * CHAR_MAX);
+  memset(io_cs, 0, sizeof(color) * CHAR_MAX);
+  *ls = salloc(sizeof(level) * CHAR_MAX);
+  memset(*ls, 0, sizeof(level *) * CHAR_MAX);
   char c;
   char name;
   while((c = fgetc(f)) != EOF){

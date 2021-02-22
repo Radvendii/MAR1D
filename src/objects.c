@@ -8,15 +8,15 @@ void ob_init(){
 }
 
 void ob_deinit() {
-  for(int i=0;i<127;i++){
-    if(io_os[i].ps != NULL){
+  for(int i=0;i<CHAR_MAX;i++){
+    if(io_os[i].ps){
       for(int j=0;j<io_os[i].nps;j++){
         free(io_os[i].ps[j]);
       }
       free(io_os[i].ps);
       free(io_os[i].cols);
     }
-    if(ob_levels[i] != NULL){
+    if(ob_levels[i]){
       free(ob_levels[i]);
     }
   }
