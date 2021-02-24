@@ -92,13 +92,13 @@ void gr_drawBezelOut(rect rct) {
   float s = k_bezelSize;
 
   //top edge
-  gr_drawRect(k_colorF, RECT_LTRB(l, t + s, r, t));
+  gr_drawRect(RGB_F, RECT_LTRB(l, t + s, r, t));
   //left edge
-  gr_drawRect(k_colorF, RECT_LTRB(l - s, t, l, b));
+  gr_drawRect(RGB_F, RECT_LTRB(l - s, t, l, b));
   //bottom edge
-  gr_drawRect(k_color0, RECT_LTRB(l, b, r, b - s));
+  gr_drawRect(RGB_0, RECT_LTRB(l, b, r, b - s));
   //right edge
-  gr_drawRect(k_color0, RECT_LTRB(r, t, r + s, b));
+  gr_drawRect(RGB_0, RECT_LTRB(r, t, r + s, b));
 }
 
 void gr_drawBezelIn(rect rct) {
@@ -110,13 +110,13 @@ void gr_drawBezelIn(rect rct) {
   float s = k_bezelSize;
 
   //top edge
-  gr_drawRect(k_color0, RECT_LTRB(l, t + s, r, t));
+  gr_drawRect(RGB_0, RECT_LTRB(l, t + s, r, t));
   //left edge
-  gr_drawRect(k_color0, RECT_LTRB(l - s, t, l, b));
+  gr_drawRect(RGB_0, RECT_LTRB(l - s, t, l, b));
   //bottom edge
-  gr_drawRect(k_colorF, RECT_LTRB(l, b, r, b - s));
+  gr_drawRect(RGB_F, RECT_LTRB(l, b, r, b - s));
   //right edge
-  gr_drawRect(k_colorF, RECT_LTRB(r, t, r + s, b));
+  gr_drawRect(RGB_F, RECT_LTRB(r, t, r + s, b));
 }
 
 // Render a text character
@@ -217,7 +217,7 @@ void gr_drawPersp(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glOrtho(-k_perspWindowW/2, k_perspWindowW/2, -k_perspWindowH/2, k_perspWindowH/2, -1, 1);
-    gr_text(k_colorTextDim, false, "PAUSED", k_fontSize, -3*k_fontSpaceX(false)*k_fontSize, 0);
+    gr_text(RGB_textDim, false, "PAUSED", k_fontSize, -3*k_fontSpaceX(false)*k_fontSize, 0);
   }
 }
 
@@ -266,7 +266,7 @@ void gr_drawHud(){
   glLoadIdentity();
   glOrtho(0, k_hudWindowW, 0, k_hudWindowH, -1, 1);
 
-  gr_text(k_colorTextDim, true, hud, k_fontSize, 5, k_hudWindowH-5);
+  gr_text(RGB_textDim, true, hud, k_fontSize, 5, k_hudWindowH-5);
 }
 
 void gr_init(){

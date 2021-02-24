@@ -368,7 +368,7 @@ int mu_labelSpace(menu m) {
 
 void mu_drawMenu(menu m, float x, float y) {
 
-  gr_text(k_colorTextLit, false, m.heading, k_fontSize, x, y);
+  gr_text(RGB_textLit, false, m.heading, k_fontSize, x, y);
 
   float yi = y - k_headingSpace;
 
@@ -418,7 +418,7 @@ void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
 
   // All widgets (so far) have their label displayed in front.
   // If you add a widget for which this is not the case, this will have to be added to all of the cases
-  gr_text(k_colorTextLit, false, w.label, k_fontSize, x, y);
+  gr_text(RGB_textLit, false, w.label, k_fontSize, x, y);
 
   x += labelSpace;
 
@@ -430,28 +430,28 @@ void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
 
       rect slider = RECT_LCWH(x, ymid, k_sliderW, k_sliderH);
       rect fill = RECT_LCWH(x, ymid, dist, k_sliderH);
-      gr_drawRect(k_colorBlue, slider);
+      gr_drawRect(RGB_blue, slider);
       gr_drawBezelIn(slider);
-      gr_drawRect(k_colorWhite, fill);
+      gr_drawRect(RGB_white, fill);
       break;
     case WK_SWITCH: ; // sacrifice an empty statement to appease the C gods
       rect socket = RECT_LCWH(x, ymid, k_switchW, k_switchH);
       rect button = *(w.switchVal)
         ? RECT_RCWH(x + k_switchW - 2, ymid, k_switchButtonW - 4, k_switchH - 4)
         : RECT_LCWH(x + 2, ymid, k_switchButtonW - 4, k_switchH - 4);
-      gr_drawRect(*(w.switchVal) ? k_colorWhite : k_colorBlue, socket);
+      gr_drawRect(*(w.switchVal) ? RGB_white : RGB_blue, socket);
       gr_drawBezelIn(socket);
-      gr_drawRect(k_colorBlue, button);
+      gr_drawRect(RGB_blue, button);
       gr_drawBezelOut(button);
       break;
     case WK_KEYBIND: ; // sacrifice an empty statement to appease the C gods
       const char *str = SDL_GetKeyName(*w.keyVal);
       // TODO: I don't know why that -1 has to be there ;-;
-      gr_text(k_colorTextLit, false, str, 1.6, x + (k_keybindW - strlen(str) * k_fontW * 1.6) / 2, y - 1 - (k_keybindH - k_fontH * 1.6) / 2);
+      gr_text(RGB_textLit, false, str, 1.6, x + (k_keybindW - strlen(str) * k_fontW * 1.6) / 2, y - 1 - (k_keybindH - k_fontH * 1.6) / 2);
       (w.active ? &gr_drawBezelIn : &gr_drawBezelOut)(RECT_LTWH(x, y, k_keybindW, k_keybindH));
       break;
     case WK_TEXT:
-      gr_text(k_colorTextLit, false, w.text, w.size, x - labelSpace - k_selSpace, y);
+      gr_text(RGB_textLit, false, w.text, w.size, x - labelSpace - k_selSpace, y);
       break;
     case WK_MENU:
     case WK_ACTION:

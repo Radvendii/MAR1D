@@ -17,20 +17,20 @@
     .b = ((0x##hex) & 0x0000FF) >> 0            \
   }
 
-#define k_colorBrown RGB0x(C84C0C)
-#define k_colorPink  RGB0x(FCBCB0)
-#define k_colorWhite RGB0x(F0F0F0)
-#define k_colorDark  RGB0x(404040)
-#define k_colorLight RGB0x(CCCCCC)
-#define k_colorGray  RGB0x(888888)
-#define k_colorBlue  RGB0x(5c94fc)
-#define k_colorGreen RGB0x(00a800)
-#define k_colorF     RGB0x(FFFFFF)
-#define k_color0     RGB0x(000000)
+#define RGB_brown RGB0x(C84C0C)
+#define RGB_pink  RGB0x(FCBCB0)
+#define RGB_white RGB0x(F0F0F0)
+#define RGB_dark  RGB0x(404040)
+#define RGB_light RGB0x(CCCCCC)
+#define RGB_gray  RGB0x(888888)
+#define RGB_blue  RGB0x(5c94fc)
+#define RGB_green RGB0x(00a800)
+#define RGB_F     RGB0x(FFFFFF)
+#define RGB_0     RGB0x(000000)
 
-#define k_colorTextLit k_colorWhite
-#define k_colorTextDim k_colorDark
-#define k_colorTextMed k_colorGray
+#define RGB_textLit RGB_white
+#define RGB_textDim RGB_dark
+#define RGB_textMed RGB_gray
 
 typedef struct {
   unsigned char r;
