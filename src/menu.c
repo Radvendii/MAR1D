@@ -3,14 +3,42 @@
 image imBg; // menu background
 image imSel; // image that appears to the left of selected item
 
-menu main_menu;
+menu mu_mainMenu;
+menu mu_winMenu; // after the game ends
 menu *active_menu;
+
+// points to the text on the win screen
+// so the score can get changed
+char **mu_winText;
+
+bool endMenu;
 
 void mu_init() {
 
+  mu_winMenu = _MENU(
+    WIDGET(
+      .label = "",
+      .kind = WK_TEXT,
+      .text = WIN_TEXT_SCORE(0),
+      .size = 1.5
+    ),
+    WIDGET(
+      .label = "MAIN MENU",
+      .kind = WK_ACTION,
+      .action = &mu_exitMenu
+    ),
+    WIDGET(
+      .label = "SAVE PLAYTHROUGH",
+      .kind = WK_ACTION,
+      .action = &mu_saveRecording
+    )
+  );
+
+  mu_winText = &mu_winMenu.ws[0].text;
+
   // initialize menu
   // TODO: read this in from a (json?) resource file
-  main_menu = _MENU(
+  mu_mainMenu = _MENU(
     WIDGET(
       .label = "START GAME",
       .kind = WK_ACTION,
@@ -186,12 +214,14 @@ void mu_init() {
   // TODO: I really, really want this to be incorporated in the macros above,
   //       and not it's own function. But I can't figure out an elegant way to do it.
   //       I could do it if .m were a pointer to a menu, and not a menu itself
-  mu_setParents(&main_menu, NULL);
+  mu_setParents(&mu_mainMenu, NULL);
+  mu_setParents(&mu_winMenu, NULL);
   //       this one could easily be moved into the macros. just add a set_heading
   //       function call to the WIDGET() macro that checks if it's a menu and if so sets the heading
-  mu_setHeadings(&main_menu, "MAIN MENU");
+  mu_setHeadings(&mu_mainMenu, "MAIN MENU");
+  mu_setHeadings(&mu_winMenu, "CONGRATULATIONS!");
 
-  active_menu = &main_menu;
+  active_menu = &mu_mainMenu;
 
   // initialize images
   imBg = io_getImage("menuscreen_bg.bmp");
@@ -223,6 +253,10 @@ void mu_quit() {
   quit = true;
 }
 
+void mu_exitMenu() {
+  endMenu = true;
+}
+
 // TODO: better name?
 void mu_goParent() {
   active_menu->sel = 0;
@@ -238,6 +272,10 @@ void mu_saveConfig() {
   // TODO: goParent() shouldn't really be in the saveConfig() function. really there
   // should be a separate function for the menu item.
   mu_goParent();
+}
+
+void mu_saveRecording() {
+  io_writeRec("playthrough.png");
 }
 
 void mu_menuMatrix() {
@@ -306,8 +344,21 @@ void mu_startGame() {
   wn_eventCallbacks(&mu_keypress, &mu_mouseclick, &mu_mousemove);
 }
 
+void mu_setWinScore(int score) {
+  // in theory this could just be overwritten
+  // but this would still work if the string varied in length
+  free(*mu_winText);
+  *mu_winText = WIN_TEXT_SCORE(score);
+}
+
 void mu_deinit() {
-  mu_deleteMenu(&main_menu);
+  free(*mu_winText); // WIN_TEXT_SCORE() needs to be freed
+  mu_deleteMenu(&mu_mainMenu);
+  mu_deleteMenu(&mu_winMenu);
+  gr_unbindImage(&imSel);
+  gr_unbindImage(&imBg);
+  free(imSel.data);
+  free(imBg.data);
   active_menu = NULL;
 }
 
@@ -323,9 +374,16 @@ void mu_deleteMenu(menu *m) {
 }
 
 void mu_main() {
+  mu_menu(mu_mainMenu);
+}
+
+void mu_menu(menu m) {
+  // back up the old active menu to be restored when we're done
+  menu *active_menu_bck = active_menu;
+  active_menu = &m;
   wn_eventCallbacks(&mu_keypress, &mu_mouseclick, &mu_mousemove);
 
-  while (!quit) {
+  while (!quit && !endMenu) {
     wn_menuWindow();
     gr_clear();
 
@@ -337,6 +395,10 @@ void mu_main() {
     wn_update();
     mu_update();
   }
+  // reset endMenu and restore old active menu
+  // in case mu_menu() got called from inside mu_menu()
+  endMenu = false;
+  active_menu = active_menu_bck;
 }
 
 void mu_update() {

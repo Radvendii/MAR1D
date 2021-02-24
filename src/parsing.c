@@ -3,6 +3,72 @@
 color* io_cs;
 obj* io_os;
 
+// recording of the current playthrough (but with x and y axis flipped)
+image io_recording;
+
+// this does not extend the data memory, so io_recording must be allocated with enough space to begin with.
+void io_recAddFrame(unsigned char *frame) {
+  // increase allocated size by doubling, so that we don't have to do it every frame
+  static int maxSizeY = 0;
+  if (maxSizeY < io_recording.sizeY+1) {
+    maxSizeY *= 2;
+    // just to make sure (there's an issue with the first iteration)
+    BOUND_BELOW(maxSizeY, io_recording.sizeY+1);
+    resalloc(&io_recording.data, maxSizeY * io_recording.sizeX * 3 * sizeof(unsigned char));
+  }
+
+  memcpy(io_recording.data + io_recording.sizeX * io_recording.sizeY * 3, frame, sizeof(unsigned char) * k_nPixels * 3);
+
+
+  io_recording.sizeY++;
+}
+
+void io_resetRec() {
+  gr_unbindImage(&io_recording);
+  io_recording.sizeY = 0;
+  io_recording.sizeX = k_nPixels;
+}
+
+void io_writeRec(char *fn) {
+  image playthrough = io_flippedImage(io_recording);
+  io_writeImPng(fn, playthrough);
+  free(playthrough.data);
+}
+
+// the returned image has separately allocated data. caller is responsible for freeing.
+image io_flippedImage(image im) {
+  image new;
+  new.sizeX = im.sizeY;
+  new.sizeY = im.sizeX;
+  new.texture = 0;
+  new.data = salloc(sizeof(unsigned char) * new.sizeX * new.sizeY * 3);
+  for(int i=0; i < new.sizeY; i++) {
+    for (int j=0; j < new.sizeX; j++) {
+      memcpy(new.data + (i * new.sizeX + j) * 3, im.data + (j * im.sizeX + i) * 3, sizeof(unsigned char) * 3);
+    }
+  }
+  return new;
+}
+
+void io_writeImPng(const char *fn, image im) {
+  // need alpha channel
+  unsigned char *buf = salloc(im.sizeX * im.sizeY * 4 * sizeof(unsigned char));
+  for (int j=0; j < im.sizeY; j++) {
+    for (int i=0; i < im.sizeX; i++) {
+      // copy RGB but flip vertically because that's how lodepng wants it
+      memcpy(buf + (j * im.sizeX + i) * 4, im.data + ((im.sizeY - j) * im.sizeX + i) * 3, sizeof(unsigned char) * 3);
+      buf[(j * im.sizeX + i) * 4 + 3] = (unsigned char) -1; //max alpha
+    }
+  }
+
+  unsigned error = lodepng_encode32_file(fn, buf, im.sizeX, im.sizeY);
+  if(error) {
+    fprintf(stderr, "Error writing png \"%s\" %u: %s\n", fn, error, lodepng_error_text(error));
+  }
+
+  free(buf);
+}
+
 // Reads a font specification from a file. 
 // The file should start with a number specifying the size of each character in pixels.
 // Then it should have a grid for each character in the ascii character set, where 1 represents the pixel being on and 0 (or anything else) represents it being off.

@@ -55,6 +55,7 @@ void gr_drawBezelOut(rect);
 void gr_drawBezelIn(rect);
 
 void gr_image(image *, rect);
+void gr_unbindImage(image *);
 
 void gr_init();
 void gr_deinit();

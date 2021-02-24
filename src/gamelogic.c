@@ -23,6 +23,7 @@ void gl_main() {
   wn_eventCallbacks(&gl_keypress, &gl_mouseclick, &gl_mousemove);
   gl_load();
   gameEnd = false;
+  io_resetRec();
 
   /*
    * the last SDL time at which the game was updated.
@@ -61,52 +62,22 @@ void gl_main() {
       lastSDLTime += k_msPerGameTick + timeWaited;
       timeWaited = 0;
     }
-    gr_update();
+    if (!gameEnd && !quit) {
+      gr_update();
 
-    // draw updates
-    wn_perspWindow();
-    gr_drawPersp();
-    wn_dimWindow();
-    gr_drawDim();
-    wn_hudWindow();
-    gr_drawHud();
-    wn_update();
+      // draw updates
+      wn_perspWindow();
+      gr_drawPersp();
+      wn_dimWindow();
+      gr_drawDim();
+      wn_hudWindow();
+      gr_drawHud();
+      wn_update();
+    }
   }
 
   // release mouse on game exit
   wn_disable_mouse(false);
-}
-
-void gl_winScreen() {
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  wn_menuWindow();
-  gr_clear();
-  wn_perspWindow();
-  gr_clear();
-  wn_dimWindow();
-  gr_clear();
-  wn_hudWindow();
-  gr_clear();
-
-  char text[512];
-  sprintf(text,
-          "CONGRATULATIONS!\n\nYOUVE WON STAGE 1-1!\n\n"
-          ""
-          "SCORE %06d\n\n"
-          "\n"
-          "THATS ALL IVE IMPLEMENTED\n"
-          "SO FAR. I HOPE YOU HAD FUN!",
-          s.score);
-  glOrtho(0, k_menuWindowW, 0, k_menuWindowH, -1, 1);
-  gr_text(RGB_textLit, false, text, k_fontSize, 20, k_menuWindowH-20);
-
-  wn_update();
-
-  SAFE_DELAY(k_winScreenTime);
 }
 
 void gl_keypress(SDL_KeyboardEvent ev) {
@@ -180,7 +151,8 @@ void gl_win(){
   }
   else{
     au_mainStop();
-    gl_winScreen();
+    mu_setWinScore(s.score);
+    mu_menu(mu_winMenu);
     gameEnd = true;
   }
 }

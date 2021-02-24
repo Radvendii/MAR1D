@@ -1,4 +1,5 @@
-sources = files( 'audio.c'
+sources = files( 'lodepng.c'
+               , 'audio.c'
                , 'controls.c'
                , 'enemies.c'
                , 'gamelogic.c'

@@ -6,6 +6,19 @@ bool quit; // global variable for exiting all loops and quitting the game
 
 int err; // global variable for capturing error codes
 
+// wrapper to return a formatted string of the correct size
+// caller is responsible for freeing result
+char *rprintf(char *fmtstr, ...) {
+  va_list vargs;
+  va_start(vargs, fmtstr);
+
+  char *str;
+  vasprintf(&str, fmtstr, vargs);
+
+  va_end(vargs);
+  return str;
+}
+
 void* salloc(size_t size){ //Named such after "Safe allocate"
   void *ptr = malloc(size);
   if(ptr == NULL){printf("Error in salloc(): malloc() failed with size %lu\n", size);exit(EXIT_FAILURE);}
@@ -23,16 +36,18 @@ void sfclose(FILE* f){
   return;
 }
 
-void* resalloc(void* ptr, size_t size){ //TODO: make this take in a void**
+// unlike realloc, this also changes the pointer you pass in
+void* resalloc(void** ptr, size_t size){
   void *ret;
-  if(ptr == NULL){
+  if(*ptr == NULL){
     ret = salloc(size);
   }
   else{
-    ret = realloc(ptr, size);
+    ret = realloc(*ptr, size);
     if(ret == NULL){printf("Error #1 in resalloc(): realloc() failed with size %lu\n", size);exit(EXIT_FAILURE);}
-    if(ptr == NULL){printf("Error #2 in resalloc(): realloc() failed with size %lu\n", size);exit(EXIT_FAILURE);}
+    if(*ptr == NULL){printf("Error #2 in resalloc(): realloc() failed with size %lu\n", size);exit(EXIT_FAILURE);}
   }
+  *ptr = ret;
   return ret;
 }
 

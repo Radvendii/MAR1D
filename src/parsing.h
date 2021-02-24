@@ -3,17 +3,12 @@
 #include "helpers.h"
 #include "objects.h"
 #include "resources.h"
+#include "graphics.h"
+#include "lodepng.h"
 #include <libconfig.h>
 
 extern color* io_cs;
 extern obj* io_os;
-
-typedef struct {
-  unsigned long sizeX;
-  unsigned long sizeY;
-  unsigned char *data;
-  int texture;
-} image;
 
 // TODO: not all of these should be public functions
 
@@ -32,5 +27,11 @@ void io_readConfig(config *);
 void io_writeConfig(config);
 
 image io_getImage(char*);
+
+void io_recAddFrame(unsigned char *frame);
+void io_resetRec();
+void io_writeRec(char *fn);
+image io_flippedImage(image);
+void io_writeImPng(const char *fn, image);
 
 #endif

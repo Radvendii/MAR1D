@@ -126,18 +126,27 @@ typedef struct {
   bool debug;
 } config; // not to be confused with config_t from libconfig
 
+typedef struct {
+  unsigned long sizeX;
+  unsigned long sizeY;
+  unsigned char *data;
+  int texture;
+} image;
+
 extern config conf;
 
 extern bool quit; // global variable for exiting all loops and quitting the game
 
 extern int err; // global variable for capturing error codes
 
+char *rprintf(char *, ...);
+
 // Safe versions of various functions (checks for errors)
 FILE* sfopen(char*, char*);
 void sfclose(FILE*);
 
 void* salloc(size_t);
-void* resalloc(void*, size_t);
+void* resalloc(void**, size_t);
 
 void intsort(int*, int); // Sorts a list of ints with specified length.
                          // This is never used and I'm not sure why it's here.
