@@ -80,3 +80,57 @@ img.inline {
   display: inline;
   margin: 0 2px;
 }
+
+
+
+.huh {
+
+  padding: 3px;
+
+  input {
+    display:none;
+
+    // triangle pointer
+    & + .tri-toggle {
+      border: solid black;
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      padding: 0.2em;
+      margin: 2px;
+    }
+
+    // when unselected, it points to the right
+    & + .tri-toggle {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+    }
+
+    // when selected, it points down
+    &:checked + .tri-toggle {
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+    }
+
+    & ~ .q {
+      font-size: 1.2em;
+    }
+
+    // answer is hidden until the question is clicked
+    & ~ div.a {
+      margin-left: 1em;
+      display: none;
+      visibility: hidden;
+    }
+
+    &:checked ~ div.a {
+      display: block;
+      visibility: visible;
+    }
+  }
+}
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}

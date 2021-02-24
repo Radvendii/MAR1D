@@ -2,10 +2,111 @@
 title: Huh‽
 ---
 
+<!--
 - Reference to flatland
 - Diagram with 2d and 3d rendering
 - Just because it's not 1 pixel wide does not mean it is not 1-dimensional
+- time on X axis diagram
+- it's the same as a translationally symmetric 3D world
+-->
 
-<p>
+<div class="huh">
+    <label>
+        <input type="checkbox" id="checkbox1">
+        <div class="tri-toggle"></div>
+        <span class="q">
+            Huh‽ What am I looking at when I play this game?
+        </span>
+        <div class="a">
+            <p>
+                TODO: add diagrams
+            </p>
 
-</p>
+            <p>
+                When we play a three dimensional game, we are displaying that three dimensional world on a two dimensional screen. How does that happen? Well, the computer knows where in the scene all of the 3D objects are, and it goes through a process called "rendering".
+            </p>
+
+            <p>
+                In the simpler version of rendering, we pick a location for the camera, a direction that it's facing, and a location that the screen (virtually) sits in front of the eye. Then we draw rays out from that eye, and see (a) what color the object (or part of the object) that they hit is, and (b) where they hit the virtual screen. Then we color that pixel on the virtual screen with that color. When we're done, we display that virtual screen on your actual screen.
+            </p>
+
+            <p>
+                In MAR1D, we can go through exactly the same process, but with a one dimensional screen in a two dimensional world.
+            </p>
+
+            <p>
+                Another thing that might help you visualize what is happening: a two dimensional world, mathematically speaking, is virtually the same as a three dimensional world that is "translationally symmetric" along one axis. What that means is, we can imagine MAR1D as taking place in a 3D world where everything is the same out to infinity to your left and right.
+            </p>
+        </div>
+    </label>
+</div>
+
+<div class="huh">
+    <label>
+        <input type="checkbox" id="checkbox1">
+        <div class="tri-toggle"></div>
+        <span class="q">
+            Huh‽ How is this one dimensional? The game line is more than one pixel wide!
+        </span>
+        <div class="a">
+            <p>
+                The game width can actually be adjusted, including to a width of one pixel. That's how I prefer to play, but other people had trouble seeing what was going on.
+            </p>
+
+            <p>
+                Regardless of how much you stretch it though, there is only one dimension of information. Your computer pixels have some amount of depth to them, but that doesn't make the games you play on them have 3 dimensional viewports.
+            </p>
+        </div>
+    </label>
+</div>
+
+<div class="huh">
+    <label>
+        <input type="checkbox" id="checkbox1">
+        <div class="tri-toggle"></div>
+        <span class="q">
+            Huh‽ What's with the weird stripey image on the front page?
+        </span>
+        <div class="a">
+            <p>
+                Each frame of the game takes up only one column of pixels, so if we lay time across the x axis, we can represent an entire playthrough in one still image. That's what that image is. This gives us another perspective on time as a dimension. It is not the same as a spatial dimension, but it can be visualized as such.
+            </p>
+        </div>
+    </label>
+</div>
+
+<div class="huh">
+    <label>
+        <input type="checkbox" id="checkbox1">
+        <div class="tri-toggle"></div>
+        <span class="q">
+            Huh‽ This game makes my head hurt and I have so much trouble with it!
+        </span>
+        <div class="a">
+            <p>
+                I have a few suggestions:
+                <ol>
+                    <li> If you have not played the original Super Mario Bros., you should. You can find it emulated online, and having a basic understanding of where everything is in the level helps a lot when running through it in first person. </li>
+                    <li> Play with the settings. In particular, changing the width of the line might give you a better intuition for what's going on, and make sure your sound is on. Having those extra cues about what's happening helps. </li>
+                    <li> Read the book "Flatland", and maybe some other material about dimensions and rendering. It can help to have some explicit understanding to match to what you're seeing on the screen </li>
+                    <li> Practice! This is a hard cognitive jump, but hopefully a rewarding one. </li>
+                </ol>
+            </p>
+        </div>
+    </label>
+</div>
+
+<div class="huh">
+    <label>
+        <input type="checkbox" id="checkbox1">
+        <div class="tri-toggle"></div>
+        <span class="q">
+            Huh‽ What's with the name MAR1D?
+        </span>
+        <div class="a">
+            <p>
+                When written in certain fonts (including the title font of the original Super Mario Bros.) MAR1D looks like MARIO, and the "1D" refers to the number of dimensions you get when looking at the world.
+            </p>
+        </div>
+    </label>
+</div>
