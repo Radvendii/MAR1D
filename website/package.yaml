@@ -1,0 +1,13 @@
+name: mar1d
+
+dependencies:
+    - base
+    - hakyll
+    - hakyll-sass
+
+executable:
+    main: site.hs
+    source-dirs: .
+
+default-extensions:
+    - OverloadedStrings

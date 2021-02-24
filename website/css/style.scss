@@ -1,0 +1,82 @@
+@mixin plain_link {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  height: 100%;
+  background: url(/static/super-mario-bros.jpg) repeat;
+}
+
+.contents {
+  margin-top: 100px;
+  width: 500px;
+  background-color: lightblue;
+  padding: 50px;
+  height: 100%;
+  border-style: outset;
+  border-color: grey;
+  border-width: 5px;
+  font-family: "OPTIVagRound";
+}
+
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+@font-face {
+  font-family: "Emulogic";
+  src: url(/static/Emulogic.ttf);
+}
+
+@font-face {
+  font-family: "Typewriter";
+  src: url(/static/typewriter.ttf);
+}
+
+@font-face {
+  font-family: "OPTIVagRound";
+  src: url(/static/OPTIVagRound-Bold.otf);
+}
+
+.box {
+  background-color: #C84C0C;
+  display: inline-block;
+  padding: 2px 25px;
+  margin: 2px;
+  border: inset;
+  border-color: #FCBCB0;
+  border-width: 5px;
+  border-style: outset;
+}
+
+a.box {
+  @include plain_link;
+  &:hover {
+    border-style: inset;
+  }
+}
+
+h1 {
+  font-family: Emulogic;
+  text-align: center;
+}
+
+.logo {
+  text-align: center;
+  img {
+    width: 100px;
+  }
+}
+
+a.logo {
+  @include plain_link;
+}
+
+img.inline {
+  width: 0.8em;
+  display: inline;
+  margin: 0 2px;
+}

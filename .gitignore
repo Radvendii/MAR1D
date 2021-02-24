@@ -5,3 +5,6 @@ CMakeFiles/*
 build/*
 install/*
 result
+
+website/_site/*
+website/_cache/*
