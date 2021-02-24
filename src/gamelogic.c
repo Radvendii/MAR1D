@@ -59,12 +59,11 @@ void gl_main() {
     // (this will usually just be once)
     while (curSDLTime > lastSDLTime && !gameEnd && !quit) {
       gl_update();
+      gr_update();
       lastSDLTime += k_msPerGameTick + timeWaited;
       timeWaited = 0;
     }
     if (!gameEnd && !quit) {
-      gr_update();
-
       // draw updates
       wn_perspWindow();
       gr_drawPersp();

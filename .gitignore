@@ -5,6 +5,7 @@ CMakeFiles/*
 build/*
 install/*
 result
+playthrough.png
 
 website/_site/*
 website/_cache/*

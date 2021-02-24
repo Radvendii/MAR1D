@@ -6,6 +6,7 @@ int fontSize; // length of the array containing a single character
 
 struct camera cam;
 // TODO: perhaps this should be an array of `color`s instead?
+//       color[k_nPixels] perspScreen
 unsigned char *perspScreen;
 point *dimScreen;
 
@@ -67,6 +68,8 @@ void gr_update(){
   // Render
   rn_dimFcamera(dimScreen, cam);
   rn_perspFcamera(perspScreen, cam);
+
+  io_recAddFrame(perspScreen);
 }
 
 void gr_color(color c) {
@@ -167,8 +170,6 @@ void gr_pixel(int y, unsigned char r, unsigned char g, unsigned char b){
 
 // Render an array of pixels
 void gr_pixels(unsigned char *renderArr){
-  io_recAddFrame(renderArr);
-
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
