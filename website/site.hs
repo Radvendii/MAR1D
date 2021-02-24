@@ -26,6 +26,7 @@ main = hakyll $ do
           getResourceBody
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
+
     match "*.html" $ do
       route $ cleanRoute
       compile $ do
