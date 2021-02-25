@@ -5,7 +5,8 @@
 
 body {
   height: 100%;
-  background: url(/static/super-mario-bros.jpg) repeat;
+  background: url(/static/background.png) repeat;
+  background-size: 32px;
   font-family: "OPTIVagRound";
   font-size: 0.9em;
 }
@@ -163,6 +164,7 @@ figure {
 @media only screen and (min-width: 600px) {
   body {
     font-size: 1em;
+    background-size: 128px;
   }
   .contents {
     margin-top: 100px;
