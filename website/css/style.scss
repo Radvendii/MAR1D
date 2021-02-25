@@ -12,8 +12,7 @@ body {
 }
 
 .contents {
-  margin: 0px;
-  margin-top: 10px;
+  margin: 10px;
   width: 100%;
   background-color: lightblue;
   padding: 10px;
@@ -25,7 +24,7 @@ body {
 
 .container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: flex-end;
   flex-wrap: wrap;
   // manual breaks in the right places

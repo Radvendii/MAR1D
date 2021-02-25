@@ -27,8 +27,9 @@ void mu_init() {
       .kind = WK_ACTION,
       .action = &mu_exitMenu
     ),
+    //TODO: this should be a submenu that lets people name the file and shows them a preview. that sounds like a lot of work though
     WIDGET(
-      .label = "SAVE PLAYTHROUGH IMAGE",
+      .label = "SAVE PLAYTHROUGH.PNG",
       .kind = WK_ACTION,
       .action = &mu_saveRecording
     )
