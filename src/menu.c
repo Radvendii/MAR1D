@@ -23,12 +23,12 @@ void mu_init() {
       .size = 1.5
     ),
     WIDGET(
-      .label = "MAIN MENU",
+      .label = "BACK TO MAIN MENU",
       .kind = WK_ACTION,
       .action = &mu_exitMenu
     ),
     WIDGET(
-      .label = "SAVE PLAYTHROUGH",
+      .label = "SAVE PLAYTHROUGH IMAGE",
       .kind = WK_ACTION,
       .action = &mu_saveRecording
     )

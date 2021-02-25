@@ -51,7 +51,7 @@
   rprintf("YOUVE BEATEN STAGE 1-1!\n"             \
           "SCORE %06d\n\n"                        \
           "THATS ALL IVE IMPLEMENTED\n"           \
-          "SO FAR. I HOPE YOU HAD FUN!", (score))
+          "SO FAR. I HOPE YOU HAD FUN!\n", (score))
 
 /*
  * define a menu from a list of widgets. This is useful for initializing nested
