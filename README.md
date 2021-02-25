@@ -4,16 +4,11 @@ MAR1D
 ## Under Construction
 The game is undergoing a lot of changes. I'd like to get it into shape so I can be proud to put it out there. Until I do, don't expect the README to match the game or anything like that.
 
-Four things need to get done:
+Two things need to get done:
 
-- Easy install & cross-compatibility.
-  - As much as I might want everyone to just switch to linux, it's not going to happen. And a Nix package is certainly not sufficient for most people. I'd like the game to have a download-and-go package for Mac, Linux, and, yes, Windows.
-- Menu
-  - Not everyone can use command line options. I need a menu screen for settings, remapping controls, etc.
-- Playtesting
-  - I don't need this to play *exactly* like the original, but for a while I was missing running, which is pretty essential. When I'm done with the first two I'm going to need some people to test it and make sure I'm not missing anything glaring.
-- A website
-  - It's gotta be presentable.
+- Mac .app bundle
+- Trailer
+
 
 ## Description
 The original Super Mario Bros as you've never seen it. Step into Mario's shoes in this first person clone of the classic Mario game. True to the original, however, the game still takes place in a two dimensional world. You must view the world as mario does, as a one dimensional line.
@@ -35,30 +30,39 @@ Other notable similar exploits include:
 * Send me any I'm missing! I love playing with these things :)
 
 ## Playing the Game
-I'll be trying to put out binaries in the near future, but for now you'll have to compile it yourself, and then run the `./MAR1D` executable in the main directory, or `./install/bin/MAR1D` (or wherever you've installed it) with optional command line arguments as described below.
 
-The `./install/bin/MAR1D` executable takes a few command line arguments (note that all numerical arguments must be integers):
-* `-m` mutes the audio
-* `-f` unmutes the sound effects if the audio is muted, so it does nothing on its own, but `-mf` will enable only sound effects.
+### Options
+
+Options can be configured either through an in-game menu, which will save to a config file. That config file can also be edited directly. They can also be set through command line options (except on windows, where the in-game / config file will have to suffice)
+
+The `MAR1D` executable takes a few command line arguments (note that all numerical arguments must be integers):
+* `-m##` sets the music volume (0-128)
+* `-f##` sets the sound effects volume (0-128).
 * `-w##` sets the display area to a width of `##` pixels.
 * `-s##` sets the mouse sensitivity.
-* `-r` reverses the mouse y axis. Not sure why this is necessary, but lots of games seem to include it.
+* `-y` inverts the mouse y axis. Not sure why this is necessary, but lots of games seem to include it.
+* `-d` debug mode
 
 ## Compiling
+
+MAR1D uses the meson build system, with a nix wrapper around it.
+
+You should be able to just compile directly with meson, but I don't actually know how to do that so you'll have to figure it out yourself. If you do, please send a pull request updating this section with instructions.
+
+To compile on a system using the [nix package manager](https://nixos.org/), it's as simple as `nix-build`.
+
+To cross-compile for windows, `nix-build windows.nix` (then you can either run through wine or transfer it to a windows computer).
+
+To compile a universal linux binary that can be transferred to other computers, you have two options. You can use `nix-build bundle.nix`, which produces a binary symlinked to `./result`. The disadvantage of bundle is it's extremely slow to compile and boot up.
+
+Or you can use [flatpak](https://www.flatpak.org/), which has the disadvantage of needing flatpak installed on the target platform, but is much faster. (TODO: expand this section)
+
 ### Dependencies
-* Cmake
+* meson (with ninja and pkgconfig)
 * SDL2
 * SDL2_mixer
 * GLU
 * libconfig
-
-### Linux
-It should be enough to just run ./compile.sh from the main source directory if you have all the dependencies.
-If you would like to install it under a certain prefix, you can modify ./compile.sh to change `-DCMAKE_INSTALL_PREFIX=../install` to point to wherever you would like to install it
-
-***NOTE:*** If you use nix(os), there's a nix package for MAR1D under 'mar1d'. If you don't use nix(os), you should!
-
-### Mac OS X
 
 ## License
 Licensed under AGPL v3.0, check COPYING for more details. If you have something you want to do with it that doesn't work under that license, let me know. Basically, if you're trying to make and share awesome things with it, I want to help you do that.
@@ -72,29 +76,25 @@ Below is a screencap of me playing through the first stage, as well as an image 
 ![mar1d-png](./mar1d.png)
 
 ## Credits
-* Edwin Abbott Abbott
-  * Writing Flatland and inspiring this game
+* [Taeer Bar-Yam](https://taeer.bar-yam.me)
+  * Hey, that's me!
+* [Owen Lynch](owenlynch.org)
+  * Helping out with the coding when I get stuck
+  * Telling me when I'm being an idiot
+* [Sophie Galowitz](http://sophiegalowitz.com/)
+  * Aesthetic
+* [Yavni Bar-Yam](https://yavni.org)
+  * Photoshoping the menuscreen image
+  * Coming up with the name "MAR1D"
 * [Maurice Guégan](http://stabyourself.net/about/)
   * Making [Mari0](http://stabyourself.net/mari0/), and inspiring me to hack on Mario
   * The audio files in MAR1D are from Mari0
   * Helping me out with the game logic for spawning enemies
-  * Being an awesome guy
-* Owen Lynch
-  * Hosting the game on his github
-  * Helping out with some of the coding (Especially setting up cmake. I hate compiling C code)
-  * Being a great friend
 * Friends and Family
   * Testing
   * Moral Support
   * Putting up with me getting sucked into coding for long stretches
-* Yavni
-  * Photoshoping the menuscreen image
-  * Coming up with the name "MAR1D"
+* Edwin Abbott Abbott
+  * Writing Flatland and inspiring this game
 * Nintendo
-  * Making Super Mario Bros
-  * Inspiring game makers
-* My parents
-  * Moral support
-  * Raising me
-  * Inspiring me
-  * Shaping me into an inquisitive person
+  * Making Super Mario Bros, and inspiring game makers
