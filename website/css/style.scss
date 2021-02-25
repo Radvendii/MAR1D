@@ -6,24 +6,36 @@
 body {
   height: 100%;
   background: url(/static/super-mario-bros.jpg) repeat;
+  font-family: "OPTIVagRound";
+  font-size: 0.9em;
 }
 
 .contents {
-  margin-top: 100px;
-  width: 550px;
+  margin: 0px;
+  margin-top: 10px;
+  width: 100%;
   background-color: lightblue;
-  padding: 50px;
+  padding: 10px;
   height: 100%;
-  border-style: outset;
+  border-style: solid;
   border-color: grey;
-  border-width: 5px;
-  font-family: "OPTIVagRound";
+  border-width: 2px;
 }
 
 .container {
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
+  flex-wrap: wrap;
+  // manual breaks in the right places
+  > br {
+    width: 100%;
+    flex-basis: 100%;
+    flex-grow: 1;
+    height: 0;
+    margin: 0;
+    content: '';
+  }
 }
 
 @font-face {
@@ -44,11 +56,11 @@ body {
 .box {
   background-color: #C84C0C;
   display: inline-block;
-  padding: 2px 25px;
+  padding: 2px 15px;
   margin: 2px;
   border: inset;
   border-color: #FCBCB0;
-  border-width: 5px;
+  border-width: 4px;
   border-style: outset;
 }
 
@@ -140,5 +152,35 @@ figcaption {
       display: block;
       visibility: visible;
     }
+  }
+}
+
+figure {
+  width: 100%;
+  margin: 0;
+}
+
+@media only screen and (min-width: 600px) {
+  body {
+    font-size: 1em;
+  }
+  .contents {
+    margin-top: 100px;
+    width: 550px;
+    padding: 50px;
+    border-width: 5px;
+  }
+  .container {
+    > br {
+      display: none;
+    }
+  }
+  .box {
+    padding: 2px 25px;
+    border-width: 5px;
+  }
+  figure {
+    width: inherit;
+    margin: inherit;
   }
 }
