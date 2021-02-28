@@ -53,42 +53,6 @@ with import <nixpkgs> {
         dontDisableStatic = 1;
         buildInputs = []; # get rid of alsaLib (like for darwin)
       });
-      libGL = super.libGL.overrideAttrs (old:  {
-        # like darwin
-        buildCommand = ''
-          mkdir -p $out/nix-support $dev
-          echo ${self.mesa} >> $out/nix-support/propagated-build-inputs
-          ln -s ${self.mesa.out}/lib $out/lib
-          mkdir -p $dev/lib/pkgconfig $dev/nix-support
-          echo "$out" > $dev/nix-support/propagated-build-inputs
-          ln -s ${self.mesa.dev}/include $dev/include
-          cat <<EOF >$dev/lib/pkgconfig/gl.pc
-  Name: gl
-  Description: gl library
-  Version: ${self.mesa.version}
-  Libs: -L${self.mesa.out}/lib -lGL
-  Cflags: -I${self.mesa.dev}/include
-  EOF
-    cat <<EOF >$dev/lib/pkgconfig/glesv1_cm.pc
-  Name: glesv1_cm
-  Description: glesv1_cm library
-  Version: ${self.mesa.version}
-  Libs: -L${self.mesa.out}/lib -lGLESv1_CM
-  Cflags: -I${self.mesa.dev}/include
-  EOF
-    cat <<EOF >$dev/lib/pkgconfig/glesv2.pc
-  Name: glesv2
-  Description: glesv2 library
-  Version: ${self.mesa.version}
-  Libs: -L${self.mesa.out}/lib -lGLESv2
-  Cflags: -I${self.mesa.dev}/include
-  EOF
-        '';
-      });
-      mesa = super.mesa.overrideAttrs (old: {
-        buildInputs = [ self.zlib ];
-        propagatedBuildInputs = [];
-      });
     })
   ];
 };

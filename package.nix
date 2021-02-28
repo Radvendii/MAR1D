@@ -23,9 +23,9 @@ stdenv.mkDerivation rec {
     [
       SDL2
       SDL2_mixer
-      libGLU
       libconfig
-    ];
+    ]
+      ++ optional (!stdenv.targetPlatform.isWindows) libGLU;
 
   meta = with stdenv.lib; {
     description = "First person Super Mario Bros";
