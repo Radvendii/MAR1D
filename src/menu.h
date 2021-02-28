@@ -181,6 +181,7 @@ void mu_setParents(menu *m, menu *p);
 void mu_setHeadings(menu *m, char *heading);
 
 void mu_main();
+void mu_menu(menu);
 void mu_update();
 
 void mu_init();
