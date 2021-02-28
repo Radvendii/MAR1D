@@ -31,14 +31,3 @@ endif
 subdir('src')
 
 install_subdir('resources', install_dir: resources_dir, strip_directory: true)
-
-# for AppImage (which doesn't work)
-# if not is_windows
-#     configure_file(input : 'mar1d.desktop.in',
-#                    output: 'mar1d.desktop',
-#                    install_dir: 'share' / 'applications',
-#                    configuration:  { 'EXECUTABLE' : get_option('prefix') / get_option('bindir') / 'MAR1D'
-#                                    , 'ICON' : 'MAR1D'
-#                                    })
-#     install_data('MAR1D.png', install_dir: 'share' / 'icons' / 'hicolor' / '256x256' / 'apps')
-# endif
