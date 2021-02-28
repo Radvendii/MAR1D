@@ -8,11 +8,15 @@
 #include <string.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
+#ifndef _WIN32
+#include <syslog.h>
+#endif
 
-// switch the DEBUG(...) definitions to enable / disable debugging logs
-#define DEBUG(...)                              // DEBUG OFF
-#undef  DEBUG
-#define DEBUG(s, ...) fprintf(stderr, "%s(%d) "s"\n", __FILE__, __LINE__, ##__VA_ARGS__) // DEBUG ON
+// comment / uncomment the DEBUG(...) definitions to change how debugs are logged (or not at all)
+// NOTE: syslog will not work on windows
+// #define DEBUG(...)
+// #define DEBUG(s, ...) syslog(LOG_ERR, "%s(%d) "s"\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#define DEBUG(s, ...) fprintf(stderr, "%s(%d) "s"\n", __FILE__, __LINE__, ##__VA_ARGS__)
 
 // sprinkle this into the code to see where things are going wrong
 #define LINENO DEBUG("")

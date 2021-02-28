@@ -65,7 +65,7 @@ void io_writeImPng(const char *fn, image im) {
 
   unsigned error = lodepng_encode32_file(fn, buf, im.sizeX, im.sizeY);
   if(error) {
-    fprintf(stderr, "Error writing png \"%s\" %u: %s\n", fn, error, lodepng_error_text(error));
+    DEBUG("Error writing png \"%s\" %u: %s", fn, error, lodepng_error_text(error));
   }
 
   free(buf);
@@ -348,7 +348,7 @@ void io_getLevels(level** ls, char* fn){
 void io_readConfig(config *c){
   FILE *f = rs_getConfigRead();
   if(!f){
-    printf("Unable to read configuration file. Using default.\n");
+    DEBUG("Unable to read configuration file. Using default.");
     return; // return without modifying c
   }
   config_t conf;
@@ -388,7 +388,7 @@ void io_readConfig(config *c){
 void io_writeConfig(config c){
   FILE *f = rs_getConfigWrite();
   if(!f){
-    printf("Unable to write configuration file.\n");
+    DEBUG("Unable to write configuration file.");
     return;
   }
   config_t conf;
@@ -457,11 +457,11 @@ image io_getImage(char *fn) {
   unsigned int dataPos;
 
   if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
-    fprintf(stderr, "Error reading header data from %s.\n", fn);
+    DEBUG("Error reading header data from %s.", fn);
   }
 
   if ( header[0]!='B' || header[1]!='M' ){
-    fprintf(stderr, "Error parsing header from %s. (no \"BM\")\n", fn);
+    DEBUG("Error parsing header from %s. (no \"BM\")", fn);
   }
 
   // Read ints from the byte array
@@ -479,7 +479,7 @@ image io_getImage(char *fn) {
   im.data = (unsigned char *) salloc(size);
 
   if (fread(im.data, size, 1, file) != 1) {
-    fprintf(stderr, "Error reading image data from %s.\n", fn);
+    DEBUG("Error reading image data from %s.", fn);
   }
 
   sfclose(file);

@@ -521,7 +521,7 @@ void mu_drawWidget(int labelSpace, bool selected, widget w, float x, float y) {
       /* already printed label */
       break;
     default:
-      fprintf(stderr, "%s not fully specified", __FUNCTION__);
+      DEBUG("missing case in WK_ switch");
       exit(EXIT_FAILURE);
       break;
   }
@@ -632,7 +632,7 @@ bool mu_keypressWidget(widget *w, int key, int state, int mods) {
     case WK_TEXT:
       break;
     default:
-      fprintf(stderr, "%s not fully specified", __FUNCTION__);
+      DEBUG("missing case in WK_ switch");
       exit(EXIT_FAILURE);
       break;
   }
@@ -674,7 +674,7 @@ void mu_mouseclickWidget(widget *w, int button, int state, int xPos, int yPos, i
     case WK_TEXT:
       break;
     default:
-      fprintf(stderr, "%s not fully specified", __FUNCTION__);
+      DEBUG("missing case in WK_ switch");
       exit(EXIT_FAILURE);
       break;
   }
@@ -710,7 +710,7 @@ void mu_mousemoveWidget(widget *w, int xPos, int yPos, int state, int labelSpace
       }
       break;
     default:
-      fprintf(stderr, "%s not fully specified", __FUNCTION__);
+      DEBUG("missing case in WK_ switch");
       exit(EXIT_FAILURE);
       break;
   }

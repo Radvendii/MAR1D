@@ -102,13 +102,13 @@ void wn_mousemove(SDL_MouseMotionEvent ev){
 
 void wn_init(){
   if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS)){
-    printf("Unable to initialize SDL: %s", SDL_GetError());
+    DEBUG("Unable to initialize SDL: %s", SDL_GetError());
     exit(EXIT_FAILURE);
   }
   dimWindow = SDL_CreateWindow(k_dimWindowName, k_dimWindowX, 100, k_dimWindowW, k_dimWindowH, SDL_WINDOW_OPENGL);
   perspWindow = SDL_CreateWindow(k_perspWindowName, k_perspWindowX, 100, k_perspWindowW, k_perspWindowH, SDL_WINDOW_OPENGL);
   if (!perspWindow || !dimWindow) {
-    printf("Unable to create SDL windows: %s\n", SDL_GetError());
+    DEBUG("Unable to create SDL windows: %s", SDL_GetError());
     SDL_Quit();
     exit(EXIT_FAILURE);
   }
@@ -124,7 +124,7 @@ void wn_init(){
   dimContext = SDL_GL_CreateContext(dimWindow);
 
   if (!perspContext || !dimContext) {
-    printf("Unable to create OpenGL contexts: %s\n", SDL_GetError());
+    DEBUG("Unable to create OpenGL contexts: %s", SDL_GetError());
     SDL_Quit();
     exit(EXIT_FAILURE);
   }

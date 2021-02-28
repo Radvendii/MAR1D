@@ -30,7 +30,8 @@ void rs_init(){
 #endif
 
   if(!configDir) {
-    printf("Could not fetch configuration directory. Aborting.\n");
+    // TODO: no need to abort here. config isn't that essential
+    DEBUG("Could not fetch configuration directory. Aborting.");
     exit(EXIT_FAILURE);
   }
 

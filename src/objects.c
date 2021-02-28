@@ -28,7 +28,7 @@ obj ob_objFchar(char c){
 }
 
 void ob_printPoint(point p){
-  printf("{ x: %d, y: %d, c:%c }\n", p.x, p.y, p.c);
+  DEBUG("{ x: %d, y: %d, c:%c }", p.x, p.y, p.c);
 }
 
 // Shift by it's coordinate position in the world

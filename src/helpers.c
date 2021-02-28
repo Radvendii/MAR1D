@@ -21,18 +21,18 @@ char *rprintf(char *fmtstr, ...) {
 
 void* salloc(size_t size){ //Named such after "Safe allocate"
   void *ptr = malloc(size);
-  if(ptr == NULL){printf("Error in salloc(): malloc() failed with size %lu\n", size);exit(EXIT_FAILURE);}
+  if(ptr == NULL){DEBUG("Error in salloc(): malloc() failed with size %lu", size);exit(EXIT_FAILURE);}
   else{return ptr;}
 }
 
 FILE* sfopen(char* s, char* m){
   FILE* f;
-  if((f = fopen(s, m)) == NULL){printf("Error in sfopen(): File not found: %s\n", s);exit(EXIT_FAILURE);}
+  if((f = fopen(s, m)) == NULL){DEBUG("Error in sfopen(): File not found: %s", s);exit(EXIT_FAILURE);}
   return f;
 }
 
 void sfclose(FILE* f){
-  if(fclose(f) == EOF){printf("Error in sfclose(): fclose() returned EOF\n");exit(EXIT_FAILURE);}
+  if(fclose(f) == EOF){DEBUG("Error in sfclose(): fclose() returned EOF");exit(EXIT_FAILURE);}
   return;
 }
 
@@ -44,8 +44,8 @@ void* resalloc(void** ptr, size_t size){
   }
   else{
     ret = realloc(*ptr, size);
-    if(ret == NULL){printf("Error #1 in resalloc(): realloc() failed with size %lu\n", size);exit(EXIT_FAILURE);}
-    if(*ptr == NULL){printf("Error #2 in resalloc(): realloc() failed with size %lu\n", size);exit(EXIT_FAILURE);}
+    if(ret == NULL){DEBUG("Error #1 in resalloc(): realloc() failed with size %lu", size);exit(EXIT_FAILURE);}
+    if(*ptr == NULL){DEBUG("Error #2 in resalloc(): realloc() failed with size %lu", size);exit(EXIT_FAILURE);}
   }
   *ptr = ret;
   return ret;

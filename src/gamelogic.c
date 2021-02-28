@@ -10,7 +10,7 @@ int timeWaited;
 int gl_playerIndex(){
   int ret=0;
   for(ret=0;s.scene[ret].type != '\0' && s.scene[ret].type != '@';ret++);
-  if(s.scene[ret].type == '\0'){printf("Error in gl_playerIndex(): Player not found\n");exit(1);}
+  if(s.scene[ret].type == '\0'){DEBUG("Error in gl_playerIndex(): Player not found");exit(EXIT_FAILURE);}
   return ret;
 }
 

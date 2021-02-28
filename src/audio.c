@@ -68,12 +68,12 @@ void au_init(){
 
   err = Mix_OpenAudio(k_mix_frequency, k_mix_format, k_mix_channels, k_mix_chunksize);
   if(err == -1){
-    printf("Failed to open audio: %s\n", Mix_GetError());
+    DEBUG("Failed to open audio: %s", Mix_GetError());
     exit(EXIT_FAILURE);
   }
   err = Mix_AllocateChannels(k_nSounds);
   if(err != k_nSounds){
-    printf("Couldn't allocate %d mixing channels. Got %d instead.", k_nSounds, err);
+    DEBUG("Couldn't allocate %d mixing channels. Got %d instead.", k_nSounds, err);
     exit(EXIT_FAILURE);
   }
 
@@ -111,7 +111,7 @@ void au_loadSounds(){
   for(int i=0;i<k_nSounds;i++){
     sounds[i] = Mix_LoadWAV(soundFileNames[i]);
     if(!sounds[i]) {
-      printf("Unable to load sound file %s: %s\n", soundFileNames[i], SDL_GetError());
+      DEBUG("Unable to load sound file %s: %s", soundFileNames[i], SDL_GetError());
       exit(EXIT_FAILURE);
     }
   }
@@ -133,7 +133,7 @@ void au_deinit(){
 void au_play(int snd){
   err = Mix_PlayChannel(snd, sounds[snd], 0);
   if(err == -1) {
-    printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+    DEBUG("Unable to play sound file %s: %s", soundFileNames[snd], Mix_GetError());
     exit(EXIT_FAILURE);
   }
   Mix_Volume(snd, conf.effects);
@@ -143,12 +143,12 @@ void au_play(int snd){
 int au_playWait(int snd){
   int startTime = SDL_GetTicks();
   if(au_waiting != -1) {
-    printf("Can't wait for more than one audio at once. How did you even get here?\n");
+    DEBUG("Can't wait for more than one audio at once. How did you even get here?");
     exit(EXIT_FAILURE);
   }
   err = Mix_PlayChannel(snd, sounds[snd], 0);
   if(err == -1) {
-    printf("Unable to play sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+    DEBUG("Unable to play sound file %s: %s", soundFileNames[snd], Mix_GetError());
     exit(EXIT_FAILURE);
   }
   Mix_Volume(snd, conf.effects);
@@ -173,7 +173,7 @@ void au_mainPlay(int snd){
   err = Mix_PlayChannel(snd, sounds[snd], -1);
   Mix_Volume(snd, conf.music);
   if(err == -1) {
-    printf("Unable to play main sound file %s: %s\n", soundFileNames[snd], Mix_GetError());
+    DEBUG("Unable to play main sound file %s: %s", soundFileNames[snd], Mix_GetError());
     exit(EXIT_FAILURE);
   }
 }
