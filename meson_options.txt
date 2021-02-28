@@ -1,0 +1,4 @@
+option('exe-install-dir', type: 'string',
+       description: 'Relative to the install prefix, where the executable goes. Defaults to "" on windows and "bin" everywhere else')
+option('resources-install-dir', type: 'string',
+       description: 'Relative to the install prefix, where the resources directory goes. Defaults to "" on windows, and "<prefix>/share/mar1d" (absolute path) everywhere else')

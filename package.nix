@@ -38,6 +38,6 @@ stdenv.mkDerivation rec {
     homepage = https://github.com/olynch/fp_mario;
     license = licenses.agpl3;
     maintainers = with maintainers; [ taeer ];
-    platforms = [ platforms.linux platforms.windows ];
+    platforms = platforms.linux ++ platforms.windows ++ platforms.unix;
   };
 }

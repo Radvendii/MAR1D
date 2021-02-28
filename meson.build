@@ -22,7 +22,7 @@ libconfig_dep = dependency('libconfig', static : is_windows)
 # libconfig needs this defined if it's static
 c_args = is_windows ? ['-D LIBCONFIG_STATIC'] : []
 
-# set the resource directory path (for installation and for inside the code)
+# set default resource/executable directory path
 if is_windows
     exe_install_dir = ''
     resources_install_dir = ''
@@ -31,6 +31,16 @@ else
     exe_install_dir = 'bin'
     resources_install_dir = 'share' / 'mar1d'
     resources_directory = get_option('prefix') / 'share' / 'mar1d' / 'resources' / ''
+endif
+
+# manual overrides
+if get_option('exe-install-dir') != ''
+    exe_install_dir = get_option('exe-install-dir')
+endif
+
+if get_option('resources-install-dir') != ''
+    resources_install_dir = get_option('resources-install-dir')
+    resources_directory = get_option('resources-install-dir') / 'resources' / ''
 endif
 
 subdir('src')
