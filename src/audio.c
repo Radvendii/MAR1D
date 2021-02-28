@@ -8,56 +8,57 @@ int au_waiting;
 
 int au_mainAudio;
 
-#define k_soundsDir k_resourceDir"sounds/"
+#define k_soundsDir "sounds/"
+#define k_maxSoundFileNameLen 512
 
 // This must match the `#define`d SND_ values in audio.h
 const char *soundFileNames[] = {
-  k_soundsDir"blockbreak.wav",
-  k_soundsDir"blockhit.wav",
-  k_soundsDir"boom.wav",
-  k_soundsDir"bowserfall.wav",
-  k_soundsDir"bridgebreak.wav",
-  k_soundsDir"bulletbill.wav",
-  k_soundsDir"castle-fast.wav",
-  k_soundsDir"castle.wav",
-  k_soundsDir"castleend.wav",
-  k_soundsDir"coin.wav",
-  k_soundsDir"death.wav",
-  k_soundsDir"fire.wav",
-  k_soundsDir"fireball.wav",
-  k_soundsDir"gameover.wav",
-  k_soundsDir"intermission.wav",
-  k_soundsDir"jump.wav",
-  k_soundsDir"jumpbig.wav",
-  k_soundsDir"konami.wav",
-  k_soundsDir"levelend.wav",
-  k_soundsDir"lowtime.wav",
-  k_soundsDir"mushroomappear.wav",
-  k_soundsDir"mushroomeat.wav",
-  k_soundsDir"oneup.wav",
-  k_soundsDir"overworld-fast.wav",
-  k_soundsDir"overworld.wav",
-  k_soundsDir"pause.wav",
-  k_soundsDir"pipe.wav",
-  k_soundsDir"portal1open.wav",
-  k_soundsDir"portal2open.wav",
-  k_soundsDir"portalenter.wav",
-  k_soundsDir"portalfizzle.wav",
-  k_soundsDir"princessmusic.wav",
-  k_soundsDir"rainboom.wav",
-  k_soundsDir"scorering.wav",
-  k_soundsDir"shot.wav",
-  k_soundsDir"shrink.wav",
-  k_soundsDir"stab.wav",
-  k_soundsDir"starmusic-fast.wav",
-  k_soundsDir"starmusic.wav",
-  k_soundsDir"stomp.wav",
-  k_soundsDir"swim.wav",
-  k_soundsDir"underground-fast.wav",
-  k_soundsDir"underground.wav",
-  k_soundsDir"underwater-fast.wav",
-  k_soundsDir"underwater.wav",
-  k_soundsDir"vine.wav"
+  "blockbreak.wav",
+  "blockhit.wav",
+  "boom.wav",
+  "bowserfall.wav",
+  "bridgebreak.wav",
+  "bulletbill.wav",
+  "castle-fast.wav",
+  "castle.wav",
+  "castleend.wav",
+  "coin.wav",
+  "death.wav",
+  "fire.wav",
+  "fireball.wav",
+  "gameover.wav",
+  "intermission.wav",
+  "jump.wav",
+  "jumpbig.wav",
+  "konami.wav",
+  "levelend.wav",
+  "lowtime.wav",
+  "mushroomappear.wav",
+  "mushroomeat.wav",
+  "oneup.wav",
+  "overworld-fast.wav",
+  "overworld.wav",
+  "pause.wav",
+  "pipe.wav",
+  "portal1open.wav",
+  "portal2open.wav",
+  "portalenter.wav",
+  "portalfizzle.wav",
+  "princessmusic.wav",
+  "rainboom.wav",
+  "scorering.wav",
+  "shot.wav",
+  "shrink.wav",
+  "stab.wav",
+  "starmusic-fast.wav",
+  "starmusic.wav",
+  "stomp.wav",
+  "swim.wav",
+  "underground-fast.wav",
+  "underground.wav",
+  "underwater-fast.wav",
+  "underwater.wav",
+  "vine.wav"
 };
 
 // Janky workaround because there's no way to play one sound after another with SDL
@@ -108,13 +109,20 @@ void au_update() {
 
 void au_loadSounds(){
   memset(sounds, 0, sizeof(Mix_Chunk *) * k_nSounds);
+  char *soundFilePath = salloc(strlen(rs_resourceDir) + strlen(k_soundsDir) + k_maxSoundFileNameLen + 2);
+  sprintf(soundFilePath, "%s/%s", rs_resourceDir, k_soundsDir);
+  DEBUG("%s", soundFilePath);
+  int soundFileOffset = strlen(soundFilePath);
   for(int i=0;i<k_nSounds;i++){
-    sounds[i] = Mix_LoadWAV(soundFileNames[i]);
+    strcpy(soundFilePath + soundFileOffset, soundFileNames[i]);
+  DEBUG("%s", soundFilePath);
+    sounds[i] = Mix_LoadWAV(soundFilePath);
     if(!sounds[i]) {
       DEBUG("Unable to load sound file %s: %s", soundFileNames[i], SDL_GetError());
       exit(EXIT_FAILURE);
     }
   }
+  free(soundFilePath);
 }
 
 void au_deinit(){

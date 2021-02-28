@@ -10,6 +10,8 @@
 #define k_recFileName "mar1d_recording"
 #define k_recFileExt ".png"
 
+extern char *rs_resourceDir;
+
 void rs_init();
 void rs_deinit();
 

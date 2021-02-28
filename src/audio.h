@@ -5,7 +5,6 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include "resources.h"
-/* #include <pthread.h> */
 #define SND_blockbreak 0
 #define SND_blockhit 1
 #define SND_boom 2

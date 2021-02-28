@@ -7,8 +7,9 @@ with import <nixpkgs> { };
 
 (callPackage ./package.nix {}).overrideAttrs (old: {
   mesonFlags = [
-    "-Dexe-install-dir=MAR1D.app/Contents/MacOS"
-    "-Dresources-install-dir=MAR1D.app/Contents/Resources"
+    "--bindir=MAR1D.app/Contents/MacOS"
+    "--datadir=MAR1D.app/Contents/Resources"
+    "-Dportable=true"
   ];
   postInstall = ''
     cd $out

@@ -17,11 +17,11 @@ sources = files( 'lodepng.c'
 
 configure_file(input : 'resources.h.in',
                output: 'resources.h',
-               configuration:  { 'RESOURCE_DIRECTORY' : resources_directory })
+               # TODO: should really be relative to executable, not prefix
+               configuration:  { 'RESOURCE_DIRECTORY' : resources_dir })
 
 executable('MAR1D', sources,
            install : true,
-           install_dir : exe_install_dir,
            c_args : c_args,
            dependencies : [ math_lib
                           , opengl_dep

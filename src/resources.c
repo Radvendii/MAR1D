@@ -1,6 +1,7 @@
 #include "resources.h"
 
 char *configDir;
+char *rs_resourceDir;
 
 void rs_init(){
 
@@ -35,6 +36,10 @@ void rs_init(){
     exit(EXIT_FAILURE);
   }
 
+  rs_resourceDir = getenv("MAR1D_RESOURCE_DIR");
+  if (!rs_resourceDir) {
+    rs_resourceDir = k_resourceDir;
+  }
 }
 
 void rs_deinit(){
@@ -42,18 +47,18 @@ void rs_deinit(){
   configDir = NULL;
 }
 
-// Prepends the resource directory name and then opens that file as either text or binary
+// Prepends the resource directory name and then opens that file as either text or binaryj
 FILE* rs_getFile(char* fn){
-  char *fn_ = salloc(strlen(fn) + 1 + sizeof(k_resourceDir));
-  sprintf(fn_, k_resourceDir"%s", fn);
+  char *fn_ = salloc(strlen(fn) + 2 + strlen(rs_resourceDir));
+  sprintf(fn_, "%s/%s", rs_resourceDir, fn);
   FILE *f = sfopen(fn_, "r");
   free(fn_);
   return f;
 }
 
 FILE* rs_getBFile(char* fn){
-  char *fn_ = salloc(strlen(fn) + 1 + sizeof(k_resourceDir));
-  sprintf(fn_, k_resourceDir"%s", fn);
+  char *fn_ = salloc(strlen(fn) + 2 + strlen(rs_resourceDir));
+  sprintf(fn_, "%s/%s", rs_resourceDir, fn);
   FILE *f = sfopen(fn_, "rb");
   free(fn_);
   return f;

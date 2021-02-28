@@ -22,37 +22,22 @@ libconfig_dep = dependency('libconfig', static : is_windows)
 # libconfig needs this defined if it's static
 c_args = is_windows ? ['-D LIBCONFIG_STATIC'] : []
 
-# set default resource/executable directory path
-if is_windows
-    exe_install_dir = ''
-    resources_install_dir = ''
-    resources_directory = 'resources' / ''
+if get_option('portable')
+    resources_dir = get_option('datadir') / ''
 else
-    exe_install_dir = 'bin'
-    resources_install_dir = 'share' / 'mar1d'
-    resources_directory = get_option('prefix') / 'share' / 'mar1d' / 'resources' / ''
-endif
-
-# manual overrides
-if get_option('exe-install-dir') != ''
-    exe_install_dir = get_option('exe-install-dir')
-endif
-
-if get_option('resources-install-dir') != ''
-    resources_install_dir = get_option('resources-install-dir')
-    resources_directory = get_option('resources-install-dir') / 'resources' / ''
+    resources_dir = get_option('prefix') / get_option('datadir') / 'mar1d' / ''
 endif
 
 subdir('src')
 
-install_subdir('resources', install_dir: resources_install_dir)
+install_subdir('resources', install_dir: resources_dir, strip_directory: true)
 
 # for AppImage (which doesn't work)
 # if not is_windows
 #     configure_file(input : 'mar1d.desktop.in',
 #                    output: 'mar1d.desktop',
 #                    install_dir: 'share' / 'applications',
-#                    configuration:  { 'EXECUTABLE' : get_option('prefix') / exe_install_dir / 'MAR1D'
+#                    configuration:  { 'EXECUTABLE' : get_option('prefix') / get_option('bindir') / 'MAR1D'
 #                                    , 'ICON' : 'MAR1D'
 #                                    })
 #     install_data('MAR1D.png', install_dir: 'share' / 'icons' / 'hicolor' / '256x256' / 'apps')

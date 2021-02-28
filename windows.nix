@@ -59,6 +59,11 @@ with import <nixpkgs> {
 
 (callPackage ./package.nix {}).overrideAttrs (old: {
   # package it up nice and tidy for transfering to windows
+  mesonFlags = [
+    "--bindir=."
+    "--datadir=resources"
+    "-Dportable=true"
+  ];
   postInstall = ''
     cd $out
     ${buildPackages.zip}/bin/zip -r MAR1D.zip *
