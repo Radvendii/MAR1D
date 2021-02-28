@@ -120,7 +120,6 @@ void wn_init(){
     SDL_HideWindow(dimWindow);
   }
 
-  glLineWidth(1.5f);
   perspContext = SDL_GL_CreateContext(perspWindow);
   dimContext = SDL_GL_CreateContext(dimWindow);
 
