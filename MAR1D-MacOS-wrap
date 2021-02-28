@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 cd $(dirname $0)/../../..
-$(dirname $0)/MAR1D
+MAR1D_RECORDING_DIR=$HOME/Desktop/ $(dirname $0)/MAR1D

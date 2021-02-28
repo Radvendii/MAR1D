@@ -75,3 +75,25 @@ FILE* rs_getConfigWrite(){
   free(fn_);
   return f;
 }
+
+// get the file name to write the game recording
+// by default it gets written to the current directory
+// (executable directory on windows)
+// directory can be specified with the MAR1D_RECORDING_DIR environment variable
+char* rs_getRecFn(){
+  char *recdir = NULL;
+  recdir = getenv("MAR1D_RECORDING_DIR");
+  char *fn_ = salloc((recdir ? strlen(recdir) : 0) + 3 + sizeof(k_recFileName) + sizeof(k_recFileExt) + 32); // 10^32 > INT_MAX so we should be good
+  FILE *f;
+  // find the first file file we haven't already created.
+  for(int i=0; i < INT_MAX; i++) {
+    sprintf(fn_, "%s%s"k_recFileName"_%d"k_recFileExt, (recdir ? recdir : ""), (recdir ? "/" : ""), i);
+    if (f = fopen(fn_, "r")) {
+      fclose(f);
+    }
+    else {
+      break;
+    }
+  }
+  return fn_;
+}

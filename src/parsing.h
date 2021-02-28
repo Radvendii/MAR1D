@@ -30,7 +30,7 @@ image io_getImage(char*);
 
 void io_recAddFrame(unsigned char *frame);
 void io_resetRec();
-void io_writeRec(char *fn);
+void io_writeRec();
 image io_flippedImage(image);
 void io_writeImPng(const char *fn, image);
 

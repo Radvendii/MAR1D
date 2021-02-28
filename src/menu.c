@@ -29,7 +29,7 @@ void mu_init() {
     ),
     //TODO: this should be a submenu that lets people name the file and shows them a preview. that sounds like a lot of work though
     WIDGET(
-      .label = "SAVE PLAYTHROUGH.PNG",
+      .label = "SAVE RECORDING PNG",
       .kind = WK_ACTION,
       .action = &mu_saveRecording
     )
@@ -276,7 +276,7 @@ void mu_saveConfig() {
 }
 
 void mu_saveRecording() {
-  io_writeRec("playthrough.png");
+  io_writeRec();
 }
 
 void mu_menuMatrix() {

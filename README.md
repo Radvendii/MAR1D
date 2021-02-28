@@ -43,6 +43,8 @@ The `MAR1D` executable takes a few command line arguments (note that all numeric
 * `-y` inverts the mouse y axis. Not sure why this is necessary, but lots of games seem to include it.
 * `-d` debug mode
 
+In addition, there's an environment variable `MAR1D_RECORDING_DIR` that MAR1D will use to determine where to put it's recordings. Right now this is the only way to control this.
+
 ## Compiling
 
 MAR1D uses the meson build system, with a nix wrapper around it.
@@ -56,6 +58,8 @@ To cross-compile for windows, `nix-build windows.nix` (then you can either run t
 To compile a universal linux binary that can be transferred to other computers, you have two options. You can use `nix-build bundle.nix`, which produces a binary symlinked to `./result`. The disadvantage of bundle is it's extremely slow to compile and boot up.
 
 Or you can use [flatpak](https://www.flatpak.org/), which has the disadvantage of needing flatpak installed on the target platform, but is much faster. (TODO: expand this section)
+
+To compile a .app bundle for Mac OS X, you can run `nix-build darwin-app.nix`.
 
 ### Dependencies
 * meson (with ninja and pkgconfig)

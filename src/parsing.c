@@ -29,9 +29,11 @@ void io_resetRec() {
   io_recording.sizeX = k_nPixels;
 }
 
-void io_writeRec(char *fn) {
+void io_writeRec() {
+  char *fn = rs_getRecFn();
   image playthrough = io_flippedImage(io_recording);
   io_writeImPng(fn, playthrough);
+  free(fn);
   free(playthrough.data);
 }
 

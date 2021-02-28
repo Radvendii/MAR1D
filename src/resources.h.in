@@ -7,6 +7,8 @@
 #endif
 #define k_resourceDir "@RESOURCE_DIRECTORY@" // To be filled in by cmake
 #define k_configFileName "MAR1D.conf"
+#define k_recFileName "mar1d_recording"
+#define k_recFileExt ".png"
 
 void rs_init();
 void rs_deinit();
@@ -16,4 +18,6 @@ FILE *rs_getFile(char *);
 
 FILE *rs_getConfigRead();
 FILE *rs_getConfigWrite();
+
+char* rs_getRecFn();
 #endif
