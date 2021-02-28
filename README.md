@@ -78,9 +78,9 @@ Licensed under AGPL v3.0, check COPYING for more details. If you have something 
 
 Below is a screencap of me playing through the first stage, as well as an image depicting the same video, with time on the x-axis.
 
-![mar1d-gif](./mar1d.gif)
+![mar1d-gif](./recording.gif)
 
-![mar1d-png](./mar1d.png)
+![mar1d-png](./recording.png)
 
 ## Credits
 * [Taeer Bar-Yam](https://taeer.bar-yam.me)
