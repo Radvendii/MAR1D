@@ -4,10 +4,11 @@ MAR1D
 ## Under Construction
 The game is undergoing a lot of changes. I'd like to get it into shape so I can be proud to put it out there. Until I do, don't expect the README to match the game or anything like that.
 
-Two things need to get done:
+Only one thing remains to be done:
 
-- Mac .app bundle
 - Trailer
+
+(also, some minor cleanup things, and i'm sure i'll stumble across a couple other things while those are getting done)
 
 
 ## Description
