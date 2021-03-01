@@ -1,2 +1,4 @@
 option('portable', type: 'boolean', value: 'false',
-       description: 'Is this installation meant to be self-contained, using relative paths, for example.')
+       description: 'Is this installation meant to be self-contained, using relative paths')
+option('static', type: 'boolean', value: 'false',
+       description: 'Build with static dependencies')

@@ -63,6 +63,7 @@ with import <nixpkgs> {
     "--bindir=."
     "--datadir=resources"
     "-Dportable=true"
+    "-Dstatic=true"
   ];
   postInstall = ''
     cd $out
