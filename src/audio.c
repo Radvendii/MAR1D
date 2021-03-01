@@ -111,11 +111,9 @@ void au_loadSounds(){
   memset(sounds, 0, sizeof(Mix_Chunk *) * k_nSounds);
   char *soundFilePath = salloc(strlen(rs_resourceDir) + strlen(k_soundsDir) + k_maxSoundFileNameLen + 2);
   sprintf(soundFilePath, "%s/%s", rs_resourceDir, k_soundsDir);
-  DEBUG("%s", soundFilePath);
   int soundFileOffset = strlen(soundFilePath);
   for(int i=0;i<k_nSounds;i++){
     strcpy(soundFilePath + soundFileOffset, soundFileNames[i]);
-  DEBUG("%s", soundFilePath);
     sounds[i] = Mix_LoadWAV(soundFilePath);
     if(!sounds[i]) {
       DEBUG("Unable to load sound file %s: %s", soundFileNames[i], SDL_GetError());
