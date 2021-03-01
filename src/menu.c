@@ -559,7 +559,7 @@ void mu_keypressMenu(menu *m, int key, int state, int mods) {
         active_menu = m->p;
       }
       else {
-        mu_quit();
+        mu_exitMenu();
       }
     }
   }
