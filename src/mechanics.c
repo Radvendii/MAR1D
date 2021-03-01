@@ -131,7 +131,6 @@ void mh_move(int i){
 bool mh_collision(int i1, int i2){
   if(s.scene[i1].type == '.' || s.scene[i2].type == '.' || s.dead){return false;}
   bool ret;
-  int nCols;
   int cols1, cols2;
   box b1 = s.scene[i1].bb;
   box b2 = s.scene[i2].bb;
@@ -144,18 +143,14 @@ bool mh_collision(int i1, int i2){
   if(s.scene[i2].type == '@' && s.invincible && (s.scene[i1].type == 'e' || s.scene[i1].type == '&' || s.scene[i1].type == '7')){return false;}
 
   cols1 = ret;
-  nCols = s.scene[i1].nCols;
-  if(nCols>1){
-  }
-  for(int i=0;i<nCols;i++){
+  for(int i=0;i < s.scene[i1].nCols;i++){
     b3 = s.scene[i1].cols[i];
     ob_realifyBox(&b3, s.scene[i1].x, s.scene[i1].y);
     if(k_boxInter(b3, b2) && s.scene[i2].physical){cols1 |= 1 << (i+1);}
   }
 
   cols2 = ret;
-  nCols = s.scene[i2].nCols;
-  for(int i=0;i<nCols;i++){
+  for(int i=0;i < s.scene[i2].nCols;i++){
     b3 = s.scene[i2].cols[i];
     ob_realifyBox(&b3, s.scene[i2].x, s.scene[i2].y);
     if(k_boxInter(b1, b3) && s.scene[i1].physical){cols2 |= 1 << (i+1);}
@@ -174,7 +169,10 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     if(!((s.star || s.invincible) && ((*er).type == '@' && ((*ee).type == 'e' || (*ee).type == '&')))){
       if(colser & 2){(*er).vx = 0;}
     }
-    if(colser & (4 | 8)){(*er).vy = 0;}
+    if(colser & (4 | 8)){
+      cl_jumpEnd();
+      (*er).vy = 0;
+    }
     if(colser & 8){s.onGround = true;}
     switch((*ee).type){
       //case '`': //TODO: checkpoints
