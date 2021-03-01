@@ -17,7 +17,8 @@ sources = files( 'lodepng.c'
 
 configure_file(input : 'resources.h.in',
                output: 'resources.h',
-               # TODO: should really be relative to executable, not prefix
+               # TODO: should really be relative to executable, not prefix (if portable)
+               # https://github.com/mesonbuild/meson/pull/7908
                configuration:  { 'RESOURCE_DIRECTORY' : resources_dir })
 
 executable('MAR1D', sources,
