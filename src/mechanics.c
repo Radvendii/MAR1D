@@ -257,11 +257,19 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         (*er).vy = vy;
       }
       break;
+    //TODO: deal with 'e' and '&' together. the logic is identical
     case 'e':
       if((*ee).physical == true){
         if(s.star){
           ai_kill(ee);
           s.score+=100;
+        }
+        // The hitboxes are positioned such that if you walk into them from the
+        // side, you will hit both the top and the side box. But if you come
+        // down from above, you will only hit the top box. This logic reflects
+        // that.
+        else if(colsee & (4|8)){
+          gl_killed();
         }
         else if(colsee & 2){
           int x_temp = (*ee).x;
@@ -273,47 +281,48 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           cl_smallJump();
           s.score+=100*s.multibounce;
         }
-        else{gl_killed();}
       }
       break;
     case '&':
-      if(s.star){
-        ai_kill(ee);
-        s.score+=100;
-      }
-      else if(colsee & 2){
-        int x_temp = (*ee).x;
-        int y_temp = (*ee).y-8;
-        (*ee) = ob_objFchar('7');
-        (*ee).x = x_temp;
-        (*ee).y = y_temp;
-        (*ee).i = k_shellLife;
-        cl_smallJump();
-        s.score+=100*s.multibounce;
-      }
-      else{gl_killed();}
-      break;
-    case '7':
-      if(colsee & 2){
-        au_play(SND_shot);
-        (*ee).vx = 2.0;
-        (*er).vx = -0.5;
-        (*ee).nps = 1;
-        s.score += 400+100*s.multibounce;
-      }
-      if(colsee & 4){
-        au_play(SND_shot);
-        (*ee).vx = -2.0;
-        (*er).vx = 0.5;
-        (*ee).nps = 1;
-        s.score += 400+100*s.multibounce;
-      }
-      if(!(colsee & (4|2))){
+      if((*ee).physical == true){
         if(s.star){
           ai_kill(ee);
-          s.score += 200;
+          s.score+=100;
         }
-        else{gl_killed();}
+        // The hitboxes are positioned such that if you walk into them from the
+        // side, you will hit both the top and the side box. But if you come
+        // down from above, you will only hit the top box. This logic reflects
+        // that.
+        else if(colsee & (4|8)){
+          gl_killed();
+        }
+        else if(colsee & 2) {
+          int x_temp = (*ee).x;
+          int y_temp = (*ee).y-8;
+          (*ee) = ob_objFchar('7');
+          (*ee).x = x_temp;
+          (*ee).y = y_temp;
+          (*ee).i = k_shellLife;
+          cl_smallJump();
+          s.score+=100*s.multibounce;
+        }
+      }
+      break;
+    case '7':
+      if(s.star){
+        ai_kill(ee);
+        s.score += 200;
+      }
+      if(colsee & (8 | 16)){
+        gl_killed();
+      }
+      else if(colsee & (2 | 4)){
+        int dir = (colsee & 2) - (colsee & 4);
+        au_play(SND_shot);
+        (*ee).vx = 2.0 * dir;
+        (*er).vx = -1.0 * dir;
+        (*ee).nps = 1;
+        s.score += 400+100*s.multibounce;
       }
       break;
     case '!':

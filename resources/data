@@ -738,7 +738,7 @@ C; pos:0,14; dim:5x1;
 O.1; ps:0; pos:0,0; dim:0x0; cols:0; grav:0; phys:0; hid:1;
 
 Oe2; ps:47; pos:0,7; dim:15x8; cols:3; grav:1; phys:1; hid:0;
-C; pos:1,5; dim:13x1;
+C; pos:0,5; dim:16x1;
 C; pos:0,7; dim:1x7;
 C; pos:15,7; dim:1x7;
       eeee
@@ -784,7 +784,7 @@ e              e
     ,,,  ....
 
 O&2; ps:70; pos:0,10; dim:15x12; cols:3; grav:1; phys:1; hid:0;
-C; pos:1,8; dim:13x1;
+C; pos:0,8; dim:16x1;
 C; pos:0,10; dim:1x11;
 C; pos:15,10; dim:1x11;
    _
@@ -835,8 +835,8 @@ C; pos:15,10; dim:1x11;
      ee     ee
       e     e
 O716; ps:48; pos:0,5; dim:15x7; cols:4; grav:1; phys:1; hid:0;
-C; pos:1,5; dim:1x1;
-C; pos:14,5; dim:1x1;
+C; pos:0,5; dim:1x1;
+C; pos:15,5; dim:1x1;
 C; pos:0,6; dim:1x4;
 C; pos:15,6; dim:1x4;
      eGGGGe
