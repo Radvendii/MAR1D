@@ -166,14 +166,15 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
   switch((*er).type){
   case '@':
     vy = (*er).vy;
-    if(!((s.star || s.invincible) && ((*er).type == '@' && ((*ee).type == 'e' || (*ee).type == '&')))){
+    // if we're star or invincible, we pass through enemies
+    if(!((s.star || s.invincible) && ((*ee).type == 'e' || (*ee).type == '&'))){
       if(colser & 2){(*er).vx = 0;}
+      if(colser & 4){
+        cl_jumpEnd();
+        (*er).vy = 0;
+      }
+      if(colser & 8){s.onGround = true;}
     }
-    if(colser & (4 | 8)){
-      cl_jumpEnd();
-      (*er).vy = 0;
-    }
-    if(colser & 8){s.onGround = true;}
     switch((*ee).type){
       //case '`': //TODO: checkpoints
       //s.check = '1';
