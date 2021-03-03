@@ -113,7 +113,10 @@ figcaption {
   padding: 3px;
 
   input {
-    display:none;
+    // accessible alternative to
+    // display: none;
+    position: absolute;
+    clip: rect(0 0 0 0);
 
     // triangle pointer
     & + .tri-toggle {
@@ -172,6 +175,9 @@ figure {
     border-width: 5px;
   }
   .container {
+    // TODO: this is not a very good solution
+    //       the flex items will still break in the wrong place if, for example,
+    //       the text size is made really big
     > br {
       display: none;
     }
