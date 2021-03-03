@@ -10,28 +10,27 @@ cleanRoute = customRoute createIndexRoute
     createIndexRoute ident = takeDirectory p </> takeBaseName p </> "index.html"
       where p = toFilePath ident
 
+myCompiler = do
+  getResourceBody
+    >>= loadAndApplyTemplate "template.html" defaultContext
+    >>= relativizeUrls
+
 main :: IO ()
 main = hakyll $ do
+    match "template.html" $ compile templateBodyCompiler
+
     match "static/**" $ do
         route idRoute
         compile copyFileCompiler
       
-    match "css/*" $ do
+    match "style.scss" $ do
         route $ setExtension "css"
         compile $ (compressCss <$>) <$> sassCompiler
 
     match "index.html" $ do
         route   $ idRoute
-        compile $ do
-          getResourceBody
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
-            >>= relativizeUrls
+        compile $ myCompiler
 
     match "*.html" $ do
       route $ cleanRoute
-      compile $ do
-        getResourceBody
-          >>= loadAndApplyTemplate "templates/default.html" defaultContext
-          >>= relativizeUrls
-
-    match "templates/*" $ compile templateBodyCompiler
+      compile $ myCompiler
