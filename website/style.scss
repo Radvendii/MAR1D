@@ -73,7 +73,8 @@ body {
 
 a.box {
   @include plain_link;
-  &:hover {
+  &:hover, &:focus-visible {
+    outline: none;
     border-style: inset;
   }
 }
@@ -115,7 +116,7 @@ figcaption {
 }
 
 :focus {
-  outline: #333 auto 2px; // shows up better on the background
+  outline: #333 solid 2px; // shows up better on the background
 }
 
 
@@ -138,21 +139,16 @@ figcaption {
     }
   }
 
-  input:focus {
-    outline: none;
-
-    & ~ .q {
-      border: solid black 1px;
-      margin-left: -1px;
-    }
-  }
-
   input {
     // accessible alternative to
     // display: none;
     position: absolute;
     clip: rect(0 0 0 0);
     overflow: hidden;
+
+    &:focus-visible ~ .q {
+      outline: #333 solid 2px; // shows up better on the background
+    }
 
     // when unselected, triangle points to the right
     & ~ .q::before {
