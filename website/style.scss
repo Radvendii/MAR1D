@@ -114,6 +114,10 @@ figcaption {
   font-size: 0.6em;
 }
 
+:focus {
+  outline: #333 auto 2px; // shows up better on the background
+}
+
 
 .huh {
 
@@ -131,6 +135,15 @@ figcaption {
       padding: 0.15em;
       margin: 2px;
       content: '';
+    }
+  }
+
+  input:focus {
+    outline: none;
+
+    & ~ .q {
+      border: solid black 1px;
+      margin-left: -1px;
     }
   }
 
