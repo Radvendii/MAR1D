@@ -116,48 +116,58 @@ figcaption {
 
   padding: 3px;
 
+  .q {
+    cursor: pointer;
+    display: inline;
+    // triangle pointer
+    // ideally, this would be input::after, but firefox doesn't like that
+    &::before {
+      border: solid black;
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      padding: 0.15em;
+      margin: 2px;
+      content: '';
+    }
+  }
+
   input {
     // accessible alternative to
     // display: none;
     position: absolute;
     clip: rect(0 0 0 0);
+    overflow: hidden;
 
-    // triangle pointer
-    & + .tri-toggle {
-      border: solid black;
-      border-width: 0 3px 3px 0;
-      display: inline-block;
-      padding: 0.2em;
-      margin: 2px;
-    }
-
-    // when unselected, it points to the right
-    & + .tri-toggle {
+    // when unselected, triangle points to the right
+    & ~ .q::before {
       transform: rotate(-45deg);
       -webkit-transform: rotate(-45deg);
     }
 
-    // when selected, it points down
-    &:checked + .tri-toggle {
+    // when selected, triangle points down
+    &:checked ~ .q::before {
       transform: rotate(45deg);
       -webkit-transform: rotate(45deg);
-    }
-
-    & ~ .q {
-      font-weight: bold;
-      font-size: 1.2em;
     }
 
     // answer is hidden until the question is clicked
     & ~ div.a {
       margin-left: 1em;
-      display: none;
-      visibility: hidden;
+      // accessible alternative to
+      // display: none;
+      // visibility: hidden;
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
     }
 
     &:checked ~ div.a {
-      display: block;
-      visibility: visible;
+      // accessible alternative to
+      // display: block;
+      // visibility: visible;
+      position: relative;
+      top: 0px;
+      left: 0px;
     }
   }
 }
