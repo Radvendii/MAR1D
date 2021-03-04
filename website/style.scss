@@ -22,19 +22,22 @@ body {
   border-width: 2px;
 }
 
-.container {
+/*
+ * Always have a container-outer and (at least one) container-inner.
+ * Having more than one container-inner specifies where line breaks are
+ * preferred. (between container-inners rather than inside one)
+ */
+.container-outer {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: flex-end;
   flex-wrap: wrap;
-  // manual breaks in the right places
-  > br {
-    width: 100%;
-    flex-basis: 100%;
+  > .container-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
     flex-grow: 1;
-    height: 0;
-    margin: 0;
-    content: '';
+    flex-wrap: wrap;
   }
 }
 
@@ -84,6 +87,7 @@ h2 {
   text-align: center;
   img {
     width: 100px;
+    margin: 3px;
   }
 }
 
@@ -163,7 +167,7 @@ figure {
   margin: 0;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 650px) {
   body {
     font-size: 1em;
     background-size: 128px;
@@ -173,14 +177,6 @@ figure {
     width: 550px;
     padding: 50px;
     border-width: 5px;
-  }
-  .container {
-    // TODO: this is not a very good solution
-    //       the flex items will still break in the wrong place if, for example,
-    //       the text size is made really big
-    > br {
-      display: none;
-    }
   }
   .box {
     padding: 2px 25px;
