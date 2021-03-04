@@ -5,7 +5,7 @@
 #ifdef _WIN32
 #  include <direct.h> // for getcwd() on windows
 #endif
-#define k_resourceDir "@RESOURCE_DIRECTORY@" // To be filled in by cmake
+#define k_resourceDir "@RESOURCE_DIRECTORY@" // To be filled in by meson
 #define k_configFileName "MAR1D.conf"
 #define k_recFileName "mar1d_recording"
 #define k_recFileExt ".png"
