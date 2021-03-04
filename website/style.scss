@@ -32,6 +32,10 @@ body {
   justify-content: center;
   align-items: flex-end;
   flex-wrap: wrap;
+  // ideally this shouldn't turn off outer wrapping altogether, just prefer inner wrapping
+  &.wrap-inner {
+    flex-wrap: nowrap;
+  }
   > .container-inner {
     display: flex;
     justify-content: space-around;
@@ -85,9 +89,9 @@ h2 {
 
 .logo {
   text-align: center;
+  margin: 3px;
   img {
     width: 100px;
-    margin: 3px;
   }
 }
 
