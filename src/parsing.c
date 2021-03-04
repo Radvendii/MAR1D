@@ -307,7 +307,6 @@ void io_getLevel(FILE* f, level *l, obj os[CHAR_MAX]){
 // The main entry point for parsing the data file. Writes to the object and color maps is_os and io_cs.
 // Data is specified by beginning with a C for a color, an O for an object and an L for a level.
 // Parsing of each type of data is handled by the functions above.
-//TODO: Put parsing of the char after the data specifier in this function, then simplify the functions above.
 void io_getLevels(level** ls, char* fn){
   FILE *f = rs_getFile(fn);
   // TODO: who the fuck owns io_os / io_cs?? if it's io_ then it should be parsing.c, but we don't even have an init() or deinit() function

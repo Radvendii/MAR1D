@@ -30,12 +30,6 @@ void rs_init(){
   }
 #endif
 
-  if(!configDir) {
-    // TODO: no need to abort here. config isn't that essential
-    DEBUG("Could not fetch configuration directory. Aborting.");
-    exit(EXIT_FAILURE);
-  }
-
   rs_resourceDir = getenv("MAR1D_RESOURCE_DIR");
   if (!rs_resourceDir) {
     rs_resourceDir = k_resourceDir;

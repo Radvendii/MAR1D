@@ -45,14 +45,6 @@
 // how much to zoom in on mario
 #define k_menuAnimScale 10.0
 
-// construct the text for the winning screen given a score
-// resulting string must be freed.
-#define WIN_TEXT_SCORE(score)                     \
-  rprintf("YOUVE BEATEN STAGE 1-1!\n"             \
-          "SCORE %06d\n\n"                        \
-          "THATS ALL IVE IMPLEMENTED\n"           \
-          "SO FAR. I HOPE YOU HAD FUN!\n", (score))
-
 /*
  * define a menu from a list of widgets. This is useful for initializing nested
  * menus. the MENU() macro adds a back button to the menu, _MENU() does not.

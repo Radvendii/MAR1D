@@ -19,7 +19,7 @@ void mu_init() {
     WIDGET(
       .label = "",
       .kind = WK_TEXT,
-      .text = WIN_TEXT_SCORE(0),
+      .text = INIT_ARR_ON_HEAP(char, {""}), // will be filled in properly later
       .size = 1.5
     ),
     WIDGET(
@@ -36,6 +36,7 @@ void mu_init() {
   );
 
   mu_winText = &mu_winMenu.ws[0].text;
+  mu_setWinScore(0);
 
   // initialize menu
   // TODO: read this in from a (json?) resource file
@@ -349,7 +350,11 @@ void mu_setWinScore(int score) {
   // in theory this could just be overwritten
   // but this would still work if the string varied in length
   free(*mu_winText);
-  *mu_winText = WIN_TEXT_SCORE(score);
+
+  *mu_winText = rprintf("YOUVE BEATEN STAGE 1-1!\n"
+                        "SCORE %06d\n\n"
+                        "THATS ALL IVE IMPLEMENTED\n"
+                        "SO FAR. I HOPE YOU HAD FUN!\n", score);
 }
 
 void mu_deinit() {

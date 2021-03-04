@@ -8,7 +8,7 @@ int err; // global variable for capturing error codes
 
 // wrapper to return a formatted string of the correct size
 // caller is responsible for freeing result
-char *rprintf(char *fmtstr, ...) {
+char *rprintf(char *fmtstr, ...) { // Named such after "Return printf"
   va_list vargs;
   va_start(vargs, fmtstr);
 
