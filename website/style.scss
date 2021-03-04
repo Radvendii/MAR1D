@@ -73,7 +73,11 @@ body {
 
 a.box {
   @include plain_link;
-  &:hover, &:focus-visible {
+  // these have to be separate because not all browsers support focus-visible
+  &:hover {
+    border-style: inset;
+  }
+  &:focus-visible {
     outline: none;
     border-style: inset;
   }
