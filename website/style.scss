@@ -8,7 +8,7 @@ body {
   background: url(/static/background.png) repeat;
   background-size: 32px;
   font-family: "OPTIVagRound";
-  font-size: 0.9em;
+  -webkit-text-size-adjust: 100%;
 }
 
 .contents {
@@ -80,7 +80,6 @@ a.box {
 
 h1 {
   font-family: Emulogic;
-  text-align: center;
 }
 
 h2 {
@@ -183,7 +182,6 @@ figure {
 
 @media only screen and (min-width: 650px) {
   body {
-    font-size: 1em;
     background-size: 128px;
   }
   .contents {
