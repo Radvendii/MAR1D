@@ -73,13 +73,15 @@ body {
 
 a.box {
   @include plain_link;
-  // these have to be separate because not all browsers support focus-visible
-  &:hover {
-    border-style: inset;
-  }
-  &:focus-visible {
+  &:hover, &:focus {
     outline: none;
     border-style: inset;
+  }
+  // rather than set :focus-visible, we unset :not(focus-visible). This way
+  // browsers that don't support :focus-visible will still do it on :focus
+  &:not(focus-visible) {
+    outline: none;
+    border-style: outset;
   }
 }
 
@@ -150,8 +152,12 @@ figcaption {
     clip: rect(0 0 0 0);
     overflow: hidden;
 
-    &:focus-visible ~ .q {
-      outline: #333 solid 2px; // shows up better on the background
+    &:focus ~ .q {
+      outline: #333 solid 2px;
+    }
+
+    &:not(:focus-visible) ~ .q {
+      outline: none;
     }
 
     // when unselected, triangle points to the right
