@@ -143,7 +143,6 @@ void au_play(int snd){
 
 // returns ms it took to play
 void au_playWait(int snd){
-  int startTime = SDL_GetTicks();
   if(au_waiting != SND_none) {
     DEBUG("Can't wait for more than one audio at once. How did you even get here?");
     exit(EXIT_FAILURE);

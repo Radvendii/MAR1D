@@ -131,10 +131,10 @@ typedef struct {
 } config; // not to be confused with config_t from libconfig
 
 typedef struct {
-  unsigned long sizeX;
-  unsigned long sizeY;
+  unsigned int sizeX;
+  unsigned int sizeY;
   unsigned char *data;
-  int texture;
+  unsigned int texture;
 } image;
 
 extern config conf;
@@ -144,6 +144,8 @@ extern bool quit; // global variable for exiting all loops and quitting the game
 extern int err; // global variable for capturing error codes
 
 char *rprintf(char *, ...);
+
+void sfscanf(FILE*, char*, ...);
 
 // Safe versions of various functions (checks for errors)
 FILE* sfopen(char*, char*);

@@ -75,6 +75,8 @@ void gl_main() {
     }
   }
 
+  SAFE_DELAY_UNTIL(au_waiting == SND_none);
+
   // release mouse on game exit
   wn_disable_mouse(false);
 }
@@ -174,7 +176,7 @@ void gl_win(){
 
 void gl_loadLevel(char l, char w){
   int i;
-  int wi;
+  int wi = -1;
 
   obj keepMario; //we want to keep mario's bigness state
   keepMario.type = '\0';
@@ -197,7 +199,7 @@ void gl_loadLevel(char l, char w){
     s.scene[s.pli].hidden = tmp.hidden;
 
   }
-  if(w != '\0'){
+  if(wi != -1){
     s.scene[s.pli].x = s.scene[wi].x;
     s.scene[s.pli].y = s.scene[wi].y;
   }

@@ -8,31 +8,67 @@ int err; // global variable for capturing error codes
 
 // wrapper to return a formatted string of the correct size
 // caller is responsible for freeing result
-char *rprintf(char *fmtstr, ...) { // Named such after "Return printf"
+char *vrprintf(char *fmtstr, va_list ap) { // Named such after "Return printf"
+  va_list aq;
+  va_copy(aq, ap);
+  char *str = NULL;
+
+  size_t needed = vsnprintf(str, 0, fmtstr, aq) + 1;
+  str = salloc(needed);
+
+  vsprintf(str, fmtstr, ap);
+
+  va_end(aq);
+  return str;
+}
+
+char *rprintf(char *fmtstr, ...) {
+  va_list ap;
+  va_start(ap, fmtstr);
+  char *ret = vrprintf(fmtstr, ap);
+  va_end(ap);
+  return ret;
+}
+
+void sfscanf(FILE *f, char *fmtstr, ...) {
   va_list vargs;
   va_start(vargs, fmtstr);
 
-  char *str;
-  vasprintf(&str, fmtstr, vargs);
+  int nFmts = 0;
+  // count how many results to expect
+  for(char *c = fmtstr; *c != '\0'; c++) {
+    if (*c == '%') { // format specifier!
+      if (*(c+1) == '%') { // ...or not
+        c++;
+      }
+      else {
+        nFmts++;
+      }
+    }
+  }
+  err = vfscanf(f, fmtstr, vargs);
+  if (err != nFmts) {
+    DEBUG("Error: malformed file (or format string)");
+    exit(EXIT_FAILURE);
+  }
 
   va_end(vargs);
-  return str;
 }
 
 void* salloc(size_t size){ //Named such after "Safe allocate"
   void *ptr = malloc(size);
-  if(ptr == NULL){DEBUG("Error in salloc(): malloc() failed with size %lu", size);exit(EXIT_FAILURE);}
+  if(ptr == NULL){DEBUG("salloc() failed with size %lu", (unsigned long)size);exit(EXIT_FAILURE);}
   else{return ptr;}
 }
 
 FILE* sfopen(char* s, char* m){
   FILE* f;
-  if((f = fopen(s, m)) == NULL){DEBUG("Error in sfopen(): File not found: %s", s);exit(EXIT_FAILURE);}
+  if((f = fopen(s, m)) == NULL){DEBUG("File not found: %s", s);exit(EXIT_FAILURE);}
   return f;
 }
 
 void sfclose(FILE* f){
-  if(fclose(f) == EOF){DEBUG("Error in sfclose(): fclose() returned EOF");exit(EXIT_FAILURE);}
+  if(fclose(f) == EOF){DEBUG("fclose() returned EOF");exit(EXIT_FAILURE);}
   return;
 }
 
@@ -44,8 +80,7 @@ void* resalloc(void** ptr, size_t size){
   }
   else{
     ret = realloc(*ptr, size);
-    if(ret == NULL){DEBUG("Error #1 in resalloc(): realloc() failed with size %lu", size);exit(EXIT_FAILURE);}
-    if(*ptr == NULL){DEBUG("Error #2 in resalloc(): realloc() failed with size %lu", size);exit(EXIT_FAILURE);}
+    if(!ret || !*ptr){DEBUG("resalloc() failed with size %lu", (unsigned long)size);exit(EXIT_FAILURE);}
   }
   *ptr = ret;
   return ret;

@@ -49,7 +49,7 @@ extern struct state s;
 
 void gr_color(color);
 
-void gr_text(color, bool, char *, float, GLfloat, GLfloat);
+void gr_text(color, bool, const char *, float, GLfloat, GLfloat);
 // Basic rectangle drawing
 void gr_drawRect(color, rect);
 void gr_drawBezelOut(rect);

@@ -14,7 +14,7 @@ void io_recAddFrame(unsigned char *frame) {
     maxSizeY *= 2;
     // just to make sure (there's an issue with the first iteration)
     BOUND_BELOW(maxSizeY, io_recording.sizeY+1);
-    resalloc(&io_recording.data, maxSizeY * io_recording.sizeX * 3 * sizeof(unsigned char));
+    resalloc((void **) &io_recording.data, maxSizeY * io_recording.sizeX * 3 * sizeof(unsigned char));
   }
 
   memcpy(io_recording.data + io_recording.sizeX * io_recording.sizeY * 3, frame, sizeof(unsigned char) * k_nPixels * 3);
@@ -80,7 +80,7 @@ int io_getFont(bool** font, char* fn){
   int i=0;
   int fontSize;
 
-  fscanf(f, "%d\n", &fontSize);
+  sfscanf(f, "%d\n", &fontSize);
 
   *font = salloc(sizeof(bool)*fontSize*128);
 
@@ -96,8 +96,8 @@ int io_getFont(bool** font, char* fn){
 // Parses a color. Color data should start with a C and then be followed by a character specifying the name of the color, then the R, G, B values from 0-255 separated by '.'s.
 // e.g. "CG:0.171.0" assigns a shade of green to the character 'G'
 void io_getColor(FILE* f, color *c){
-  fscanf(f, ":%hhd.%hhd.%hhd\n", &c->r, &c->g, &c->b);
-  return;
+  sfscanf(f, ":");
+  sfscanf(f, "%hhd.%hhd.%hhd\n", &c->r, &c->g, &c->b);
 }
 
 // Parses an object. Object data should start with an O, followed by a character specifying the name of the object.
@@ -158,7 +158,7 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
   int hid;
   int x,y,i,j;
   char c;
-  fscanf(f, "%d; ps:%d; pos:%d,%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &nFrames, &size, &xpos, &ypos, &w, &h, &nCols, &grav, &phys, &hid);
+  sfscanf(f, "%d; ps:%d; pos:%d,%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &nFrames, &size, &xpos, &ypos, &w, &h, &nCols, &grav, &phys, &hid);
   *o = (obj) {
     .type = oname,
     .gravity = grav,
@@ -180,7 +180,7 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
   };
   i=0;
   for (i=0; i < nCols; i++) {
-    fscanf(f, "\nC; pos:%d,%d; dim:%dx%d;", &xpos, &ypos, &xhei, &yhei);
+    sfscanf(f, "\nC; pos:%d,%d; dim:%dx%d;", &xpos, &ypos, &xhei, &yhei);
     o->cols[i] = (box) {.x = xpos, .y = -ypos, .w = xhei, .h = -yhei};
   }
   for(j=0;j<nFrames;j++){
@@ -231,7 +231,7 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
 void io_getLevel(FILE* f, level *l, obj os[CHAR_MAX]){
   int size;
   char c;
-  fscanf(f, ":%d", &size);
+  sfscanf(f, ":%d", &size);
   int y=0,x=0,i=0;
   *l = salloc(sizeof(obj) * (size*3+1));
   while(i<size){
@@ -284,22 +284,22 @@ void io_getLevel(FILE* f, level *l, obj os[CHAR_MAX]){
   int j;
   fgetc(f);
   while(fgetc(f) == 'P'){ // Stands for "Property" //TODO: better syntax for this
-    fscanf(f, ";%d%c", &i, &prop);
+    sfscanf(f, ";%d%c", &i, &prop);
     switch(prop){
     case 'h':
       (*l)[i].hidden = true;
       break;
     case 'v': // Transforms the visual appearance of the object
-      fscanf(f, "%c", &obj);
+      sfscanf(f, "%c", &obj);
       (*l)[i].frames = os[obj].frames;
       (*l)[i].nFrames = os[obj].nFrames;
       break;
     case 'j':
-      fscanf(f, "%d", &j);
+      sfscanf(f, "%d", &j);
       (*l)[i].j = j;
       break;
     case 'c':
-      fscanf(f, "%c", &c);
+      sfscanf(f, "%c", &c);
       (*l)[i].c = c;
       break;
     }
@@ -320,7 +320,7 @@ void io_getLevels(level** ls, char* fn){
   *ls = salloc(sizeof(level) * CHAR_MAX);
   memset(*ls, 0, sizeof(level *) * CHAR_MAX);
   char c;
-  char name;
+  char name = '\0';
   while((c = fgetc(f)) != EOF){
     if (c == 'C' || c == 'O' || c == 'L') {
       name = fgetc(f);
@@ -362,8 +362,8 @@ void io_readConfig(config *c){
   config_lookup_int(&conf, "effects", &(c->effects));
   config_lookup_int(&conf, "lineSize", &(c->lineSize));
   config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
-  config_lookup_bool(&conf, "invertMouseY", &(c->invertMouseY));
-  config_lookup_bool(&conf, "debug", &(c->debug));
+  config_lookup_bool(&conf, "invertMouseY", (int*) &(c->invertMouseY));
+  config_lookup_bool(&conf, "debug", (int*) &(c->debug));
 
   const char *key = NULL;
 

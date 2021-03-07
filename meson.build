@@ -5,6 +5,9 @@
 
 project('MAR1D', 'c')
 
+# this project makes extensive use of char subscripts, and i'm proud of it.
+c_args = [ '-Wno-char-subscripts' ]
+
 is_windows = host_machine.system() == 'windows'
 static_deps = get_option('static')
 
@@ -18,8 +21,9 @@ sdl2_dep = dependency('sdl2', static : static_deps)
 sdl2_mixer_dep = dependency('SDL2_mixer', static : static_deps)
 libconfig_dep = dependency('libconfig', static : static_deps)
 
+
 # libconfig needs this defined if it's static
-c_args = static_deps ? ['-D LIBCONFIG_STATIC'] : []
+c_args += static_deps ? ['-D LIBCONFIG_STATIC'] : []
 
 if get_option('portable')
     resources_dir = get_option('datadir') / ''

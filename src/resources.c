@@ -92,11 +92,11 @@ char* rs_getRecFn(){
   // find the first file file we haven't already created.
   for(int i=0; i < INT_MAX; i++) {
     sprintf(fn_, "%s%s"k_recFileName"_%d"k_recFileExt, (recdir ? recdir : ""), (recdir ? "/" : ""), i);
-    if (f = fopen(fn_, "r")) {
-      fclose(f);
+    if ((f = fopen(fn_, "r"))) { // knock knock!
+      fclose(f); // sorry ma'am, just checking if anyone was home
     }
     else {
-      break;
+      break; // don't mind if i do...
     }
   }
   return fn_;

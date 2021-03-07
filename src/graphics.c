@@ -135,7 +135,7 @@ void gr_char(char c, float size, GLfloat x, GLfloat y){
 }
 
 // Renders a text string
-void gr_text(color col, bool vert, char *s, float size, GLfloat x_orig, GLfloat y_orig){
+void gr_text(color col, bool vert, const char *s, float size, GLfloat x_orig, GLfloat y_orig){
   gr_color(col);
   GLfloat x = x_orig;
   GLfloat y = y_orig;
@@ -233,7 +233,7 @@ void gr_drawDim(){
   glEnd();
 
   // draw game points
-  gr_points(dimScreen);
+  /* gr_points(dimScreen); */
 
   // draw 2D textures
   // TODO: this looks ugly here
@@ -263,9 +263,13 @@ void gr_menuWindowMatrix() {
 
 void gr_drawHud(){
   char hud[60];
+  if(s.time/k_gameTicksPerTimeTick > 999) { // make sure time can fit in the format specifier
+    DEBUG("Too much time left. Can't fit in the HUD.");
+    exit(EXIT_FAILURE);
+  }
   // Formatting of this is very finicky
   sprintf(hud, "   MAR1D          WORLD  TIME\n"
-               "   %06d  @x%02d    1-1   %03d",
+               "   %06d  @x%02d    1-1   %03u",
           s.score, s.coins, s.time/k_gameTicksPerTimeTick);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -279,7 +283,7 @@ void gr_drawHud(){
     // bold the time left if they're running out
     char time[32];
     sprintf(time, "TIME\n"
-                  "%03d",
+                  "%03u",
             s.time/k_gameTicksPerTimeTick);
     // TODO: this could be cleaner if gr_text returned the new x, y coords
     gr_text(RGB_textMed, true, time, k_fontSize, 5, k_hudWindowH-5 - k_fontSpaceY(true) * k_fontSize * strlen("   MAR1D          WORLD  "));

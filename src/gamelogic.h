@@ -90,7 +90,7 @@ struct state {
   int lives;
   int coins;
   int score;
-  int time; // Time left in the game (in gameTicks)
+  unsigned int time; // Time left in the game (in gameTicks)
   int multibounce; // Bouncing accross multiple enemies results in a score multiplier. This keeps track of that.
   bool lowTime; // Is the player low on time
 
