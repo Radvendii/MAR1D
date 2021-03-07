@@ -226,8 +226,8 @@ void mu_init() {
   active_menu = &mu_mainMenu;
 
   // initialize images
-  imBg = io_getImage("menuscreen_bg.bmp");
-  imSel = io_getImage("selected.bmp");
+  imBg = io_getImage("menuscreen_bg.png");
+  imSel = io_getImage("selected.png");
 }
 
 // recursively set all menu.p to the menu that contains it

@@ -51,7 +51,12 @@ typedef struct {
   int h;
 } box;
 
-typedef struct{
+typedef struct {
+  point* ps; // points for 1D rendering
+  image im; // sprite for 2D rendering
+} objFrame;
+
+typedef struct {
   // Position
   int x;
   int y;
@@ -79,8 +84,8 @@ typedef struct{
   int animFrame; // Each object needs it's own animation counter so that the animation starts at the beginning when the object appears.
 
   char type; // Each object type is associated with a character.
-  point** ps; // ps[i] is the ith frame of animation.
-  int nps; // Number of points
+  objFrame* frames; // Animation frames
+  int nFrames; // Number of frames
   box bb; // bounding box
   box* cols; // The areas of collision detection.
   int nCols; // Number of collision detection boxes.

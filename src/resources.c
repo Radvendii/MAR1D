@@ -41,18 +41,22 @@ void rs_deinit(){
   configDir = NULL;
 }
 
-// Prepends the resource directory name and then opens that file as either text or binaryj
-FILE* rs_getFile(char* fn){
+char *rs_getFn(char *fn){
   char *fn_ = salloc(strlen(fn) + 2 + strlen(rs_resourceDir));
   sprintf(fn_, "%s/%s", rs_resourceDir, fn);
+  return(fn_);
+}
+
+// Prepends the resource directory name and then opens that file as either text or binaryj
+FILE* rs_getFile(char* fn){
+  char *fn_ = rs_getFn(fn);
   FILE *f = sfopen(fn_, "r");
   free(fn_);
   return f;
 }
 
 FILE* rs_getBFile(char* fn){
-  char *fn_ = salloc(strlen(fn) + 2 + strlen(rs_resourceDir));
-  sprintf(fn_, "%s/%s", rs_resourceDir, fn);
+  char *fn_ = rs_getFn(fn);
   FILE *f = sfopen(fn_, "rb");
   free(fn_);
   return f;

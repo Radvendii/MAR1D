@@ -23,15 +23,15 @@ void mh_update(){
       s.scene[i].y = y_temp;
       s.scene[i].vx = -0.5;
     }
-    if(s.scene[i].i <= ACT_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#')){
-      if(s.bigMario && s.scene[i].type == '#' && s.scene[i].i == ACT_bounce-1){
+    if(s.scene[i].i <= ACT_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#' || s.scene[i].type == '3')){
+      if(s.bigMario && (s.scene[i].type == '#' || s.scene[i].type == '3') && s.scene[i].i == ACT_bounce-1){
         au_play(SND_blockbreak);
         s.score += 50;
         int l;
         for(l=0;s.scene[l].type != '\0';l++);
         for(int j=0;j<2;j++){
           for(int k=0;k<2;k++){
-            s.scene[l+j+k*2] = ob_objFchar('b');
+            s.scene[l+j+k*2] = ob_objFchar(s.scene[i].type == '#' ? 'b' : 'B');
             s.scene[l+j+k*2].x = s.scene[i].x+j*8;
             s.scene[l+j+k*2].y = s.scene[i].y+k*8;
             s.scene[l+j+k*2].vx = (j*2-1);
@@ -241,6 +241,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       }
       break;
     case '#':
+    case '3':
       if(colsee & 2 && (*ee).i == ACT_nothing){
         if(!s.bigMario){
           au_play(SND_blockhit);
@@ -322,7 +323,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         au_play(SND_shot);
         (*ee).vx = 2.0 * dir;
         (*er).vx = -1.0 * dir;
-        (*ee).nps = 1;
+        (*ee).nFrames = 1;
         s.score += 400+100*s.multibounce;
       }
       break;

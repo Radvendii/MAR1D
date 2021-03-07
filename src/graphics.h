@@ -40,6 +40,7 @@
 #define RECT_LCWH(left, centerY, width, height) RECT_LTWH((left), (centerY) + (height) / 2.0, (width), (height))
 #define RECT_RCWH(right, centerY, width, height) RECT_LCWH((right) - (width), (centerY), (width), (height))
 
+// TODO: we have "rect" and "box" that are isomorphic types
 typedef struct {
     float l, t, r, b;
 } rect;

@@ -1,6 +1,10 @@
+CB:65.105.255
+CL:156.252.240
+CD:0.128.136
 Cb:231.95.19
 Cl:255.128.57
 Cd:212.76.0
+Cf:140.16.0
 C*:255.163.71
 Cg:184.248.24
 CG:0.171.0
@@ -39,7 +43,28 @@ b              b
 b              b
 ...............,
 
-Ob1; ps:18; pos:0,0; dim:0x0; cols:0; grav:1; phys:0; hid:0;
+O31; ps:60; pos:0,0; dim:15x15; cols:3; grav:0; phys:1; hid:0;
+C; pos:7,14; dim:1x1;
+C; pos:10,14; dim:5x1;
+C; pos:0,14; dim:5x1;
+LLLLLLLLLLLLLLL.
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+B              B
+...............,
+
+Ob1; ps:18; pos:0,0; dim:8x8; cols:0; grav:1; phys:0; hid:0;
   bbb
  b   b
 b     b
@@ -48,6 +73,16 @@ b      b
  b     b
   b   b
    bbb
+
+OB1; ps:18; pos:0,0; dim:8x8; cols:0; grav:1; phys:0; hid:0;
+  BBB
+ B   B
+B     B
+B      B
+B      B
+ B     B
+  B   B
+   BBB
 
 O-1; ps:60; pos:0,0; dim:15x15; cols:0; grav:0; phys:1; hid:0;
 dbbbbbbbbbbbbbbd
@@ -66,6 +101,24 @@ d              .
 d              .
 d              .
 ,..............d
+
+O+1; ps:60; pos:0,0; dim:15x15; cols:0; grav:0; phys:1; hid:0;
+DBBBBBBBBBBBBBBD
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+D              .
+,..............D
 
 OX1; ps:60; pos:0,0; dim:15x15; cols:0; grav:0; phys:1; hid:0;
 ,lllllllllllllld
@@ -106,7 +159,7 @@ C; pos:1,15; dim:13x1
 .              .
 ................
 
-Oc3; ps:36; pos:0,0; dim:10x14; cols:0; grav:0; phys:0; hid:0;
+Oc5; ps:36; pos:0,0; dim:10x14; cols:0; grav:0; phys:0; hid:0;
 
   ******
  *      *
@@ -138,19 +191,49 @@ d        d
  d      ,
   ,,,,,,
 
-  bbbbbb
- b      b
- b      b
-b        b
-b        b
-b        b
-b        b
-b        b
-b        b
-b        b
-b        b
- b      ,
- b      ,
+  ffffff
+ f      f
+ f      f
+f        f
+f        f
+f        f
+f        f
+f        f
+f        f
+f        f
+f        f
+ f      ,
+ f      ,
+  ,,,,,,
+
+  dddddd
+ d      d
+ d      d
+d        d
+d        d
+d        d
+d        d
+d        d
+d        d
+d        d
+d        d
+ d      ,
+ d      ,
+  ,,,,,,
+
+  ******
+ *      *
+ *      *
+*        *
+*        *
+*        *
+*        *
+*        *
+*        *
+*        *
+*        *
+ *      ,
+ *      ,
   ,,,,,,
 
 Or1; ps:40; pos:0,0; dim:15x15; cols:2; grav:1; phys:1; hid:0;
@@ -662,7 +745,7 @@ C; pos:1,15; dim:13x1;
  55        55
 
 
-O?3; ps:60; pos:0,0; dim:15x15; cols:3; grav:0; phys:1; hid:0;
+O?5; ps:60; pos:0,0; dim:15x15; cols:3; grav:0; phys:1; hid:0;
 C; pos:7,14; dim:1x1;
 C; pos:10,14; dim:5x1;
 C; pos:0,14; dim:5x1;
@@ -698,22 +781,54 @@ d              d
 d              d
 d              d
 ,dddddddddddddd,
-,bbbbbbbbbbbbbb,
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-b              b
-,bbbbbbbbbbbbbb,
+,ffffffffffffff,
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+f              f
+,ffffffffffffff,
+,dddddddddddddd,
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+d              d
+,dddddddddddddd,
+,**************,
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+*              *
+,**************,
 
 OD1; ps:60; pos:0,0; dim:15x15; cols:2; grav:0; phys:1; hid:0;
 C; pos:10,14; dim:5x1;
@@ -737,8 +852,8 @@ C; pos:0,14; dim:5x1;
 
 O.1; ps:0; pos:0,0; dim:0x0; cols:0; grav:0; phys:0; hid:1;
 
-Oe2; ps:47; pos:0,7; dim:15x8; cols:3; grav:1; phys:1; hid:0;
-C; pos:0,5; dim:16x1;
+Oe2; ps:47; pos:0,0; dim:15x15; cols:3; grav:1; phys:1; hid:0;
+C; pos:0,0; dim:16x1;
 C; pos:0,7; dim:1x7;
 C; pos:15,7; dim:1x7;
       eeee
@@ -783,10 +898,11 @@ e              e
    ,         .
     ,,,  ....
 
-O&2; ps:70; pos:0,10; dim:15x12; cols:3; grav:1; phys:1; hid:0;
-C; pos:0,8; dim:16x1;
+O&2; ps:70; pos:0,0; dim:15x22; cols:3; grav:1; phys:1; hid:0;
+C; pos:0,0; dim:16x1;
 C; pos:0,10; dim:1x11;
 C; pos:15,10; dim:1x11;
+
    _
   _ _
   _  e
@@ -810,6 +926,7 @@ C; pos:15,10; dim:1x11;
    ee        G
   e   eeGGee  e
  eeeee      eeee
+
    _
   _ _
   _  e
@@ -834,9 +951,9 @@ C; pos:15,10; dim:1x11;
     e  eGGee e
      ee     ee
       e     e
-O716; ps:48; pos:0,5; dim:15x7; cols:4; grav:1; phys:1; hid:0;
-C; pos:0,5; dim:1x1;
-C; pos:15,5; dim:1x1;
+O716; ps:48; pos:0,0; dim:15x12; cols:4; grav:1; phys:1; hid:0;
+C; pos:0,0; dim:1x1;
+C; pos:15,0; dim:1x1;
 C; pos:0,6; dim:1x4;
 C; pos:15,6; dim:1x4;
      eGGGGe
@@ -1071,7 +1188,7 @@ O|1; ps:32; pos:0,0; dim:33x15; cols:0; grav:0; phys:1; hid:0;
   g                             g
   g                             g
 
-O!1; ps:16; pos:7,0; dim:1x15; cols:0; grav:0; phys:1; hid:0;
+O!1; ps:16; pos:7,0; dim:2x15; cols:0; grav:0; phys:1; hid:0;
        g
        g
        g
@@ -1089,23 +1206,23 @@ O!1; ps:16; pos:7,0; dim:1x15; cols:0; grav:0; phys:1; hid:0;
        g
        g
 
-O<1; ps:16; pos:0,0; dim:8x15; cols:0; grav:0; phys:1; hid:0;
-       g
-      g
-     g
-    g
-   g
-  g
- g
+O<1; ps:23; pos:0,0; dim:8x15; cols:0; grav:0; phys:1; hid:0;
+________
+_
 g
-G
- G
-  G
-   G
-    G
-     G
-      G
-       G
+g
+g
+g
+_
+_
+_
+ _
+  _
+   _
+    _
+     _
+      _
+       _
 
 O=1; ps:93; pos:0,0; dim:34x15; cols:3; grav:0; phys:1; hid:0;
 C; pos:5,0; dim:25x1;
@@ -1244,7 +1361,7 @@ L1:668
                 ?   #?#?#                   ==         =s               #?#              ?     #?    ?  ?  ?     #          ##     X  X          XX  X            ##?#            XXXXXX        !
                                      ==     ||         |v                                                                         XX  XX        XXX  XX                          XXXXXXX        !
                            ==        ||     ||         ||                                                                        XXX  XXX      XXXX  XXX     =s              == XXXXXXXX        !
-  @                  e     ||        ||  e  ||    e e  ||                     .           e e        &       e e         e e    XXXX  XXXX    XXXXX  XXXX    |^        e e   ||XXXXXXXXX        X
+  @                  &     ||        ||  e  ||    e e  ||                     .           e e        &       e e         e e    XXXX  XXXX    XXXXX  XXXX    |^        e e   ||XXXXXXXXX        X
 -------------------------------------------------------------------  ------------   ---------------------------------------------------------------  --------------------------------------------------
                                                                   -  -          -   -                                                             -  -
                                                                   -  -          -   -                                                             -  -
@@ -1268,17 +1385,17 @@ P;74v#
 P;167c1
 
 Ls:100
-# @ #######    |.
-# .            |.
-#              |.
-#    ccccc     |.
-#              |.
-#   ccccccc    |.
-#              |.
-#   ccccccc    |.
-#   #######    |.
-#   #######  ]_|.
-#   #######  ..|.
- --------------
+3 @ 3333333    |.
+3 .            |.
+3              |.
+3    ccccc     |.
+3              |.
+3   ccccccc    |.
+3              |.
+3   ccccccc    |.
+3   3333333    |.
+3   3333333  ]_|.
+3   3333333  ..|.
+ ++++++++++++++
 P;12c1
 P;70c1

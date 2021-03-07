@@ -148,7 +148,7 @@ void io_getColor(FILE* f, color *c){
 //  r    r
 //   rrrr
 void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
-  int nps;
+  int nFrames;
   int size;
   int w, h;
   int nCols;
@@ -158,7 +158,7 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
   int hid;
   int x,y,i,j;
   char c;
-  fscanf(f, "%d; ps:%d; pos:%d,%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &nps, &size, &xpos, &ypos, &w, &h, &nCols, &grav, &phys, &hid);
+  fscanf(f, "%d; ps:%d; pos:%d,%d; dim:%dx%d; cols:%d; grav:%d; phys:%d; hid:%d;", &nFrames, &size, &xpos, &ypos, &w, &h, &nCols, &grav, &phys, &hid);
   *o = (obj) {
     .type = oname,
     .gravity = grav,
@@ -173,8 +173,8 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
       .w = w,
       .h = -h
     },
-    .nps = nps,
-    .ps = salloc(sizeof(point*) * nps),
+    .nFrames = nFrames,
+    .frames = salloc(sizeof(objFrame) * nFrames),
     .nCols = nCols,
     .cols = salloc(sizeof(box) * nCols)
   };
@@ -183,9 +183,12 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
     fscanf(f, "\nC; pos:%d,%d; dim:%dx%d;", &xpos, &ypos, &xhei, &yhei);
     o->cols[i] = (box) {.x = xpos, .y = -ypos, .w = xhei, .h = -yhei};
   }
-  for(j=0;j<nps;j++){
+  for(j=0;j<nFrames;j++){
     y=0; x=0; i=0;
-    o->ps[j] = salloc(sizeof(point) * (size+1));
+    char imFn[64];
+    sprintf(imFn, "2D/%c_%d.png", oname, j);
+    o->frames[j].im = io_getImage(imFn);
+    o->frames[j].ps = salloc(sizeof(point) * (size+1));
     while(i<size){
       switch(c = fgetc(f)){
       case ' ':
@@ -196,16 +199,16 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
         x=0;
         break;
       case '0':
-        o->ps[j][i++] = p_skipPoint;
+        o->frames[j].ps[i++] = p_skipPoint;
         x++;
         break;
       default:
-        o->ps[j][i++] = (point) {.x = x, .y = y, .c = c};
+        o->frames[j].ps[i++] = (point) {.x = x, .y = y, .c = c};
         x++;
         break;
       }
     }
-    o->ps[j][i] = p_termPoint;
+    o->frames[j].ps[i] = p_termPoint;
   }
 }
 
@@ -288,8 +291,8 @@ void io_getLevel(FILE* f, level *l, obj os[CHAR_MAX]){
       break;
     case 'v': // Transforms the visual appearance of the object
       fscanf(f, "%c", &obj);
-      (*l)[i].ps = os[obj].ps;
-      (*l)[i].nps = os[obj].nps;
+      (*l)[i].frames = os[obj].frames;
+      (*l)[i].nFrames = os[obj].nFrames;
       break;
     case 'j':
       fscanf(f, "%d", &j);
@@ -450,38 +453,14 @@ void io_writeConfig(config c){
 image io_getImage(char *fn) {
   image im;
 
-  FILE *file = rs_getBFile(fn);
-  unsigned long size; // size of the image in bytes.
-  unsigned char header[54]; // Each BMP file begins by a 54-bytes header
-  unsigned int dataPos;
+  char *fn_ = rs_getFn(fn);
 
-  if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
-    DEBUG("Error reading header data from %s.", fn);
+  unsigned error = lodepng_decode32_file(&im.data, &im.sizeX, &im.sizeY, fn_);
+  if(error) {
+    DEBUG("Error reading png \"%s\" %u: %s", fn, error, lodepng_error_text(error));
   }
 
-  if ( header[0]!='B' || header[1]!='M' ){
-    DEBUG("Error parsing header from %s. (no \"BM\")", fn);
-  }
-
-  // Read ints from the byte array
-  dataPos   = *(int*)&(header[0x0A]);
-  im.sizeX = *(int*)&(header[0x12]);
-  im.sizeY = *(int*)&(header[0x16]);
-
-  size = im.sizeX * im.sizeY * 4; // 3 : one byte for each Red, Green, Blue, Alpha component
-
-  if (dataPos > 54) { // bigger header size
-    fseek(file, dataPos, SEEK_SET);
-  }
-
-  // read the data.
-  im.data = (unsigned char *) salloc(size);
-
-  if (fread(im.data, size, 1, file) != 1) {
-    DEBUG("Error reading image data from %s.", fn);
-  }
-
-  sfclose(file);
+  free(fn_);
 
   im.texture = 0;
 

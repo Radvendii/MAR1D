@@ -65,8 +65,10 @@ void gl_main() {
       // draw updates
       wn_perspWindow();
       gr_drawPersp();
-      wn_dimWindow();
-      gr_drawDim();
+      if (conf.debug) {
+        wn_dimWindow();
+        gr_drawDim();
+      }
       wn_hudWindow();
       gr_drawHud();
       wn_update();
@@ -211,15 +213,9 @@ void gl_loadLevel(char l, char w){
   s.loc = l;
   if(l == 's'){ //TODO: make this not a kludge
     au_mainPlay(s.lowTime ? SND_underground_fast : SND_underground);
-    io_cs['l'] = (color) {.r = 0, .g = 255, .b = 255};
-    io_cs['b'] = (color) {.r = 0, .g = 139, .b = 139};
-    io_cs['d'] = (color) {.r = 0, .g = 92, .b = 92};
   }
   else{
     au_mainPlay(s.lowTime ? SND_overworld_fast : SND_overworld);
-    io_cs['l'] = (color) {.r = 231, .g = 95, .b = 19};
-    io_cs['b'] = (color) {.r = 255, .g = 128, .b = 57};
-    io_cs['d'] = (color) {.r = 212, .g = 76, .b = 0};
   }
   s.paused = false;
   s.userPaused = false;

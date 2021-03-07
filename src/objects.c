@@ -9,13 +9,12 @@ void ob_init(){
 
 void ob_deinit() {
   for(int i=0;i<CHAR_MAX;i++){
-    if(io_os[i].ps){
-      for(int j=0;j<io_os[i].nps;j++){
-        free(io_os[i].ps[j]);
-      }
-      free(io_os[i].ps);
-      free(io_os[i].cols);
+    for(int j=0; j < io_os[i].nFrames; j++){
+      gr_unbindImage(&io_os[i].frames[j].im);
+      free(io_os[i].frames[j].ps);
     }
+    free(io_os[i].frames);
+    free(io_os[i].cols);
     if(ob_levels[i]){
       free(ob_levels[i]);
     }

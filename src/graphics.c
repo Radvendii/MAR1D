@@ -66,7 +66,9 @@ void gr_update(){
   cam.y = s.scene[s.pli].y-2;
 
   // Render
-  rn_dimFcamera(dimScreen, cam);
+  if (conf.debug) {
+    rn_dimFcamera(dimScreen, cam);
+  }
   rn_perspFcamera(perspScreen, cam);
 
   io_recAddFrame(perspScreen);
@@ -104,7 +106,6 @@ void gr_drawBezelOut(rect rct) {
 }
 
 void gr_drawBezelIn(rect rct) {
-  #define k_bezelSize 1
   float l = rct.l;
   float t = rct.t;
   float r = rct.r;
@@ -231,7 +232,20 @@ void gr_drawDim(){
   glVertex2f(1.f, -1.f);
   glEnd();
 
+  // draw game points
   gr_points(dimScreen);
+
+  // draw 2D textures
+  // TODO: this looks ugly here
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  glOrtho(-cam.drawD+cam.x, cam.drawD+cam.x, cam.y-cam.drawD, cam.y+cam.drawD, -1, 1);
+  for(int obj = 0; cam.scene[obj].type != '\0'; obj++) {
+    image *im = &cam.scene[obj].frames[cam.scene[obj].animFrame / k_animFreq % cam.scene[obj].nFrames].im;
+    gr_image(im, RECT_LTWH(cam.scene[obj].x + cam.scene[obj].bb.x, cam.scene[obj].y + cam.scene[obj].bb.y, cam.scene[obj].bb.w, -cam.scene[obj].bb.h));
+  }
+  glPopMatrix();
 }
 
 void gr_clear(){
@@ -260,6 +274,16 @@ void gr_drawHud(){
   glOrtho(0, k_hudWindowW, 0, k_hudWindowH, -1, 1);
 
   gr_text(RGB_textDim, true, hud, k_fontSize, 5, k_hudWindowH-5);
+
+  if (s.lowTime) {
+    // bold the time left if they're running out
+    char time[32];
+    sprintf(time, "TIME\n"
+                  "%03d",
+            s.time/k_gameTicksPerTimeTick);
+    // TODO: this could be cleaner if gr_text returned the new x, y coords
+    gr_text(RGB_textMed, true, time, k_fontSize, 5, k_hudWindowH-5 - k_fontSpaceY(true) * k_fontSize * strlen("   MAR1D          WORLD  "));
+  }
 }
 
 void gr_init(){
@@ -269,8 +293,8 @@ void gr_init(){
   cam.scene = s.scene;
   cam.T = k_camT;
   perspScreen = salloc(sizeof(unsigned char)*k_nPixels*3);
-  for(int i=0;i<k_nPixels*3;i++){perspScreen[i]=0;} // Initialize to zero
-  dimScreen = salloc(sizeof(point)*500*k_nMaxObj);
+  for(int i=0;i<k_nPixels*3;i++){perspScreen[i]=0;} // Initialize to zero // TODO: memset
+  dimScreen = salloc(sizeof(point)*500*k_nMaxObj); // TODO: magic number >:(
   dimScreen[0] = p_termPoint;
   fontSize = io_getFont(&font, "mario.font");
 }
@@ -285,7 +309,7 @@ void gr_image(image *im, rect r) {
   if (!im->texture) {
     glGenTextures(1, &im->texture);
     glBindTexture(GL_TEXTURE_2D, im->texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, im->sizeX, im->sizeY, 0, GL_BGRA, GL_UNSIGNED_BYTE, im->data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, im->sizeX, im->sizeY, 0, GL_RGBA, GL_UNSIGNED_BYTE, im->data);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -297,10 +321,10 @@ void gr_image(image *im, rect r) {
 
   glBindTexture(GL_TEXTURE_2D, im->texture);
   glBegin(GL_QUADS);
-  glTexCoord2f(0.f, 1.f); glVertex2f(r.l, r.t);
-  glTexCoord2f(1.f, 1.f); glVertex2f(r.r, r.t);
-  glTexCoord2f(1.f, 0.f); glVertex2f(r.r, r.b);
-  glTexCoord2f(0.f, 0.f); glVertex2f(r.l, r.b);
+  glTexCoord2f(0.f, 1.f); glVertex2f(r.l, r.b);
+  glTexCoord2f(1.f, 1.f); glVertex2f(r.r, r.b);
+  glTexCoord2f(1.f, 0.f); glVertex2f(r.r, r.t);
+  glTexCoord2f(0.f, 0.f); glVertex2f(r.l, r.t);
   glEnd();
 
   glDisable(GL_TEXTURE_2D);
