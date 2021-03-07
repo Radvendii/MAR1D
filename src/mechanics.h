@@ -8,7 +8,7 @@
 #define k_activateD (16*16) // The distance at which enemies start moving.
 
 // Check if two boxes intersect
-#define k_leftSide(x1, x2, x3, x4) (x1 > x3 && x1 > x4 && x2 > x3 && x2 > x4)
+#define k_leftSide(x1, x2, x3, x4) (x1 >= x3 && x1 >= x4 && x2 >= x3 && x2 >= x4)
 #define k_oneSide(x1, x2, x3, x4) (k_leftSide(x1, x2, x3, x4) || k_leftSide(x3, x4, x1, x2))
 #define k_boxInter(b1, b2) !(k_oneSide(b1.x, b1.x+b1.w, b2.x, b2.x+b2.w) || k_oneSide(b1.y, b1.y+b1.h, b2.y, b2.y+b2.h))
 

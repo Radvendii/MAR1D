@@ -123,6 +123,7 @@ void gl_killed(){
 }
 
 void gl_die(){
+  s.star = false;
   s.dead = k_dieStart;
   au_mainStop();
   au_play(SND_death);

@@ -74,6 +74,7 @@ void mh_update(){
       s.scene[i].i = temp.i;
     }
     if(s.scene[i].type == '@'){
+      // TODO: seems like this logic could be simplified
       int grow[12] = {0,1,-1,1,-1,1,1,-2,1,1,-2,2};
       if(s.scene[i].i && s.bigMario == true && s.scene[i].i < 12*k_growthRate){
         s.paused = true;
@@ -139,8 +140,8 @@ bool mh_collision(int i1, int i2){
   ob_realifyBox(&b2, s.scene[i2].x, s.scene[i2].y);
   ret = k_boxInter(b1, b2);
   if(s.scene[i1].type == '@' && s.scene[i2].type == 'E'){return false;}
-  if(s.scene[i1].type == '@' && s.invincible && (s.scene[i2].type == 'e' || s.scene[i2].type == '&' || s.scene[i2].type == '7')){return false;}
-  if(s.scene[i2].type == '@' && s.invincible && (s.scene[i1].type == 'e' || s.scene[i1].type == '&' || s.scene[i1].type == '7')){return false;}
+  if(s.scene[i1].type == '@' && s.invincible && (s.scene[i2].type == 'e' || s.scene[i2].type == 'E' || s.scene[i2].type == '&' || s.scene[i2].type == '7')){return false;}
+  if(s.scene[i2].type == '@' && s.invincible && (s.scene[i1].type == 'e' || s.scene[i1].type == 'E' || s.scene[i1].type == '&' || s.scene[i1].type == '7')){return false;}
 
   cols1 = ret;
   for(int i=0;i < s.scene[i1].nCols;i++){
@@ -167,7 +168,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
   case '@':
     vy = (*er).vy;
     // if we're star or invincible, we pass through enemies
-    if(!((s.star || s.invincible) && ((*ee).type == 'e' || (*ee).type == '&'))){
+    if(!((s.star || s.invincible) && ((*ee).type == 'e' || (*ee).type == '&' || (*ee).type == 'E' || (*ee).type == '7'))){
       if(colser & 2){(*er).vx = 0;}
       if(colser & 4){
         cl_jumpEnd();
@@ -382,7 +383,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     }
     break;
   case 'o':
-    if(((*ee).type == 'e' || (*ee).type == '&') && (*ee).physical == true){
+    if(((*ee).type == 'e' || (*ee).type == '&' || (*ee).type == '7') && (*ee).physical == true){
       ai_kill(ee);
       int x_temp = (*er).x;
       int y_temp = (*er).y;
@@ -411,10 +412,10 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       cl_starman();
       s.score += 1000;
     }
-    if(colser & (2 | 4) && (*ee).type != 'e' && (*ee).type != '&'){
+    if(colser & (2 | 4) && (*ee).type != 'e' && (*ee).type != '&' && (*ee).type != 'E' && (*ee).type != '7'){
       (*er).vx = -(*er).vx;
     }
-    else if(colser & 8 && (*ee).type != 'e' && (*ee).type != '&'){
+    else if(colser & 8 && (*ee).type != 'e' && (*ee).type != '&' && (*ee).type != 'E' && (*ee).type != '7'){
       (*er).y += 1;
       (*er).vy = 6;
     }
