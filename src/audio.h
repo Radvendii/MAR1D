@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include "resources.h"
+#define SND_none -1
 #define SND_blockbreak 0
 #define SND_blockhit 1
 #define SND_boom 2
@@ -59,12 +60,14 @@
 #define k_mix_channels 2
 #define k_mix_chunksize 512
 
+extern int au_waiting;
+
 void au_init();
 void au_update();
 void au_channelFinished(int);
 void au_deinit();
 void au_play(int);
-int au_playWait(int);
+void au_playWait(int);
 void au_mainPlay(int);
 void au_lowTime();
 void au_mainStop();

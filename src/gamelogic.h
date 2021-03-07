@@ -6,6 +6,7 @@
 #include "mechanics.h"
 #include "enemies.h"
 #include "parsing.h"
+#include "audio.h"
 
 /*
  * Time keeping is a little confusing because there are three different time

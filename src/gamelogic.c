@@ -5,8 +5,6 @@ bool gameEnd;
 
 // Time that has been intentionally spent waiting, rather than time spent
 // executing code. This is important for synchronizing game ticks.
-int timeWaited;
-
 int gl_playerIndex(){
   int ret=0;
   for(ret=0;s.scene[ret].type != '\0' && s.scene[ret].type != '@';ret++);
@@ -30,7 +28,6 @@ void gl_main() {
    * used to set a constant tick rate for the game.
    */
   int lastSDLTime = SDL_GetTicks();
-  timeWaited = 0;
   // main game loop
   while (!quit && !gameEnd) {
 
@@ -58,10 +55,11 @@ void gl_main() {
     // update the game logic until we've caught up with the current time
     // (this will usually just be once)
     while (curSDLTime > lastSDLTime && !gameEnd && !quit) {
-      gl_update();
+      if (au_waiting == SND_none) { // if we're waiting for audio, don't progress the game at all
+        gl_update();
+      }
       gr_update();
-      lastSDLTime += k_msPerGameTick + timeWaited;
-      timeWaited = 0;
+      lastSDLTime += k_msPerGameTick;
     }
     if (!gameEnd && !quit) {
       // draw updates
@@ -136,23 +134,38 @@ void gl_die(){
 }
 
 void gl_win(){
-  if(!s.won){
+  // winning proceeds in stages
+  static int stage = 0;
+
+  switch(stage) {
+  case 0:
     s.won = true;
     s.paused = true;
     s.score+=400;
     au_mainStop();
-    timeWaited += au_playWait(SND_levelend);
+    au_playWait(SND_levelend);
+    stage++;
+    break;
+  case 1:
     au_mainPlay(SND_scorering);
-  }
-  else if(s.time > 0){
-    s.time -= k_gameTicksPerTimeTick;
-    s.score+=50;
-  }
-  else{
+    stage++;
+    break;
+  case 2:
+    if (s.time > k_gameTicksPerTimeTick) {
+      s.time -= k_gameTicksPerTimeTick;
+      s.score+=50;
+    }
+    else {
+      stage++;
+    }
+    break;
+  case 3:
     au_mainStop();
     mu_setWinScore(s.score);
     mu_menu(mu_winMenu);
     gameEnd = true;
+    stage = 0;
+    break;
   }
 }
 
@@ -244,9 +257,17 @@ void gl_update(){
   s.pli = gl_playerIndex();
   if(!s.paused){
     if(s.invincible){s.invincible--;}
-    if(s.invincible == 50){au_mainPlay(SND_overworld);}
+    if(s.invincible == 50){
+      au_mainPlay(s.level == 's' //TODO: Make this not a kludge
+                  ? (s.lowTime ? SND_underground_fast : SND_underground)
+                  : (s.lowTime ? SND_overworld_fast : SND_overworld));
+    }
     if(s.star){s.star--;}
-    if(s.star == 50){au_mainPlay(SND_overworld);} //this should really be more general than SND_overworld (like for time running out)
+    if(s.star == 50){
+      au_mainPlay(s.level == 's'
+                  ? (s.lowTime ? SND_underground_fast : SND_underground)
+                  : (s.lowTime ? SND_overworld_fast : SND_overworld));
+    }
     if(s.time){s.time--;}
     else{gl_die();}
 

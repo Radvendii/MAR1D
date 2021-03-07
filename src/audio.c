@@ -65,7 +65,7 @@ const char *soundFileNames[] = {
 int lowtime_done = false;
 
 void au_init(){
-  au_waiting = -1;
+  au_waiting = SND_none;
 
   err = Mix_OpenAudio(k_mix_frequency, k_mix_format, k_mix_channels, k_mix_chunksize);
   if(err == -1){
@@ -85,18 +85,14 @@ void au_init(){
 
 void au_channelFinished(int channel) {
   if(channel == au_waiting) {
-    au_waiting = -1;
+    au_waiting = SND_none;
   }
 
-  switch(channel){
-    case SND_lowtime:
+  if(channel == SND_lowtime) {
       // Low time just finished playing.
       // We cannot directly play the main audio here (see Mix_ChannelFinished documentation)
       // So we set lowtime_done flag to signal to restart mainAudio
       lowtime_done = true;
-      break;
-    default:
-      break;
   }
 }
 
@@ -146,21 +142,14 @@ void au_play(int snd){
 }
 
 // returns ms it took to play
-int au_playWait(int snd){
+void au_playWait(int snd){
   int startTime = SDL_GetTicks();
-  if(au_waiting != -1) {
+  if(au_waiting != SND_none) {
     DEBUG("Can't wait for more than one audio at once. How did you even get here?");
     exit(EXIT_FAILURE);
   }
-  err = Mix_PlayChannel(snd, sounds[snd], 0);
-  if(err == -1) {
-    DEBUG("Unable to play sound file %s: %s", soundFileNames[snd], Mix_GetError());
-    exit(EXIT_FAILURE);
-  }
-  Mix_Volume(snd, conf.effects);
+  au_play(snd);
   au_waiting = snd;
-  SAFE_DELAY_UNTIL(au_waiting == -1);
-  return SDL_GetTicks() - startTime;
 }
 
 void au_lowTime(){

@@ -327,9 +327,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       }
       break;
     case '!':
-      if(!s.won){
-        gl_win();
-      }
+      s.won = true;
       break;
     case '~':
       gl_die();
