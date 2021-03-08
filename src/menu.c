@@ -64,7 +64,7 @@ void mu_init() {
       )
     ),
     WIDGET(
-      .label = "OPTIONS",
+      .label = "SETTINGS",
       .kind = WK_MENU,
       .m = MENU(
         WIDGET(
@@ -185,7 +185,7 @@ void mu_init() {
           )
         ),
         WIDGET(
-          .label = "SAVE",
+          .label = "SAVE SETTINGS",
           .kind = WK_ACTION,
           .action = &mu_saveConfig
         )
