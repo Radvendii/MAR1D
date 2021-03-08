@@ -109,6 +109,7 @@
     .sensitivity = 10,                  \
     .invertMouseY = false,              \
     .keys = k_defaultKeys,              \
+    .visualSounds = false,              \
     .debug = false                      \
   }
 
@@ -128,6 +129,7 @@ typedef struct {
   int sensitivity;
   bool invertMouseY;
   keybinds keys;
+  bool visualSounds;
   bool debug;
 } config; // not to be confused with config_t from libconfig
 

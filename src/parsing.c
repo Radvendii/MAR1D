@@ -363,6 +363,7 @@ void io_readConfig(config *c){
   config_lookup_int(&conf, "lineSize", &(c->lineSize));
   config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
   config_lookup_bool(&conf, "invertMouseY", (int*) &(c->invertMouseY));
+  config_lookup_bool(&conf, "visualSounds", (int*) &(c->visualSounds));
   config_lookup_bool(&conf, "debug", (int*) &(c->debug));
 
   const char *key = NULL;
@@ -410,6 +411,9 @@ void io_writeConfig(config c){
 
   set = config_setting_add(root, "sensitivity", CONFIG_TYPE_INT);
   config_setting_set_int(set, c.sensitivity);
+
+  set = config_setting_add(root, "visualSounds", CONFIG_TYPE_BOOL);
+  config_setting_set_bool(set, c.visualSounds);
 
   set = config_setting_add(root, "invertMouseY", CONFIG_TYPE_BOOL);
   config_setting_set_bool(set, c.invertMouseY);

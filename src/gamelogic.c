@@ -66,9 +66,9 @@ void gl_main() {
       // draw updates
       wn_perspWindow();
       gr_drawPersp();
-      /* if (conf.visualSounds) { */
+      if (conf.visualSounds) {
         vs_draw();
-      /* } */
+      }
       if (conf.debug) {
         wn_dimWindow();
         gr_drawDim();

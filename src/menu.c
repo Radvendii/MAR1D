@@ -185,6 +185,28 @@ void mu_init() {
           )
         ),
         WIDGET(
+          .label = "ACCESSIBILITY",
+          .kind = WK_MENU,
+          .m = MENU(
+            WIDGET(
+              .label = "VISUAL SOUNDS",
+              .kind = WK_SWITCH,
+              .switchVal = &conf.visualSounds,
+            ),
+            WIDGET(
+              .label = "",
+              .kind = WK_TEXT,
+              .text =
+                "VISUALLY DISPLAY SOUND EFFECTS\n"
+                "\n"
+                "THIS BREAKS IMMERSION BUT SOME\n"
+                "PEOPLE HAVE A LOT OF TROUBLE\n"
+                "WITHOUT THE AUDIO CUES.",
+              .size = 1.5
+            )
+          )
+        ),
+        WIDGET(
           .label = "SAVE SETTINGS",
           .kind = WK_ACTION,
           .action = &mu_saveConfig
