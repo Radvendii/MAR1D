@@ -15,9 +15,7 @@ void ob_deinit() {
     }
     free(io_os[i].frames);
     free(io_os[i].cols);
-    if(ob_levels[i]){
-      free(ob_levels[i]);
-    }
+    free(ob_levels[i]);
   }
   free(ob_levels);
 }
