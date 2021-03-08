@@ -50,6 +50,7 @@ void gl_main() {
 
     // update the state
     au_update();
+    vs_update();
     // fix the current time in a variable so there's no chance of an infinite loop
     int curSDLTime = SDL_GetTicks();
     // update the game logic until we've caught up with the current time
@@ -65,6 +66,9 @@ void gl_main() {
       // draw updates
       wn_perspWindow();
       gr_drawPersp();
+      /* if (conf.visualSounds) { */
+        vs_draw();
+      /* } */
       if (conf.debug) {
         wn_dimWindow();
         gr_drawDim();

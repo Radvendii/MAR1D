@@ -139,6 +139,7 @@ void au_play(int snd){
     exit(EXIT_FAILURE);
   }
   Mix_Volume(snd, conf.effects);
+  vs_play(snd);
 }
 
 // returns ms it took to play
@@ -170,8 +171,10 @@ void au_mainPlay(int snd){
     DEBUG("Unable to play main sound file %s: %s", soundFileNames[snd], Mix_GetError());
     exit(EXIT_FAILURE);
   }
+  vs_mainPlay(snd);
 }
 
 void au_mainStop(){
   Mix_HaltChannel(au_mainAudio);
+  vs_mainStop();
 }

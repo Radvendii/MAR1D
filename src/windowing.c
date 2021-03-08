@@ -120,7 +120,9 @@ void wn_init(){
     SDL_HideWindow(dimWindow);
   }
 
+  SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 0);
   perspContext = SDL_GL_CreateContext(perspWindow);
+  SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
   dimContext = SDL_GL_CreateContext(dimWindow);
 
   if (!perspContext || !dimContext) {

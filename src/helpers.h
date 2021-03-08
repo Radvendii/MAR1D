@@ -87,6 +87,7 @@
 #define DROP_ONE(first, ...) __VA_ARGS__
 
 // requires that the keycode by bound to key and the state be bound to state
+// TODO: ^^ this is bad ^^
 #define KEY_DN(k) (key == conf.keys.k && state == SDL_PRESSED)
 #define KEY_UP(k) (key == conf.keys.k && state == SDL_RELEASED)
 

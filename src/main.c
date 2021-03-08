@@ -11,6 +11,7 @@
 #include "windowing.h"
 #include "parsing.h"
 #include "audio.h"
+#include "visual_sounds.h"
 #include "menu.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -78,12 +79,14 @@ int main(int argc, char **argv){
   gl_init();
   wn_init();
   au_init();
+  vs_init();
   gr_init();
 
   mu_main(); // start the program with the menu
 
   // deinit in reverse order
   gr_deinit();
+  vs_deinit();
   au_deinit();
   wn_deinit();
   gl_deinit();

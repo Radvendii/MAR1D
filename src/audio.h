@@ -2,6 +2,7 @@
 #define _AUDIO_H
 #include "helpers.h"
 #include "windowing.h"
+#include "visual_sounds.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include "resources.h"

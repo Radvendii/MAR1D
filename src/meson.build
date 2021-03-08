@@ -1,5 +1,6 @@
 sources = files( 'lodepng.c'
                , 'audio.c'
+               , 'visual_sounds.c'
                , 'controls.c'
                , 'enemies.c'
                , 'gamelogic.c'
