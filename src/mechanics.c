@@ -195,12 +195,10 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       }
       break;
     case ']':
-      // TODO: why is this commented out?
-      //if(colsee & 2){
-      //s.pipeTo = (*ee).c;
-      //(*er).x++;
-      //}
       if(colsee & (2|4)){
+        if (!s.pipeTo) {
+          au_play(SND_pipe);
+        }
         s.pipeTo = (*ee).c;
         if(s.time % 3){
           if((*ee).c == '\0'){(*er).x--;}
@@ -208,7 +206,6 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         }
       }
       if(colsee & 8 && (*ee).c != '\0'){
-        au_play(SND_pipe);
         cl_pipe();
       }
       break;

@@ -22,30 +22,221 @@ void vs_init() {
   vs_mainVisual = SND_none;
 
   vs_sounds[SND_jump] = VS_ANIM(
-    VS_FRAME( VS_OBJ('^', 0, 0) ),
-    VS_FRAME( VS_OBJ('^', 0, 0) ),
-    VS_FRAME( VS_OBJ('^', 0, 0) ),
-    VS_FRAME( VS_OBJ('^', 0, 1) ),
-    VS_FRAME( VS_OBJ('^', 0, 2) ),
-    VS_FRAME( VS_OBJ('^', 0, 3) ),
-    VS_FRAME( VS_OBJ('^', 0, 4) ),
-    VS_FRAME( VS_OBJ('^', 0, 5) ),
-    VS_FRAME( VS_OBJ('^', 0, 6) ),
-    VS_FRAME( VS_OBJ('^', 0, 7) ),
-    VS_FRAME( VS_OBJ('^', 0, 8) ),
-    VS_FRAME( VS_OBJ('^', 0, 9) ),
-    VS_FRAME( VS_OBJ('^', 0, 10) ),
-    VS_FRAME( VS_OBJ('^', 0, 11) ),
-    VS_FRAME( VS_OBJ('^', 0, 12) ),
-    VS_FRAME( VS_OBJ('^', 0, 13) ),
-    VS_FRAME( VS_OBJ('^', 0, 14) ),
-    VS_FRAME( VS_OBJ('^', 0, 15) ),
-    VS_FRAME( VS_OBJ('^', 0, 16) ),
-    VS_FRAME( VS_OBJ('^', 0, 17) ),
-    VS_FRAME( VS_OBJ('^', 0, 18) ),
-    VS_FRAME( VS_OBJ('^', 0, 19) ),
-    VS_FRAME( VS_OBJ('^', 0, 19) ),
-    VS_FRAME( VS_OBJ('^', 0, 19) )
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 1) ),
+    VS_FRAME( VS_OBJ('^', 5, 2) ),
+    VS_FRAME( VS_OBJ('^', 5, 3) ),
+    VS_FRAME( VS_OBJ('^', 5, 4) ),
+    VS_FRAME( VS_OBJ('^', 5, 5) ),
+    VS_FRAME( VS_OBJ('^', 5, 6) ),
+    VS_FRAME( VS_OBJ('^', 5, 7) ),
+    VS_FRAME( VS_OBJ('^', 5, 8) ),
+    VS_FRAME( VS_OBJ('^', 5, 9) ),
+    VS_FRAME( VS_OBJ('^', 5, 10) ),
+    VS_FRAME( VS_OBJ('^', 5, 11) ),
+    VS_FRAME( VS_OBJ('^', 5, 12) ),
+    VS_FRAME( VS_OBJ('^', 5, 13) ),
+    VS_FRAME( VS_OBJ('^', 5, 14) ),
+    VS_FRAME( VS_OBJ('^', 5, 15) ),
+    VS_FRAME( VS_OBJ('^', 5, 16) ),
+    VS_FRAME( VS_OBJ('^', 5, 17) ),
+    VS_FRAME( VS_OBJ('^', 5, 18) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) )
+  );
+
+  // I'm not going to bother making another object type for bigmario
+  vs_sounds[SND_jumpbig] = VS_ANIM(
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 0) ),
+    VS_FRAME( VS_OBJ('^', 5, 1) ),
+    VS_FRAME( VS_OBJ('^', 5, 2) ),
+    VS_FRAME( VS_OBJ('^', 5, 3) ),
+    VS_FRAME( VS_OBJ('^', 5, 4) ),
+    VS_FRAME( VS_OBJ('^', 5, 5) ),
+    VS_FRAME( VS_OBJ('^', 5, 6) ),
+    VS_FRAME( VS_OBJ('^', 5, 7) ),
+    VS_FRAME( VS_OBJ('^', 5, 8) ),
+    VS_FRAME( VS_OBJ('^', 5, 9) ),
+    VS_FRAME( VS_OBJ('^', 5, 10) ),
+    VS_FRAME( VS_OBJ('^', 5, 11) ),
+    VS_FRAME( VS_OBJ('^', 5, 12) ),
+    VS_FRAME( VS_OBJ('^', 5, 13) ),
+    VS_FRAME( VS_OBJ('^', 5, 14) ),
+    VS_FRAME( VS_OBJ('^', 5, 15) ),
+    VS_FRAME( VS_OBJ('^', 5, 16) ),
+    VS_FRAME( VS_OBJ('^', 5, 17) ),
+    VS_FRAME( VS_OBJ('^', 5, 18) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) ),
+    VS_FRAME( VS_OBJ('^', 5, 19) )
+  );
+
+  vs_sounds[SND_coin] = VS_ANIM(
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) ),
+    VS_FRAME( VS_OBJ('c', 5, 20+16) )
+  );
+
+  vs_sounds[SND_stomp] = VS_ANIM(
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('e', 0, 0), VS_OBJ('&', 10, 7) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) ),
+    VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) )
+  );
+
+  vs_sounds[SND_blockbreak] = VS_ANIM(
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME(
+      VS_OBJ('b', 5, 22),
+      VS_OBJ('b', 5, 14),
+      VS_OBJ('b', 5, 22),
+      VS_OBJ('b', 5, 14)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', 5, 22),
+      VS_OBJ('b', 5, 14),
+      VS_OBJ('b', 5, 22),
+      VS_OBJ('b', 5, 14)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', 4, 21),
+      VS_OBJ('b', 4, 13),
+      VS_OBJ('b', 6, 21),
+      VS_OBJ('b', 6, 13)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', 4, 21),
+      VS_OBJ('b', 4, 13),
+      VS_OBJ('b', 6, 21),
+      VS_OBJ('b', 6, 13)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', 3, 20),
+      VS_OBJ('b', 3, 11),
+      VS_OBJ('b', 7, 20),
+      VS_OBJ('b', 7, 11)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', 3, 20),
+      VS_OBJ('b', 3, 11),
+      VS_OBJ('b', 7, 20),
+      VS_OBJ('b', 7, 11)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', 2, 18),
+      VS_OBJ('b', 2, 9),
+      VS_OBJ('b', 8, 18),
+      VS_OBJ('b', 8, 9)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', 1, 16),
+      VS_OBJ('b', 1, 7),
+      VS_OBJ('b', 9, 16),
+      VS_OBJ('b', 9, 7)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', 0, 13),
+      VS_OBJ('b', 0, 4),
+      VS_OBJ('b', 10, 13),
+      VS_OBJ('b', 10, 4)
+    )
+  );
+  vs_sounds[SND_pipe] = VS_ANIM(
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 20), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 25, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 19), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 26, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 18), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 27, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 17), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 28, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 16), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 29, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 15), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 30, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 14), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 31, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 13), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 33, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 12), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 34, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 11), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 35, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 10), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 36, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 9), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 37, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 8), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 38, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 7), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 39, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 6), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 40, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3)),
+    VS_FRAME( VS_OBJ('@', 6, 5), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
+              VS_OBJ('@', 41, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3))
   );
 }
 
@@ -56,6 +247,7 @@ void vs_play(int snd) {
 void vs_mainPlay(int snd) {
   vs_mainStop();
   vs_mainVisual = snd;
+  vs_play(snd);
 }
 
 void vs_mainStop() {

@@ -180,77 +180,87 @@ C; pos:1,15; dim:13x1
 .              .
 ................
 
-Oc5; ps:36; pos:0,0; dim:10x14; cols:0; grav:0; phys:0; hid:0;
-  ******
- *      *
- *      *
-*        *
-*        *
-*        *
-*        *
-*        *
-*        *
-*        *
-*        *
- *      ,
- *      ,
-  ,,,,,,
-  dddddd
- d      d
- d      d
-d        d
-d        d
-d        d
-d        d
-d        d
-d        d
-d        d
-d        d
- d      ,
- d      ,
-  ,,,,,,
-  ffffff
- f      f
- f      f
-f        f
-f        f
-f        f
-f        f
-f        f
-f        f
-f        f
-f        f
- f      ,
- f      ,
-  ,,,,,,
-  dddddd
- d      d
- d      d
-d        d
-d        d
-d        d
-d        d
-d        d
-d        d
-d        d
-d        d
- d      ,
- d      ,
-  ,,,,,,
-  ******
- *      *
- *      *
-*        *
-*        *
-*        *
-*        *
-*        *
-*        *
-*        *
-*        *
- *      ,
- *      ,
-  ,,,,,,
+Oc5; ps:36; pos:3,1; dim:16x16; cols:0; grav:0; phys:0; hid:0;
+
+     ******
+    *      *
+    *      *
+   *        *
+   *        *
+   *        *
+   *        *
+   *        *
+   *        *
+   *        *
+   *        *
+    *      ,
+    *      ,
+     ,,,,,,
+
+
+     dddddd
+    d      d
+    d      d
+   d        d
+   d        d
+   d        d
+   d        d
+   d        d
+   d        d
+   d        d
+   d        d
+    d      ,
+    d      ,
+     ,,,,,,
+
+
+     ffffff
+    f      f
+    f      f
+   f        f
+   f        f
+   f        f
+   f        f
+   f        f
+   f        f
+   f        f
+   f        f
+    f      ,
+    f      ,
+     ,,,,,,
+
+
+     dddddd
+    d      d
+    d      d
+   d        d
+   d        d
+   d        d
+   d        d
+   d        d
+   d        d
+   d        d
+   d        d
+    d      ,
+    d      ,
+     ,,,,,,
+
+
+     ******
+    *      *
+    *      *
+   *        *
+   *        *
+   *        *
+   *        *
+   *        *
+   *        *
+   *        *
+   *        *
+    *      ,
+    *      ,
+     ,,,,,,
+
 
 Or1; ps:40; pos:0,0; dim:16x16; cols:2; grav:1; phys:1; hid:0;
 C; pos:0,1; dim:1x13;
@@ -1263,7 +1273,7 @@ g   G,,,,,...............,,,,,G   g
  ..                             ..
   .                             .
 
-O_1; ps:32; pos:0,0; dim:34x16; cols:0; grav:0; phys:1; hid:0;
+O_1; ps:32; pos:0,0; dim:16x32; cols:0; grav:0; phys:1; hid:0;
 
 
 gggggggggggggggg
@@ -1293,10 +1303,11 @@ gggggggggggggggg
 
 
 
-
 gggggggggggggggg
 
-O]1; ps:91; pos:0,0; dim:16x35; cols:3; grav:0; phys:1; hid:0;
+
+
+O]1; ps:91; pos:0,0; dim:16x32; cols:3; grav:0; phys:1; hid:0;
 C; pos:0,5; dim:1x25;
 C; pos:1,5; dim:15x25;
 C; pos:15,5; dim:1x25;
@@ -1310,7 +1321,6 @@ gGGGGGGGGGGGGG
              ,
              ,
              ,
-             .
              .
              .
              .

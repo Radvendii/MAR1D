@@ -50,7 +50,6 @@ void gl_main() {
 
     // update the state
     au_update();
-    vs_update();
     // fix the current time in a variable so there's no chance of an infinite loop
     int curSDLTime = SDL_GetTicks();
     // update the game logic until we've caught up with the current time
@@ -60,6 +59,7 @@ void gl_main() {
         gl_update();
       }
       gr_update();
+      vs_update();
       lastSDLTime += k_msPerGameTick;
     }
     if (!gameEnd && !quit) {

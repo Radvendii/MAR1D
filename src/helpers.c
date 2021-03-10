@@ -46,7 +46,7 @@ void sfscanf(FILE *f, char *fmtstr, ...) {
       }
     }
   }
-  err = vfscanf(f, fmtstr, vargs);
+  err = vfscanf(f, fmtstr, vargs); // causes problems through wine?
   if (err != nFmts) {
     DEBUG("Error: malformed file (or format string)");
     exit(EXIT_FAILURE);
