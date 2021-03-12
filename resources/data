@@ -1328,7 +1328,7 @@ gggggggggggggggg
 
 
 
-O]1; ps:91; pos:0,0; dim:16x32; cols:3; grav:0; phys:1; hid:0;
+O]1; ps:90; pos:0,0; dim:16x32; cols:3; grav:0; phys:1; hid:0;
 C; pos:0,5; dim:1x25;
 C; pos:1,5; dim:15x25;
 C; pos:15,5; dim:1x25;
