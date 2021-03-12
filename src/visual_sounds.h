@@ -24,14 +24,17 @@
 
 // TODO: maybe these data structures should have fields for how long the lists
 //       are (like in the menu code)
+//       especially because animFrame could just re-use cur if cur were an int
+//       indexing into an array of known length
 
 // objects store their position as well, which is the only property we'll use
-// frames are rendered in order, from back to front.
+// the objects of a frame are rendered in order, from back to front.
 typedef obj* vs_frame;
 
 typedef struct {
   vs_frame *fs; // pointer to the beginning of the animation
   vs_frame *cur; // pointer to the current frame of animation
+  int animFrame; // each object steps through an animation
 } vs_anim;
 
 #define VS_OBJ(...) vs_obj(__VA_ARGS__)

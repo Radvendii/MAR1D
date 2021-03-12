@@ -18,6 +18,7 @@ void vs_init() {
   for (int i=0; i < k_nSounds; i++) {
     vs_sounds[i].cur = NULL;
     vs_sounds[i].fs = NULL;
+    vs_sounds[i].animFrame = 0;
   }
   vs_mainVisual = SND_none;
 
@@ -346,11 +347,38 @@ void vs_init() {
     VS_FRAME( VS_OBJ('%', 0, -8) ),
     VS_FRAME( VS_OBJ('%', 0, -9) )
   );
-  /* vs_sounds[SND_gameover] = */
+
+  vs_sounds[SND_fireball] = VS_ANIM(
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 7, 0) ),
+    VS_FRAME( VS_OBJ('o', 8, 0) ),
+    VS_FRAME( VS_OBJ('o', 8, 0) ),
+    VS_FRAME( VS_OBJ('o', 9, 0) ),
+    VS_FRAME( VS_OBJ('o', 9, 0) ),
+    VS_FRAME( VS_OBJ('o', 10, 0) )
+  );
+
+  // SND_gameover
+  // SND_levelend
+  // SND_lowtime
+  // SND_mushroomappear
+  // SND_mushroomeat
+  // SND_oneup
+  // SND_scorering
+  // SND_shrink
 }
 
 void vs_play(int snd) {
   vs_sounds[snd].cur = vs_sounds[snd].fs; // set current frame to first frame
+  vs_sounds[snd].animFrame = 0;
 }
 
 void vs_mainPlay(int snd) {
@@ -378,7 +406,7 @@ void vs_draw() {
     float shift = (float) conf.lineSize * k_drawD2 / k_perspWindowW + 5; // rescale and add buffer
     glOrtho(-k_drawD2 - shift, k_drawD2 - shift, -k_drawD2, k_drawD2, -1, 1);
     for (obj *o = *vs_sounds[i].cur; o->type != '\0'; o++) {
-        gr_image(&o->frames[0].im, RECT_LTWH(o->x + o->bb.x, o->y + o->bb.y, o->bb.w, -(o->bb.h)));
+        gr_image(&o->frames[vs_sounds[i].animFrame / k_animFreq % o->nFrames].im, RECT_LTWH(o->x + o->bb.x, o->y + o->bb.y, o->bb.w, -(o->bb.h)));
     }
     glPopMatrix();
   }
@@ -392,12 +420,14 @@ void vs_update() {
 
     // increment the animation
     vs_sounds[i].cur++;
+    vs_sounds[i].animFrame++;
     if (*(vs_sounds[i].cur) == NULL) { // we've reached the end of the animation
       if (i == vs_mainVisual) { // this is the main audio loop
         vs_sounds[i].cur = vs_sounds[i].fs; // restart the animation
       }
-      else {
-        vs_sounds[i].cur = NULL; // we're done
+      else { // we're done
+        vs_sounds[i].cur = NULL;
+        vs_sounds[i].animFrame = 0;
       }
     }
   }
