@@ -120,70 +120,101 @@ void vs_init() {
     VS_FRAME( VS_OBJ('E', 0, -8), VS_OBJ('7', 10, -3) )
   );
 
+  vs_sounds[SND_blockhit] = VS_ANIM(
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) ),
+    VS_FRAME( VS_OBJ('#', 5, 36) )
+  );
+
+  int base_y = 36;
+  int base_x = 5;
   vs_sounds[SND_blockbreak] = VS_ANIM(
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
-    VS_FRAME( VS_OBJ('#', 5, 20) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
+    VS_FRAME( VS_OBJ('#', base_x, base_y) ),
     VS_FRAME(
-      VS_OBJ('b', 5, 22),
-      VS_OBJ('b', 5, 14),
-      VS_OBJ('b', 5, 22),
-      VS_OBJ('b', 5, 14)
+      VS_OBJ('b', base_x, base_y+2),
+      VS_OBJ('b', base_x, base_y-2),
+      VS_OBJ('b', base_x, base_y+2),
+      VS_OBJ('b', base_x, base_y-2)
     ),
     VS_FRAME(
-      VS_OBJ('b', 5, 22),
-      VS_OBJ('b', 5, 14),
-      VS_OBJ('b', 5, 22),
-      VS_OBJ('b', 5, 14)
+      VS_OBJ('b', base_x, base_y+2),
+      VS_OBJ('b', base_x, base_y-2),
+      VS_OBJ('b', base_x, base_y+2),
+      VS_OBJ('b', base_x, base_y-2)
     ),
     VS_FRAME(
-      VS_OBJ('b', 4, 21),
-      VS_OBJ('b', 4, 13),
-      VS_OBJ('b', 6, 21),
-      VS_OBJ('b', 6, 13)
+      VS_OBJ('b', base_x-1, base_y+1),
+      VS_OBJ('b', base_x-1, base_y-3),
+      VS_OBJ('b', base_x+1, base_y+1),
+      VS_OBJ('b', base_x+1, base_y-3)
     ),
     VS_FRAME(
-      VS_OBJ('b', 4, 21),
-      VS_OBJ('b', 4, 13),
-      VS_OBJ('b', 6, 21),
-      VS_OBJ('b', 6, 13)
+      VS_OBJ('b', base_x-1, base_y+1),
+      VS_OBJ('b', base_x-1, base_y-3),
+      VS_OBJ('b', base_x+1, base_y+1),
+      VS_OBJ('b', base_x+1, base_y-3)
     ),
     VS_FRAME(
-      VS_OBJ('b', 3, 20),
-      VS_OBJ('b', 3, 11),
-      VS_OBJ('b', 7, 20),
-      VS_OBJ('b', 7, 11)
+      VS_OBJ('b', base_x-2, base_y+0),
+      VS_OBJ('b', base_x-2, base_y-4),
+      VS_OBJ('b', base_x+2, base_y+0),
+      VS_OBJ('b', base_x+2, base_y-4)
     ),
     VS_FRAME(
-      VS_OBJ('b', 3, 20),
-      VS_OBJ('b', 3, 11),
-      VS_OBJ('b', 7, 20),
-      VS_OBJ('b', 7, 11)
+      VS_OBJ('b', base_x-2, base_y+0),
+      VS_OBJ('b', base_x-2, base_y-4),
+      VS_OBJ('b', base_x+2, base_y+0),
+      VS_OBJ('b', base_x+2, base_y-4)
     ),
     VS_FRAME(
-      VS_OBJ('b', 2, 18),
-      VS_OBJ('b', 2, 9),
-      VS_OBJ('b', 8, 18),
-      VS_OBJ('b', 8, 9)
+      VS_OBJ('b', base_x-3, base_y-1),
+      VS_OBJ('b', base_x-3, base_y-5),
+      VS_OBJ('b', base_x+3, base_y-1),
+      VS_OBJ('b', base_x+3, base_y-5)
     ),
     VS_FRAME(
-      VS_OBJ('b', 1, 16),
-      VS_OBJ('b', 1, 7),
-      VS_OBJ('b', 9, 16),
-      VS_OBJ('b', 9, 7)
+      VS_OBJ('b', base_x-3, base_y-1),
+      VS_OBJ('b', base_x-3, base_y-5),
+      VS_OBJ('b', base_x+3, base_y-1),
+      VS_OBJ('b', base_x+3, base_y-5)
     ),
     VS_FRAME(
-      VS_OBJ('b', 0, 13),
-      VS_OBJ('b', 0, 4),
-      VS_OBJ('b', 10, 13),
-      VS_OBJ('b', 10, 4)
+      VS_OBJ('b', base_x-4, base_y-2),
+      VS_OBJ('b', base_x-4, base_y-6),
+      VS_OBJ('b', base_x+4, base_y-2),
+      VS_OBJ('b', base_x+4, base_y-6)
+    ),
+    VS_FRAME(
+      VS_OBJ('b', base_x-5, base_y-3),
+      VS_OBJ('b', base_x-5, base_y-7),
+      VS_OBJ('b', base_x+5, base_y-3),
+      VS_OBJ('b', base_x+5, base_y-7)
     )
   );
   vs_sounds[SND_pipe] = VS_ANIM(
@@ -238,6 +269,84 @@ void vs_init() {
     VS_FRAME( VS_OBJ('@', 6, 5), VS_OBJ('=', 0, 4), VS_OBJ('|', 0, -12),
               VS_OBJ('@', 41, 0), VS_OBJ(']', 41, 3), VS_OBJ('_', 57, 3))
   );
+
+  vs_sounds[SND_death] = VS_ANIM(
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 6) ),
+    VS_FRAME( VS_OBJ('%', 0, 6) ),
+    VS_FRAME( VS_OBJ('%', 0, 7) ),
+    VS_FRAME( VS_OBJ('%', 0, 8) ),
+    VS_FRAME( VS_OBJ('%', 0, 9) ),
+    VS_FRAME( VS_OBJ('%', 0, 10) ),
+    VS_FRAME( VS_OBJ('%', 0, 11) ),
+    VS_FRAME( VS_OBJ('%', 0, 12) ),
+    VS_FRAME( VS_OBJ('%', 0, 13) ),
+    VS_FRAME( VS_OBJ('%', 0, 14) ),
+    VS_FRAME( VS_OBJ('%', 0, 15) ),
+    VS_FRAME( VS_OBJ('%', 0, 15) ),
+    VS_FRAME( VS_OBJ('%', 0, 16) ),
+    VS_FRAME( VS_OBJ('%', 0, 16) ),
+    VS_FRAME( VS_OBJ('%', 0, 17) ),
+    VS_FRAME( VS_OBJ('%', 0, 17) ),
+    VS_FRAME( VS_OBJ('%', 0, 18) ),
+    VS_FRAME( VS_OBJ('%', 0, 18) ),
+    VS_FRAME( VS_OBJ('%', 0, 19) ),
+    VS_FRAME( VS_OBJ('%', 0, 19) ),
+    VS_FRAME( VS_OBJ('%', 0, 20) ),
+    VS_FRAME( VS_OBJ('%', 0, 20) ),
+    VS_FRAME( VS_OBJ('%', 0, 20) ),
+    VS_FRAME( VS_OBJ('%', 0, 19) ),
+    VS_FRAME( VS_OBJ('%', 0, 19) ),
+    VS_FRAME( VS_OBJ('%', 0, 18) ),
+    VS_FRAME( VS_OBJ('%', 0, 18) ),
+    VS_FRAME( VS_OBJ('%', 0, 17) ),
+    VS_FRAME( VS_OBJ('%', 0, 17) ),
+    VS_FRAME( VS_OBJ('%', 0, 16) ),
+    VS_FRAME( VS_OBJ('%', 0, 16) ),
+    VS_FRAME( VS_OBJ('%', 0, 15) ),
+    VS_FRAME( VS_OBJ('%', 0, 15) ),
+    VS_FRAME( VS_OBJ('%', 0, 14) ),
+    VS_FRAME( VS_OBJ('%', 0, 13) ),
+    VS_FRAME( VS_OBJ('%', 0, 12) ),
+    VS_FRAME( VS_OBJ('%', 0, 11) ),
+    VS_FRAME( VS_OBJ('%', 0, 10) ),
+    VS_FRAME( VS_OBJ('%', 0, 9) ),
+    VS_FRAME( VS_OBJ('%', 0, 8) ),
+    VS_FRAME( VS_OBJ('%', 0, 7) ),
+    VS_FRAME( VS_OBJ('%', 0, 6) ),
+    VS_FRAME( VS_OBJ('%', 0, 5) ),
+    VS_FRAME( VS_OBJ('%', 0, 4) ),
+    VS_FRAME( VS_OBJ('%', 0, 3) ),
+    VS_FRAME( VS_OBJ('%', 0, 2) ),
+    VS_FRAME( VS_OBJ('%', 0, 1) ),
+    VS_FRAME( VS_OBJ('%', 0, 0) ),
+    VS_FRAME( VS_OBJ('%', 0, -1) ),
+    VS_FRAME( VS_OBJ('%', 0, -2) ),
+    VS_FRAME( VS_OBJ('%', 0, -3) ),
+    VS_FRAME( VS_OBJ('%', 0, -4) ),
+    VS_FRAME( VS_OBJ('%', 0, -5) ),
+    VS_FRAME( VS_OBJ('%', 0, -6) ),
+    VS_FRAME( VS_OBJ('%', 0, -7) ),
+    VS_FRAME( VS_OBJ('%', 0, -8) ),
+    VS_FRAME( VS_OBJ('%', 0, -9) )
+  );
+  /* vs_sounds[SND_gameover] = */
 }
 
 void vs_play(int snd) {

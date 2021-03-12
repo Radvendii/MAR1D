@@ -42,6 +42,7 @@ The `MAR1D` executable takes a few command line arguments (note that all numeric
 * `-w##` sets the display area to a width of `##` pixels.
 * `-s##` sets the mouse sensitivity.
 * `-y` inverts the mouse y axis. Not sure why this is necessary, but lots of games seem to include it.
+* `-x` visual sf**x**
 * `-d` debug mode
 
 In addition, there are two environment variables which affect where MAR1D puts / looks for files.
