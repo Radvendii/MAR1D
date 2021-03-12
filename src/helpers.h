@@ -110,6 +110,7 @@
     .invertMouseY = false,              \
     .keys = k_defaultKeys,              \
     .visualSounds = false,              \
+    .toggleRun = false,                 \
     .debug = false                      \
   }
 
@@ -130,6 +131,7 @@ typedef struct {
   bool invertMouseY;
   keybinds keys;
   bool visualSounds;
+  bool toggleRun;
   bool debug;
 } config; // not to be confused with config_t from libconfig
 

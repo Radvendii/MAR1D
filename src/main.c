@@ -49,7 +49,7 @@ int main(int argc, char **argv){
 
   // overwrite default / conf file settings with command line options.
   int c;
-  while ((c = getopt(argc, argv, "m:f:w:s:yxd")) != -1){
+  while ((c = getopt(argc, argv, "m:f:w:s:yxrd")) != -1){
     switch (c){
     case 'm':
       conf.music = atoi(optarg);
@@ -69,6 +69,8 @@ int main(int argc, char **argv){
     case 'x':
       conf.visualSounds = true;
       break;
+    case 'r':
+      conf.toggleRun = true;
     case 'd':
       conf.debug = true;
       break;

@@ -213,10 +213,17 @@ void cl_keypress(int key, int state, int mods){
   }
 
   if (KEY_DN(run)){
-    s.run = true;
+    if (!conf.toggleRun) {
+      s.run = true;
+    }
+    else {
+      s.run ^= true;
+    }
   }
   if (KEY_UP(run)){
-    s.run = false;
+    if (!conf.toggleRun) {
+      s.run = false;
+    }
   }
 
   if (KEY_DN(jump)){

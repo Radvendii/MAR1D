@@ -189,19 +189,27 @@ void mu_init() {
           .kind = WK_MENU,
           .m = MENU(
             WIDGET(
-              .label = "VISUAL SOUNDS",
+              .label = "2D SOUND VISUALS",
               .kind = WK_SWITCH,
-              .switchVal = &conf.visualSounds,
+              .switchVal = &conf.visualSounds
             ),
             WIDGET(
               .label = "",
               .kind = WK_TEXT,
               .text =
-                "VISUALLY DISPLAY SOUND EFFECTS\n"
-                "\n"
-                "THIS BREAKS IMMERSION BUT SOME\n"
-                "PEOPLE HAVE A LOT OF TROUBLE\n"
-                "WITHOUT THE AUDIO CUES.",
+                "THIS BREAKS IMMERSION AND I\n"
+                "RECOMMEND AGAINST IT.\n",
+              .size = 1.5
+            ),
+            WIDGET(
+              .label = "RUN IS A TOGGLE",
+              .kind = WK_SWITCH,
+              .switchVal = &conf.toggleRun
+            ),
+            WIDGET(
+              .label = "",
+              .kind = WK_TEXT,
+              .text = "",
               .size = 1.5
             )
           )
