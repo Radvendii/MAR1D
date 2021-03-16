@@ -63,7 +63,16 @@ To cross-compile for windows, `nix-build windows.nix` (then you can either run t
 
 To compile a universal linux binary that can be transferred to other computers, you have two options. You can use `nix-build bundle.nix`, which produces a binary symlinked to `./result`. The disadvantage of bundle is it's extremely slow to compile and boot up.
 
-Or you can use [flatpak](https://www.flatpak.org/), which has the disadvantage of needing flatpak installed on the target platform, but is much faster. (TODO: expand this section)
+Or you can use [flatpak](https://www.flatpak.org/), which has the disadvantage of needing flatpak installed on the target platform, but is much faster.
+
+To build a .flatpak bundle, install flatpak and flatpak-builder, and run the following two commands.
+
+``` sh
+flatpak-builder --repo=flatpak-repo --force-clean flatpak-build com.mar1d.MAR1D.yml
+flatpak build-bundle flatpak-repo/ mar1d.flatpak com.mar1d.MAR1D --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+```
+
+This will create the directories `repo` and `flatpak-build` if they do not already exist, and create a `mar1d.flatpak` file that can be used with `flatpak install`.
 
 To compile a .app bundle for Mac OS X, you can run `nix-build darwin-app.nix`.
 
