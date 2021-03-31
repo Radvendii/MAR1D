@@ -6,7 +6,6 @@ obj* io_os;
 // recording of the current playthrough (but with x and y axis flipped)
 image io_recording;
 
-// this does not extend the data memory, so io_recording must be allocated with enough space to begin with.
 void io_recAddFrame(unsigned char *frame) {
   // increase allocated size by doubling, so that we don't have to do it every frame
   static int maxSizeY = 0;
@@ -18,7 +17,6 @@ void io_recAddFrame(unsigned char *frame) {
   }
 
   memcpy(io_recording.data + io_recording.sizeX * io_recording.sizeY * 3, frame, sizeof(unsigned char) * k_nPixels * 3);
-
 
   io_recording.sizeY++;
 }
