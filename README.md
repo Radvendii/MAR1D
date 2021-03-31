@@ -4,8 +4,10 @@ MAR1D
 ## Under Construction
 The game is undergoing a lot of changes. I'd like to get it into shape so I can be proud to put it out there. Until I do, don't expect the README to match the game or anything like that.
 
-Only one thing remains to be done:
+Things remaining to be done:
 
+- Fix koopa shell behaviour
+- Finish visual sfx
 - Trailer
 
 (also, some minor cleanup things, and i'm sure i'll stumble across a couple other things while those are getting done)
@@ -57,13 +59,13 @@ MAR1D uses the meson build system, with a nix wrapper around it.
 
 You should be able to just compile directly with meson, but I don't actually know how to do that so you'll have to figure it out yourself. If you do, please send a pull request updating this section with instructions.
 
-To compile on a system using the [nix package manager](https://nixos.org/), it's as simple as `nix-build`.
+To compile on a system using the [nix package manager](https://nixos.org/), it's as simple as `nix-build`. If you are using flakes, `nix build` works too.
 
-To cross-compile for windows, `nix-build windows.nix` (then you can either run through wine or transfer it to a windows computer).
+To cross-compile for windows, `nix-build windows.nix` or for flakes `nix build .#windows`, then transfer `result/MAR1D.zip` it to a windows computer.
 
-To compile a universal linux binary that can be transferred to other computers, you have two options. You can use `nix-build bundle.nix`, which produces a binary symlinked to `./result`. The disadvantage of bundle is it's extremely slow to compile and boot up.
+To compile an AppImage that can be transferred to other linux distros, you must be using flakes, and run `nix build .#appimage`.
 
-Or you can use [flatpak](https://www.flatpak.org/), which has the disadvantage of needing flatpak installed on the target platform, but is much faster.
+Or you can use [flatpak](https://www.flatpak.org/), which has the disadvantage of needing flatpak installed on the target platform.
 
 To build a .flatpak bundle, install flatpak and flatpak-builder, and run the following two commands.
 
@@ -74,7 +76,7 @@ flatpak build-bundle flatpak-repo/ mar1d.flatpak com.mar1d.MAR1D --runtime-repo=
 
 This will create the directories `repo` and `flatpak-build` if they do not already exist, and create a `mar1d.flatpak` file that can be used with `flatpak install`.
 
-To compile a .app bundle for Mac OS X, you can run `nix-build darwin-app.nix`.
+To compile a .app bundle for Mac OS X, you can run `nix-build darwin-app.nix`, or with flakes `nix build .#darwin-app`.
 
 ### Dependencies
 * meson (with ninja and pkgconfig)
