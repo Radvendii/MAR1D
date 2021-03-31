@@ -96,6 +96,21 @@ h2 {
 .logo {
   text-align: center;
   margin: 3px;
+
+  &:hover,&:focus {
+    outline: none;
+    img:not(.inline) {
+      filter: brightness(130%);
+    }
+  }
+
+  &:not(:focus-visible) {
+    outline: none;
+    img:not(.inline) {
+      filter: none;
+    }
+  }
+
   img {
     width: 100px;
   }
@@ -123,6 +138,10 @@ figcaption {
 
 :focus {
   outline: #333 solid 2px; // shows up better on the background
+}
+
+:not(:focus-visible) {
+  outline: none;
 }
 
 
