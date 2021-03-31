@@ -79,7 +79,7 @@ a.box {
   }
   // rather than set :focus-visible, we unset :not(focus-visible). This way
   // browsers that don't support :focus-visible will still do it on :focus
-  &:not(focus-visible) {
+  &:not(:hover):not(:focus-visible) {
     outline: none;
     border-style: outset;
   }
@@ -104,7 +104,7 @@ h2 {
     }
   }
 
-  &:not(:focus-visible) {
+  &:not(:hover):not(:focus-visible) {
     outline: none;
     img:not(.inline) {
       filter: none;
