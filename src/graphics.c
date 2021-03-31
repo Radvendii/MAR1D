@@ -233,7 +233,7 @@ void gr_drawDim(){
   glEnd();
 
   // draw game points
-  /* gr_points(dimScreen); */
+  gr_points(dimScreen);
 
   // draw 2D textures
   // TODO: this looks ugly here

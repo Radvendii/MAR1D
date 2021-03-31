@@ -1,12 +1,10 @@
-This website is generated with hakyll.
+This website is generated with [hakyll](https://jaspervdj.be/hakyll/), using [hakyll-flake-gen](https://github.com/Radvendii/hakyll-flake-gen).
 
-On a system with the Nix package manager, you can generate and host the website at https://localhost:8000 with
+On a system with the Nix package manager with nix-flakes enabled, there are a number of things you can do:
 
-``` 
-nix-shell
-snack run -- watch
+`nix build`: generate the website (found at ./result)
+`nix build .#builder`: generate the hakyll site builder (found at ./result/bin/mar1d-site)
+`nix run . -- watch`: generate the site and host it at localhost:8000
 ```
 
-It will take a long time the first time.
-
-The site will be in `./_site`
+It will take while the first time.

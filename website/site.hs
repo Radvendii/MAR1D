@@ -16,21 +16,24 @@ myCompiler = do
     >>= relativizeUrls
 
 main :: IO ()
-main = hakyll $ do
+main = hakyllWith config $ do
     match "template.html" $ compile templateBodyCompiler
 
     match "static/**" $ do
-        route idRoute
-        compile copyFileCompiler
+      route idRoute
+      compile copyFileCompiler
       
     match "style.scss" $ do
-        route $ setExtension "css"
-        compile $ (compressCss <$>) <$> sassCompiler
+      route $ setExtension "css"
+      compile $ (compressCss <$>) <$> sassCompiler
 
     match "index.html" $ do
-        route   $ idRoute
-        compile $ myCompiler
+      route   $ idRoute
+      compile $ myCompiler
 
     match "*.html" $ do
       route $ cleanRoute
       compile $ myCompiler
+
+config :: Configuration
+config = defaultConfiguration { providerDirectory = "src" }

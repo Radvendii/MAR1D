@@ -128,12 +128,14 @@ struct menu {
   int sel;    // the index of the selected widget
 };
 
-enum widgetKind { WK_MENU,      // menu
-                  WK_SLIDER,    // int value slider
-                  WK_SWITCH,    // bool value switch
-                  WK_KEYBIND,   // attaches a key to an in-game action
-                  WK_ACTION,    // perform an action when selected
-                  WK_TEXT };    // display text
+enum widgetKind {
+  WK_MENU,      // menu
+  WK_SLIDER,    // int value slider
+  WK_SWITCH,    // bool value switch
+  WK_KEYBIND,   // attaches a key to an in-game action
+  WK_ACTION,    // perform an action when selected
+  WK_TEXT       // display text
+};
 
 struct widget {
   char *label;

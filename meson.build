@@ -5,8 +5,11 @@
 
 project('MAR1D', 'c')
 
+# make sure we're nice and clean
+add_project_arguments('-Werror',  language: 'c')
+
 # this project makes extensive use of char subscripts, and i'm proud of it.
-c_args = [ '-Wno-char-subscripts' ]
+add_project_arguments( '-Wno-char-subscripts', language: 'c')
 
 is_windows = host_machine.system() == 'windows'
 static_deps = get_option('static')
@@ -23,14 +26,28 @@ libconfig_dep = dependency('libconfig', static : static_deps)
 
 
 # libconfig needs this defined if it's static
-c_args += static_deps ? ['-D LIBCONFIG_STATIC'] : []
+if static_deps
+    add_project_arguments('-D LIBCONFIG_STATIC', language: 'c')
+endif
 
 if get_option('portable')
     resources_dir = get_option('datadir') / ''
+    executable = get_option('bindir') / 'MAR1D'
 else
     resources_dir = get_option('prefix') / get_option('datadir') / 'mar1d' / ''
+    executable = get_option('prefix') / get_option('bindir') / 'MAR1D'
 endif
 
 subdir('src')
 
 install_subdir('resources', install_dir: resources_dir, strip_directory: true)
+
+if not is_windows
+   configure_file(input: 'mar1d.desktop.in',
+                  output: 'mar1d.desktop',
+                  install_dir: 'share' / 'applications',
+                  configuration: { 'EXECUTABLE': executable
+                                 , 'ICON' : 'MAR1D'
+                                 })
+  install_data('MAR1D.png', install_dir: 'share' / 'icons' / 'hicolor' / '256x256' / 'apps')
+endif

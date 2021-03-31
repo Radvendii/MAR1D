@@ -1,4 +1,5 @@
 { stdenv
+, lib
 , SDL2
 , SDL2_mixer
 , libGLU
@@ -9,7 +10,7 @@
 , pkgconfig
 }:
 
-with stdenv.lib;
+with lib;
 
 stdenv.mkDerivation rec {
   pname = "MAR1D";
@@ -25,9 +26,9 @@ stdenv.mkDerivation rec {
       SDL2_mixer
       libconfig
     ]
-      ++ optional (!stdenv.targetPlatform.isWindows) libGLU;
+    ++ optional (!stdenv.targetPlatform.isWindows) libGLU;
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "First person Super Mario Bros";
     longDescription = ''
         The original Super Mario Bros as you've never seen it. Step into Mario's

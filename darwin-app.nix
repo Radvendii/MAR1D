@@ -4,7 +4,11 @@
 # NOTE: this must be compiled *on* darwin as well
 # TODO: would be lovely if this could cross-compile
 
-with import <nixpkgs> { };
+{ nixpkgs ? <nixpkgs>
+, system ? builtins.currentSystem
+}:
+
+with import nixpkgs { inherit system; };
 
 (callPackage ./package.nix {}).overrideAttrs (old: {
   mesonFlags = [

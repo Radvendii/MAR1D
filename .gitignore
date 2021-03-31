@@ -4,7 +4,7 @@ CMakeFiles/*
 *Makefile*
 build/*
 install/*
-result
+result*
 playthrough.png
 
 website/_site/*

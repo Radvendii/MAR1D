@@ -22,6 +22,12 @@ void vs_init() {
   }
   vs_mainVisual = SND_none;
 
+  // TODO; This is a terrible way to program animations.
+  //       1) it should probably be read in from a file
+  //       2) it should probably have keyframes and shit not just every single frame
+  //       3) it certainly shouldn't store a separate copy of every object for each frame
+  //       one idea might be to make the animation just be a 2D view of certain actual game objects for a moment
+  //       this has it's own problems, but it's an idea.
   vs_sounds[SND_jump] = VS_ANIM(
     VS_FRAME( VS_OBJ('^', 5, 0) ),
     VS_FRAME( VS_OBJ('^', 5, 0) ),
@@ -365,6 +371,8 @@ void vs_init() {
     VS_FRAME( VS_OBJ('o', 9, 0) ),
     VS_FRAME( VS_OBJ('o', 10, 0) )
   );
+
+  /* vs_sounds[SND] */
 
   // SND_gameover
   // SND_levelend

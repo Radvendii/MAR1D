@@ -361,7 +361,7 @@ void io_readConfig(config *c){
   config_lookup_int(&conf, "music", &(c->music));
   config_lookup_int(&conf, "effects", &(c->effects));
   config_lookup_int(&conf, "lineSize", &(c->lineSize));
-  config_lookup_int(&conf, "sensitiviy", &(c->sensitivity));
+  config_lookup_int(&conf, "sensitivity", &(c->sensitivity));
   config_lookup_bool(&conf, "invertMouseY", (int*) &(c->invertMouseY));
   config_lookup_bool(&conf, "visualSounds", (int*) &(c->visualSounds));
   config_lookup_bool(&conf, "toggleRun", (int*) &(c->toggleRun));
@@ -456,7 +456,7 @@ void io_writeConfig(config c){
 }
 
 image io_getImage(char *fn) {
-  image im;
+  image im = { 0 };
 
   char *fn_ = rs_getFn(fn);
 
