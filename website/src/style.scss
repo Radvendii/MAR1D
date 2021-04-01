@@ -5,21 +5,24 @@
 
 body {
   height: 100%;
+  line-height: 1.6;
   background: url(/static/background.png) repeat;
-  background-size: 32px;
+  background-size: 120px;
   font-family: "OPTIVagRound";
+  // stop fucking with my font sizes, apple
   -webkit-text-size-adjust: 100%;
 }
 
 .contents {
   margin: 10px;
-  width: 100%;
+  margin-top: 100px;
+  width: 550px;
   background-color: lightblue;
-  padding: 10px;
+  padding: 50px;
   height: 100%;
   border-style: solid;
   border-color: grey;
-  border-width: 2px;
+  border-width: 5px;
 }
 
 /*
@@ -63,11 +66,11 @@ body {
 .box {
   background-color: #C84C0C;
   display: inline-block;
-  padding: 2px 15px;
+  padding: 2px 25px;
   margin: 2px;
   border: inset;
   border-color: #FCBCB0;
-  border-width: 4px;
+  border-width: 5px;
   border-style: outset;
 }
 
@@ -220,27 +223,26 @@ figcaption {
   }
 }
 
-figure {
-  width: 100%;
-  margin: 0;
-}
-
-@media only screen and (min-width: 650px) {
+// small screens
+@media only screen and (max-width: 650px) {
   body {
-    background-size: 128px;
+    background-size: 32px;
   }
   .contents {
-    margin-top: 100px;
-    width: 550px;
-    padding: 50px;
-    border-width: 5px;
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    border-width: 2px;
   }
   .box {
-    padding: 2px 25px;
-    border-width: 5px;
+    padding: 2px 10px;
+    border-width: 4px;
+  }
+  h1 {
+    margin: 10px;
   }
   figure {
-    width: inherit;
-    margin: inherit;
+    width: 100%;
+    margin: 0;
   }
 }
