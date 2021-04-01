@@ -3,113 +3,98 @@ title: Huh‽
 ---
 
 <div class="huh">
-    <!--
-      -- ideally, the `div.a` would not be inside the `label`, but i simply
-      -- refuse to add `id`s to the inputs and `for`s to the `labels`, and css won't
-      -- let me hide the `.a` otherwise
-      -->
-    <label>
-        <input type="checkbox" />
-        <h2 class="q"> What am I looking at when I play this game? </h2>
-        <div class="a">
-            <p>
-                When we play a three dimensional game, we are displaying that three dimensional world on a two dimensional screen. How does that happen? Well, the computer knows where in the scene all of the 3D objects are, and it goes through a process called "rendering".
-            </p>
+    <input type="checkbox" id="huh-rendering" />
+    <h2 class="q"><label for="huh-rendering"> What am I looking at when I play this game? </label></h2>
+    <div class="a">
+        <p>
+            When we play a three dimensional game, we are displaying that three dimensional world on a two dimensional screen. How does that happen? Well, the computer knows where in the scene all of the 3D objects are, and it goes through a process called "rendering".
+        </p>
 
-            <p>
-                In the simpler version of rendering called ray-tracing, we pick a location for the camera, a direction that it's facing, and a location that the screen (virtually) sits in front of the eye. Then we draw rays out from that eye, and see (a) what color the object (or part of the object) that they hit is, and (b) where they hit the virtual screen. Then we color that pixel on the virtual screen with that color. When we're done, we display that virtual screen on your actual screen.
-            </p>
+        <p>
+            In the simpler version of rendering called ray-tracing, we pick a location for the camera, a direction that it's facing, and a location that the screen (virtually) sits in front of the eye. Then we draw rays out from that eye, and see (a) what color the object (or part of the object) that they hit is, and (b) where they hit the virtual screen. Then we color that pixel on the virtual screen with that color. When we're done, we display that virtual screen on your actual screen.
+        </p>
 
-            <figure>
-                <img src="/static/ray_trace_3d.svg" style="width: 100%" alt="Diagram of 3D ray tracing" />
-                <figcaption>
-                    The ray-tracing process. Rays are cast from a camera through a pixel grid into a scene, where they intersect a sphere. The color of the sphere is then transfered to the pixel the ray passed through. Image modified from Henrik, CC BY-SA 4.0 <a href="https://creativecommons.org/licenses/by-sa/4.0">https://creativecommons.org/licenses/by-sa/4.0;</a>, via Wikimedia Commons
-                </figcaption>
-            </figure>
+        <figure>
+            <img src="/static/ray_trace_3d.svg" style="width: 100%" alt="Diagram of 3D ray tracing" />
+            <figcaption>
+                The ray-tracing process. Rays are cast from a camera through a pixel grid into a scene, where they intersect a sphere. The color of the sphere is then transfered to the pixel the ray passed through. Image modified from Henrik, CC BY-SA 4.0 <a href="https://creativecommons.org/licenses/by-sa/4.0">https://creativecommons.org/licenses/by-sa/4.0;</a>, via Wikimedia Commons
+            </figcaption>
+        </figure>
 
-            <p>
-                In MAR1D, we can go through exactly the same process, but with a one dimensional screen in a two dimensional world. In actuality we use a faster rendering algorithm called rasterizing, but because the rendering is so basic in MAR1D, the results are equivalent.
-            </p>
+        <p>
+            In MAR1D, we can go through exactly the same process, but with a one dimensional screen in a two dimensional world. In actuality we use a faster rendering algorithm called rasterizing, but because the rendering is so basic in MAR1D, the results are equivalent.
+        </p>
 
-            <figure>
-                <img src="/static/ray_trace_2d.png" style="width: 100%" alt="Diagram of 2D ray tracing" />
-                <figcaption>
-                    The ray-tracing process in a 2D world. Rays are cast from Mario through a 1D screen into the game world, where they intersect various objects. Black borders around objects are ignored / removed.
-                </figcaption>
-            </figure>
+        <figure>
+            <img src="/static/ray_trace_2d.png" style="width: 100%" alt="Diagram of 2D ray tracing" />
+            <figcaption>
+                The ray-tracing process in a 2D world. Rays are cast from Mario through a 1D screen into the game world, where they intersect various objects. Black borders around objects are ignored / removed.
+            </figcaption>
+        </figure>
 
 
-            <p>
-                Another thing that might help you visualize what is happening: a two dimensional world, mathematically speaking, is virtually the same as a three dimensional world that is "translationally symmetric" along one axis. What that means is, we can imagine MAR1D as taking place in a 3D world where everything is the same out to infinity to your left and right.
-            </p>
-        </div>
-    </label>
+        <p>
+            Another thing that might help you visualize what is happening: a two dimensional world, mathematically speaking, is virtually the same as a three dimensional world that is "translationally symmetric" along one axis. What that means is, we can imagine MAR1D as taking place in a 3D world where everything is the same out to infinity to your left and right.
+        </p>
+    </div>
 </div>
 
 <div class="huh">
-    <label>
-        <input type="checkbox" />
-        <h2 class="q"> How is this 1D? The game is more than one pixel wide! </h2>
-        <div class="a">
-            <p>
-                The game width can actually be adjusted, including to a width of one pixel. That's how I prefer to play, but other people had trouble seeing what was going on.
-            </p>
+    <input type="checkbox" id="huh-one-pixel" />
+    <h2 class="q"><label for="huh-one-pixel"> How is this 1D? The game is more than one pixel wide! </label></h2>
+    <div class="a">
+        <p>
+            The game width can actually be adjusted, including to a width of one pixel. That's how I prefer to play, but other people had trouble seeing what was going on.
+        </p>
 
-            <p>
-                Regardless of how much you stretch it though, there is only one dimension of information, the horizontal smear is entirely redundant. Your computer's pixels have some amount of depth to them, but that doesn't mean the games you play on them have 3 dimensional viewports.
-            </p>
-        </div>
-    </label>
+        <p>
+            Regardless of how much you stretch it though, there is only one dimension of information, the horizontal smear is entirely redundant. Your computer's pixels have some amount of depth to them, but that doesn't mean the games you play on them have 3 dimensional viewports.
+        </p>
+    </div>
 </div>
 
 <div class="huh">
-    <label>
-        <input type="checkbox" />
-        <h2 class="q"> What's with the weird stripey image on the front page? </h2>
-        <div class="a">
-            <p>
-                Each frame of the game takes up only one column of pixels, so if we lay time across the x axis, we can represent an entire playthrough in one still image. That's what that image is. This gives us another perspective on time as a dimension. It is not the same as a spatial dimension, but it can be visualized as such.
+    <input type="checkbox" id="huh-playthrough-image" />
+    <h2 class="q"><label for="huh-playthrough-image"> What's with the weird stripey image on the front page? </label></h2>
+    <div class="a">
+        <p>
+            Each frame of the game takes up only one column of pixels, so if we lay time across the x axis, we can represent an entire playthrough in one still image. That's what that image is. This gives us another perspective on time as a dimension. It is not the same as a spatial dimension, but it can be visualized as such.
 
-            </p>
-            <p>
-                Below is a video showing what the creation of that image might look like. As the game is played, a recording of each frame moves off to the left, turning movement through time into movement through space.
-            </p>
-            <p>
-                You can also save your own playthrough replay images! There is an option after you beat the game.
-            </p>
+        </p>
+        <p>
+            Below is a video showing what the creation of that image might look like. As the game is played, a recording of each frame moves off to the left, turning movement through time into movement through space.
+        </p>
+        <p>
+            You can also save your own playthrough replay images! There is an option after you beat the game.
+        </p>
 
-            <video controls width="100%" height="200px" style="object-fit: fill;" src="/static/playthrough_hybrid.mp4">Your browser does not support the video tag</video>
-        </div>
-    </label>
+        <video controls width="100%" height="200px" style="object-fit: fill;" src="/static/playthrough_hybrid.mp4">Your browser does not support the video tag</video>
+    </div>
 </div>
 
 <div class="huh">
-    <label>
-        <input type="checkbox" />
-        <h2 class="q"> I'm having so much trouble with this game! </h2>
-        <div class="a">
-            <p>
-                I have a few suggestions:
-                <ol>
-                    <li> Use the mouse more. You can use the mouse to tilt Mario's head up and down (but not side to side).
-                    <li> If you have not played the original Super Mario Bros., you should. You can find it emulated online, and having a basic understanding of where everything is in the level helps a lot when running through it in first person. </li>
-                    <li> Play with the settings. In particular, changing the width of the line might give you a better intuition for what's going on, and make sure your sound is on. Having those extra cues about what's happening helps. </li>
-                    <li> Read the book "Flatland", and maybe some other material about dimensions and rendering. It can help to have some explicit understanding to match to what you're seeing on the screen </li>
-                    <li> Practice! This is a hard cognitive jump, but hopefully a rewarding one. </li>
-                </ol>
-            </p>
-        </div>
-    </label>
+    <input type="checkbox" id="huh-game-hard" />
+    <h2 class="q"><label for="huh-game-hard"> I'm having so much trouble with this game! </label></h2>
+    <div class="a">
+        <p>
+            I have a few suggestions:
+            <ol>
+                <li> Use the mouse more. You can use the mouse to tilt Mario's head up and down (but not side to side).
+                <li> If you have not played the original Super Mario Bros., you should. You can find it emulated online, and having a basic understanding of where everything is in the level helps a lot when running through it in first person. </li>
+                <li> Play with the settings. In particular, changing the width of the line might give you a better intuition for what's going on, and make sure your sound is on. Having those extra cues about what's happening helps. </li>
+                <li> Read the book "Flatland", and maybe some other material about dimensions and rendering. It can help to have some explicit understanding to match to what you're seeing on the screen </li>
+                <li> Practice! This is a hard cognitive jump, but hopefully a rewarding one. </li>
+            </ol>
+        </p>
+    </div>
 </div>
 
 <div class="huh">
-    <label>
-        <input type="checkbox" />
-        <h2 class="q"> What's with the name MAR1D? </h2>
-        <div class="a">
-            <p>
-                When written in certain fonts (including the title font of the original Super Mario Bros.) MAR1D looks like MARIO, and the "1D" refers to the number of dimensions you get when looking at the world.
-            </p>
-        </div>
-    </label>
+    <input type="checkbox" id="huh-name"/>
+    <h2 class="q"><label for="huh-name"> What's with the name MAR1D? </h2>
+    <div class="a">
+        <p>
+            When written in certain fonts (including the title font of the original Super Mario Bros.) MAR1D looks like MARIO, and the "1D" refers to the number of dimensions you get when looking at the world.
+        </p>
+    </div>
 </div>

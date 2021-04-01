@@ -185,12 +185,6 @@ figcaption {
       -webkit-transform: rotate(-45deg);
     }
 
-    // when selected, triangle points down
-    &:checked ~ .q::before {
-      transform: rotate(45deg);
-      -webkit-transform: rotate(45deg);
-    }
-
     // answer is hidden until the question is clicked
     & ~ div.a {
       margin-left: 1em;
@@ -202,13 +196,26 @@ figcaption {
       left: -9999px;
     }
 
-    &:checked ~ div.a {
-      // accessible alternative to
-      // display: block;
-      // visibility: visible;
-      position: relative;
-      top: 0px;
-      left: 0px;
+    // when selected xor linked to with #id in the URL, triangle points down and
+    // text is visible. XOR is so you can still toggle it off when linked to
+    // @each is for backward compatiblity. can be just :is in the future
+    @each $is in is, matches, -webkit-any, -moz-any {
+      &:#{$is}(:checked:not(:target),:target:not(:checked)) {
+        ~ .q::before {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+          -moz-transform: rotate(45deg);
+        }
+
+        ~ div.a {
+          // accessible alternative to
+          // display: block;
+          // visibility: visible;
+          position: relative;
+          top: 0px;
+          left: 0px;
+        }
+      }
     }
   }
 }
