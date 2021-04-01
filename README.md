@@ -1,6 +1,8 @@
 MAR1D
 =====
 
+This page is mostly for developers / hackers. If you just want to play the game, check out (the main website)[https://mar1d.com]. Or stick around, that's fine too.
+
 ## Under Construction
 The game is undergoing a lot of changes. I'd like to get it into shape so I can be proud to put it out there. Until I do, don't expect the README to match the game or anything like that.
 
@@ -11,7 +13,6 @@ Things remaining to be done:
 - Trailer
 
 (also, some minor cleanup things, and i'm sure i'll stumble across a couple other things while those are getting done)
-
 
 ## Description
 The original Super Mario Bros as you've never seen it. Step into Mario's shoes in this first person clone of the classic Mario game. True to the original, however, the game still takes place in a two dimensional world. You must view the world as mario does, as a one dimensional line.
@@ -88,14 +89,6 @@ To compile a .app bundle for Mac OS X, you can run `nix-build darwin-app.nix`, o
 ## License
 Licensed under AGPL v3.0, check COPYING for more details. If you have something you want to do with it that doesn't work under that license, let me know. Basically, if you're trying to make and share awesome things with it, I want to help you do that.
 
-## Extras
-
-Below is a screencap of me playing through the first stage, as well as an image depicting the same video, with time on the x-axis.
-
-![mar1d-gif](./recording.gif)
-
-![mar1d-png](./recording.png)
-
 ## Credits
 * [Taeer Bar-Yam](https://taeer.bar-yam.me)
   * Hey, that's me!
@@ -103,7 +96,7 @@ Below is a screencap of me playing through the first stage, as well as an image 
   * Helping out with the coding when I get stuck
   * Telling me when I'm being an idiot
 * [Sophie Galowitz](http://sophiegalowitz.com/)
-  * Aesthetic
+  * A E S T H E T I C
 * [Yavni Bar-Yam](https://yavni.org)
   * Photoshoping the menuscreen image
   * Coming up with the name "MAR1D"

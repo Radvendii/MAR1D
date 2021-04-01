@@ -27,6 +27,26 @@ void io_resetRec() {
   io_recording.sizeX = k_nPixels;
 }
 
+// write every frame of the game as a separate image
+// use make_anim.sh to turn those images into an animation
+void io_writeRecAnim() {
+  // back up io_recording
+  image bck = io_recording;
+  bck.data = salloc(io_recording.sizeY * io_recording.sizeX * 3 * sizeof(unsigned char));
+  memcpy(bck.data, io_recording.data, io_recording.sizeY * io_recording.sizeX * 3 * sizeof(unsigned char));
+
+  // make sure io_recording can take the extra padding at the end
+  io_recording.data = salloc((io_recording.sizeY + 29) * io_recording.sizeX * 3 * sizeof(unsigned char));
+  io_recording.sizeY = 29;
+  for (int i=0; i < bck.sizeY; i++) {
+    for (int j=0; j<30; j++) {
+      memcpy(io_recording.data + io_recording.sizeX * (i + j) * 3, bck.data + bck.sizeX * i * 3, sizeof(unsigned char) * bck.sizeX * 3);
+    }
+    io_recording.sizeY++;
+    io_writeRec();
+  }
+}
+
 void io_writeRec() {
   char *fn = rs_getRecFn();
   image playthrough = io_flippedImage(io_recording);
@@ -56,7 +76,7 @@ void io_writeImPng(const char *fn, image im) {
   for (int j=0; j < im.sizeY; j++) {
     for (int i=0; i < im.sizeX; i++) {
       // copy RGB but flip vertically because that's how lodepng wants it
-      memcpy(buf + (j * im.sizeX + i) * 4, im.data + ((im.sizeY - j) * im.sizeX + i) * 3, sizeof(unsigned char) * 3);
+      memcpy(buf + (j * im.sizeX + i) * 4, im.data + ((im.sizeY - 1 - j) * im.sizeX + i) * 3, sizeof(unsigned char) * 3);
       buf[(j * im.sizeX + i) * 4 + 3] = (unsigned char) -1; //max alpha
     }
   }

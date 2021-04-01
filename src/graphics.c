@@ -71,7 +71,9 @@ void gr_update(){
   }
   rn_perspFcamera(perspScreen, cam);
 
-  io_recAddFrame(perspScreen);
+  if (!s.won) { // ignore the long static view of the flag
+    io_recAddFrame(perspScreen);
+  }
 }
 
 void gr_color(color c) {
