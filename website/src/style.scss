@@ -32,7 +32,8 @@ body {
   margin: 10px;
   margin-top: 100px;
   width: 550px;
-  background-color: lightblue;
+  background-color: #6b88ff;
+  // background-color: lightblue;
   padding: 50px;
   height: 100%;
   border-style: solid;
@@ -148,6 +149,14 @@ img.inline {
   margin: 0 2px;
 }
 
+.tiny-border {
+  border: 1px solid gray;
+}
+
+.stretch {
+  object-fit: fill;
+}
+
 figcaption {
   font-weight: lighter;
   font-size: 0.6em;
@@ -159,7 +168,7 @@ figcaption {
 
   .q {
     cursor: pointer;
-    display: inline;
+    font-size: 1.2em;
 
     // triangle pointer
     // ideally, this would be input::after, but firefox doesn't like that
