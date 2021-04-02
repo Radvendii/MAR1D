@@ -32,13 +32,12 @@ body {
   margin: 10px;
   margin-top: 100px;
   width: 550px;
-  background-color: #6b88ff;
-  // background-color: lightblue;
+  // background-color: #6b88ff; // same as mario/mar1d sky color. kind of aggresive though
+  // background-color: #d7fdec; // too green
+  background-color: #dae2df; // bluish off-white
   padding: 50px;
   height: 100%;
-  border-style: solid;
-  border-color: grey;
-  border-width: 5px;
+  border: 5px solid gray;
 }
 
 footer {
@@ -107,6 +106,14 @@ footer {
   }
 }
 
+hr {
+  // border: 1px outset #FCBCB0; // like the outside of the boxes
+  // border-color: #C84C0C; // like the inside of the boxes
+  // ^^ neither of these look good down in the body of the website, away from
+  // the context of the boxes
+  border-color: #333;
+}
+
 h1 {
   font-family: Emulogic;
 }
@@ -135,6 +142,7 @@ h2 {
 
   > img.logo {
     width: 100px;
+    margin: 0 auto;
   }
 
   // a& is not supported yet
@@ -146,15 +154,17 @@ h2 {
 img.inline {
   width: 0.8em;
   display: inline;
+  vertical-align: baseline;
   margin: 0 2px;
-}
-
-.tiny-border {
-  border: 1px solid gray;
 }
 
 .stretch {
   object-fit: fill;
+}
+
+// unless they're .inline
+a > img {
+  display: block;
 }
 
 figcaption {
@@ -186,7 +196,8 @@ figcaption {
   }
   // answer is hidden until the question is clicked
   .a {
-    margin-left: 1em;
+    margin-left: 1em; // inset past the question
+    margin-top: -10px; // closer to the question
     // accessible alternative to
     // display: none;
     // visibility: hidden;
