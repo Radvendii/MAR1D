@@ -15,7 +15,7 @@ let
   datadir = "MAR1D.app/Contents/Resources";
 in
 (callPackage ./package.nix {}).overrideAttrs (old: {
-  nativeBuildInputs = old.nativeBuildInput
+  nativeBuildInputs = old.nativeBuildInputs
                       ++ [ buildPackages.dylibbundler
                            buildPackages.makeWrapper
                          ];
@@ -27,17 +27,25 @@ in
   ];
 
   postInstall = ''
-    cp darwin/MAR1D.icns $out/${datadir}
-    cp darwin/Info.plist $out/MAR1D.app/Contents
-    # cp darwin/MAR1D-MacOS-wrap $out/${bindir}
-    # cd into MAR1D.app and save recordings to the desktop
-    wrapProgram $out/MAR1D.app/Contents/MacOS/MAR1D \
-      --run 'cd $(dirname $0)/../../..' \
-      --set MAR1D_RECORDING_DIR '$HOME/Desktop'
-    # need the wrapper to refer to relative path of the executable
-    substituteInPlace $out/${bindir}/MAR1D \
-      --replace "$out/MAR1D.app/" './'
+    # transfer accoutrements
+    cp $src/accoutrements/MAR1D.icns $out/${datadir}
+    cp $src/accoutrements/Info.plist $out/MAR1D.app/Contents
+
+    # find dynamic libraries
     mkdir $out/MAR1D.app/Contents/Libs
-    dylibbundler -b -x $outMAR1D.app/Contents/MacOS/MAR1D -d $out/MAR1D.app/Contents/Libs
+    dylibbundler -b -x $out/MAR1D.app/Contents/MacOS/MAR1D -d $out/MAR1D.app/Contents/Libs
+
+    # wrap the program manually (no wrapProgram because we want to break nix purity)
+    mv $out/${bindir}/{MAR1D,.MAR1D-wrapped}
+    cat <<'EOF' > $out/${bindir}/MAR1D
+#!/usr/bin/env bash -e
+cd $(dirname $0)/../../..
+export MAR1D_RECORDING_DIR="$HOME/Desktop"
+exec -a "$0" "$(dirname $0)/.MAR1D-wrapped"  "$@"
+EOF
+    chmod +x $out/${bindir}/MAR1D
   '';
+
+  # this should be portable to non-nix systems
+  dontPatchShebangs = true;
 })

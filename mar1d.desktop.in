@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Terminal=false
-Exec=@EXECUTABLE@
-Name=MAR1D
-Icon=@ICON@
-Categories=Game;

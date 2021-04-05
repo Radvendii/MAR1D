@@ -46,11 +46,11 @@ subdir('src')
 install_subdir('resources', install_dir: resources_dir, strip_directory: true)
 
 if is_linux
-   configure_file(input: 'mar1d.desktop.in',
+   configure_file(input: 'accoutrements/mar1d.desktop.in',
                   output: 'mar1d.desktop',
                   install_dir: 'share' / 'applications',
                   configuration: { 'EXECUTABLE': executable
                                  , 'ICON' : 'MAR1D'
                                  })
-  install_data('MAR1D.png', install_dir: 'share' / 'icons' / 'hicolor' / '256x256' / 'apps')
+  install_data('accoutrements/MAR1D.png', install_dir: 'share' / 'icons' / 'hicolor' / '256x256' / 'apps')
 endif
