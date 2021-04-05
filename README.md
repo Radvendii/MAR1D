@@ -49,7 +49,7 @@ The `MAR1D` executable takes a few command line arguments (note that all numeric
 
 In addition, there are two environment variables which affect where MAR1D puts / looks for files.
 
-* `MAR1D_RECORDING_DIR` where to put .png recordings of your playthrough. By default this is the current directory on Linux and Windows, and the current user's desktop on Mac OS X.
+* `MAR1D_RECORDING_DIR` where to put .png recordings of your playthrough. By default this is the current directory on Linux and Windows, and the current user's desktop when running the Mac OS X .app bundle.
 * `MAR1D_RESOURCE_DIR` where to find the resource files. By default this is wherever they were installed.
 
 ## Compiling
