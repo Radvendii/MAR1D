@@ -63,15 +63,34 @@ with import nixpkgs {
 };
 
 (pkgsStatic.callPackage ./package.nix {}).overrideAttrs (old: {
+  nativeBuildInputs = old.nativeBuildInputs
+                      ++ [ buildPackages.zip
+                           buildPackages.perl
+                         ];
+
+  # windows can't handle certain characters in file names, so we encode in ascii
+  # TODO: really, this should happen in the meson.build file, so the build
+  #       process is more flexible
+  # TODO: really really, i shouldn't be using special characters in file names.
+  #       I couldn't even figure out how to deal with them in bash and had to
+  #       shell out to perl.
+  postPatch = ''
+    pushd resources/2D
+    # dealing with these files in bash is a mess. maybe i shouldn't be using weird characters in file names to begin with...
+    ls -A | perl -MFile::Copy -ne 'chomp && move($_, s/^(.)/ord($1)/re) or die "move failed $_: $!"'
+    popd
+  '';
+
   mesonFlags = [
     "--bindir=."
     "--datadir=resources"
     "-Dportable=true"
     "-Dstatic=true"
   ];
+
   # package it up nice and tidy for transfering to windows
   postInstall = ''
     cd $out
-    ${buildPackages.zip}/bin/zip -r MAR1D.zip *
+    zip -r MAR1D.zip *
   '';
 })

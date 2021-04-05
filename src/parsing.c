@@ -204,7 +204,12 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
   for(j=0;j<nFrames;j++){
     y=0; x=0; i=0;
     char imFn[64];
+#ifdef _WIN32
+    // windows can't handle certain characters in file names, so we encode in ascii
+    sprintf(imFn, "2D/%d_%d.png", oname, j);
+#else
     sprintf(imFn, "2D/%c_%d.png", oname, j);
+#endif
     o->frames[j].im = io_getImage(imFn);
     o->frames[j].ps = salloc(sizeof(point) * (size+1));
     while(i<size){

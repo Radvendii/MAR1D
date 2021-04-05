@@ -12,6 +12,9 @@ add_project_arguments('-Werror',  language: 'c')
 add_project_arguments( '-Wno-char-subscripts', language: 'c')
 
 is_windows = host_machine.system() == 'windows'
+is_linux = host_machine.system() == 'linux'
+is_darwin = host_machine.system() == 'darwin'
+
 static_deps = get_option('static')
 
 cc = meson.get_compiler('c')
@@ -42,7 +45,7 @@ subdir('src')
 
 install_subdir('resources', install_dir: resources_dir, strip_directory: true)
 
-if not is_windows
+if is_linux
    configure_file(input: 'mar1d.desktop.in',
                   output: 'mar1d.desktop',
                   install_dir: 'share' / 'applications',

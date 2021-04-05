@@ -46,7 +46,16 @@ void sfscanf(FILE *f, char *fmtstr, ...) {
       }
     }
   }
-  err = vfscanf(f, fmtstr, vargs); // causes problems through wine?
+#ifdef _WIN32
+  /*
+   * NOTE: For some reason wine can't handle the vfscanf line unless this line
+   *       is run somewhere in the program first (it doesn't have to be
+   *       immediately before, I just wanted to keep them together). It runs
+   *       fine on windows without, but not through wine.
+   */
+  sscanf(" ", " ");
+#endif
+  err = vfscanf(f, fmtstr, vargs);
   if (err != nFmts) {
     DEBUG("Error: malformed file (or format string)");
     exit(EXIT_FAILURE);

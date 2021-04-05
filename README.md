@@ -60,7 +60,7 @@ You should be able to just compile directly with meson, but I don't actually kno
 
 To compile on a system using the [nix package manager](https://nixos.org/), it's as simple as `nix-build`. If you are using flakes, `nix build` works too.
 
-To cross-compile for windows, `nix-build windows.nix` or for flakes `nix build .#windows`, then transfer `result/MAR1D.zip` it to a windows computer.
+To cross-compile for windows, `nix-build windows.nix` or for flakes `nix build .#windows`, then transfer `result/MAR1D.zip` to a windows computer, or `cd result; wine ./MAR1D.exe` (you must be in the same directory as `MAR1D.exe`).
 
 To compile an AppImage that can be transferred to other linux distros, you must be using flakes, and run `nix build .#appimage`.
 
