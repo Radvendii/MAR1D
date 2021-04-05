@@ -1,3 +1,11 @@
+// colour palette: https://coolors.co/6b88ff-c84c0c-fc9838-dae2df-423e3b
+$blue: #6b88ff;
+$brown: #c84c0c;
+$pink: #fcbcb0;
+$lightblue: #dae2df;
+$gray: #423e3b;
+$text: black;
+
 @mixin plain-link {
   text-decoration: none;
   color: inherit;
@@ -19,6 +27,7 @@
 }
 
 body {
+  color: $text;
   height: 100%;
   line-height: 1.6;
   background: url(/static/background.png) repeat;
@@ -32,12 +41,10 @@ body {
   margin: 10px;
   margin-top: 100px;
   width: 550px;
-  // background-color: #6b88ff; // same as mario/mar1d sky color. kind of aggresive though
-  // background-color: #d7fdec; // too green
-  background-color: #dae2df; // bluish off-white
+  background-color: $lightblue;
   padding: 50px;
   height: 100%;
-  border: 5px solid gray;
+  border: 5px solid $gray;
 }
 
 footer {
@@ -46,7 +53,7 @@ footer {
 }
 
 :focus {
-  outline: #333 solid 2px; // shows up better on the background
+  outline: $gray solid 2px;
 }
 
 :not(:focus-visible) {
@@ -81,12 +88,12 @@ footer {
 }
 
 .box {
-  background-color: #C84C0C;
+  background-color: $brown;
   display: inline-block;
   padding: 2px 25px;
   margin: 2px;
   border: inset;
-  border-color: #FCBCB0;
+  border-color: $pink;
   border-width: 5px;
   border-style: outset;
 
@@ -107,11 +114,7 @@ footer {
 }
 
 hr {
-  // border: 1px outset #FCBCB0; // like the outside of the boxes
-  // border-color: #C84C0C; // like the inside of the boxes
-  // ^^ neither of these look good down in the body of the website, away from
-  // the context of the boxes
-  border-color: #333;
+  border-color: $text;
 }
 
 h1 {
@@ -183,7 +186,7 @@ figcaption {
     // triangle pointer
     // ideally, this would be input::after, but firefox doesn't like that
     &::before {
-      border: solid black;
+      border: solid $text;
       border-width: 0 3px 3px 0;
       display: inline-block;
       padding: 0.15em;
@@ -215,7 +218,7 @@ figcaption {
 
     // focus is on the checkbox, but should visually show on the question
     &:focus ~ .q {
-      outline: #333 solid 2px;
+      outline: $gray solid 2px;
     }
     &:not(:focus-visible) ~ .q {
       outline: none;
