@@ -4,7 +4,12 @@ title: Home
 
 <div class="container-outer"> <div class="container-inner">
     <p>
-        <video controls style="width: 100%; max-width: 512px; /* that's how big the video is */" src="/static/playthrough_video.mp4">Your browser does not support the video tag</video>
+        <video controls playsinline
+               style="width: 100%; max-width: 512px; /* that's how big the video is */"
+               poster="/static/playthrough_video_poster.png"
+               src="/static/playthrough_video.mp4">
+            Your browser does not support the video tag
+        </video>
     </p>
 </div> </div>
 
