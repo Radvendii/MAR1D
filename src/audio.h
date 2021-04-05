@@ -28,28 +28,32 @@
 #define SND_levelend 18
 #define SND_lowtime 19
 #define SND_mushroomappear 20
-#define SND_mushroomeat 21
-#define SND_oneup 22
-#define SND_overworld_fast 23
-#define SND_overworld 24
-#define SND_pause 25
-#define SND_pipe 26
-#define SND_princessmusic 27
-#define SND_rainboom 28
-#define SND_scorering 29
-#define SND_shot 30
-#define SND_shrink 31
-#define SND_stab 32
-#define SND_starmusic_fast 33
-#define SND_starmusic 34
-#define SND_stomp 35
-#define SND_swim 36
-#define SND_underground_fast 37
-#define SND_underground 38
-#define SND_underwater_fast 39
-#define SND_underwater 40
-#define SND_vine 41
-#define k_nSounds 42
+#define SND_fireflowerappear 21
+#define SND_mushroomeat 22
+#define SND_fireflowereat 23
+#define SND_oneup 24
+#define SND_overworld_fast 25
+#define SND_overworld 26
+#define SND_pause 27
+#define SND_pipe 28
+#define SND_princessmusic 29
+#define SND_rainboom 30
+#define SND_scorering 31
+#define SND_shot 32
+#define SND_shrink 33
+#define SND_stab 34
+#define SND_starmusic_fast 35
+#define SND_starmusic 36
+#define SND_stomp 37
+#define SND_goombastomp 38
+#define SND_koopastomp 39
+#define SND_swim 40
+#define SND_underground_fast 41
+#define SND_underground 42
+#define SND_underwater_fast 43
+#define SND_underwater 44
+#define SND_vine 45
+#define k_nSounds 46
 #define SND_continueMain k_nSounds
 
 #define k_mix_frequency MIX_DEFAULT_FREQUENCY
@@ -66,6 +70,7 @@ void au_deinit();
 void au_play(int);
 void au_playWait(int);
 void au_mainPlay(int);
+bool au_playing(int);
 void au_lowTime();
 void au_mainStop();
 void au_loadSounds();

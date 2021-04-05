@@ -437,6 +437,9 @@ void io_writeConfig(config c){
   set = config_setting_add(root, "invertMouseY", CONFIG_TYPE_BOOL);
   config_setting_set_bool(set, c.invertMouseY);
 
+  set = config_setting_add(root, "visualSounds", CONFIG_TYPE_BOOL);
+  config_setting_set_bool(set, c.visualSounds);
+
   /*
    * only write debug back to the config if it's true. I want this to be a fairly
    * inaccessible option, so it shouldn't be just showing up in people's configs

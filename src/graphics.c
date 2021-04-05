@@ -281,8 +281,9 @@ void gr_drawHud(){
 
   gr_text(RGB_textDim, true, hud, k_fontSize, 5, k_hudWindowH-5);
 
-  if (s.lowTime) {
-    // bold the time left if they're running out
+  // bold the time left if they're running out
+  // flash bold during SND_lowtime
+  if (s.lowTime && !(au_playing(SND_lowtime) && (s.time/k_gameTicksPerTimeTick)%2==0)) {
     char time[32];
     sprintf(time, "TIME\n"
                   "%03u",

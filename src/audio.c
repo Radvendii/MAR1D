@@ -34,7 +34,9 @@ const char *soundFileNames[] = {
   "levelend.wav",
   "lowtime.wav",
   "mushroomappear.wav",
+  "mushroomappear.wav", // SND_fireflowerappear
   "mushroomeat.wav",
+  "mushroomeat.wav", // SND_fireflowereat
   "oneup.wav",
   "overworld-fast.wav",
   "overworld.wav",
@@ -49,6 +51,8 @@ const char *soundFileNames[] = {
   "starmusic-fast.wav",
   "starmusic.wav",
   "stomp.wav",
+  "stomp.wav", // SND_goombastomp
+  "stomp.wav", // SND_koopastomp
   "swim.wav",
   "underground-fast.wav",
   "underground.wav",
@@ -168,6 +172,15 @@ void au_mainPlay(int snd){
     exit(EXIT_FAILURE);
   }
   vs_mainPlay(snd);
+}
+
+bool au_playing(int snd){
+  if (snd == SND_none) {
+    return !Mix_Playing(-1);
+  }
+  else {
+    return (au_mainAudio == snd || Mix_Playing(snd));
+  }
 }
 
 void au_mainStop(){

@@ -117,7 +117,7 @@ void cl_starman(){
 
 void cl_fireMario(){
   s.fire = true;
-  au_play(SND_mushroomeat);
+  au_play(SND_fireflowereat);
 }
 
 void cl_bigMario(){
@@ -146,7 +146,6 @@ void cl_smallMario(){
 }
 
 void cl_smallJump(){
-  au_play(SND_stomp);
   s.scene[s.pli].vy = k_yVel;
   s.onGround = false;
   s.multibounce++;

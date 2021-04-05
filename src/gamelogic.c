@@ -16,6 +16,12 @@ void gl_init(){
   s.scene = salloc(sizeof(obj) * k_nMaxObj);
 }
 
+// bypass everything and quit either if "quit" is set, or if the game is over
+// and we're not waiting on some sound
+bool gl_shouldQuit() {
+  return quit || (gameEnd && au_waiting == SND_none);
+}
+
 // main game loop
 void gl_main() {
   wn_eventCallbacks(&gl_keypress, &gl_mouseclick, &gl_mousemove);
@@ -29,7 +35,7 @@ void gl_main() {
    */
   int lastSDLTime = SDL_GetTicks();
   // main game loop
-  while (!quit && !gameEnd) {
+  while (!gl_shouldQuit()) {
 
     //TODO: Do this when the pause button is pressed so that it doesn't have to happen every time through the loop.
     if (s.userPaused) {
@@ -54,7 +60,7 @@ void gl_main() {
     int curSDLTime = SDL_GetTicks();
     // update the game logic until we've caught up with the current time
     // (this will usually just be once)
-    while (curSDLTime > lastSDLTime && !gameEnd && !quit) {
+    while (curSDLTime > lastSDLTime && !gl_shouldQuit()) {
       if (au_waiting == SND_none) { // if we're waiting for audio, don't progress the game at all
         gl_update();
       }
@@ -62,7 +68,7 @@ void gl_main() {
       vs_update();
       lastSDLTime += k_msPerGameTick;
     }
-    if (!gameEnd && !quit) {
+    if (!gl_shouldQuit()) {
       // draw updates
       wn_perspWindow();
       gr_drawPersp();
@@ -78,8 +84,6 @@ void gl_main() {
       wn_update();
     }
   }
-
-  SAFE_DELAY_UNTIL(au_waiting == SND_none);
 
   // release mouse on game exit
   wn_disable_mouse(false);
@@ -276,7 +280,7 @@ void gl_update(){
 
     if(s.time == k_timeLow * k_gameTicksPerTimeTick){
       au_lowTime();
-      s.lowTime = true;
+      s.lowTime = true; // TODO: replace s.lowTime with just a check of `s.time < k_timeLow * k_gameTicksPerTimeTick`?
     }
   }
   if(s.won){

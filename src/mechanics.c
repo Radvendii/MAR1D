@@ -57,8 +57,11 @@ void mh_update(){
         s.scene[l] = ob_objFchar(s.scene[i].c);
         s.scene[l].x = s.scene[i].x;
         s.scene[l].y = s.scene[i].y+16;
-        if(s.scene[i].c == 'r' || s.scene[i].c == 'g' || s.scene[i].c == 'R'){
+        if(s.scene[i].c == 'r' || s.scene[i].c == 'g'){
           au_play(SND_mushroomappear);
+        }
+        if(s.scene[i].c == 'R'){
+          au_play(SND_fireflowerappear);
         }
         if(s.scene[i].c != 'R'){
           s.scene[l].vx = 0.5;
@@ -278,6 +281,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           (*ee).x = x_temp;
           (*ee).y = y_temp;
           (*ee).i = k_corpseLife;
+          au_play(SND_goombastomp);
           cl_smallJump();
           s.score+=100*s.multibounce;
         }
@@ -303,6 +307,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           (*ee).x = x_temp;
           (*ee).y = y_temp;
           (*ee).i = k_shellLife;
+          au_play(SND_koopastomp);
           cl_smallJump();
           s.score+=100*s.multibounce;
         }
