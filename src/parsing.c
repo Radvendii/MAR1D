@@ -113,6 +113,9 @@ int io_getFont(bool** font, char* fn){
 
 // Parses a color. Color data should start with a C and then be followed by a character specifying the name of the color, then the R, G, B values from 0-255 separated by '.'s.
 // e.g. "CG:0.171.0" assigns a shade of green to the character 'G'
+// NOTE: Assigning a color to 'f' doesn't work on Windows, it shows as black. I
+//       have *no* idea why, so I've just avoided 'f'. Hopefully no other
+//       letters are affected.
 void io_getColor(FILE* f, color *c){
   sfscanf(f, ":");
   sfscanf(f, "%hhd.%hhd.%hhd\n", &c->r, &c->g, &c->b);

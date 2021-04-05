@@ -4,7 +4,7 @@ CD:0.128.136
 Cb:231.95.19
 Cl:255.128.57
 Cd:212.76.0
-Cf:140.16.0
+CF:140.16.0
 C*:255.163.71
 Cg:184.248.24
 CG:0.171.0
@@ -235,19 +235,19 @@ Oc5; ps:36; pos:3,1; dim:16x16; cols:0; grav:0; phys:0; hid:0;
      ,,,,,,
 
 
-     ffffff
-    f      f
-    f      f
-   f        f
-   f        f
-   f        f
-   f        f
-   f        f
-   f        f
-   f        f
-   f        f
-    f      ,
-    f      ,
+     FFFFFF
+    F      F
+    F      F
+   F        F
+   F        F
+   F        F
+   F        F
+   F        F
+   F        F
+   F        F
+   F        F
+    F      ,
+    F      ,
      ,,,,,,
 
 
@@ -830,22 +830,22 @@ d              d
 d              d
 d              d
 ,dddddddddddddd,
-,ffffffffffffff,
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-f              f
-,ffffffffffffff,
+,FFFFFFFFFFFFFF,
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+F              F
+,FFFFFFFFFFFFFF,
 ,dddddddddddddd,
 d              d
 d              d
