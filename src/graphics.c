@@ -62,8 +62,8 @@ void gr_update(){
   }
   //TODO: 3rd person deathcam?
   // Position camera in player
-  cam.x = s.scene[s.pli].x+14;
-  cam.y = s.scene[s.pli].y-2;
+  cam.x = s.scene[s.pli].x+8; // halfway, so that looking up looks directly up
+  cam.y = s.scene[s.pli].y-2; // inset a bit, so we're *in* his head
 
   // Render
   if (conf.debug) {
