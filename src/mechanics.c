@@ -15,13 +15,16 @@ void mh_update(){
     if(s.scene[i].i == ACT_nothing){continue;}
     if(s.scene[i].type == 'O' && --s.scene[i].i == ACT_nothing){cl_delObjAt(i);}
     if(s.scene[i].type == 'E' && --s.scene[i].i == ACT_nothing){cl_delObjAt(i);}
-    if(s.scene[i].type == '7' && --s.scene[i].i == ACT_nothing && s.scene[i].vx == 0){
-      int x_temp = s.scene[i].x;
-      int y_temp = s.scene[i].y+16;
-      s.scene[i] = ob_objFchar('&');
-      s.scene[i].x = x_temp;
-      s.scene[i].y = y_temp;
-      s.scene[i].vx = -0.5;
+    if(s.scene[i].type == '7'){
+      if(s.scene[i].vx == 0 && --s.scene[i].i == ACT_nothing){
+        int x_temp = s.scene[i].x;
+        int y_temp = s.scene[i].y+16;
+        s.scene[i] = ob_objFchar('&');
+        s.scene[i].x = x_temp;
+        s.scene[i].y = y_temp;
+        s.scene[i].vx = -0.5;
+      }
+      if(s.scene[i].j){s.scene[i].j--;}
     }
     if(s.scene[i].i <= ACT_bounce && (s.scene[i].type == '?' || s.scene[i].type == '#' || s.scene[i].type == '3')){
       if(s.bigMario && (s.scene[i].type == '#' || s.scene[i].type == '3') && s.scene[i].i == ACT_bounce-1){
@@ -318,16 +321,34 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         ai_kill(ee);
         s.score += 200;
       }
-      if(colsee & (8 | 16)){
-        gl_killed();
+      bool side = colsee & (8 | 16);
+      bool top = colsee & (2 | 4) && !side;
+      bool moving = (*ee).vx;
+      if(moving && !(*ee).j){ // j marks if it's just been bopped
+        if(side){
+          gl_killed();
+        }
+        else if(top){
+          int x_temp = (*ee).x;
+          int y_temp = (*ee).y;
+          (*ee) = ob_objFchar('7');
+          (*ee).x = x_temp;
+          (*ee).y = y_temp;
+          (*ee).i = k_shellLife;
+          cl_smallJump();
+        }
       }
-      else if(colsee & (2 | 4)){
-        int dir = (colsee & 2) - (colsee & 4);
+      else if(top || side){
+        int dir = !!(colsee & 2) - !!(colsee & 4);
         au_play(SND_shot);
-        (*ee).vx = 2.0 * dir;
-        (*er).vx = -1.0 * dir;
-        (*ee).nFrames = 1;
+        (*ee).vx = k_xVelRunMax * dir; // can't catch it
+        if (top) {
+          (*er).vx = -1.0 * dir;
+        }
+        (*ee).nFrames = 1; // stop the animation
         s.score += 400+100*s.multibounce;
+        // prevent immediate repeated collisions
+        (*ee).j = 5; // TODO: arbitrary magic number
       }
       break;
     case '!':
@@ -371,6 +392,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
   case '7':
     switch((*ee).type){
     case '&':
+      // not sure what happens here; it never comes up in 1-1
       ;
     case 'e':
       if((*ee).physical == true){
