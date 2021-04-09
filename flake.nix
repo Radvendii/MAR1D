@@ -16,7 +16,7 @@
         oldGlibcPkgs = import nixpkgs {
           inherit system;
           overlays = [
-            nix-bundle.overlays.glibc_2_24.${system}
+            nix-bundle.overlays.glibc_2_24
           ];
         };
       in rec {
