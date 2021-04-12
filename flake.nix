@@ -50,6 +50,10 @@
             });
           };
         };
+        defaultApp = {
+          type = "app";
+          program = "${packages.game}/bin/MAR1D";
+        };
       }
     );
 }
