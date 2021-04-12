@@ -83,6 +83,8 @@ typedef struct {
 
   int animFrame; // Each object needs it's own animation counter so that the animation starts at the beginning when the object appears.
 
+  int combo; // used by the player and koopa shell to keep track of the score combo count
+
   char type; // Each object type is associated with a character.
   objFrame* frames; // Animation frames
   int nFrames; // Number of frames

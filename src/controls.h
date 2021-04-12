@@ -38,6 +38,8 @@ void cl_fireMario();
 void cl_starman();
 void cl_smallMario();
 void cl_fire();
+void cl_oneUp();
+void cl_score(int);
 void cl_crouch();
 void cl_uncrouch();
 void cl_pipe();

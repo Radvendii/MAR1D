@@ -6,7 +6,6 @@ void cl_init(){
   s.upcount = 0;
   s.run = false;
   s.runWarp = false;
-  s.multibounce=0;
 }
 
 void cl_update(){
@@ -52,8 +51,8 @@ void cl_update(){
   if(*vx > k_xVelMax){s.runWarp++;}
   else if(s.runWarp){s.runWarp--;}
 
-  // reset bounce counter when we land
-  if(s.onGround){s.multibounce = 0;}
+  // reset bounce counter when we land / when star power runs out
+  if(s.onGround && !s.star){s.scene[s.pli].combo = 0;}
 }
 
 bool cl_move1(int i, char dir, int inc){
@@ -148,7 +147,20 @@ void cl_smallMario(){
 void cl_smallJump(){
   s.scene[s.pli].vy = k_yVel;
   s.onGround = false;
-  s.multibounce++;
+}
+
+void cl_oneUp(){
+  au_play(SND_oneup);
+  s.lives++;
+}
+
+void cl_score(int combo){
+  if(combo > k_scoreComboMax){
+    cl_oneUp();
+  }
+  else{
+    s.score += k_scoreCombo[combo];
+  }
 }
 
 void cl_jumpStart(){

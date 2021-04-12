@@ -62,6 +62,9 @@
 
 #define k_winScreenTime 6000
 
+#define k_scoreCombo ((int[]){100, 200, 400, 500, 800, 1000, 2000, 4000, 5000, 8000})
+#define k_scoreComboMax (sizeof(k_scoreCombo) / sizeof(int))
+
 struct state {
   char level; // The level the player is on
   char loc; //
@@ -92,7 +95,6 @@ struct state {
   int coins;
   int score;
   unsigned int time; // Time left in the game (in gameTicks)
-  int multibounce; // Bouncing accross multiple enemies results in a score multiplier. This keeps track of that.
   bool lowTime; // Is the player low on time
 
   /* int menu; // This variable keeps track of which part of the game we are in (menu, main game, win screen) */

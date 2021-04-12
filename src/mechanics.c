@@ -268,7 +268,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       if((*ee).physical == true){
         if(s.star){
           ai_kill(ee);
-          s.score+=100;
+          cl_score((*er).combo++);
         }
         // The hitboxes are positioned such that if you walk into them from the
         // side, you will hit both the top and the side box. But if you come
@@ -286,7 +286,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           (*ee).i = k_corpseLife;
           au_play(SND_goombastomp);
           cl_smallJump();
-          s.score+=100*s.multibounce;
+          cl_score((*er).combo++);
         }
       }
       break;
@@ -294,7 +294,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
       if((*ee).physical == true){
         if(s.star){
           ai_kill(ee);
-          s.score+=100;
+          cl_score((*er).combo++);
         }
         // The hitboxes are positioned such that if you walk into them from the
         // side, you will hit both the top and the side box. But if you come
@@ -312,14 +312,14 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           (*ee).i = k_shellLife;
           au_play(SND_koopastomp);
           cl_smallJump();
-          s.score+=100*s.multibounce;
+          cl_score((*er).combo++);
         }
       }
       break;
     case '7':
       if(s.star){
         ai_kill(ee);
-        s.score += 200;
+        cl_score((*er).combo++);
       }
       bool side = colsee & (8 | 16);
       bool top = colsee & (2 | 4) && !side;
@@ -336,6 +336,8 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           (*ee).y = y_temp;
           (*ee).i = k_shellLife;
           cl_smallJump();
+          cl_score((*er).combo++);
+          (*ee).combo = 2; // reset combo
         }
       }
       else if(top || side){
@@ -346,7 +348,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
           (*er).vx = -1.0 * dir;
         }
         (*ee).nFrames = 1; // stop the animation
-        s.score += 400+100*s.multibounce;
+        (*ee).combo = 2; // koopa shell scores start at 500
         // prevent immediate repeated collisions
         (*ee).j = 5; // TODO: arbitrary magic number
       }
@@ -370,7 +372,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     if((*er).i != ACT_nothing){
       if(((*ee).type == 'e' || (*ee).type == '&') && (*ee).physical == true){
         ai_kill(ee);
-        s.score += 100;
+        cl_score((*er).combo++);
       }
       if((*ee).type == 'r' || (*ee).type == 'g'){
         (*ee).vx = -(*ee).vx;
@@ -392,11 +394,10 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
   case '7':
     switch((*ee).type){
     case '&':
-      // not sure what happens here; it never comes up in 1-1
-      ;
     case 'e':
       if((*ee).physical == true){
         ai_kill(ee);
+        cl_score((*er).combo++);
       }
       break;
     default:
@@ -464,8 +465,7 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
   case 'g':
     if((*ee).type == '@'){
       cl_delObj(er);
-      au_play(SND_oneup);
-      s.lives++;
+      cl_oneUp();
       s.score+= 1000;
     }
     else if(colser & (2 | 4)){
