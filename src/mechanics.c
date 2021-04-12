@@ -383,11 +383,8 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
     }
     break;
   case 'e':
-    if((*er).physical == true && colser & (4 | 8)){
-      (*er).vx = -(*er).vx;
-    }
-    break;
   case '&':
+    // TODO: koopas should also turn around if they reach an edge
     if((*er).physical == true && colser & (4 | 8)){
       (*er).vx = -(*er).vx;
       (*er).flip = !(*er).flip;
