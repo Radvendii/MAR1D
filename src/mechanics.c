@@ -385,6 +385,8 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
   case 'e':
   case '&':
     // TODO: koopas should also turn around if they reach an edge
+    //       could do this by putting a hitbox on their bottom corners and turn
+    //       around if they're coliding with something but their corners are not
     if((*er).physical == true && colser & (4 | 8)){
       (*er).vx = -(*er).vx;
       (*er).flip = !(*er).flip;
