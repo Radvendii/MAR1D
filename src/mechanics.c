@@ -353,7 +353,9 @@ void mh_doCollision(obj* er, obj* ee, int colser, int colsee){
         (*ee).j = 5; // TODO: arbitrary magic number
       }
       break;
+    case '<':
     case '!':
+      s.score+=k_scoreFlag[(*ee).i];
       s.won = true;
       break;
     case '~':

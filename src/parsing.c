@@ -290,6 +290,11 @@ void io_getLevel(FILE* f, level *l, obj os[CHAR_MAX]){
           }
         }
       }
+      if(c == '!' || c == '<'){
+        // grab the next character as the "flag level/height"
+        // TODO: really, this shouldn't be in the data file. it should be determined based on height
+        sfscanf(f, "%1hhd", &(*l)[i].i);
+      }
       if(c == '|' || c == '='){
         fgetc(f);
         x++;

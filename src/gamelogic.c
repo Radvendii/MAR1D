@@ -154,7 +154,6 @@ void gl_win(){
   case 0:
     s.won = true;
     s.paused = true;
-    s.score+=400;
     au_mainStop();
     au_playWait(SND_levelend);
     stage++;

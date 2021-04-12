@@ -65,6 +65,8 @@
 #define k_scoreCombo ((int[]){100, 200, 400, 500, 800, 1000, 2000, 4000, 5000, 8000})
 #define k_scoreComboMax (sizeof(k_scoreCombo) / sizeof(int))
 
+#define k_scoreFlag ((int[]){100, 400, 800, 2000, 5000})
+
 struct state {
   char level; // The level the player is on
   char loc; //
