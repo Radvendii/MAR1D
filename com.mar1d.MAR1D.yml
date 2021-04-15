@@ -16,7 +16,7 @@ modules:
         - type: archive
           url: "https://mesa.freedesktop.org/archive/glu/glu-9.0.1.tar.gz"
           sha256: f6f484cfcd51e489afe88031afdea1e173aa652697e4c19ddbcb8260579a10f7
-  - name: mar1d
+  - name: MAR1D
     buildsystem: meson
     sources:
       - type: dir
