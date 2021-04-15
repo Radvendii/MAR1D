@@ -1,11 +1,21 @@
-CMakeFiles/*
-*cmake_install*
-*CMakeCache.txt*
-*Makefile*
-build/*
-install/*
-result*
-playthrough.png
+# Mac OS X
+.DS_Store
 
-website/_site/*
-website/_cache/*
+# Editors
+*~
+*.swp
+
+# Meson
+/build
+/dist
+
+# Nix
+result*
+
+# Flatpak
+flatpak-repo
+flatpak-build
+.flatpak-builder
+flatpak-cruft
+flatpak-data
+MAR1D.flatpak
