@@ -5,10 +5,9 @@
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     nix-bundle.url = "github:radvendii/nix-bundle";
-    website.url = "path:./website";
   };
 
-  outputs = { self, nixpkgs, flake-utils, nix-bundle, website }:
+  outputs = { self, nixpkgs, flake-utils, nix-bundle }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
@@ -22,12 +21,17 @@
       in rec {
         defaultPackage = packages.game;
         packages = {
-          website = website.defaultPackage.${system};
           game = import ./. { inherit nixpkgs system; };
           darwin-app = import ./darwin-app.nix { inherit nixpkgs system; };
           windows = import ./windows.nix { inherit nixpkgs system; };
+          # no way to bundle flatpak with nix yet
+          # flatpak = import ./flatpak.nix { inherit nixpkgs system; };
           appimage = nix-bundle.bundlers.appimage {
             inherit system;
+            target = (oldGlibcPkgs.callPackage ./package.nix { }).overrideAttrs (old: {
+              mesonFlags = [ "-Dportable=true" ];
+            });
+
             # trial and error removing them from the AppDir
             excludePkgs = with oldGlibcPkgs;
               [ llvm_11
@@ -45,9 +49,6 @@
                 kbd
                 shadow
               ];
-            target = (oldGlibcPkgs.callPackage ./package.nix { }).overrideAttrs (old: {
-              mesonFlags = [ "-Dportable=true" ];
-            });
           };
         };
         defaultApp = {
