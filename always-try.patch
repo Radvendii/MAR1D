@@ -1,0 +1,34 @@
+diff --git a/bubblewrap.c b/bubblewrap.c
+index b3d52bc..04a1c13 100644
+--- a/bubblewrap.c
++++ b/bubblewrap.c
+@@ -1615,8 +1615,7 @@ parse_args_recurse (int          *argcp,
+           op = setup_op_new (SETUP_BIND_MOUNT);
+           op->source = argv[1];
+           op->dest = argv[2];
+-          if (strcmp(arg, "--bind-try") == 0)
+-            op->flags = ALLOW_NOTEXIST;
++          op->flags = ALLOW_NOTEXIST;
+ 
+           argv += 2;
+           argc -= 2;
+@@ -1630,8 +1629,7 @@ parse_args_recurse (int          *argcp,
+           op = setup_op_new (SETUP_RO_BIND_MOUNT);
+           op->source = argv[1];
+           op->dest = argv[2];
+-          if (strcmp(arg, "--ro-bind-try") == 0)
+-            op->flags = ALLOW_NOTEXIST;
++          op->flags = ALLOW_NOTEXIST;
+ 
+           argv += 2;
+           argc -= 2;
+@@ -1645,8 +1643,7 @@ parse_args_recurse (int          *argcp,
+           op = setup_op_new (SETUP_DEV_BIND_MOUNT);
+           op->source = argv[1];
+           op->dest = argv[2];
+-          if (strcmp(arg, "--dev-bind-try") == 0)
+-            op->flags = ALLOW_NOTEXIST;
++          op->flags = ALLOW_NOTEXIST;
+ 
+           argv += 2;
+           argc -= 2;

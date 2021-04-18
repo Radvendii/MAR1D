@@ -1,0 +1,13 @@
+diff --git a/bubblewrap.c b/bubblewrap.c
+index 04a1c13..fdd7baf 100644
+--- a/bubblewrap.c
++++ b/bubblewrap.c
+@@ -1800,7 +1800,7 @@ parse_args_recurse (int          *argcp,
+           if (argc < 2)
+             die ("--lock-file takes an argument");
+ 
+-          (void) lock_file_new (argv[1]);
++          /* (void) lock_file_new (argv[1]); */
+ 
+           argv += 1;
+           argc -= 1;

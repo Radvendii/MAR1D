@@ -24,8 +24,7 @@
           game = import ./. { inherit nixpkgs system; };
           darwin-app = import ./darwin-app.nix { inherit nixpkgs system; };
           windows = import ./windows.nix { inherit nixpkgs system; };
-          # no way to bundle flatpak with nix yet
-          # flatpak = import ./flatpak.nix { inherit nixpkgs system; };
+          flatpak = import ./flatpak.nix { inherit nixpkgs system; };
           appimage = nix-bundle.bundlers.appimage {
             inherit system;
             target = (oldGlibcPkgs.callPackage ./package.nix { }).overrideAttrs (old: {

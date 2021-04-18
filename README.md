@@ -56,26 +56,48 @@ In addition, there are two environment variables which affect where MAR1D puts /
 
 MAR1D uses the meson build system, with a nix wrapper around it.
 
+### Meson
+
 You should be able to just compile directly with meson, but I don't actually know how to do that so you'll have to figure it out yourself. If you do, please send a pull request updating this section with instructions.
 
-To compile on a system using the [nix package manager](https://nixos.org/), it's as simple as `nix-build`. If you are using flakes, `nix build` works too.
+### Nix
+
+To compile on Linux or Mac OS X using the [nix package manager](https://nixos.org/), it's as simple as `nix-build`. If you are using flakes, `nix build` works too.
+
+### Windows
 
 To cross-compile for windows, `nix-build windows.nix` or for flakes `nix build .#windows`, then transfer `result/MAR1D.zip` to a windows computer, or `cd result; wine ./MAR1D.exe` (you must be in the same directory as `MAR1D.exe`).
 
-To compile an AppImage that can be transferred to other linux distros, you must be using flakes, and run `nix build .#appimage`.
+### Mac OS X Bundle
 
-Or you can use [flatpak](https://www.flatpak.org/), which has the disadvantage of needing flatpak installed on the target platform.
+Mac OS X Nix cross-compilation is a little broken at the moment, so you have to be running Nix *on* Mac OS X for this one. But then it's as simple as running `nix-build darwin-app.nix`, or with flakes `nix build .#darwin-app`. This will produce `result/MAR1D.app` that should work like any other application on Mac OS X.
 
-To build a .flatpak bundle, install flatpak and flatpak-builder, and run the following two commands.
+### AppImage
+
+To compile an AppImage that can be transferred to other linux distros, you must be using flakes, and run `nix build .#appimage`. The result is at `result/MAR1D-x86_64.AppImage`.
+
+### Flatpak
+
+You can also use [flatpak](https://www.flatpak.org/) to deploy across linux distros, which has the disadvantage of needing flatpak installed on the target platform, but has… presumably some advantages?
+
+You guessed it, there's a nix expression for that. Just run `nix-build flatpak.nix` or `nix build .#flatpak` with flakes. The flatpak is at `result/MAR1D.flatpak`
+
+If you want to attend the circus that is using flatpak directly, these are commands that should do it for you. Install `flatpak` and `flatpak-builder`, and run the following:
 
 ``` sh
-flatpak-builder --repo=flatpak-repo --force-clean flatpak-build com.mar1d.MAR1D.yml
-flatpak build-bundle flatpak-repo/ mar1d.flatpak com.mar1d.MAR1D --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+flatpak install org.freedesktop.Sdk//20.08
+flatpak install org.freedesktop.Platform//20.08
+
+flatpak-builder --repo=flatpak-repo --state-dir=flatpak-state --force-clean flatpak-build com.mar1d.MAR1D.yml
+flatpak build-bundle flatpak-repo/ MAR1D.flatpak com.mar1d.MAR1D --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-This will create the directories `repo` and `flatpak-build` if they do not already exist, and create a `mar1d.flatpak` file that can be used with `flatpak install`.
+This will, among other things, create a `MAR1D.flatpak` file that can be used with `flatpak install`.
 
-To compile a .app bundle for Mac OS X, you can run `nix-build darwin-app.nix`, or with flakes `nix build .#darwin-app`.
+I also have a tidy script for this one in case you want to keep the state contained, but don't want to use Nix, you can run `./build-flatpak.sh`
 
 ### Dependencies
 * meson (with ninja and pkgconfig)
