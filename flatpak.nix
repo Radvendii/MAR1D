@@ -25,11 +25,6 @@ let
       ];
     });
   };
-  # fix a TLS error (upstream PR #119661)
-  myOSTree = ostree.overrideAttrs (old: {
-    nativeBuildInputs = old.nativeBuildInputs ++ [ wrapGAppsHook ];
-    buildInputs = old.buildInputs ++ [ glib-networking ];
-  });
 
   # TODO: should probably have a fetchOSTree that actually checks out the commit
   #       and call this fetchOSTreeRaw or something
@@ -48,7 +43,7 @@ let
     stdenv.mkDerivation {
       inherit ref commit remote preFetch postFetch;
       name = sanitizeDerivationName ref;
-      nativeBuildInputs = [ myOSTree libfaketime ];
+      nativeBuildInputs = [ ostree libfaketime ];
       buildCommand = ''
         runHook preFetch
 
@@ -114,7 +109,7 @@ let
     , ...
     }@args:
     stdenv.mkDerivation (removeAttrs args [ "flatpakRuntimes" "flatpakSources" ] // rec {
-      nativeBuildInputs = (args.nativeBuildInputs or []) ++ [ myFlatpak myOSTree ];
+      nativeBuildInputs = (args.nativeBuildInputs or []) ++ [ myFlatpak ostree ];
 
       # TODO: should probably be a more unique name and/or not be in the build directory
       #       because what if the project has a flatpak-cruft folder?
