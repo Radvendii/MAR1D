@@ -4,7 +4,6 @@
 , SDL2_mixer
 , libGLU
 , libconfig
-, cmake
 , meson
 , ninja
 , pkgconfig
@@ -36,9 +35,9 @@ stdenv.mkDerivation rec {
         original, however, the game still takes place in a two dimensional world.
         You must view the world as mario does, as a one dimensional line.
       '';
-    homepage = https://mar1d.com;
+    homepage = "https://mar1d.com";
     license = licenses.agpl3;
     maintainers = with maintainers; [ taeer ];
-    platforms = platforms.linux ++ platforms.windows ++ platforms.unix;
+    platforms = platforms.linux ++ platforms.unix ++ platforms.windows;
   };
 }
