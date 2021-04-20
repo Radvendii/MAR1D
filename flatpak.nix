@@ -147,7 +147,7 @@ in
 
 mkFlatpakDerivation {
   pname = "MAR1D-flatpak";
-  version = "0.2.0";
+  version = "0.3.0";
   src = ./.;
 
   nativeBuildInputs = [ flatpak-builder ];

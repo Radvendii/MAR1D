@@ -14,7 +14,7 @@ with lib;
 
 stdenv.mkDerivation rec {
   pname = "MAR1D";
-  version = "0.2.0";
+  version = "0.3.0";
 
   src = ./.;
 

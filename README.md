@@ -3,15 +3,6 @@ MAR1D
 
 This page is mostly for developers / hackers. If you just want to play the game, check out [the main website](https://mar1d.com). Or stick around, that's fine too.
 
-## Under Construction
-The game is undergoing a lot of changes. I'd like to get it into shape so I can be proud to put it out there. Until I do, don't expect the README to match the game or anything like that.
-
-Things remaining to be done:
-
-- Trailer
-
-(also, some minor cleanup things, and i'm sure i'll stumble across a couple other things while those are getting done)
-
 ## Description
 The original Super Mario Bros as you've never seen it. Step into Mario's shoes in this first person clone of the classic Mario game. True to the original, however, the game still takes place in a two dimensional world. You must view the world as mario does, as a one dimensional line.
 
