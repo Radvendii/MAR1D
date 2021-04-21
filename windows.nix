@@ -27,15 +27,20 @@ with import nixpkgs {
 
   crossOverlays = [
     (self: super: {
+
+      # nixpkgs PR #120017
       libconfig = super.libconfig.overrideAttrs (old: {
         configureFlags = [ "--disable-examples" ];
       });
+
+      # nixpkgs PR #120013
       SDL2 = (super.SDL2.override {
         x11Support = false;
       }).overrideAttrs (old: {
         configureFlags = old.configureFlags
                          ++ [ "--disable-video-opengles" ];
       });
+
       SDL2_mixer = (super.SDL2_mixer.override {
         fluidsynth = null;
         mpg123 = null;
