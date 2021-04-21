@@ -32,10 +32,6 @@ with import nixpkgs {
       });
       SDL2 = (super.SDL2.override {
         x11Support = false;
-        alsaSupport = false;
-        waylandSupport = false;
-        dbusSupport = false;
-        pulseaudioSupport = false;
       }).overrideAttrs (old: {
         configureFlags = old.configureFlags
                          ++ [ "--disable-video-opengles" ];
@@ -63,10 +59,11 @@ with import nixpkgs {
 };
 
 (pkgsStatic.callPackage ./package.nix {}).overrideAttrs (old: {
-  nativeBuildInputs = old.nativeBuildInputs
-                      ++ [ buildPackages.zip
-                           buildPackages.perl
-                         ];
+  nativeBuildInputs =
+    old.nativeBuildInputs ++ [
+      buildPackages.zip
+      buildPackages.perl
+    ];
 
   # windows can't handle certain characters in file names, so we encode in ascii
   # TODO: really, this should happen in the meson.build file, so the build
