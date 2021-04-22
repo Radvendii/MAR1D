@@ -57,7 +57,7 @@ To compile on Linux or Mac OS X using the [nix package manager](https://nixos.or
 
 ### Windows
 
-To cross-compile for windows, `nix-build windows.nix` or for flakes `nix build .#windows`, then transfer `result/MAR1D.zip` to a windows computer, or `cd result; wine ./MAR1D.exe` (you must be in the same directory as `MAR1D.exe`).
+To cross-compile for windows, `nix-build windows.nix` or for flakes `nix build .#windows`, then transfer the contents of `result/` to a windows computer, or `cd result; wine ./MAR1D.exe` (you must be in the same directory as `MAR1D.exe`).
 
 ### Mac OS X Bundle
 

@@ -66,7 +66,6 @@ with import nixpkgs {
 (pkgsStatic.callPackage ./package.nix {}).overrideAttrs (old: {
   nativeBuildInputs =
     old.nativeBuildInputs ++ [
-      buildPackages.zip
       buildPackages.perl
     ];
 
@@ -89,10 +88,4 @@ with import nixpkgs {
     "-Dportable=true"
     "-Dstatic=true"
   ];
-
-  # package it up nice and tidy for transfering to windows
-  postInstall = ''
-    cd $out
-    zip -r MAR1D.zip *
-  '';
 })
