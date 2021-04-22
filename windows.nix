@@ -28,35 +28,29 @@ with import nixpkgs {
   crossOverlays = [
     (self: super: {
 
-      # nixpkgs PR #120017
       libconfig = super.libconfig.overrideAttrs (old: {
-        configureFlags = [ "--disable-examples" ];
-      });
-
-      # nixpkgs PR #120013
-      SDL2 = (super.SDL2.override {
-        x11Support = false;
-      }).overrideAttrs (old: {
-        configureFlags = old.configureFlags
-                         ++ [ "--disable-video-opengles" ];
+        nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ super.autoconf super.automake115x ];
+        configureFlags = (old.configureFlags or []) ++ [ "--disable-tests" ];
+        patches = (old.patches or []) ++ [ ./libconfig-disable-tests.patch ];
+        cmakeFlags = (old.cmakeFlags or []) ++ [ "-DBUILD_TESTS:BOOL=OFF" ];
+        doCheck = false;
       });
 
       SDL2_mixer = (super.SDL2_mixer.override {
         fluidsynth = null;
-        mpg123 = null;
         opusfile = null;
-        libogg = null;
         libmodplug = null;
         smpeg2 = null;
       }).overrideAttrs (old: {
         configureFlags = old.configureFlags
                          ++ [ "--disable-sdltest" "--disable-smpegtest" ] # like darwin
                          ++ [ "--disable-music-mod-modplug"
-                              "--disable-music-ogg"
                               "--disable-music-opus"
-                              "--disable-music-mp3"
-                              "--disable-music-mp3-mpg123"
                             ]; # disable libraries that were causing problems
+
+        # TODO: shouldn't need to specify transitive dependencies manually
+        NIX_LDFLAGS = [ "-logg" ];
+
         autoreconfFlags = [ "--include=./acinclude" ];
       });
     })
@@ -68,6 +62,15 @@ with import nixpkgs {
     old.nativeBuildInputs ++ [
       buildPackages.perl
     ];
+
+  # TODO: shouldn't need to specify transitive dependencies manually
+  NIX_LDFLAGS = [
+    "-lvorbisfile"
+    "-lvorbisenc"
+    "-lvorbis"
+    "-lFLAC"
+    "-logg"
+  ];
 
   # windows can't handle certain characters in file names, so we encode in ascii
   # TODO: really, this should happen in the meson.build file, so the build
