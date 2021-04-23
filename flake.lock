@@ -18,15 +18,14 @@
     "nix-bundle": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "nixpkgs-appimagekit": "nixpkgs-appimagekit",
-        "nixpkgs-old": "nixpkgs-old"
+        "nixpkgs-appimagekit": "nixpkgs-appimagekit"
       },
       "locked": {
-        "lastModified": 1617996354,
-        "narHash": "sha256-kN5GSxWIZAyDfecoZGI1OwPRqvktpDSKXFIrwfT048Y=",
+        "lastModified": 1619188375,
+        "narHash": "sha256-oQW+9bxdQcdartan+0pe1+bBnxDqzugLEtuP6KA2sBQ=",
         "owner": "radvendii",
         "repo": "nix-bundle",
-        "rev": "b2ab96447e83603f6d0e373d432d60dd42b84084",
+        "rev": "e743fb2ed8b85abd1a6d2aff7cafa9b27d613077",
         "type": "github"
       },
       "original": {
@@ -62,22 +61,6 @@
       "original": {
         "id": "nixpkgs",
         "ref": "master",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs-old": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1475375830,
-        "narHash": "sha256-8K9wvu82flzlzpU1uJv/T8IaLGQlsCASwjxGcrVjpbM=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "f22817d8d2bc17d2bcdb8ac4308a4bce6f5d1d2b",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "ref": "16.09",
         "type": "indirect"
       }
     },

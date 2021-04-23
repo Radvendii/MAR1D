@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
+    # my personal nix-bundle branch
+    # can be switched to the main repo when PR #76 is merged
     nix-bundle.url = "github:radvendii/nix-bundle";
   };
 
