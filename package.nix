@@ -6,10 +6,12 @@
 , libconfig
 , meson
 , ninja
-, pkgconfig
+, pkg-config
 }:
 
-with lib;
+let
+  inherit (stdenv.targetPlatform) isWindows;
+in
 
 stdenv.mkDerivation rec {
   pname = "MAR1D";
@@ -17,27 +19,29 @@ stdenv.mkDerivation rec {
 
   src = ./.;
 
-  nativeBuildInputs = [ meson ninja pkgconfig ];
+  nativeBuildInputs = [ meson ninja pkg-config ];
 
-  buildInputs =
-    [
-      SDL2
-      SDL2_mixer
-      libconfig
-    ]
-    ++ optional (!stdenv.targetPlatform.isWindows) libGLU;
+  buildInputs = [
+    SDL2
+    SDL2_mixer
+    libconfig
+  ] ++ lib.optionals (!isWindows) [ libGLU ];
+
+  postPatch = lib.optionalString isWindows ''
+    patchShebangs rename_files_for_windows.sh
+  '';
 
   meta = with lib; {
     description = "First person Super Mario Bros";
     longDescription = ''
-        The original Super Mario Bros as you've never seen it. Step into Mario's
-        shoes in this first person clone of the classic Mario game. True to the
-        original, however, the game still takes place in a two dimensional world.
-        You must view the world as mario does, as a one dimensional line.
-      '';
+      The original Super Mario Bros as you've never seen it. Step into Mario's
+      shoes in this first person clone of the classic Mario game. True to the
+      original, however, the game still takes place in a two dimensional world.
+      You must view the world as mario does, as a one dimensional line.
+    '';
     homepage = "https://mar1d.com";
     license = licenses.agpl3;
     maintainers = with maintainers; [ taeer ];
-    platforms = platforms.linux ++ platforms.unix ++ platforms.windows;
+    platforms = platforms.unix;
   };
 }

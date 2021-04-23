@@ -31,6 +31,7 @@ with import nixpkgs {
       libconfig = super.libconfig.overrideAttrs (old: {
         nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ super.autoconf super.automake115x ];
         configureFlags = (old.configureFlags or []) ++ [ "--disable-tests" ];
+        # libconfig PR #190
         patches = (old.patches or []) ++ [ ./libconfig-disable-tests.patch ];
         cmakeFlags = (old.cmakeFlags or []) ++ [ "-DBUILD_TESTS:BOOL=OFF" ];
         doCheck = false;
@@ -58,10 +59,6 @@ with import nixpkgs {
 };
 
 (pkgsStatic.callPackage ./package.nix {}).overrideAttrs (old: {
-  nativeBuildInputs =
-    old.nativeBuildInputs ++ [
-      buildPackages.perl
-    ];
 
   # TODO: shouldn't need to specify transitive dependencies manually
   NIX_LDFLAGS = [
@@ -71,19 +68,6 @@ with import nixpkgs {
     "-lFLAC"
     "-logg"
   ];
-
-  # windows can't handle certain characters in file names, so we encode in ascii
-  # TODO: really, this should happen in the meson.build file, so the build
-  #       process is more flexible
-  # TODO: really really, i shouldn't be using special characters in file names.
-  #       I couldn't even figure out how to deal with them in bash and had to
-  #       shell out to perl.
-  postPatch = ''
-    pushd resources/2D
-    # dealing with these files in bash is a mess. maybe i shouldn't be using weird characters in file names to begin with...
-    ls -A | perl -MFile::Copy -ne 'chomp && move($_, s/^(.)/ord($1)/re) or die "move failed $_: $!"'
-    popd
-  '';
 
   mesonFlags = [
     "--bindir=."
