@@ -1,11 +1,5 @@
 # windows.nix
-# compile using `nix-build windows.nix` to cross-compile for windows. This file does 3 main things
-#
-# 1. Make all the libraries static. DLL hell is real, and I don't want to deal with it.
-# 2. Disable libraries / features wherever they were causing problems and could be disabled.
-# 3. Copy stuff that was enabled for Darwin that's actually needed on all non-linux systems (e.g. windows)
-#
-# This was accomplished through a boatload of trial-and-error. There may well be a better way of going about this, and I encourage someone to send a pull request.
+# compile using `nix-build windows.nix` to cross-compile for windows.
 
 { nixpkgs ? <nixpkgs>
 , system ? builtins.currentSystem
@@ -14,20 +8,18 @@
 with import nixpkgs {
   inherit system;
   crossSystem = {
+    isStatic = true;
     config = "x86_64-w64-mingw32";
     libc = "msvcrt";
   };
 
-  config = {
-    allowUnsupportedSystem = true;
-    permittedInsecurePackages = [
-      "openssl-1.0.2u"
-    ];
-  };
-
   crossOverlays = [
+    # statically compile everything same as pkgsStatic
+    (import "${nixpkgs}/pkgs/top-level/static.nix")
+
     (self: super: {
 
+      # nixpkgs PR #120973
       libconfig = super.libconfig.overrideAttrs (old: {
         nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ super.autoconf super.automake115x ];
         configureFlags = (old.configureFlags or []) ++ [ "--disable-tests" ];
@@ -38,41 +30,52 @@ with import nixpkgs {
       });
 
       SDL2_mixer = (super.SDL2_mixer.override {
-        fluidsynth = null;
-        opusfile = null;
-        libmodplug = null;
-        smpeg2 = null;
+        fluidsynth = null; # fluidsynth is broken in like a dozen different ways.
+        libmodplug = null; # SDL2_mixer can't find libmodplug for some reason
+        smpeg2 = null; # this can be upstreamed; smpeg isn't a dependency anymore
       }).overrideAttrs (old: {
+        # src = super.fetchFromGitHub {
+        #   owner = "libsdl-org";
+        #   repo = "SDL_mixer";
+        #   rev = "4d2fec78b8deca24ce6c7f7a9e3725cf31f75896";
+        #   sha256 = "sha256-Z0uIGEoSrsBhZeF859mcEK+7OCVdtlx5mQaLvKyahLg=";
+        # };
+        # https://github.com/libsdl-org/SDL_mixer/pull/313
+        patches = (old.patches or []) ++ [ ./pkgconfig_requires.patch ];
+        # patches = (old.patches or []) ++ [ ./sdl2_mixer-pkgconfig.patch ];
+        # patches = (old.patches or []) ++ [ ./sdl2-mixer-new.patch ];
+        # # dontAddDisableDepTrack = true;
+        # # dontFixLibtool = true;
+        # # dontPruneLibtoolFiles = true;
+        # nativeBuildInputs = old.nativeBuildInputs
+        #   ++ (with super.buildPackages; [ autoconf automake which ]);
+
+        preConfigure = ''
+          ./autogen.sh
+        '';
+
+        # this doesn't help the modplug issue
+        # NIX_LDFLAGS = [ "-L${super.libmodplug}/lib -lmodplug" ];
+
         configureFlags = old.configureFlags
-                         ++ [ "--disable-sdltest" "--disable-smpegtest" ] # like darwin
-                         ++ [ "--disable-music-mod-modplug"
-                              "--disable-music-opus"
-                            ]; # disable libraries that were causing problems
-
-        # TODO: shouldn't need to specify transitive dependencies manually
-        NIX_LDFLAGS = [ "-logg" ];
-
-        autoreconfFlags = [ "--include=./acinclude" ];
+          ++ [ "--disable-sdltest" # like darwin (can be upstreamed)
+               "--disable-music-mod-modplug"
+             ];
+        meta = old.meta // {
+          platforms = old.meta.platforms ++ super.lib.platforms.windows;
+        };
       });
     })
   ];
 };
 
-(pkgsStatic.callPackage ./package.nix {}).overrideAttrs (old: {
-
-  # TODO: shouldn't need to specify transitive dependencies manually
-  NIX_LDFLAGS = [
-    "-lvorbisfile"
-    "-lvorbisenc"
-    "-lvorbis"
-    "-lFLAC"
-    "-logg"
-  ];
-
-  mesonFlags = [
+(callPackage ./package.nix {}).overrideAttrs (old: {
+  mesonFlags = old.mesonFlags ++ [
     "--bindir=."
     "--datadir=resources"
     "-Dportable=true"
-    "-Dstatic=true"
   ];
+  meta = old.meta // {
+    platforms = old.meta.platforms ++ lib.platforms.windows;
+  };
 })

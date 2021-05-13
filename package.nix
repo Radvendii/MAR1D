@@ -10,7 +10,7 @@
 }:
 
 let
-  inherit (stdenv.targetPlatform) isWindows;
+  inherit (stdenv.hostPlatform) isWindows isStatic;
 in
 
 stdenv.mkDerivation rec {
@@ -30,6 +30,8 @@ stdenv.mkDerivation rec {
   postPatch = lib.optionalString isWindows ''
     patchShebangs rename_files_for_windows.sh
   '';
+
+  mesonFlags = lib.optionals isStatic [ "-Dstatic=true" ];
 
   meta = with lib; {
     description = "First person Super Mario Bros";

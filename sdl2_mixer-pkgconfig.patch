@@ -1,0 +1,36 @@
+diff --git a/Makefile.in b/Makefile.in
+index 2ff24b2..7b95ccc 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -62,7 +62,7 @@ $(objects):
+ .PHONY: all install install-hdrs install-lib install-bin uninstall uninstall-hdrs uninstall-lib uninstall-bin clean distclean dist
+ 
+ $(objects)/$(TARGET): $(OBJECTS) $(VERSION_OBJECTS)
+-	$(LIBTOOL) --mode=link $(CC) -o $@ $(OBJECTS) $(VERSION_OBJECTS) $(LDFLAGS) $(EXTRA_LDFLAGS) $(LT_LDFLAGS)
++	$(LIBTOOL) --mode=link $(CC) -o $@ $(OBJECTS) $(VERSION_OBJECTS) $(LDFLAGS) $(SDL_LIBS) $(EXTRA_LDFLAGS) $(LT_LDFLAGS)
+ 
+ $(objects)/playwave$(EXE): $(objects)/playwave.lo $(objects)/$(TARGET)
+ 	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playwave.lo $(SDL_CFLAGS) $(objects)/$(TARGET) $(SDL_LIBS) $(LDFLAGS)
+diff --git a/SDL2_mixer.pc.in b/SDL2_mixer.pc.in
+index 48869b4..be07343 100644
+--- a/SDL2_mixer.pc.in
++++ b/SDL2_mixer.pc.in
+@@ -8,5 +8,6 @@ Description: mixer library for Simple DirectMedia Layer
+ Version: @VERSION@
+ Requires: sdl2 >= @SDL_VERSION@
+ Libs: -L${libdir} -lSDL2_mixer
++Libs.private: @EXTRA_LDFLAGS@
+ Cflags: -I${includedir}/SDL2
+ 
+diff --git a/configure.in b/configure.in
+index 240a322..b627474 100644
+--- a/configure.in
++++ b/configure.in
+@@ -194,7 +194,6 @@ AM_PATH_SDL2($SDL_VERSION,
+             AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
+ )
+ EXTRA_CFLAGS="$EXTRA_CFLAGS $SDL_CFLAGS"
+-EXTRA_LDFLAGS="$EXTRA_LDFLAGS $SDL_LIBS"
+ 
+ dnl Check for math library
+ AC_CHECK_LIB(m, pow, [LIBM="-lm"])

@@ -1,0 +1,13 @@
+diff --git a/SDL2_mixer.pc.in b/SDL2_mixer.pc.in
+index 48869b4..824c89f 100644
+--- a/SDL2_mixer.pc.in
++++ b/SDL2_mixer.pc.in
+@@ -6,6 +6,8 @@ includedir=@includedir@
+ Name: SDL2_mixer
+ Description: mixer library for Simple DirectMedia Layer
+ Version: @VERSION@
++Requires.private: vorbisfile vorbisenc vorbis opusfile opus
++Libs.private: -lFLAC
+ Requires: sdl2 >= @SDL_VERSION@
+ Libs: -L${libdir} -lSDL2_mixer
+ Cflags: -I${includedir}/SDL2
