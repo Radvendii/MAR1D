@@ -19,11 +19,6 @@ static_deps = get_option('static')
 
 cc = meson.get_compiler('c')
 
-# windows can't handle certain characters in file names, so we encode in ascii
-if is_windows
-  run_command('rename_files_for_windows.sh', check: true)
-endif
-
 # find dependencies (depending on host)
 math_lib = cc.find_library('m', required : false)
 opengl_dep = is_windows ? cc.find_library('opengl32', required : true) : dependency('opengl', static : static_deps)

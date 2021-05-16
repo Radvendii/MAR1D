@@ -27,10 +27,6 @@ stdenv.mkDerivation rec {
     libconfig
   ] ++ lib.optionals (!isWindows) [ libGLU ];
 
-  postPatch = lib.optionalString isWindows ''
-    patchShebangs rename_files_for_windows.sh
-  '';
-
   mesonFlags = lib.optionals isStatic [ "-Dstatic=true" ];
 
   meta = with lib; {
