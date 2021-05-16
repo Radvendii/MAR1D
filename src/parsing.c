@@ -208,9 +208,9 @@ void io_getObj(FILE* f, obj *o, char oname, color cs[CHAR_MAX]) {
     y=0; x=0; i=0;
     char imFn[64];
     // windows can't handle certain characters in file names, and mac can't deal
-    // with case sensitivity, so we give up and encode the obj char in ascii in
-    // the filename
-    sprintf(imFn, "2D/%d_%d.png", oname, j);
+    // with case sensitivity, so we give up and encode the obj char in ascii hex
+    // in the filename
+    sprintf(imFn, "2D/%x_%d.png", oname, j);
     o->frames[j].im = io_getImage(imFn);
     o->frames[j].ps = salloc(sizeof(point) * (size+1));
     while(i<size){
