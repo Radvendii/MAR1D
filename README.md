@@ -43,6 +43,18 @@ In addition, there are two environment variables which affect where MAR1D puts /
 * `MAR1D_RECORDING_DIR` where to put .png recordings of your playthrough. By default this is the current directory on Linux and Windows, and the current user's desktop when running the Mac OS X .app bundle.
 * `MAR1D_RESOURCE_DIR` where to find the resource files. By default this is wherever they were installed.
 
+## Project Structure
+
+``` sh
+$ tree -dL 1
+.                  # the top level contains build files
+├── accoutrements/ # files to install alongside the application (icon, .desktop, etc)
+├── nix/           # nix build files
+├── resources/     # runtime game resources (sounds, images, etc)
+├── scripts/       # related scripts, not necessary for building or running
+└── src/           # source files
+```
+
 ## Compiling
 
 MAR1D uses the meson build system, with a nix wrapper around it.

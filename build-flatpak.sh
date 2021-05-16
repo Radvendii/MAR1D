@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# builds the MAR1D flatpak with all byproducts contained to flatpak-cruft folder
+# requires flatpak-builder and flatpak installed
+
 # run in a subshell so `export`s don't leak
 (
 
