@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
   pname = "MAR1D";
   version = "0.3.1";
 
-  src = ./.;
+  src = ./..;
 
   nativeBuildInputs = [ meson ninja pkg-config ];
 

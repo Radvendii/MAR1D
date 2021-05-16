@@ -24,7 +24,7 @@ with import nixpkgs {
         nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ super.autoconf super.automake115x ];
         configureFlags = (old.configureFlags or []) ++ [ "--disable-tests" ];
         # libconfig PR #190
-        patches = (old.patches or []) ++ [ ./libconfig-disable-tests.patch ];
+        patches = (old.patches or []) ++ [ ./patches/libconfig-disable-tests.patch ];
         cmakeFlags = (old.cmakeFlags or []) ++ [ "-DBUILD_TESTS:BOOL=OFF" ];
         doCheck = false;
       });
@@ -41,9 +41,9 @@ with import nixpkgs {
         #   sha256 = "sha256-Z0uIGEoSrsBhZeF859mcEK+7OCVdtlx5mQaLvKyahLg=";
         # };
         # https://github.com/libsdl-org/SDL_mixer/pull/313
-        patches = (old.patches or []) ++ [ ./pkgconfig_requires.patch ];
-        # patches = (old.patches or []) ++ [ ./sdl2_mixer-pkgconfig.patch ];
-        # patches = (old.patches or []) ++ [ ./sdl2-mixer-new.patch ];
+        patches = (old.patches or []) ++ [ ./patches/pkgconfig_requires.patch ];
+        # patches = (old.patches or []) ++ [ ./patches/sdl2_mixer-pkgconfig.patch ];
+        # patches = (old.patches or []) ++ [ ./patches/sdl2-mixer-new.patch ];
         # # dontAddDisableDepTrack = true;
         # # dontFixLibtool = true;
         # # dontPruneLibtoolFiles = true;

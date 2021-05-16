@@ -53,15 +53,15 @@ You should be able to just compile directly with meson, but I don't actually kno
 
 ### Nix
 
-To compile on Linux or Mac OS X using the [nix package manager](https://nixos.org/), it's as simple as `nix-build`. If you are using flakes, `nix build` works too.
+To compile on Linux or Mac OS X using the [Nix package manager](https://nixos.org/), it's as simple as `nix-build nix`. If you are using flakes, `nix build` works too.
 
 ### Windows
 
-To cross-compile for windows, `nix-build windows.nix` or for flakes `nix build .#windows`, then transfer the contents of `result/` to a windows computer, or `cd result; wine ./MAR1D.exe` (you must be in the same directory as `MAR1D.exe`).
+To cross-compile for windows, `nix-build nix/windows.nix` or for flakes `nix build .#windows`, then transfer the contents of `result/` to a windows computer, or `cd result; wine ./MAR1D.exe` (you must be in the same directory as `MAR1D.exe`).
 
 ### Mac OS X Bundle
 
-Mac OS X Nix cross-compilation is a little broken at the moment, so you have to be running Nix *on* Mac OS X for this one. But then it's as simple as running `nix-build darwin-app.nix`, or with flakes `nix build .#darwin-app`. This will produce `result/MAR1D.app` that should work like any other application on Mac OS X.
+Mac OS X Nix cross-compilation is a little broken at the moment, so you have to be running Nix *on* Mac OS X for this one. But then it's as simple as running `nix-build nix/darwin-app.nix`, or with flakes `nix build .#darwin-app`. This will produce `result/MAR1D.app` that should work like any other application on Mac OS X.
 
 ### AppImage
 
@@ -71,7 +71,7 @@ To compile an AppImage that can be transferred to other linux distros, you must 
 
 You can also use [flatpak](https://www.flatpak.org/) to deploy across linux distros, which has the disadvantage of needing flatpak installed on the target platform, but has… presumably some advantages?
 
-You guessed it, there's a nix expression for that. Just run `nix-build flatpak.nix` or `nix build .#flatpak` with flakes. The flatpak is at `result/MAR1D.flatpak`
+You guessed it, there's a nix expression for that. Just run `nix-build nix/flatpak.nix` or `nix build .#flatpak` with flakes. The flatpak is at `result/MAR1D.flatpak`
 
 If you want to attend the circus that is using flatpak directly, these are commands that should do it for you. Install `flatpak` and `flatpak-builder`, and run the following:
 
