@@ -23,7 +23,7 @@
       in rec {
         defaultPackage = packages.game;
         packages = {
-          game = import ./. { inherit nixpkgs system; };
+          game = import ./nix { inherit nixpkgs system; };
           darwin-app = import ./darwin-app.nix { inherit nixpkgs system; };
           windows = import ./windows.nix { inherit nixpkgs system; };
           flatpak = import ./flatpak.nix { inherit nixpkgs system; };
