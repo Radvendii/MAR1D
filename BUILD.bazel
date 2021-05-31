@@ -1,0 +1,36 @@
+genrule(
+    name = "gen_sh",
+    outs = ["gen.sh"],
+    cmd = """
+cat > $@ << "EOF"
+#! /bin/sh
+sed -e 's#@RESOURCE_DIRECTORY@#resources/#g' \
+    -e 's#helpers.h#src/helpers.h#'
+EOF""",
+)
+
+genrule(
+    name = "resources_h_gen",
+    srcs = [ "src/resources.h.in" ],
+    outs = [ "resources.h" ],
+    cmd = "$(location :gen_sh) < $(<) > $(@)",
+    tools = [ ":gen_sh" ],
+)
+
+cc_library(
+    name = "resources_h",
+    hdrs = [":resources_h_gen"] + glob(["src/*.h"]),
+)
+
+cc_binary(
+    name = "MAR1D",
+    srcs = glob(["src/*.c", "src/*.h"]) + [ "resources.h" ],
+    deps = [
+        "@SDL2//:SDL2",
+        "@SDL2_mixer//:SDL2_mixer",
+        "@libconfig//:libconfig",
+        "@libGLU//:libGLU",
+        "@libGL//:libGL",
+    ],
+    data = glob(["resources/**"]),
+)

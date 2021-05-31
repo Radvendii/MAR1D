@@ -1,0 +1,157 @@
+workspace(name = "MAR1D")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "io_tweag_rules_nixpkgs",
+    strip_prefix = "rules_nixpkgs-a388ab60dea07c3fc182453e89ff1a67c9d3eba6",
+    urls = ["https://github.com/tweag/rules_nixpkgs/archive/a388ab60dea07c3fc182453e89ff1a67c9d3eba6.tar.gz"],
+)
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:repositories.bzl", "rules_nixpkgs_dependencies")
+rules_nixpkgs_dependencies()
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_git_repository", "nixpkgs_package", "nixpkgs_cc_configure")
+
+nixpkgs_git_repository(
+    name = "nixpkgs",
+    # revision = "20.09", # Any tag or commit hash
+    revision = "dc68eb58bb8d4dc3cfb8896932e6146c45579932", # from flake.lock
+    sha256 = "" # optional sha to verify package integrity!
+)
+
+nixpkgs_package(
+    name = "nixpkgs_SDL2",
+    attribute_path = "SDL2",
+    repository = "@nixpkgs//:default.nix",
+)
+
+nixpkgs_package(
+    name = "SDL2",
+    attribute_path = "SDL2.dev",
+    repository = "@nixpkgs//:default.nix",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "include",
+    srcs = glob(["include/**/*.h", "include/**/*.hh", "include/**/*.hpp", "include/**/*.hxx"], allow_empty = True),
+)
+
+cc_library(
+    name = "SDL2",
+    srcs = ["@nixpkgs_SDL2//:lib"],
+    hdrs = [":include"],
+    strip_include_prefix = "include/SDL2",
+)
+""",
+)
+
+nixpkgs_package(
+    name = "SDL2_mixer",
+    repository = "@nixpkgs//:default.nix",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "lib",
+    srcs = glob(["lib/**/*.so*", "lib/**/*.dylib", "lib/**/*.a"], allow_empty = True),
+)
+
+filegroup(
+    name = "include",
+    srcs = glob(["include/**/*.h", "include/**/*.hh", "include/**/*.hpp", "include/**/*.hxx"], allow_empty = True),
+)
+
+cc_library(
+    name = "SDL2_mixer",
+    srcs = [":lib"],
+    hdrs = [":include"],
+    strip_include_prefix = "include/SDL2",
+)
+""",
+)
+
+nixpkgs_package(
+    name = "nixpkgs_libGLU",
+    attribute_path = "libGLU",
+    repository = "@nixpkgs//:default.nix",
+)
+
+nixpkgs_package(
+    name = "libGLU",
+    attribute_path = "libGLU.dev",
+    repository = "@nixpkgs//:default.nix",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "include",
+    srcs = glob(["include/**/*.h", "include/**/*.hh", "include/**/*.hpp", "include/**/*.hxx"], allow_empty = True),
+)
+
+cc_library(
+    name = "libGLU",
+    srcs = ["@nixpkgs_libGLU//:lib"],
+    hdrs = [":include"],
+    strip_include_prefix = "include",
+)
+""",
+)
+
+nixpkgs_package(
+    name = "nixpkgs_libGL",
+    attribute_path = "libGL",
+    repository = "@nixpkgs//:default.nix",
+)
+
+nixpkgs_package(
+    name = "libGL",
+    attribute_path = "libGL.dev",
+    repository = "@nixpkgs//:default.nix",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "include",
+    srcs = glob(["include/**/*.h", "include/**/*.hh", "include/**/*.hpp", "include/**/*.hxx"], allow_empty = True),
+)
+
+cc_library(
+    name = "libGL",
+    srcs = ["@nixpkgs_libGL//:lib"],
+    hdrs = [":include"],
+    strip_include_prefix = "include",
+)
+""",
+)
+
+nixpkgs_package(
+    name = "libconfig",
+    repository = "@nixpkgs//:default.nix",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "bin",
+    srcs = glob(["bin/*"], allow_empty = True),
+)
+
+filegroup(
+    name = "lib",
+    srcs = glob(["lib/**/*.so*", "lib/**/*.dylib", "lib/**/*.a"], allow_empty = True),
+)
+
+filegroup(
+    name = "include",
+    srcs = glob(["include/**/*.h", "include/**/*.hh", "include/**/*.hpp", "include/**/*.hxx"], allow_empty = True),
+)
+
+cc_library(
+    name = "libconfig",
+    srcs = [":lib"],
+    hdrs = [":include"],
+    strip_include_prefix = "include",
+)
+""",
+)

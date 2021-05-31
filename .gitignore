@@ -12,6 +12,9 @@
 # Nix
 result*
 
+# bazel
+bazel*
+
 # Flatpak
 flatpak-repo
 flatpak-build
