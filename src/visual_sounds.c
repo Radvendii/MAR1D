@@ -7,18 +7,10 @@ vs_anim vs_sounds[k_nSounds];
 
 int vs_mainVisual;
 
-obj vs_obj(char c, int x, int y) {
-  obj ret = io_os[c];
-  ret.x = x;
-  ret.y = y;
-  return ret;
-}
-
 void vs_init() {
   for (int i=0; i < k_nSounds; i++) {
-    vs_sounds[i].cur = NULL;
     vs_sounds[i].fs = NULL;
-    vs_sounds[i].animFrame = 0;
+    vs_sounds[i].cur = -1;
   }
   vs_mainVisual = SND_none;
 
@@ -439,6 +431,7 @@ void vs_init() {
     VS_OBJ('!', x, y-16*6),                     \
     VS_OBJ('!', x, y-16*7),                     \
     VS_OBJ('X', x, y-16*8)
+
 
   vs_sounds[SND_levelend] = VS_ANIM(
     VS_FRAME(_TMP_FLAG(5+10, 16*4), VS_OBJ('@', 5, 16*3) ),
@@ -910,8 +903,11 @@ void vs_init() {
 }
 
 void vs_play(int snd) {
-  vs_sounds[snd].cur = vs_sounds[snd].fs; // set current frame to first frame
-  vs_sounds[snd].animFrame = 0;
+  if (vs_sounds[snd].nFs == 0) {
+    // no animation to play
+    return;
+  }
+  vs_sounds[snd].cur = 0;
 }
 
 void vs_mainPlay(int snd) {
@@ -921,13 +917,13 @@ void vs_mainPlay(int snd) {
 }
 
 void vs_mainStop() {
-  vs_sounds[vs_mainVisual].cur = NULL;
+  vs_sounds[vs_mainVisual].cur = -1;
   vs_mainVisual = SND_none;
 }
 
 void vs_draw() {
   for (int i=0; i < k_nSounds; i++) {
-    if (!vs_sounds[i].cur) { // not playing
+    if (vs_sounds[i].cur == -1) { // not playing
       continue;
     }
     // draw vs_sounds[i].cur
@@ -938,8 +934,9 @@ void vs_draw() {
     // shifted over so that positive numbers land to the right of the game area
     float shift = (float) conf.lineSize * k_drawD2 / k_perspWindowW + 5; // rescale and add buffer
     glOrtho(-k_drawD2 - shift, k_drawD2 - shift, -k_drawD2, k_drawD2, -1, 1);
-    for (obj *o = *vs_sounds[i].cur; o->type != '\0'; o++) {
-        gr_image(&o->frames[vs_sounds[i].animFrame / k_animFreq % o->nFrames].im, RECT_LTWH(o->x + o->bb.x, o->y + o->bb.y, o->bb.w, -(o->bb.h)));
+    for (vs_obj *o = vs_sounds[i].fs[vs_sounds[i].cur]; o->type != '\0'; o++) {
+        obj *ob = &io_os[o->type];
+        gr_image(&ob->frames[vs_sounds[i].cur / k_animFreq % ob->nFrames].im, RECT_LTWH(o->x + ob->bb.x, o->y + ob->bb.y, ob->bb.w, -(ob->bb.h)));
     }
     glPopMatrix();
   }
@@ -947,20 +944,17 @@ void vs_draw() {
 
 void vs_update() {
   for (int i=0; i < k_nSounds; i++) {
-    if (!vs_sounds[i].cur) { // not playing
+    if (vs_sounds[i].cur == -1) { // not playing
       continue;
     }
 
-    // increment the animation
     vs_sounds[i].cur++;
-    vs_sounds[i].animFrame++;
-    if (*(vs_sounds[i].cur) == NULL) { // we've reached the end of the animation
+    if (vs_sounds[i].cur == vs_sounds[i].nFs) { // we've reached the end of the animation
       if (i == vs_mainVisual) { // this is the main audio loop
-        vs_sounds[i].cur = vs_sounds[i].fs; // restart the animation
+        vs_sounds[i].cur = 0; // restart the animation
       }
       else { // we're done
-        vs_sounds[i].cur = NULL;
-        vs_sounds[i].animFrame = 0;
+        vs_sounds[i].cur = -1;
       }
     }
   }
@@ -968,12 +962,10 @@ void vs_update() {
 
 void vs_deinit() {
   for (int i=0; i < k_nSounds; i++) {
-    for (vs_frame *f = vs_sounds[i].fs; f && *f; f++) {
-      free(*f);
-      *f = NULL;
+    for (int j=0; j < vs_sounds[i].nFs; j++) {
+      free(vs_sounds[i].fs[j]);
     }
     free(vs_sounds[i].fs);
-    vs_sounds[i].cur = NULL;
     vs_sounds[i].fs = NULL;
   }
 }
