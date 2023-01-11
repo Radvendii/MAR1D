@@ -13,49 +13,43 @@ with import nixpkgs {
     libc = "msvcrt";
   };
 
+  config.allowUnsupportedSystem = true;
+
   crossOverlays = [
-    # statically compile everything same as pkgsStatic
-    (import "${nixpkgs}/pkgs/top-level/static.nix")
 
     (self: super: {
 
-      # nixpkgs PR #120973
-      libconfig = super.libconfig.overrideAttrs (old: {
-        nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ super.autoconf super.automake115x ];
-        configureFlags = (old.configureFlags or []) ++ [ "--disable-tests" ];
-        # libconfig PR #190
-        patches = (old.patches or []) ++ [ ./patches/libconfig-disable-tests.patch ];
-        cmakeFlags = (old.cmakeFlags or []) ++ [ "-DBUILD_TESTS:BOOL=OFF" ];
-        doCheck = false;
+      flac = self.callPackage ({cmake, pkg-config, doxygen}: super.flac.overrideAttrs (old: {
+        # remove graphviz, which doesn't seem necessary, and fails to build even thought it's in nativeBuildInputs
+        nativeBuildInputs = [ cmake pkg-config doxygen ];
+      })) {};
+
+      libopus = super.libopus.overrideAttrs (old: {
+        NIX_LDFLAGS = "-lssp";
       });
 
       SDL2_mixer = (super.SDL2_mixer.override {
         fluidsynth = null; # fluidsynth is broken in like a dozen different ways.
         libmodplug = null; # SDL2_mixer can't find libmodplug for some reason
         smpeg2 = null; # this can be upstreamed; smpeg isn't a dependency anymore
-      }).overrideAttrs (old: {
-        # src = super.fetchFromGitHub {
-        #   owner = "libsdl-org";
-        #   repo = "SDL_mixer";
-        #   rev = "4d2fec78b8deca24ce6c7f7a9e3725cf31f75896";
-        #   sha256 = "sha256-Z0uIGEoSrsBhZeF859mcEK+7OCVdtlx5mQaLvKyahLg=";
-        # };
-        # https://github.com/libsdl-org/SDL_mixer/pull/313
-        patches = (old.patches or []) ++ [ ./patches/pkgconfig_requires.patch ];
-        # patches = (old.patches or []) ++ [ ./patches/sdl2_mixer-pkgconfig.patch ];
-        # patches = (old.patches or []) ++ [ ./patches/sdl2-mixer-new.patch ];
-        # # dontAddDisableDepTrack = true;
-        # # dontFixLibtool = true;
-        # # dontPruneLibtoolFiles = true;
-        # nativeBuildInputs = old.nativeBuildInputs
-        #   ++ (with super.buildPackages; [ autoconf automake which ]);
 
-        preConfigure = ''
-          ./autogen.sh
-        '';
+        timidity = null; # didn't work; didn't really look into why; don't need it
+        mpg123 = null; # didn't work; didn't really look into why; don't need it
+      }).overrideAttrs (old: rec {
 
-        # this doesn't help the modplug issue
-        # NIX_LDFLAGS = [ "-L${super.libmodplug}/lib -lmodplug" ];
+        # SDL2_mixer is woefully outdated in nixpkgs
+        # TODO: upstream
+        version = "2.6.2";
+        src = self.fetchFromGitHub {
+          owner = "libsdl-org";
+          repo = "SDL_mixer";
+          rev = "release-${version}";
+          sha256 = "sha256-ZdPqNyRI9QnZ2qyrz1W63VHzJXO6n1STrT+TS9gNweM=";
+        };
+
+        NIX_LDFLAGS = "-lssp";
+        # remove timidity
+        postPatch = "";
 
         configureFlags = old.configureFlags
           ++ [ "--disable-sdltest" # like darwin (can be upstreamed)
@@ -70,6 +64,7 @@ with import nixpkgs {
 };
 
 (callPackage ./package.nix {}).overrideAttrs (old: {
+  NIX_LDFLAGS = "-lssp";
   mesonFlags = old.mesonFlags ++ [
     "--bindir=."
     "--datadir=resources"
