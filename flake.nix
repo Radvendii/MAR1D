@@ -26,6 +26,13 @@
           game = import ./nix { inherit nixpkgs system; };
           darwin-app = import ./nix/darwin-app.nix { inherit nixpkgs system; };
           windows = import ./nix/windows.nix { inherit nixpkgs system; };
+          windows-zip = pkgs.runCommandLocal "MAR1D-windows.zip" {} ''
+            mkdir -p $out
+            {
+              cd ${packages.windows}
+              ${pkgs.zip}/bin/zip -r $out/MAR1D.zip MAR1D.exe resources
+            }
+          '';
           flatpak = import ./nix/flatpak.nix { inherit nixpkgs system; };
           appimage = nix-bundle.bundlers.appimage {
             inherit system;
