@@ -72,9 +72,10 @@ To compile on Linux or Mac OS X using the [Nix package manager](https://nixos.or
 To cross-compile for windows, `nix-build nix/windows.nix` or for flakes `nix build .#windows`, then transfer the contents of `result/` to a windows computer, or `cd result; wine ./MAR1D.exe` (you must be in the same directory as `MAR1D.exe`).
 
 I've also added a convenient wrapper `nix build .#windows-zip` (flakes only) which produces `result/MAR1D.zip` that can be transferred to a windows computer more easily.
+
 ### Mac OS X Bundle
 
-Mac OS X Nix cross-compilation is a little broken at the moment, so you have to be running Nix *on* Mac OS X for this one. But then it's as simple as running `nix-build nix/darwin-app.nix`, or with flakes `nix build .#darwin-app`. This will produce `result/MAR1D.app` that should work like any other application on Mac OS X.
+Mac OS X Nix cross-compilation is ~~a little broken at the moment~~ impossible because Apple goes out of their way to prevent it, so you have to be running Nix *on* Mac OS X for this one. But then it's as simple as running `nix-build nix/darwin-app.nix`, or with flakes `nix build .#darwin-app`. This will produce `result/MAR1D.app` that should work like any other application on Mac OS X.
 
 ### AppImage
 
