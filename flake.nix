@@ -21,8 +21,8 @@
           ];
         };
       in rec {
-        defaultPackage = packages.game;
         packages = {
+          default = packages.game;
           game = import ./nix { inherit nixpkgs system; };
           darwin-app = import ./nix/darwin-app.nix { inherit nixpkgs system; };
           windows = import ./nix/windows.nix { inherit nixpkgs system; };
@@ -59,7 +59,7 @@
               ];
           };
         };
-        defaultApp = {
+        apps.default = {
           type = "app";
           program = "${packages.game}/bin/MAR1D";
         };
