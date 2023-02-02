@@ -20,6 +20,7 @@ Other notable similar exploits include:
 * [Hyperrogue](http://www.roguetemple.com/z/hyper/)
 * [4D Toys](http://www.4dtoys.com/) (Though I've never personally played it)
 * [Hyperbolica](https://store.steampowered.com/app/1256230/Hyperbolica/) (Someone seems to have actually made my dream game.)
+* [Manifold Garden](https://manifold.garden)
 * Send me any I'm missing! I love playing with these things :)
 
 ## Playing the Game
