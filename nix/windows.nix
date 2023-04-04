@@ -25,6 +25,9 @@ with import nixpkgs {
       })) {};
 
       libopus = super.libopus.overrideAttrs (old: {
+        # TODO: maybe this should be propagated to dependencies?
+        #       setupHook
+        #       addEnvHooks
         NIX_LDFLAGS = "-lssp";
       });
 
@@ -37,21 +40,9 @@ with import nixpkgs {
         mpg123 = null; # didn't work; didn't really look into why; don't need it
       }).overrideAttrs (old: rec {
 
-        # SDL2_mixer is woefully outdated in nixpkgs
-        # TODO: upstream
-        version = "2.6.2";
-        src = self.fetchFromGitHub {
-          owner = "libsdl-org";
-          repo = "SDL_mixer";
-          rev = "release-${version}";
-          sha256 = "sha256-ZdPqNyRI9QnZ2qyrz1W63VHzJXO6n1STrT+TS9gNweM=";
-        };
-
         NIX_LDFLAGS = "-lssp";
-        # remove timidity
-        postPatch = "";
 
-        configureFlags = old.configureFlags
+        configureFlags = (nixpkgs.lib.take 6 old.configureFlags) # drop something to do with timidity
           ++ [ "--disable-sdltest" # like darwin (can be upstreamed)
                "--disable-music-mod-modplug"
              ];
@@ -59,6 +50,13 @@ with import nixpkgs {
           platforms = old.meta.platforms ++ super.lib.platforms.windows;
         };
       });
+      # libjack2 = super.libjack2.overrideAttrs (old: {
+      #   nativeBuildInputs = with self.buildPackages; [ pkg-config python3Packages.python wafHook ];
+      #   prePatch = ''
+      #     substituteInPlace svnversion_regenerate.sh \
+      #     --replace /bin/bash ${self.buildPackages.buildPackages.bash}/bin/bash
+      #   '';
+      # });
     })
   ];
 };
