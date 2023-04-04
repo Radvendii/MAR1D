@@ -25,16 +25,15 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [
-            zig-in.overlays.default
+        overlays = [
             (final: prev: {
-              zig = final.zigpkgs.master;
+              zig = zig-in.packages.${system}.master;
               zls = zls-in.packages.${system}.zls;
               zigBuild = final.callPackage ./nix/zig-build { };
             })
           ];
+        pkgs = import nixpkgs {
+          inherit system overlays;
         };
         oldGlibcPkgs = import nixpkgs {
           inherit system;
@@ -47,7 +46,7 @@
           default = packages.game;
           game = import ./nix { inherit pkgs system; };
           darwin-app = import ./nix/darwin-app.nix { inherit nixpkgs system; };
-          windows = import ./nix/windows.nix { inherit nixpkgs system; };
+          windows = import ./nix/windows.nix { inherit nixpkgs system overlays; };
           windows-zip = pkgs.runCommandLocal "MAR1D-windows.zip" {} ''
             mkdir -p $out
             {

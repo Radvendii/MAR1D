@@ -3,10 +3,11 @@
 
 { nixpkgs ? <nixpkgs>
 , system ? builtins.currentSystem
+, overlays ? []
 }:
 
 with import nixpkgs {
-  inherit system;
+  inherit system overlays;
   crossSystem = {
     isStatic = true;
     config = "x86_64-w64-mingw32";
@@ -37,22 +38,18 @@ with import nixpkgs {
         mpg123 = null; # didn't work; didn't really look into why; don't need it
       }).overrideAttrs (old: rec {
 
-        # SDL2_mixer is woefully outdated in nixpkgs
-        # TODO: upstream
-        version = "2.6.2";
-        src = self.fetchFromGitHub {
-          owner = "libsdl-org";
-          repo = "SDL_mixer";
-          rev = "release-${version}";
-          sha256 = "sha256-ZdPqNyRI9QnZ2qyrz1W63VHzJXO6n1STrT+TS9gNweM=";
-        };
-
         NIX_LDFLAGS = "-lssp";
         # remove timidity
         postPatch = "";
 
-        configureFlags = old.configureFlags
-          ++ [ "--disable-sdltest" # like darwin (can be upstreamed)
+        configureFlags = [ # copied from upstream (remove timidity)
+          "--disable-music-ogg-shared"
+          "--disable-music-flac-shared"
+          "--disable-music-mod-modplug-shared"
+          "--disable-music-mp3-mpg123-shared"
+          "--disable-music-opus-shared"
+          "--disable-music-midi-fluidsynth-shared"
+        ] ++ [ "--disable-sdltest" # like darwin (can be upstreamed)
                "--disable-music-mod-modplug"
              ];
         meta = old.meta // {
@@ -63,12 +60,16 @@ with import nixpkgs {
   ];
 };
 
+# SDL2_mixer
+
 (callPackage ./package.nix {}).overrideAttrs (old: {
   NIX_LDFLAGS = "-lssp";
-  mesonFlags = old.mesonFlags ++ [
-    "--bindir=."
-    "--datadir=resources"
+  zigFlags = old.zigFlags ++ [
+    "--prefix-exe-dir $prefix"
+    "-Dbindir=."
+    "-Ddatadir=resources"
     "-Dportable=true"
+    "-Dtarget=x86_64-windows"
   ];
   meta = old.meta // {
     platforms = old.meta.platforms ++ lib.platforms.windows;
