@@ -5,6 +5,9 @@
 *~
 *.swp
 
+# direnv
+.direnv/
+
 # Meson
 /build
 /dist
@@ -19,3 +22,7 @@ flatpak-build
 flatpak-cruft
 flatpak-data
 MAR1D.flatpak
+
+# zig
+zig-out/
+zig-cache/

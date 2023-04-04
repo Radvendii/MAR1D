@@ -4,9 +4,9 @@
 , SDL2_mixer
 , libGLU
 , libconfig
-, meson
-, ninja
+, zig
 , pkg-config
+, autoPatchelfHook
 }:
 
 let
@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
 
   src = ./..;
 
-  nativeBuildInputs = [ meson ninja pkg-config ];
+  nativeBuildInputs = [ zig pkg-config autoPatchelfHook ];
 
   buildInputs = [
     SDL2
@@ -27,7 +27,13 @@ stdenv.mkDerivation rec {
     libconfig
   ] ++ lib.optionals (!isWindows) [ libGLU ];
 
-  mesonFlags = lib.optionals isStatic [ "-Dstatic=true" ];
+  # mesonFlags = lib.optionals isStatic [ "-Dstatic=true" ];
+
+  buildPhase = ''
+    mkdir $out
+    export HOME=$TMPDIR
+    zig build -Doptimize=ReleaseFast --prefix $out
+  '';
 
   meta = with lib; {
     description = "First person Super Mario Bros";

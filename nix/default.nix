@@ -1,7 +1,6 @@
 { nixpkgs ? <nixpkgs>
 , system ? builtins.currentSystem
+, pkgs ? import nixpkgs { inherit system; }
 }:
 
-with import nixpkgs { inherit system; };
-
-callPackage ./package.nix {}
+pkgs.callPackage ./package.nix {}

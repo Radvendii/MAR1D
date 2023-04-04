@@ -7,13 +7,35 @@
     # my personal nix-bundle branch
     # can be switched to the main repo when PR #76 is merged
     nix-bundle.url = "github:radvendii/nix-bundle";
+
+    zig-in = {
+      url = "github:mitchellh/zig-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    zls-in = {
+      url = "github:zigtools/zls";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        zig-overlay.follows = "zig-in";
+      };
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, nix-bundle }:
+  outputs = { self, nixpkgs, flake-utils, nix-bundle, zig-in, zls-in }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = nixpkgs.legacyPackages."${system}";
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [
+            zig-in.overlays.default
+            (final: prev: {
+              zig = final.zigpkgs.master;
+              zls = zls-in.packages.${system}.zls;
+              zigStdenv = final.overrideCC final.clangStdenv final.zig;
+            })
+          ];
+        };
         oldGlibcPkgs = import nixpkgs {
           inherit system;
           overlays = [
@@ -23,7 +45,7 @@
       in rec {
         packages = {
           default = packages.game;
-          game = import ./nix { inherit nixpkgs system; };
+          game = import ./nix { inherit pkgs system; };
           darwin-app = import ./nix/darwin-app.nix { inherit nixpkgs system; };
           windows = import ./nix/windows.nix { inherit nixpkgs system; };
           windows-zip = pkgs.runCommandLocal "MAR1D-windows.zip" {} ''
@@ -62,6 +84,17 @@
         apps.default = {
           type = "app";
           program = "${packages.game}/bin/MAR1D";
+        };
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            zig
+            zls
+            SDL2
+            SDL2_mixer
+            libGLU
+            libconfig
+            pkg-config
+          ];
         };
       }
     );
