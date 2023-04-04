@@ -32,7 +32,7 @@
             (final: prev: {
               zig = final.zigpkgs.master;
               zls = zls-in.packages.${system}.zls;
-              zigStdenv = final.overrideCC final.clangStdenv final.zig;
+              zigBuild = final.callPackage ./nix/zig-build { };
             })
           ];
         };
