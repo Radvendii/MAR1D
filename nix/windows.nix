@@ -16,48 +16,43 @@ with import nixpkgs {
 
   config.allowUnsupportedSystem = true;
 
-  crossOverlays = [
+  crossOverlays = [(self: super: {
+    flac = self.callPackage ({cmake, pkg-config, doxygen}: super.flac.overrideAttrs (old: {
+      # remove graphviz, which doesn't seem necessary, and fails to build even thought it's in nativeBuildInputs
+      nativeBuildInputs = [ cmake pkg-config doxygen ];
+    })) {};
 
-    (self: super: {
+    libopus = super.libopus.overrideAttrs (old: {
+      NIX_LDFLAGS = "-lssp";
+    });
 
-      flac = self.callPackage ({cmake, pkg-config, doxygen}: super.flac.overrideAttrs (old: {
-        # remove graphviz, which doesn't seem necessary, and fails to build even thought it's in nativeBuildInputs
-        nativeBuildInputs = [ cmake pkg-config doxygen ];
-      })) {};
+    SDL2_mixer = (super.SDL2_mixer.override {
+      fluidsynth = null; # fluidsynth is broken in like a dozen different ways.
+      libmodplug = null; # SDL2_mixer can't find libmodplug for some reason
+      smpeg2 = null; # this can be upstreamed; smpeg isn't a dependency anymore
 
-      libopus = super.libopus.overrideAttrs (old: {
-        NIX_LDFLAGS = "-lssp";
-      });
+      timidity = null; # didn't work; didn't really look into why; don't need it
+      mpg123 = null; # didn't work; didn't really look into why; don't need it
+    }).overrideAttrs (old: rec {
 
-      SDL2_mixer = (super.SDL2_mixer.override {
-        fluidsynth = null; # fluidsynth is broken in like a dozen different ways.
-        libmodplug = null; # SDL2_mixer can't find libmodplug for some reason
-        smpeg2 = null; # this can be upstreamed; smpeg isn't a dependency anymore
+      NIX_LDFLAGS = "-lssp";
 
-        timidity = null; # didn't work; didn't really look into why; don't need it
-        mpg123 = null; # didn't work; didn't really look into why; don't need it
-      }).overrideAttrs (old: rec {
-
-        NIX_LDFLAGS = "-lssp";
-        # remove timidity
-        postPatch = "";
-
-        configureFlags = [ # copied from upstream (remove timidity)
-          "--disable-music-ogg-shared"
-          "--disable-music-flac-shared"
-          "--disable-music-mod-modplug-shared"
-          "--disable-music-mp3-mpg123-shared"
-          "--disable-music-opus-shared"
-          "--disable-music-midi-fluidsynth-shared"
-        ] ++ [ "--disable-sdltest" # like darwin (can be upstreamed)
-               "--disable-music-mod-modplug"
-             ];
-        meta = old.meta // {
-          platforms = old.meta.platforms ++ super.lib.platforms.windows;
-        };
-      });
-    })
-  ];
+      configureFlags = [ # copied from upstream (remove timidity)
+        "--disable-music-ogg-shared"
+        "--disable-music-flac-shared"
+        "--disable-music-mod-modplug-shared"
+        "--disable-music-mp3-mpg123-shared"
+        "--disable-music-opus-shared"
+        "--disable-music-midi-fluidsynth-shared"
+      ] ++ [
+        "--disable-sdltest" # like darwin (can be upstreamed)
+        "--disable-music-mod-modplug"
+      ];
+      meta = old.meta // {
+        platforms = old.meta.platforms ++ super.lib.platforms.windows;
+      };
+    });
+  })];
 };
 
 # SDL2_mixer
@@ -69,7 +64,7 @@ with import nixpkgs {
     "-Dbindir=."
     "-Ddatadir=resources"
     "-Dportable=true"
-    "-Dtarget=x86_64-windows"
+    "-Dtarget=x86_64-windows-gnu"
   ];
   meta = old.meta // {
     platforms = old.meta.platforms ++ lib.platforms.windows;

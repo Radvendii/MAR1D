@@ -1,21 +1,26 @@
 const std = @import("std");
 const builtin = @import("builtin");
 const Style = std.Build.ConfigHeaderStep.Style;
+const Allocator = std.mem.Allocator;
+const NativePaths = std.zig.system.NativePaths;
 
-const MAX_CFLAGS = 100;
-
-var cflags = [_][]const u8{undefined} ** MAX_CFLAGS;
-var ncflags: u8 = 0;
-
-pub fn addCFlags(flags: []const []const u8) void {
-    std.mem.copy([]const u8, cflags[ncflags..], flags);
-    ncflags += @intCast(u8, flags.len);
+pub fn getNixFlags(allocator: std.mem.Allocator) ?NativePaths {
+    // we don't actually care what this is. it's not used by the nix detection code
+    if (std.process.hasEnvVarConstant("NIX_CFLAGS_COMPILE") or std.process.hasEnvVarConstant("NIX_LDFLAGS")) {
+        const garbage_nti = std.zig.system.NativeTargetInfo{ .target = builtin.target, .dynamic_linker = std.zig.system.NativeTargetInfo.DynamicLinker.init(null) };
+        return NativePaths.detect(allocator, garbage_nti) catch unreachable;
+    }
+    return null;
 }
 
-// Although this function looks imperative, note that its job is to
-// declaratively construct a build graph that will be executed by an external
-// runner.
-pub fn build(b: *std.Build) void {
+pub fn build(b: *std.Build) !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    var arena = std.heap.ArenaAllocator.init(gpa.allocator());
+    defer arena.deinit();
+
+    var cflags = std.ArrayList([]const u8).init(arena.allocator());
+    defer cflags.deinit();
+
     const portable = b.option(bool, "portable", "Is this installation meant to be self-contained, using relative paths") orelse false;
     const static = b.option(bool, "static", "Build with static dependencies") orelse false;
     const data_dir = b.option([]const u8, "datadir", "Where to put resources") orelse "share";
@@ -52,35 +57,65 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    addCFlags(&.{ "-Werror", "-Wall", "-Wno-char-subscripts" });
+    try cflags.appendSlice(&.{ "-Werror", "-Wall", "-Wno-char-subscripts" });
     if (static) {
-        addCFlags(&.{"-D LIBCONFIG_STATIC"});
+        try cflags.appendSlice(&.{ "-D LIBCONFIG_STATIC", "-static" });
     }
 
     // TODO: complain to zig fmt about this formatting
-    exe.addCSourceFiles(&.{ "src/audio.c", "src/controls.c", "src/enemies.c", "src/gamelogic.c", "src/graphics.c", "src/helpers.c", "src/lodepng.c", "src/mechanics.c", "src/menu.c", "src/objects.c", "src/parsing.c", "src/rendering.c", "src/resources.c", "src/visual_sounds.c", "src/windowing.c" }, cflags[0..ncflags]);
+    exe.addCSourceFiles(&.{ "src/audio.c", "src/controls.c", "src/enemies.c", "src/gamelogic.c", "src/graphics.c", "src/helpers.c", "src/lodepng.c", "src/mechanics.c", "src/menu.c", "src/objects.c", "src/parsing.c", "src/rendering.c", "src/resources.c", "src/visual_sounds.c", "src/windowing.c" }, cflags.items);
     exe.addConfigHeader(resources_h);
 
-    exe.linkSystemLibrary(switch (builtin.target.os.tag) {
-        .windows => "opengl32",
-        else => "opengl",
-    });
-    exe.linkSystemLibrary(switch (builtin.target.os.tag) {
-        .windows => "glu32",
-        else => "glu",
-    });
-
-    if (static) {
-        exe.addObjectFile("libSDL2.a");
-        exe.addObjectFile("libSDL2_mixer.a");
-        exe.addObjectFile("libconfig.a");
+    if (false) {
+        // exe.addObjectFile("libSDL2.a");
+        // exe.addObjectFile("libSDL2_mixer.a");
+        // exe.addObjectFile("libconfig.a");
+        // exe.addObjectFile("OpenGL.a");
+        // exe.addObjectFile("libGLU.a");
+        exe.addObjectFile("/nix/store/hrzz0djnxav1r88vx70nacvfddh6nq00-SDL2-static-x86_64-w64-mingw32-2.26.4/lib/libSDL2.a");
+        exe.addObjectFile("/nix/store/hrzz0djnxav1r88vx70nacvfddh6nq00-SDL2-static-x86_64-w64-mingw32-2.26.4/lib/libSDL2main.a");
+        exe.addObjectFile("/nix/store/216i33q43pzc7dsybjx6s09595mzhilg-SDL2_mixer-static-x86_64-w64-mingw32-2.6.3/lib/libSDL2_mixer.a");
+        exe.addObjectFile("/nix/store/wyld9vz7myxl4wsp3pf9dx89i8652m2l-libconfig-static-x86_64-w64-mingw32-1.7.3/lib/libconfig.a");
+        exe.linkSystemLibrary("opengl32");
+        exe.linkSystemLibrary("glu32");
     } else {
         exe.linkSystemLibrary("sdl2");
         exe.linkSystemLibrary("SDL2_mixer");
         exe.linkSystemLibrary("libconfig");
+        exe.linkSystemLibrary(switch (builtin.target.os.tag) {
+            .windows => "opengl32",
+            else => "opengl",
+        });
+        exe.linkSystemLibrary(switch (builtin.target.os.tag) {
+            .windows => "glu32",
+            else => "glu",
+        });
     }
     exe.addIncludePath("src/");
+    exe.addIncludePath("/nix/store/rwql2h2avh2gvzl60hnlhhib0j65bx15-SDL2-static-x86_64-w64-mingw32-2.26.4-dev/include/SDL2");
+    exe.addIncludePath("/nix/store/qlsgvqw2rqkxs9jl4z4gq3s1jl7xzh0q-SDL2_mixer-static-x86_64-w64-mingw32-2.6.3-dev/include/SDL2");
+
     exe.linkLibC();
+
+    // add nix flags
+
+    if (getNixFlags(arena.allocator())) |paths| {
+        for (paths.warnings.items) |warning| {
+            std.log.warn("\n\n{s}\n\n", .{warning});
+        }
+        for (paths.include_dirs.items) |include_dir| {
+            exe.addIncludePath(include_dir);
+        }
+        for (paths.framework_dirs.items) |framework_dir| {
+            exe.addFrameworkPath(framework_dir);
+        }
+        for (paths.lib_dirs.items) |lib_dir| {
+            exe.addLibraryPath(lib_dir);
+        }
+        for (paths.rpaths.items) |rpath| {
+            exe.addRPath(rpath);
+        }
+    }
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
