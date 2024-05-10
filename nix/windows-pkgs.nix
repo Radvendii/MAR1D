@@ -27,12 +27,9 @@ import nixpkgs {
       nativeBuildInputs = [ cmake pkg-config doxygen ];
     })) {};
 
-    libopus = super.libopus.overrideAttrs (old: {
-      NIX_LDFLAGS = "-lssp";
-    });
-
     SDL2 = super.SDL2.overrideAttrs (old: {
-      # this is for dynamic linking. Upstream checking whether dynamic linking is happening
+      # this is for dynamic linking. 
+      # UPSTREAM: checking whether dynamic linking is happening
       postFixup = "";
     });
 
@@ -45,9 +42,7 @@ import nixpkgs {
       timidity = null; # didn't work; didn't really look into why; don't need it
       mpg123 = null; # didn't work; didn't really look into why; don't need it
     }).overrideAttrs (old: rec {
-
-      NIX_LDFLAGS = "-lssp";
-      # TODO: upstream using SDL2.dev in buildInputs rather than SDL2 in nativeBuildInputs
+      # UPSTREAM: using SDL2.dev in buildInputs rather than SDL2 in nativeBuildInputs
       nativeBuildInputs = [ self.pkg-config self.SDL2.dev ];
 
       configureFlags = [ # copied from upstream (remove timidity)
@@ -58,7 +53,7 @@ import nixpkgs {
         "--disable-music-opus-shared"
         "--disable-music-midi-fluidsynth-shared"
       ] ++ [
-        "--disable-sdltest" # like darwin (can be upstreamed)
+        "--disable-sdltest" # like darwin UPSTREAM:
         "--disable-music-mod-modplug"
       ];
       meta = old.meta // {

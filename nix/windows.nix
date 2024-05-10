@@ -21,7 +21,6 @@ with import ./windows-pkgs.nix { inherit nixpkgs system overlays; };
     ''
   )];
   dontAutoPatchelf = true;
-  NIX_LDFLAGS = "-lssp";
   zigFlags = old.zigFlags ++ [
     "--prefix-exe-dir ."
     "-Ddatadir=resources"
