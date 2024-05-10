@@ -38,7 +38,7 @@ stdenv.mkDerivation rec {
       You must view the world as mario does, as a one dimensional line.
     '';
     homepage = "https://mar1d.com";
-    license = licenses.agpl3;
+    license = licenses.agpl3Plus;
     maintainers = with maintainers; [ taeer ];
     platforms = platforms.unix;
   };

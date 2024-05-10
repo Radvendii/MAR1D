@@ -3,7 +3,7 @@
 
   inputs = {
     # XXX: zig links against the wrong glibc if we use nixpkgs master
-    nixpkgs.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     # my personal nix-bundle branch
     # can be switched to the main repo when PR #76 is merged
