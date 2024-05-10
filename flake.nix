@@ -109,12 +109,9 @@
             windows-pkgs.SDL2_mixer
             windows-pkgs.libconfig
             pkgs.wineWow64Packages.base
-            (pkgs.writeShellScriptBin "pkg-config" ''
-              if [ -z "$PKG_CONFIG_FOR_TARGET" ]; then
-                echo "Error: PKG_CONFIG_FOR_TARGET undefined"
-                exit 1
-              fi
-              $PKG_CONFIG_FOR_TARGET "$@"
+            (pkgs.runCommand "rename-pkg-config" {} ''
+              mkdir -p $out/bin
+              ln -s ${windows-pkgs.buildPackages.pkg-config}/bin/x86_64-w64-mingw32-pkg-config $out/bin/pkg-config
             '')
           ];
         };
