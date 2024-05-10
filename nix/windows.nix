@@ -26,6 +26,12 @@ with import nixpkgs {
       NIX_LDFLAGS = "-lssp";
     });
 
+    SDL2 = super.SDL2.overrideAttrs (old: {
+      # this is for dynamic linking. Upstream checking whether dynamic linking is happening
+      postFixup = "";
+    });
+
+
     SDL2_mixer = (super.SDL2_mixer.override {
       fluidsynth = null; # fluidsynth is broken in like a dozen different ways.
       libmodplug = null; # SDL2_mixer can't find libmodplug for some reason
@@ -36,6 +42,8 @@ with import nixpkgs {
     }).overrideAttrs (old: rec {
 
       NIX_LDFLAGS = "-lssp";
+      # TODO: upstream using SDL2.dev in buildInputs rather than SDL2 in nativeBuildInputs
+      nativeBuildInputs = [ self.pkg-config self.SDL2.dev ];
 
       configureFlags = [ # copied from upstream (remove timidity)
         "--disable-music-ogg-shared"
