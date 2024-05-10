@@ -1,0 +1,15 @@
+diff --git a/lib/wincompat.h b/lib/wincompat.h
+index 5de29c3..74bd07d 100644
+--- a/lib/wincompat.h
++++ b/lib/wincompat.h
+@@ -44,10 +44,6 @@
+ 
+ #define fileno _fileno
+ 
+-#if _MSC_VER <= 1800
+-#define snprintf  _snprintf
+-#endif
+-
+ #if !defined(__MINGW32__) && _MSC_VER < 1800
+ #define atoll     _atoi64
+ #define strtoull  _strtoui64

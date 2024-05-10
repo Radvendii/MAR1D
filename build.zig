@@ -9,9 +9,7 @@ pub fn build(b: *std.Build) !void {
     // options
     const static = b.option(bool, "static", "Build with static dependencies") orelse false;
     const data_dir = b.option([]const u8, "datadir", "Where to put resources") orelse "share";
-    const bin_dir = b.option([]const u8, "bindir", "Where to put binaries") orelse "bin";
-    // XXX: ther doesn't seem to be a way to set the directory for the binaries
-    _ = bin_dir;
+    // use --prefix-exe-dir to set the output of binaries
 
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
@@ -67,17 +65,33 @@ pub fn build(b: *std.Build) !void {
     exe.addCSourceFiles(.{ .files = source_files, .flags = cflags.items });
     exe.addConfigHeader(resources_h);
 
-    exe.linkSystemLibrary("sdl2");
-    exe.linkSystemLibrary("SDL2_mixer");
-    exe.linkSystemLibrary("libconfig");
-    exe.linkSystemLibrary(switch (target.result.os.tag) {
-        .windows => "opengl32",
-        else => "opengl",
-    });
-    exe.linkSystemLibrary(switch (target.result.os.tag) {
-        .windows => "glu32",
-        else => "glu",
-    });
+    const link_mode: std.builtin.LinkMode = if (static) std.builtin.LinkMode.static else std.builtin.LinkMode.dynamic;
+    const link_settings: std.Build.Module.LinkSystemLibraryOptions = .{ .preferred_link_mode = link_mode };
+
+    exe.linkSystemLibrary2("libconfig", link_settings);
+
+    exe.linkSystemLibrary2("sdl2", link_settings);
+
+    exe.linkSystemLibrary2("SDL2_mixer", link_settings);
+
+    exe.linkSystemLibrary2(
+        switch (target.result.os.tag) {
+            .windows => "glu32",
+            else => "glu",
+        },
+        link_settings,
+    );
+
+    exe.linkSystemLibrary2(
+        switch (target.result.os.tag) {
+            .windows => "opengl32",
+            else => "opengl",
+        },
+        link_settings,
+    );
+
+    // TODO: not sure why this needs to be added explicitly (only for windows static compilation). it should be implied by SDL2_mixer
+    exe.linkSystemLibrary2("opusfile", link_settings);
 
     exe.linkLibC();
 

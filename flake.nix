@@ -39,6 +39,7 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
+        windows-pkgs = import ./nix/windows-pkgs.nix { inherit nixpkgs system overlays; };
         oldGlibcPkgs = import nixpkgs {
           inherit system;
           overlays = [
@@ -97,6 +98,24 @@
             libGLU
             libconfig
             pkg-config
+          ];
+        };
+        devShells.windows = pkgs.mkShell {
+          buildInputs = [
+            pkgs.zig
+            pkgs.zls
+            windows-pkgs.buildPackages.pkg-config
+            windows-pkgs.SDL2
+            windows-pkgs.SDL2_mixer
+            windows-pkgs.libconfig
+            pkgs.wineWow64Packages.base
+            (pkgs.writeShellScriptBin "pkg-config" ''
+              if [ -z "$PKG_CONFIG_FOR_TARGET" ]; then
+                echo "Error: PKG_CONFIG_FOR_TARGET undefined"
+                exit 1
+              fi
+              $PKG_CONFIG_FOR_TARGET "$@"
+            '')
           ];
         };
       }
