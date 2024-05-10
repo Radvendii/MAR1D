@@ -916,9 +916,12 @@ void vs_mainPlay(int snd) {
   vs_play(snd);
 }
 
+// XXX: vs_mainStop() gets called twice whenever au_mainPlay() gets called
 void vs_mainStop() {
-  vs_sounds[vs_mainVisual].cur = -1;
-  vs_mainVisual = SND_none;
+  if (vs_mainVisual != SND_none) {
+    vs_sounds[vs_mainVisual].cur = -1;
+    vs_mainVisual = SND_none;
+  }
 }
 
 void vs_draw() {

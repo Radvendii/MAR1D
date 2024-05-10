@@ -6,6 +6,7 @@
 #  include <direct.h> // for getcwd() on windows
 #endif
 #cmakedefine k_resourceDir // To be filled in by zig
+#define k_resourceDir "@RESOURCE_DIRECTORY@" // To be filled in by the build system
 #define k_configFileName "MAR1D.conf"
 #define k_recFileName "mar1d_recording"
 #define k_recFileExt ".png"

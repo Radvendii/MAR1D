@@ -2,7 +2,8 @@
   description = "First person clone of Super Mario Bros.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
+    # XXX: zig links against the wrong glibc if we use nixpkgs master
+    nixpkgs.url = "github:nixos/nixpkgs/23.11";
     flake-utils.url = "github:numtide/flake-utils";
     # my personal nix-bundle branch
     # can be switched to the main repo when PR #76 is merged
@@ -28,7 +29,10 @@
         overlays = [
             (final: prev: {
               zig = zig-in.packages.${system}.master;
-              zls = zls-in.packages.${system}.zls;
+              zls = (zls-in.packages.${system}.zls.overrideAttrs { 
+                # zls is obnoxious to build, every bit of speed helps
+                doCheck = false;
+              });
               zigBuild = final.callPackage ./nix/zig-build { };
             })
           ];
