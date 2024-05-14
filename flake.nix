@@ -2,7 +2,6 @@
   description = "First person clone of Super Mario Bros.";
 
   inputs = {
-    # XXX: zig links against the wrong glibc if we use nixpkgs master
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     # my personal nix-bundle branch
@@ -26,9 +25,26 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
+        lib = nixpkgs.lib;
         overlays = [
             (final: prev: {
-              zig = zig-in.packages.${system}.master;
+              zig = zig-in.packages.${system}.master.overrideAttrs (oldAttrs: {
+                # SEE: https://github.com/mitchellh/zig-overlay/issues/21
+                # SEE: https://github.com/ziglang/zig/issues/14146
+                installPhase = ''
+                  ${oldAttrs.installPhase}
+
+                  mv $out/bin/{zig,.zig-unwrapped}
+
+                  cat > $out/bin/zig <<EOF
+                  #! ${final.lib.getExe pkgs.dash}
+                  exec ${final.lib.getExe pkgs.proot} \\
+                    --bind=${pkgs.coreutils}/bin/env:/usr/bin/env \\
+                    $out/bin/.zig-unwrapped "\$@"
+                  EOF
+                  chmod +x $out/bin/zig
+                '';
+              });
               zls = (zls-in.packages.${system}.zls.overrideAttrs { 
                 # zls is obnoxious to build, every bit of speed helps
                 doCheck = false;
@@ -91,28 +107,34 @@
         };
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            zig
+            gdb
             zls
+
+            zig
+            pkg-config
+
             SDL2
             SDL2_mixer
-            libGLU
             libconfig
-            pkg-config
+            libGLU
           ];
         };
         devShells.windows = pkgs.mkShell {
           buildInputs = [
-            pkgs.zig
-            pkgs.zls
-            windows-pkgs.buildPackages.pkg-config
-            windows-pkgs.SDL2
-            windows-pkgs.SDL2_mixer
-            windows-pkgs.libconfig
             pkgs.wineWow64Packages.base
+            pkgs.zls
+            pkgs.gdb
+
+            pkgs.zig
+            windows-pkgs.buildPackages.pkg-config
             (pkgs.runCommand "rename-pkg-config" {} ''
               mkdir -p $out/bin
               ln -s ${windows-pkgs.buildPackages.pkg-config}/bin/x86_64-w64-mingw32-pkg-config $out/bin/pkg-config
             '')
+
+            windows-pkgs.SDL2
+            windows-pkgs.SDL2_mixer
+            windows-pkgs.libconfig
           ];
         };
       }
