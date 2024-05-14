@@ -37,11 +37,20 @@ pub fn build(b: *std.Build) !void {
         .optimize = optimize,
     });
 
+    const enemies = b.addObject(.{
+        .name = "enemies",
+        .root_source_file = b.path("src/enemies.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    exe.addObject(enemies);
+
     const source_files: []const []const u8 = &.{
         // "src/main.c",
         "src/audio.c",
         "src/controls.c",
-        "src/enemies.c",
+        // "src/enemies.c",
         "src/gamelogic.c",
         "src/graphics.c",
         "src/helpers.c",
@@ -64,42 +73,45 @@ pub fn build(b: *std.Build) !void {
     }
 
     exe.addCSourceFiles(.{ .files = source_files, .flags = cflags.items });
-    exe.addConfigHeader(resources_h);
-
-    const link_mode: std.builtin.LinkMode = if (static) std.builtin.LinkMode.static else std.builtin.LinkMode.dynamic;
-    const link_settings: std.Build.Module.LinkSystemLibraryOptions = .{ .preferred_link_mode = link_mode };
-
-    exe.linkSystemLibrary2("libconfig", link_settings);
-
-    exe.linkSystemLibrary2("sdl2", link_settings);
-
-    exe.linkSystemLibrary2("SDL2_mixer", link_settings);
-
-    exe.linkSystemLibrary2(
-        switch (target.result.os.tag) {
-            .windows => "glu32",
-            else => "glu",
-        },
-        link_settings,
-    );
-
-    exe.linkSystemLibrary2(
-        switch (target.result.os.tag) {
-            .windows => "opengl32",
-            else => "opengl",
-        },
-        link_settings,
-    );
-
-    // TODO: not sure why this needs to be added explicitly (only for windows static compilation). it should be implied by SDL2_mixer
-    exe.linkSystemLibrary2("opusfile", link_settings);
-
-    exe.linkLibC();
-
-    exe.addIncludePath(b.path("src/"));
 
     exe.step.dependOn(&resources_install.step);
 
+    // I don't think we're actually linking anything when producing the enemies object, but we need the include files.
+    inline for (&.{ exe, enemies }) |c| {
+        const link_mode: std.builtin.LinkMode = if (static) std.builtin.LinkMode.static else std.builtin.LinkMode.dynamic;
+        const link_settings: std.Build.Module.LinkSystemLibraryOptions = .{ .preferred_link_mode = link_mode };
+
+        c.addIncludePath(b.path("src/"));
+
+        c.addConfigHeader(resources_h);
+
+        c.linkSystemLibrary2("libconfig", link_settings);
+
+        c.linkSystemLibrary2("sdl2", link_settings);
+
+        c.linkSystemLibrary2("SDL2_mixer", link_settings);
+
+        c.linkSystemLibrary2(
+            switch (target.result.os.tag) {
+                .windows => "glu32",
+                else => "glu",
+            },
+            link_settings,
+        );
+
+        c.linkSystemLibrary2(
+            switch (target.result.os.tag) {
+                .windows => "opengl32",
+                else => "opengl",
+            },
+            link_settings,
+        );
+
+        // TODO: not sure why this needs to be added explicitly (only for windows static compilation). it should be implied by SDL2_mixer
+        c.linkSystemLibrary2("opusfile", link_settings);
+
+        c.linkLibC();
+    }
     b.installArtifact(exe);
 
     // This *creates* a Run step in the build graph, to be executed when another
