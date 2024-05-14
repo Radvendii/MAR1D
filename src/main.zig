@@ -4,9 +4,13 @@ const c = @cImport({
     // but makes true and false of type c_int
     // this makes it impossible to take values defined in C code and assign them to variables defined in C code
     // SEE: https://github.com/ziglang/zig/issues/19950
+    @cDefine("true", "(_Bool)1");
+    @cDefine("false", "(_Bool)0");
     @cInclude("stdbool.h");
-    @cUndef("bool");
-    @cDefine("bool", "int");
+    @cUndef("true");
+    @cUndef("false");
+    @cDefine("true", "(_Bool)1");
+    @cDefine("false", "(_Bool)0");
     //
 
     @cInclude("SDL.h");
@@ -31,7 +35,7 @@ const c = @cImport({
 pub export var s: c.state = undefined;
 
 pub fn main() !void {
-    c.quit = c.false;
+    c.quit = false;
 
     c.rs_init();
 
