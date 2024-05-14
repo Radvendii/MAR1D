@@ -32,12 +32,13 @@ pub fn build(b: *std.Build) !void {
 
     const exe = b.addExecutable(.{
         .name = "MAR1D",
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
 
     const source_files: []const []const u8 = &.{
-        "src/main.c",
+        // "src/main.c",
         "src/audio.c",
         "src/controls.c",
         "src/enemies.c",
