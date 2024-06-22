@@ -3,10 +3,8 @@
 # subdirectories here, and trying to avoid putting any concerns about what the.
 # host machine is in the subdirectories.
 
-project('MAR1D', 'c')
-
 # make sure we're nice and clean
-add_project_arguments('-Werror',  language: 'c')
+project('MAR1D', 'c', default_options: 'werror=true')
 
 # this project makes extensive use of char subscripts, and i'm proud of it.
 add_project_arguments( '-Wno-char-subscripts', language: 'c')
