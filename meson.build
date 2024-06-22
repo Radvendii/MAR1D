@@ -20,7 +20,13 @@ cc = meson.get_compiler('c')
 # find dependencies (depending on host)
 math_lib = cc.find_library('m', required : false)
 opengl_dep = is_windows ? cc.find_library('opengl32', required : true) : dependency('opengl', static : static_deps)
-glu_dep = is_windows ? cc.find_library('glu32', required : true) : dependency('glu', static : static_deps)
+if is_windows
+    glu_dep = cc.find_library('glu32', required : true)
+elif is_darwin
+    glu_dep = opengl_dep
+else
+    glu_dep = dependency('glu', static : static_deps)
+endif
 sdl2_dep = dependency('sdl2', static : static_deps)
 sdl2_mixer_dep = dependency('SDL2_mixer', static : static_deps)
 libconfig_dep = dependency('libconfig', static : static_deps)
