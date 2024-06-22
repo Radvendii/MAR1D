@@ -31,6 +31,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "First person Super Mario Bros";
+    mainProgram = "MAR1D";
     longDescription = ''
       The original Super Mario Bros as you've never seen it. Step into Mario's
       shoes in this first person clone of the classic Mario game. True to the
@@ -38,7 +39,7 @@ stdenv.mkDerivation rec {
       You must view the world as mario does, as a one dimensional line.
     '';
     homepage = "https://mar1d.com";
-    license = licenses.agpl3;
+    license = licenses.agpl3Only;
     maintainers = with maintainers; [ taeer ];
     platforms = platforms.unix;
   };
