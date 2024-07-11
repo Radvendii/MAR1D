@@ -24,9 +24,9 @@
         defaultPackage = packages.game;
         packages = {
           game = import ./nix { inherit nixpkgs system; };
-          darwin-app = import ./darwin-app.nix { inherit nixpkgs system; };
-          windows = import ./windows.nix { inherit nixpkgs system; };
-          flatpak = import ./flatpak.nix { inherit nixpkgs system; };
+          darwin-app = import ./nix/darwin-app.nix { inherit nixpkgs system; };
+          windows = import ./nix/windows.nix { inherit nixpkgs system; };
+          flatpak = import ./nix/flatpak.nix { inherit nixpkgs system; };
           appimage = nix-bundle.bundlers.appimage {
             inherit system;
             target = (oldGlibcPkgs.callPackage ./package.nix { }).overrideAttrs (old: {

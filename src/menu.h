@@ -2,7 +2,11 @@
 #define _MENU_H
 
 #include <SDL_opengl.h>
-#include <GL/glu.h>
+#if __APPLE__
+  #include <OpenGL/glu.h>
+#else
+  #include <GL/glu.h>
+#endif
 #include <SDL.h>
 #include "helpers.h"
 #include "graphics.h"

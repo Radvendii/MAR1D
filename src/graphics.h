@@ -1,7 +1,11 @@
 #ifndef _GRAPHICS_H
 #define _GRAPHICS_H
 #include <SDL_opengl.h>
-#include <GL/glu.h>
+#ifdef __APPLE__
+  #include <OpenGL/glu.h>
+#else
+  #include <GL/glu.h>
+#endif
 #include <SDL.h>
 #include "helpers.h"
 #include "objects.h"
