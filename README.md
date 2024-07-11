@@ -21,6 +21,8 @@ Other notable similar exploits include:
 * [4D Toys](http://www.4dtoys.com/) (Though I've never personally played it)
 * [Hyperbolica](https://store.steampowered.com/app/1256230/Hyperbolica/) (Someone seems to have actually made my dream game.)
 * [Manifold Garden](https://manifold.garden)
+* [Automatic 3Dification](https://www.youtube.com/watch?v=xDxjbXAqTPg) (automatic 1Dification would awesome!)
+* [A whole list of non-euclidean geometry games](https://zenorogue.medium.com/non-euclidean-geometry-and-games-fb46989320d4)
 * Send me any I'm missing! I love playing with these things :)
 
 ## Playing the Game
