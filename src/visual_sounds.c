@@ -921,6 +921,9 @@ void vs_mainPlay(int snd) {
 }
 
 void vs_mainStop() {
+  if (vs_mainVisual == SND_none) {
+    return;
+  }
   vs_sounds[vs_mainVisual].cur = NULL;
   vs_mainVisual = SND_none;
 }

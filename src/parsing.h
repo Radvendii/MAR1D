@@ -16,9 +16,9 @@ int io_getFont(bool**, char*);
 
 void io_getColor(FILE*, color*);
 
-void io_getLevel(FILE*, level*, obj[127]);
+void io_getLevel(FILE*, level*, obj[CHAR_MAX]);
 
-void io_getObj(FILE*, obj*, char, color[127]);
+void io_getObj(FILE*, obj*, char, color[CHAR_MAX]);
 
 // TODO: this is named terribly. There should be another function io_readLevels that's exposed. this should be private and take in FILE*
 void io_getLevels(level**, char*);

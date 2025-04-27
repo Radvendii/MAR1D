@@ -348,8 +348,8 @@ void io_getLevels(level** ls, char* fn){
   memset(io_cs, 0, sizeof(color) * CHAR_MAX);
   *ls = salloc(sizeof(level) * CHAR_MAX);
   memset(*ls, 0, sizeof(level *) * CHAR_MAX);
-  char c;
-  char name = '\0';
+  int c;
+  int name = '\0';
   while((c = fgetc(f)) != EOF){
     if (c == 'C' || c == 'O' || c == 'L') {
       name = fgetc(f);
